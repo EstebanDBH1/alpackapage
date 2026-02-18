@@ -111,13 +111,17 @@ const Checkout: React.FC = () => {
 
                     console.log('Opening checkout with priceId:', priceId);
 
+                    // Verificación de formato de Price ID
+                    if (!priceId.startsWith('pri_')) {
+                        console.warn('CUIDADO: El Price ID no empieza por "pri_". Esto podría causar el error 400.');
+                    }
+
                     const checkoutConfig = {
                         settings: {
                             displayMode: "inline",
                             containerSelector: "#paddle-checkout-container",
                             frameInitialHeight: 450,
                             frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;",
-                            successUrl: `${window.location.origin}/payment-success`
                         },
                         items: [
                             {
@@ -125,16 +129,16 @@ const Checkout: React.FC = () => {
                                 quantity: 1
                             }
                         ],
-                        customer: {
-                            email: user.email
-                        },
-                        customData: {
-                            supabase_user_id: String(user.id)
-                        }
+                        // Simplificamos quitando customer y customData temporalmente para debug
                     };
 
-                    window.Paddle.Checkout.open(checkoutConfig);
-                    setLoading(false);
+                    try {
+                        window.Paddle.Checkout.open(checkoutConfig);
+                        setLoading(false);
+                    } catch (e) {
+                        console.error('Paddle open error block:', e);
+                        checkoutInitialized.current = false;
+                    }
                 }
             } catch (error) {
                 console.error('Error during Paddle setup:', error);
