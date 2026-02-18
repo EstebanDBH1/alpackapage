@@ -40,7 +40,7 @@ const PromptDetail: React.FC = () => {
             const [promptResult, isSubscribedResult] = await Promise.all([promptPromise, userPromise]);
 
             if (promptResult.error) {
-                console.error('Error fetching prompt:', promptResult.error);
+                // Handle error
             } else {
                 setPrompt(promptResult.data);
             }

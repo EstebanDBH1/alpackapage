@@ -56,7 +56,6 @@ const Login: React.FC = () => {
                   });
                   if (error) throw error;
                 } catch (error) {
-                  console.error('Error logging in:', error);
                   alert('Error al iniciar sesión. Por favor intenta de nuevo.');
                 }
               }}

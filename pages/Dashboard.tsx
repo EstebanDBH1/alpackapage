@@ -46,8 +46,6 @@ const Dashboard: React.FC = () => {
         if (subscription?.update_url) {
             window.open(subscription.update_url, '_blank');
         } else {
-            // Fallback or Alert
-            console.error("Missing update_url", subscription);
             alert('No se puede abrir el portal de gestión. Por favor contacta a soporte.');
         }
     };
@@ -58,7 +56,6 @@ const Dashboard: React.FC = () => {
                 window.open(subscription.cancel_url, '_blank');
             }
         } else {
-            console.error("Missing cancel_url", subscription);
             alert('No se puede procesar la cancelación automática. Por favor contacta a soporte.');
         }
     }

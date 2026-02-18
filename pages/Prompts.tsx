@@ -20,7 +20,7 @@ const Prompts: React.FC = () => {
                 .rpc('get_public_prompts'); // Secure function call
 
             if (error) {
-                console.error('Error fetching prompts:', error);
+                // Silently fail or handle UI state
             } else {
                 setPrompts(data || []);
             }

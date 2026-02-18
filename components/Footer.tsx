@@ -40,10 +40,10 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-mono text-gray-600">
-          <p>© 2024 PromptBank Inc. Todos los derechos reservados.</p>
+          <p>© 2025. Todos los derechos reservados.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <span>San Francisco, CA</span>
-            <span>Establecido 2023</span>
+            <span></span>
+            <span></span>
           </div>
         </div>
       </div>
