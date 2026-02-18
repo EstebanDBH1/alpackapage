@@ -12,9 +12,20 @@ const Checkout: React.FC = () => {
 
     // 1. Carga Dinámica del Script de Paddle
     useEffect(() => {
+        if (window.Paddle) {
+            setScriptLoaded(true);
+            return;
+        }
+
         const scriptId = 'paddle-js-sdk';
         if (document.getElementById(scriptId)) {
-            setScriptLoaded(true);
+            // Script already exists in DOM but window.Paddle might not be ready yet
+            const checkPaddle = setInterval(() => {
+                if (window.Paddle) {
+                    setScriptLoaded(true);
+                    clearInterval(checkPaddle);
+                }
+            }, 100);
             return;
         }
 
@@ -28,8 +39,7 @@ const Checkout: React.FC = () => {
         document.body.appendChild(script);
 
         return () => {
-            // No eliminamos el script al desmontar para evitar recargas innecesarias
-            // Pero podríamos hacerlo si fuera estrictamente necesario
+            // Cleanup check
         };
     }, []);
 
@@ -53,10 +63,11 @@ const Checkout: React.FC = () => {
 
         const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN;
         const priceId = import.meta.env.VITE_PADDLE_PRICE_ID;
-        const env = import.meta.env.VITE_PADDLE_ENV || 'sandbox';
+        // Detectar si estamos en producción o sandbox
+        const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || 'sandbox';
 
         if (!clientToken || !priceId) {
-            console.error('Paddle configuration missing: token or priceId');
+            console.error('Paddle configuration missing: Check VITE_PADDLE_CLIENT_TOKEN and VITE_PADDLE_PRICE_ID');
             return;
         }
 
@@ -65,14 +76,20 @@ const Checkout: React.FC = () => {
 
         const initializeCheckout = async () => {
             try {
-                // Sincronización con el DOM: Pequeño delay para garantizar que el contenedor esté renderizado
-                await new Promise(resolve => setTimeout(resolve, 300));
+                // Sincronización con el DOM: Delay garantizado
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 if (window.Paddle) {
-                    // Inicialización única
+                    // Inicialización con entorno dinámico
                     window.Paddle.Environment.set(env);
                     window.Paddle.Initialize({
-                        token: clientToken
+                        token: clientToken,
+                        eventCallback: (event: any) => {
+                            if (event.name === 'checkout.completed') {
+                                console.log('Checkout successful!', event.data);
+                                navigate('/payment-success');
+                            }
+                        }
                     });
 
                     // Carga del Checkout Inline
@@ -81,7 +98,8 @@ const Checkout: React.FC = () => {
                             displayMode: "inline",
                             containerSelector: "#paddle-checkout-container",
                             frameInitialHeight: 450,
-                            frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;"
+                            frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;",
+                            successUrl: `${window.location.origin}/payment-success`
                         },
                         items: [
                             {
@@ -101,12 +119,12 @@ const Checkout: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Error initializing Paddle:', error);
-                checkoutInitialized.current = false; // Permitir reintento si falló
+                checkoutInitialized.current = false;
             }
         };
 
         initializeCheckout();
-    }, [scriptLoaded, user]);
+    }, [scriptLoaded, user, navigate]);
 
     // Loading Screen (mientras carga el usuario o el script inicial)
     if (!user && loading) {
