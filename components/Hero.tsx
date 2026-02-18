@@ -59,13 +59,20 @@ const Hero: React.FC = () => {
         <p className="text-center font-mono text-xs text-gray-400 uppercase tracking-widest mb-8">
           Con la confianza de equipos en
         </p>
-        <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale">
-          <h3 className="text-2xl font-black font-sans">WIRED</h3>
-          <h3 className="text-2xl font-black font-serif italic">Forbes</h3>
-          <h3 className="text-2xl font-black font-mono">TechCrunch</h3>
-          <h3 className="text-2xl font-black font-sans tracking-widest">VERGE</h3>
-          <h3 className="text-2xl font-black font-serif">Vogue</h3>
-        </div>
+
+        {
+
+          /*
+          <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale">
+            <h3 className="text-2xl font-black font-sans">WIRED</h3>
+            <h3 className="text-2xl font-black font-serif italic">Forbes</h3>
+            <h3 className="text-2xl font-black font-mono">TechCrunch</h3>
+            <h3 className="text-2xl font-black font-sans tracking-widest">VERGE</h3>
+            <h3 className="text-2xl font-black font-serif">Vogue</h3>
+          </div>
+
+          */
+        }
       </div>
     </section>
   );

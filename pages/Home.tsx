@@ -16,7 +16,7 @@ const Home: React.FC = () => {
       <Faq />
 
       {/* Bottom CTA similar to reference */}
-      <section className="bg-brand-bg py-24 border-t border-gray-100">
+      <section className="bg-braznd-bg py-24 border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-6">
             accede al <span className="underline decoration-4 underline-offset-4 decoration-black">banco completo</span> hoy
