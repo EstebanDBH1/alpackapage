@@ -118,10 +118,10 @@ const Checkout: React.FC = () => {
 
                     const checkoutConfig = {
                         settings: {
-                            displayMode: "inline",
-                            containerSelector: "#paddle-checkout-container",
-                            frameInitialHeight: 450,
-                            frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;",
+                            displayMode: "overlay", // Cambiamos a overlay para probar si el error 400 es por el dominio (inline requiere aprobación)
+                            theme: "light",
+                            locale: "es",
+                            successUrl: `${window.location.origin}/payment-success`
                         },
                         items: [
                             {
@@ -129,14 +129,17 @@ const Checkout: React.FC = () => {
                                 quantity: 1
                             }
                         ],
-                        // Simplificamos quitando customer y customData temporalmente para debug
+                        customer: {
+                            email: user.email
+                        }
                     };
 
                     try {
+                        console.log('Attempting Paddle.Checkout.open with config:', checkoutConfig);
                         window.Paddle.Checkout.open(checkoutConfig);
                         setLoading(false);
                     } catch (e) {
-                        console.error('Paddle open error block:', e);
+                        console.error('CRITICAL: Paddle open exception:', e);
                         checkoutInitialized.current = false;
                     }
                 }
