@@ -13,13 +13,16 @@ const Checkout: React.FC = () => {
     // 1. Carga Dinámica del Script de Paddle
     useEffect(() => {
         if (window.Paddle) {
+            console.log('Paddle already window-assigned');
             setScriptLoaded(true);
             return;
         }
 
         const scriptId = 'paddle-js-sdk';
-        if (document.getElementById(scriptId)) {
-            // Script already exists in DOM but window.Paddle might not be ready yet
+        const existingScript = document.getElementById(scriptId);
+
+        if (existingScript) {
+            console.log('Script exists, waiting for window.Paddle...');
             const checkPaddle = setInterval(() => {
                 if (window.Paddle) {
                     setScriptLoaded(true);
@@ -29,28 +32,29 @@ const Checkout: React.FC = () => {
             return;
         }
 
+        console.log('Loading Paddle script...');
         const script = document.createElement('script');
         script.id = scriptId;
         script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
         script.async = true;
         script.onload = () => {
+            console.log('Paddle script loaded');
             setScriptLoaded(true);
         };
+        script.onerror = (err) => console.error('Failed to load Paddle script', err);
         document.body.appendChild(script);
-
-        return () => {
-            // Cleanup check
-        };
     }, []);
 
     // 2. Verificación de Usuario
     useEffect(() => {
         const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (error || !user) {
+                console.log('No user found, redirecting to login');
                 navigate('/login?redirect=/checkout');
                 return;
             }
+            console.log('User authenticated:', user.email);
             setUser(user);
         };
         checkUser();
@@ -58,42 +62,56 @@ const Checkout: React.FC = () => {
 
     // 3. Inicialización y Apertura del Checkout
     useEffect(() => {
-        // Solo procedemos si el script está listo, el usuario existe y no hemos inicializado ya
-        if (!scriptLoaded || !user || checkoutInitialized.current) return;
-
-        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN;
-        const priceId = import.meta.env.VITE_PADDLE_PRICE_ID;
-        // Detectar si estamos en producción o sandbox
-        const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || 'sandbox';
-
-        if (!clientToken || !priceId) {
-            console.error('Paddle configuration missing: Check VITE_PADDLE_CLIENT_TOKEN and VITE_PADDLE_PRICE_ID');
+        if (!scriptLoaded || !user || checkoutInitialized.current) {
+            console.log('Waiting for deps:', { scriptLoaded, hasUser: !!user, alreadyInit: checkoutInitialized.current });
             return;
         }
 
-        // Marcar como inicializado para evitar duplicidad de iframes
+        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
+        const priceId = import.meta.env.VITE_PADDLE_PRICE_ID?.trim();
+
+        // Auto-detect environment based on token prefix if possible
+        const envFromToken = clientToken?.startsWith('test_') ? 'sandbox' : 'production';
+        const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || envFromToken;
+
+        console.log('Paddle Config:', { env, hasToken: !!clientToken, hasPrice: !!priceId });
+
+        if (!clientToken || !priceId) {
+            console.error('CRITICAL: Paddle client token or price ID is missing in .env');
+            return;
+        }
+
         checkoutInitialized.current = true;
 
         const initializeCheckout = async () => {
             try {
-                // Sincronización con el DOM: Delay garantizado
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Ensure container is ready
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                const container = document.getElementById('paddle-checkout-container');
+                if (!container) {
+                    console.error('Checkout container NOT found in DOM');
+                    checkoutInitialized.current = false;
+                    return;
+                }
 
                 if (window.Paddle) {
-                    // Inicialización con entorno dinámico
+                    console.log('Initializing Paddle with environment:', env);
                     window.Paddle.Environment.set(env);
+
                     window.Paddle.Initialize({
                         token: clientToken,
                         eventCallback: (event: any) => {
+                            console.log('Paddle Event:', event.name, event.data);
                             if (event.name === 'checkout.completed') {
-                                console.log('Checkout successful!', event.data);
                                 navigate('/payment-success');
                             }
                         }
                     });
 
-                    // Carga del Checkout Inline
-                    window.Paddle.Checkout.open({
+                    console.log('Opening checkout with priceId:', priceId);
+
+                    const checkoutConfig = {
                         settings: {
                             displayMode: "inline",
                             containerSelector: "#paddle-checkout-container",
@@ -111,15 +129,17 @@ const Checkout: React.FC = () => {
                             email: user.email
                         },
                         customData: {
-                            supabase_user_id: user.id
+                            supabase_user_id: String(user.id)
                         }
-                    });
+                    };
 
+                    window.Paddle.Checkout.open(checkoutConfig);
                     setLoading(false);
                 }
             } catch (error) {
-                console.error('Error initializing Paddle:', error);
+                console.error('Error during Paddle setup:', error);
                 checkoutInitialized.current = false;
+                setLoading(false);
             }
         };
 
