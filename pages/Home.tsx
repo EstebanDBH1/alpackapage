@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import PromptGrid from '../components/PromptGrid';
 import Features from '../components/Features';
@@ -13,7 +14,7 @@ const Home: React.FC = () => {
       <Features />
       <HowItWorks />
       <Faq />
-      
+
       {/* Bottom CTA similar to reference */}
       <section className="bg-brand-bg py-24 border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center px-4">
@@ -23,9 +24,11 @@ const Home: React.FC = () => {
           <p className="font-mono text-sm text-gray-500 mb-10 uppercase tracking-widest">
             un precio simple. $3.90/mes. cancela cuando quieras.
           </p>
-          <button className="bg-brand-text text-brand-bg px-12 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform shadow-xl">
-            OBTENER ACCESO ILIMITADO →
-          </button>
+          <Link to="/pricing">
+            <button className="bg-brand-text text-brand-bg px-12 py-4 rounded-none font-bold text-lg hover:scale-105 transition-transform shadow-xl uppercase tracking-widest">
+              OBTENER ACCESO ILIMITADO →
+            </button>
+          </Link>
         </div>
       </section>
     </div>

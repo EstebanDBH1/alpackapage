@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -10,7 +10,6 @@ import Dashboard from './pages/Dashboard';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import PaymentSuccess from './pages/PaymentSuccess';
-import Checkout from './pages/Checkout';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -39,7 +38,6 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />

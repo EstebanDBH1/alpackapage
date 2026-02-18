@@ -36,6 +36,11 @@ export interface Subscription {
   metadata: any;
 }
 
+export interface StatItem {
+  value: string;
+  label: string;
+}
+
 declare global {
   interface Window {
     Paddle: any;

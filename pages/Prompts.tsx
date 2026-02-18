@@ -142,11 +142,12 @@ const Prompts: React.FC = () => {
                     </div>
                 </div>
 
+                {/* MASONRY LAYOUT USING COLUMNS */}
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
                         {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <div key={i} className="bg-white border border-gray-100">
-                                <Skeleton className="aspect-square w-full" />
+                            <div key={i} className="break-inside-avoid mb-8 bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                                <Skeleton className="h-48 w-full" />
                                 <div className="p-5">
                                     <Skeleton variant="text" className="w-3/4 mb-4" />
                                     <Skeleton variant="text" className="w-full mb-2" />
@@ -156,71 +157,60 @@ const Prompts: React.FC = () => {
                         ))}
                     </div>
                 ) : filteredPrompts.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
                         {filteredPrompts.map((prompt) => (
                             <Link
                                 to={`/prompts/${prompt.id}`}
                                 key={prompt.id}
-                                className="group relative bg-white border border-gray-200 transition-all duration-300 flex flex-col block overflow-hidden rounded-xl shadow-sm"
+                                className="break-inside-avoid mb-8 group relative bg-white border border-gray-200 transition-all duration-300 flex flex-col overflow-hidden rounded-none shadow-sm hover:shadow-md"
                             >
-                                {/* Image or Text Preview Area */}
-                                <div className="aspect-[4/3] w-full overflow-hidden relative bg-gray-50 border-b border-gray-100">
-                                    {prompt.image_url ? (
+                                {/* Only show Image if it exists */}
+                                {prompt.image_url && (
+                                    <div className="w-full overflow-hidden relative bg-gray-50 border-b border-gray-100">
                                         <img
                                             src={prompt.image_url}
                                             alt={prompt.title}
-                                            className="w-full h-full object-cover grayscale transition-all duration-500"
+                                            className="w-full h-auto object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                                         />
-                                    ) : (
-                                        <div className="w-full h-full p-8 bg-[#FDFCFC] transition-colors relative overflow-hidden flex items-start justify-start">
-                                            {/* Pure Text Preview */}
-                                            <div className="font-mono text-[10px] leading-relaxed text-gray-400 select-none break-words w-full opacity-70 line-clamp-6">
-                                                {prompt.content || prompt.description}
-                                            </div>
-
-                                            {/* Fade overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-
-                                            {/* Category Tag overlay */}
-                                            <div className="absolute bottom-4 left-4">
-                                                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400 border border-gray-200 bg-white px-2 py-1 rounded">
-                                                    {prompt.category?.toUpperCase()}
+                                        <div className="absolute top-4 right-4 z-10">
+                                            {prompt.is_premium ? (
+                                                <span className="bg-black text-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
+                                                    <Lock size={12} /> Pro
                                                 </span>
-                                            </div>
+                                            ) : (
+                                                <span className="bg-white text-black border border-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                                    <Unlock size={12} /> Free
+                                                </span>
+                                            )}
                                         </div>
-                                    )}
-
-                                    <div className="absolute top-4 right-4 z-10">
-                                        {prompt.is_premium ? (
-                                            <span className="bg-black text-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
-                                                <Lock size={12} /> Pro
-                                            </span>
-                                        ) : (
-                                            <span className="bg-white text-black border border-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                                                <Unlock size={12} /> Free
-                                            </span>
-                                        )}
                                     </div>
-                                </div>
+                                )}
 
                                 {/* Content */}
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <div className="mb-auto">
-                                        <div className="flex items-start justify-between gap-4 mb-3">
-                                            <h3 className="font-bold text-lg leading-tight line-clamp-2">{prompt.title}</h3>
-                                            <BadgeCheck size={18} className="text-blue-500 flex-shrink-0 mt-1" />
+                                <div className="p-6 flex flex-col">
+                                    <div>
+                                        <div className="flex items-start justify-between gap-4 mb-4">
+                                            <h3 className="font-bold text-xl leading-[1.1] tracking-tight group-hover:text-black transition-colors">{prompt.title}</h3>
+                                            <BadgeCheck size={20} className="text-blue-500 flex-shrink-0 mt-1" />
                                         </div>
-                                        <p className="text-sm text-gray-500 mb-4 font-sans line-clamp-2 leading-relaxed">
+                                        <p className="text-base text-gray-500 mb-6 font-sans leading-relaxed">
                                             {prompt.description}
                                         </p>
                                     </div>
 
-                                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                                        <span className="text-[10px] font-bold bg-brand-surface px-2 py-1 text-gray-600 uppercase rounded">
-                                            {prompt.category || 'General'}
-                                        </span>
-                                        <div className="flex items-center text-xs font-bold">
-                                            VER DETALLES <span className="ml-1">→</span>
+                                    <div className="pt-5 border-t border-gray-100 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[11px] font-black bg-brand-bg border border-brand-surface px-2.5 py-1 text-gray-500 uppercase tracking-widest rounded shadow-sm">
+                                                {prompt.category || 'General'}
+                                            </span>
+                                            {prompt.is_premium ? (
+                                                <span className="text-[10px] font-bold text-black border border-black px-2 py-0.5 uppercase tracking-tighter">PRO</span>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-green-600 border border-green-600 px-2 py-0.5 uppercase tracking-tighter">FREE</span>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center text-xs font-black tracking-widest uppercase group-hover:translate-x-1 transition-transform">
+                                            EXPLORAR <span className="ml-1 text-lg">→</span>
                                         </div>
                                     </div>
                                 </div>

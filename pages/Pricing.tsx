@@ -9,6 +9,25 @@ const Pricing: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const [scriptLoaded, setScriptLoaded] = useState(false);
+
+    // 1. Carga Dinámica de Paddle en la página de precios
+    useEffect(() => {
+        if (window.Paddle) {
+            setScriptLoaded(true);
+            return;
+        }
+
+        const scriptId = 'paddle-js-sdk';
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+        script.async = true;
+        script.onload = () => {
+            setScriptLoaded(true);
+        };
+        document.body.appendChild(script);
+    }, []);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -34,11 +53,42 @@ const Pricing: React.FC = () => {
         if (isSubscribed) return;
 
         if (!user) {
-            navigate('/login?redirect=/checkout');
+            // Regresar a la página de precios después del login para abrir el overlay
+            navigate('/login?redirect=/pricing');
             return;
         }
 
-        navigate('/checkout');
+        if (!scriptLoaded || !window.Paddle) {
+            alert('Cargando pasarela de pago... Por favor espera un segundo.');
+            return;
+        }
+
+        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
+        const priceId = import.meta.env.VITE_PADDLE_PRICE_ID?.trim();
+        const envFromToken = clientToken?.startsWith('test_') ? 'sandbox' : 'production';
+        const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || envFromToken;
+
+        window.Paddle.Environment.set(env);
+        window.Paddle.Initialize({
+            token: clientToken,
+            eventCallback: (event: any) => {
+                if (event.name === 'checkout.completed') {
+                    navigate('/payment-success');
+                }
+            }
+        });
+
+        window.Paddle.Checkout.open({
+            settings: {
+                displayMode: "overlay",
+                theme: "light",
+                locale: "es",
+                successUrl: `${window.location.origin}/payment-success`
+            },
+            items: [{ priceId: priceId, quantity: 1 }],
+            customer: { email: user.email },
+            customData: { supabase_user_id: String(user.id) }
+        });
     };
 
     return (

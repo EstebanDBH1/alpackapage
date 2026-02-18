@@ -8,8 +8,15 @@ const Login: React.FC = () => {
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect') || '/dashboard';
 
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        navigate(redirect, { replace: true });
+      }
+    });
+  }, [navigate, redirect]);
+
   const handleLogin = () => {
-    // Simulate login
     navigate(redirect);
   };
 

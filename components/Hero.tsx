@@ -1,6 +1,7 @@
 import React from 'react';
 import { StatItem } from '../types';
 import { ArrowRight, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const stats: StatItem[] = [
   { value: '1.2M+', label: 'prompts accesibles' },
@@ -30,22 +31,26 @@ const Hero: React.FC = () => {
 
         {/* Subheadline */}
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 mb-10 font-sans leading-relaxed">
-          Deja de adivinar. Empieza a crear. <br/>
+          Deja de adivinar. Empieza a crear. <br />
           Obtén acceso ilimitado al mayor banco de prompts probados del mundo por solo $3.90/mes.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <button className="w-full sm:w-auto bg-brand-text text-brand-bg px-8 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-gray-200">
-            ACCESO ILIMITADO <ArrowRight size={20} />
-          </button>
-          <button className="w-full sm:w-auto bg-brand-surface text-brand-text border border-gray-200 px-8 py-4 rounded-md font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-            VER PACK DE MUESTRA <Lock size={16} className="text-gray-400" />
-          </button>
+          <Link to="/pricing" className="w-full sm:w-auto">
+            <button className="w-full bg-brand-text text-brand-bg px-8 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-gray-200 uppercase tracking-tight">
+              ACCESO ILIMITADO <ArrowRight size={20} />
+            </button>
+          </Link>
+          <Link to="/prompts" className="w-full sm:w-auto">
+            <button className="w-full bg-brand-surface text-brand-text border border-gray-200 px-8 py-4 rounded-md font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 uppercase tracking-tight">
+              VER PACK DE MUESTRA <Lock size={16} className="text-gray-400" />
+            </button>
+          </Link>
         </div>
 
-        <div className="mt-8 text-xs font-mono text-gray-400">
-          cancela cuando quieras. <span className="text-brand-text cursor-pointer hover:underline">acceso instantáneo al registrarte →</span>
+        <div className="mt-8 text-xs font-mono text-gray-400 uppercase tracking-widest">
+          cancela cuando quieras. <Link to="/login" className="text-brand-text hover:underline">acceso instantáneo al registrarte →</Link>
         </div>
       </div>
 
@@ -55,11 +60,11 @@ const Hero: React.FC = () => {
           Con la confianza de equipos en
         </p>
         <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale">
-           <h3 className="text-2xl font-black font-sans">WIRED</h3>
-           <h3 className="text-2xl font-black font-serif italic">Forbes</h3>
-           <h3 className="text-2xl font-black font-mono">TechCrunch</h3>
-           <h3 className="text-2xl font-black font-sans tracking-widest">VERGE</h3>
-           <h3 className="text-2xl font-black font-serif">Vogue</h3>
+          <h3 className="text-2xl font-black font-sans">WIRED</h3>
+          <h3 className="text-2xl font-black font-serif italic">Forbes</h3>
+          <h3 className="text-2xl font-black font-mono">TechCrunch</h3>
+          <h3 className="text-2xl font-black font-sans tracking-widest">VERGE</h3>
+          <h3 className="text-2xl font-black font-serif">Vogue</h3>
         </div>
       </div>
     </section>
