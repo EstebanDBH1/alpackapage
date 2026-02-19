@@ -71,9 +71,14 @@ const Dashboard: React.FC = () => {
     const handleManageSubscription = async () => {
         if (!subscription) return;
 
-        // Paddle V2 Billing documentation for managing subscriptions:
-        // When using Paddle.js, we can open the management portal directly 
-        // using the subscription ID.
+        // According to documentation: "The simplest way to cancel/manage a subscription is to use management_urls"
+        // These are temporary URLs that should be fetched fresh or passed from Paddle events.
+        if (subscription.update_url) {
+            window.open(subscription.update_url, '_blank');
+            return;
+        }
+
+        // Alternative: Use Paddle.js SDK as a fallback to open the management portal
         if (window.Paddle) {
             window.Paddle.Checkout.open({
                 subscriptionId: subscription.subscription_id,
@@ -84,12 +89,7 @@ const Dashboard: React.FC = () => {
                 }
             });
         } else {
-            // Fallback for custom links if SDK fails or for legacy records
-            if (subscription.update_url) {
-                window.open(subscription.update_url, '_blank');
-            } else {
-                alert('No se pudo inicializar el portal de gestión. Por favor refresca la página o contacta a soporte@alpacka.ai');
-            }
+            alert('No se pudo encontrar el portal de gestión. Por favor refresca la página o contacta a soporte@alpacka.ai');
         }
     };
 
@@ -100,21 +100,42 @@ const Dashboard: React.FC = () => {
             return;
         }
 
-        // According to Paddle V2 docs, the cancellation is handled within the 
-        // same management portal as the update.
-        if (window.Paddle) {
-            window.Paddle.Checkout.open({
-                subscriptionId: subscription.subscription_id,
-                settings: {
-                    displayMode: "overlay",
-                    theme: "light",
-                    locale: "es",
+        // 1. Doc: "The simplest way to cancel is to use management_urls.cancel"
+        if (subscription.cancel_url) {
+            window.open(subscription.cancel_url, '_blank');
+            return;
+        }
+
+        // 2. Doc: "You can also cancel a subscription via the API (effective_from: next_billing_period)"
+        setUpdating(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('cancel-paddle-subscription', {
+                body: {
+                    subscriptionID: subscription.subscription_id,
+                    userID: user.id
                 }
             });
-        } else if (subscription.cancel_url) {
-            window.open(subscription.cancel_url, '_blank');
-        } else {
-            alert('No se pudo abrir el portal de cancelación. Por favor intenta desde "Gestionar Suscripción" o contacta a soporte.');
+
+            if (error) throw error;
+            alert('Tu suscripción ha sido programada para cancelarse al final del periodo actual.');
+            window.location.reload();
+        } catch (err: any) {
+            console.error('Error in API cancel:', err);
+            // 3. Last Fallback: Use Paddle.js overlay
+            if (window.Paddle) {
+                window.Paddle.Checkout.open({
+                    subscriptionId: subscription.subscription_id,
+                    settings: {
+                        displayMode: "overlay",
+                        theme: "light",
+                        locale: "es",
+                    }
+                });
+            } else {
+                alert('Hubo un error al procesar la cancelación: ' + (err.message || 'Error de conexión'));
+            }
+        } finally {
+            setUpdating(false);
         }
     }
 
