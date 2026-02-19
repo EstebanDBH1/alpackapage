@@ -71,13 +71,9 @@ const Dashboard: React.FC = () => {
     const handleManageSubscription = async () => {
         if (!subscription) return;
 
-        // Prioritize the personalized update link from Paddle
-        if (subscription.update_url) {
-            window.open(subscription.update_url, '_blank');
-            return;
-        }
-
-        // Fallback: If URL is missing but we have an ID, try Paddle.js or alert
+        // Paddle V2 Billing documentation for managing subscriptions:
+        // When using Paddle.js, we can open the management portal directly 
+        // using the subscription ID.
         if (window.Paddle) {
             window.Paddle.Checkout.open({
                 subscriptionId: subscription.subscription_id,
@@ -88,7 +84,12 @@ const Dashboard: React.FC = () => {
                 }
             });
         } else {
-            alert('No se puede abrir el portal de gestión automáticamente. Por favor contacta a soporte@alpacka.ai');
+            // Fallback for custom links if SDK fails or for legacy records
+            if (subscription.update_url) {
+                window.open(subscription.update_url, '_blank');
+            } else {
+                alert('No se pudo inicializar el portal de gestión. Por favor refresca la página o contacta a soporte@alpacka.ai');
+            }
         }
     };
 
@@ -99,13 +100,22 @@ const Dashboard: React.FC = () => {
             return;
         }
 
-        // Prioritize the personalized cancel link from Paddle
-        if (subscription.cancel_url) {
+        // According to Paddle V2 docs, the cancellation is handled within the 
+        // same management portal as the update.
+        if (window.Paddle) {
+            window.Paddle.Checkout.open({
+                subscriptionId: subscription.subscription_id,
+                settings: {
+                    displayMode: "overlay",
+                    theme: "light",
+                    locale: "es",
+                }
+            });
+        } else if (subscription.cancel_url) {
             window.open(subscription.cancel_url, '_blank');
-            return;
+        } else {
+            alert('No se pudo abrir el portal de cancelación. Por favor intenta desde "Gestionar Suscripción" o contacta a soporte.');
         }
-
-        alert('No se pudo encontrar el enlace de cancelación automático. Por favor, gestiona tu suscripción desde el botón "Gestionar en Paddle" o contacta a soporte@alpacka.ai');
     }
 
 
