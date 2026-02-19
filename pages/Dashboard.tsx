@@ -114,9 +114,13 @@ const Dashboard: React.FC = () => {
 
         setUpdating(true);
         try {
-            // If it's PayPal, we have a specialized function
-            if (subscription.subscription_id.startsWith('I-')) {
-                const { data, error } = await supabase.functions.invoke('cancel-subscription', {
+            // Determine which function to call based on provider
+            const isPayPal = subscription.subscription_id.startsWith('I-');
+            const isPaddle = subscription.subscription_id.startsWith('sub_');
+            const functionName = isPayPal ? 'cancel-paypal-subscription' : (isPaddle ? 'cancel-paddle-subscription' : null);
+
+            if (functionName) {
+                const { data, error } = await supabase.functions.invoke(functionName, {
                     body: {
                         subscriptionID: subscription.subscription_id,
                         userID: user.id
@@ -124,10 +128,10 @@ const Dashboard: React.FC = () => {
                 });
 
                 if (error) throw error;
-                alert('Suscripción cancelada con éxito.');
+                alert('Suscripción cancelada con éxito. Seguirás teniendo acceso hasta el final del periodo.');
                 window.location.reload();
             } else {
-                alert('Para cancelar, por favor contacta a soporte@alpacka.ai o usa el portal de gestión de Paddle.');
+                alert('No se puede cancelar este tipo de suscripción automáticamente. Por favor contacta a soporte@alpacka.ai');
             }
         } catch (err: any) {
             console.error('Error cancelling:', err);
@@ -184,6 +188,11 @@ const Dashboard: React.FC = () => {
                             <span className={`bg-[#F5F3F1] border border-gray-200 px-4 py-2 rounded-full text-xs font-mono flex items-center gap-2 ${!isActive ? 'opacity-50' : ''}`}>
                                 <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
                                 {isActive ? 'MEMBRESÍA ACTIVA' : 'INACTIVA'}
+                                {isActive && (
+                                    <span className="ml-2 text-[10px] opacity-70">
+                                        ({subscription?.subscription_id.startsWith('I-') ? 'PAYPAL' : 'PADDLE'})
+                                    </span>
+                                )}
                             </span>
                         </div>
                     </div>
@@ -273,9 +282,11 @@ const Dashboard: React.FC = () => {
                                     <label className="block text-[10px] font-mono text-gray-400 uppercase mb-2">Método de Pago</label>
                                     <div className="flex items-center gap-2 font-bold">
                                         <CreditCard size={18} className="text-gray-400" />
-                                        {isActive ? 'Gestionado por Paddle' : '-'}
+                                        {isActive ? (subscription?.subscription_id.startsWith('I-') ? 'PayPal' : 'Paddle') : '-'}
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-1 font-sans">Vía Paddle Payments</p>
+                                    <p className="text-xs text-gray-400 mt-1 font-sans">
+                                        {subscription?.subscription_id.startsWith('I-') ? 'Suscripción de PayPal' : 'Via Paddle Payments'}
+                                    </p>
                                 </div>
                             </div>
 
