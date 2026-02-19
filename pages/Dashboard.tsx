@@ -71,15 +71,14 @@ const Dashboard: React.FC = () => {
     const handleManageSubscription = async () => {
         if (!subscription) return;
 
-        // If we have the URL directly, use it
+        // Prioritize the personalized update link from Paddle
         if (subscription.update_url) {
             window.open(subscription.update_url, '_blank');
             return;
         }
 
-        // If it's a Paddle subscription but we don't have the URL, 
-        // we can try to use Paddle.js if it's initialized
-        if (subscription.subscription_id.startsWith('sub_') && window.Paddle) {
+        // Fallback: If URL is missing but we have an ID, try Paddle.js or alert
+        if (window.Paddle) {
             window.Paddle.Checkout.open({
                 subscriptionId: subscription.subscription_id,
                 settings: {
@@ -88,12 +87,6 @@ const Dashboard: React.FC = () => {
                     locale: "es",
                 }
             });
-            return;
-        }
-
-        // Fallback: Notify support or check if it's PayPal
-        if (subscription.subscription_id.startsWith('I-')) {
-            alert('Para gestionar tu suscripción de PayPal, por favor ve a tu cuenta de PayPal > Pagos automáticos.');
         } else {
             alert('No se puede abrir el portal de gestión automáticamente. Por favor contacta a soporte@alpacka.ai');
         }
@@ -106,39 +99,13 @@ const Dashboard: React.FC = () => {
             return;
         }
 
-        // If we have the URL directly, use it
+        // Prioritize the personalized cancel link from Paddle
         if (subscription.cancel_url) {
             window.open(subscription.cancel_url, '_blank');
             return;
         }
 
-        setUpdating(true);
-        try {
-            // Determine which function to call based on provider
-            const isPayPal = subscription.subscription_id.startsWith('I-');
-            const isPaddle = subscription.subscription_id.startsWith('sub_');
-            const functionName = isPayPal ? 'cancel-paypal-subscription' : (isPaddle ? 'cancel-paddle-subscription' : null);
-
-            if (functionName) {
-                const { data, error } = await supabase.functions.invoke(functionName, {
-                    body: {
-                        subscriptionID: subscription.subscription_id,
-                        userID: user.id
-                    }
-                });
-
-                if (error) throw error;
-                alert('Suscripción cancelada con éxito. Seguirás teniendo acceso hasta el final del periodo.');
-                window.location.reload();
-            } else {
-                alert('No se puede cancelar este tipo de suscripción automáticamente. Por favor contacta a soporte@alpacka.ai');
-            }
-        } catch (err: any) {
-            console.error('Error cancelling:', err);
-            alert('Hubo un error al procesar la cancelación: ' + err.message);
-        } finally {
-            setUpdating(false);
-        }
+        alert('No se pudo encontrar el enlace de cancelación automático. Por favor, gestiona tu suscripción desde el botón "Gestionar en Paddle" o contacta a soporte@alpacka.ai');
     }
 
 
@@ -190,7 +157,7 @@ const Dashboard: React.FC = () => {
                                 {isActive ? 'MEMBRESÍA ACTIVA' : 'INACTIVA'}
                                 {isActive && (
                                     <span className="ml-2 text-[10px] opacity-70">
-                                        ({subscription?.subscription_id.startsWith('I-') ? 'PAYPAL' : 'PADDLE'})
+                                        (PADDLE)
                                     </span>
                                 )}
                             </span>
@@ -282,10 +249,10 @@ const Dashboard: React.FC = () => {
                                     <label className="block text-[10px] font-mono text-gray-400 uppercase mb-2">Método de Pago</label>
                                     <div className="flex items-center gap-2 font-bold">
                                         <CreditCard size={18} className="text-gray-400" />
-                                        {isActive ? (subscription?.subscription_id.startsWith('I-') ? 'PayPal' : 'Paddle') : '-'}
+                                        {isActive ? 'Paddle' : '-'}
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1 font-sans">
-                                        {subscription?.subscription_id.startsWith('I-') ? 'Suscripción de PayPal' : 'Via Paddle Payments'}
+                                        Via Paddle Payments
                                     </p>
                                 </div>
                             </div>
