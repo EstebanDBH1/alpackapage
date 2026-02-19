@@ -42,21 +42,98 @@ const Dashboard: React.FC = () => {
         navigate('/login');
     };
 
-    const handleManageSubscription = () => {
-        if (subscription?.update_url) {
+    const [updating, setUpdating] = useState(false);
+
+    // 1. Dynamic Paddle Loading in Dashboard
+    useEffect(() => {
+        if (!window.Paddle) {
+            const scriptId = 'paddle-js-sdk-dash';
+            if (!document.getElementById(scriptId)) {
+                const script = document.createElement('script');
+                script.id = scriptId;
+                script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+                script.async = true;
+                script.onload = () => {
+                    const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
+                    const envFromToken = clientToken?.startsWith('test_') ? 'sandbox' : 'production';
+                    const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || envFromToken;
+
+                    if (window.Paddle && clientToken) {
+                        window.Paddle.Environment.set(env);
+                        window.Paddle.Initialize({ token: clientToken });
+                    }
+                };
+                document.body.appendChild(script);
+            }
+        }
+    }, []);
+
+    const handleManageSubscription = async () => {
+        if (!subscription) return;
+
+        // If we have the URL directly, use it
+        if (subscription.update_url) {
             window.open(subscription.update_url, '_blank');
+            return;
+        }
+
+        // If it's a Paddle subscription but we don't have the URL, 
+        // we can try to use Paddle.js if it's initialized
+        if (subscription.subscription_id.startsWith('sub_') && window.Paddle) {
+            window.Paddle.Checkout.open({
+                subscriptionId: subscription.subscription_id,
+                settings: {
+                    displayMode: "overlay",
+                    theme: "light",
+                    locale: "es",
+                }
+            });
+            return;
+        }
+
+        // Fallback: Notify support or check if it's PayPal
+        if (subscription.subscription_id.startsWith('I-')) {
+            alert('Para gestionar tu suscripción de PayPal, por favor ve a tu cuenta de PayPal > Pagos automáticos.');
         } else {
-            alert('No se puede abrir el portal de gestión. Por favor contacta a soporte.');
+            alert('No se puede abrir el portal de gestión automáticamente. Por favor contacta a soporte@alpacka.ai');
         }
     };
 
-    const handleCancelSubscription = () => {
-        if (subscription?.cancel_url) {
-            if (window.confirm("¿Estás seguro de que quieres cancelar? Perderás el acceso al final de tu periodo de facturación actual.")) {
-                window.open(subscription.cancel_url, '_blank');
+    const handleCancelSubscription = async () => {
+        if (!subscription) return;
+
+        if (!window.confirm("¿Estás seguro de que quieres cancelar? Perderás el acceso al final de tu periodo de facturación actual.")) {
+            return;
+        }
+
+        // If we have the URL directly, use it
+        if (subscription.cancel_url) {
+            window.open(subscription.cancel_url, '_blank');
+            return;
+        }
+
+        setUpdating(true);
+        try {
+            // If it's PayPal, we have a specialized function
+            if (subscription.subscription_id.startsWith('I-')) {
+                const { data, error } = await supabase.functions.invoke('cancel-subscription', {
+                    body: {
+                        subscriptionID: subscription.subscription_id,
+                        userID: user.id
+                    }
+                });
+
+                if (error) throw error;
+                alert('Suscripción cancelada con éxito.');
+                window.location.reload();
+            } else {
+                alert('Para cancelar, por favor contacta a soporte@alpacka.ai o usa el portal de gestión de Paddle.');
             }
-        } else {
-            alert('No se puede procesar la cancelación automática. Por favor contacta a soporte.');
+        } catch (err: any) {
+            console.error('Error cancelling:', err);
+            alert('Hubo un error al procesar la cancelación: ' + err.message);
+        } finally {
+            setUpdating(false);
         }
     }
 
@@ -208,16 +285,18 @@ const Dashboard: React.FC = () => {
                                     <>
                                         <button
                                             onClick={handleManageSubscription}
-                                            className="flex-1 bg-black text-white py-4 font-bold text-sm uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
+                                            disabled={updating}
+                                            className="flex-1 bg-black text-white py-4 font-bold text-sm uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
-                                            <Settings size={16} /> Gestionar en Paddle
+                                            <Settings size={16} /> {updating ? 'Procesando...' : 'Gestionar en Paddle'}
                                         </button>
 
                                         <button
                                             onClick={handleCancelSubscription}
-                                            className="flex-1 bg-white border border-red-200 text-red-600 py-4 font-bold text-sm uppercase tracking-wider hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                                            disabled={updating}
+                                            className="flex-1 bg-white border border-red-200 text-red-600 py-4 font-bold text-sm uppercase tracking-wider hover:bg-red-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
-                                            <AlertTriangle size={16} /> Cancelar Suscripción
+                                            <AlertTriangle size={16} /> {updating ? 'Procesando...' : 'Cancelar Suscripción'}
                                         </button>
                                     </>
                                 ) : (
