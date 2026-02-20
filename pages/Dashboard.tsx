@@ -175,7 +175,7 @@ const Dashboard: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase">
+                            <h1 className="text-3xl font-black tracking-tighter mb-2 uppercase">
                                 Hola, {user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'}
                             </h1>
                             <p className="font-mono text-gray-500 text-xs uppercase tracking-widest">

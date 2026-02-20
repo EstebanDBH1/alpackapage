@@ -29,7 +29,7 @@ const Login: React.FC = () => {
               <Bot size={40} strokeWidth={1.5} />
             </div>
           </div>
-          <h2 className="text-4xl font-black tracking-tighter text-black mb-2">
+          <h2 className="text-3xl font-black tracking-tighter text-black mb-2 uppercase">
             bienvenido de nuevo
           </h2>
           <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">

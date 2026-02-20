@@ -41,6 +41,11 @@ export interface StatItem {
   label: string;
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 declare global {
   interface Window {
     Paddle: any;

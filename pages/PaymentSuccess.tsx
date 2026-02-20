@@ -24,7 +24,7 @@ const PaymentSuccess: React.FC = () => {
                     </div>
                 </div>
 
-                <h1 className="text-4xl font-black tracking-tighter mb-4">¡PAGO EXITOSO!</h1>
+                <h1 className="text-3xl font-black tracking-tighter mb-4">¡PAGO EXITOSO!</h1>
                 <p className="font-mono text-gray-500 mb-8">
                     Tu suscripción ha sido procesada correctamente. Ya tienes acceso ilimitado a todo el banco de prompts.
                 </p>

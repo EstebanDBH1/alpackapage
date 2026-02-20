@@ -63,7 +63,7 @@ const Prompts: React.FC = () => {
                         </span>
                     </div>
 
-                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-[0.9]">
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6">
                         ARCHIVO <br className="hidden md:block" />
                         <span className="text-gray-300">DE</span> PROMPTS
                     </h1>
@@ -137,7 +137,7 @@ const Prompts: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex justify-between items-end mb-8">
                     <div>
-                        <h2 className="text-2xl font-black tracking-tight">Recientes</h2>
+                        <h2 className="text-2xl font-black tracking-tight uppercase">Recientes</h2>
                         <p className="text-xs font-mono text-gray-500 uppercase tracking-widest mt-1">mostrando {filteredPrompts.length} resultados</p>
                     </div>
                 </div>

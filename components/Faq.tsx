@@ -31,7 +31,7 @@ const Faq: React.FC = () => {
   return (
     <section className="py-24 bg-brand-bg">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-center mb-16">preguntas frecuentes</h2>
+        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-center mb-16 uppercase">preguntas frecuentes</h2>
         <div className="space-y-4">
           {faqData.map((item, index) => (
             <div key={index} className="border-b border-gray-200">
@@ -49,9 +49,8 @@ const Faq: React.FC = () => {
                 </span>
               </button>
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  openIndex === index ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'
+                  }`}
               >
                 <p className="text-gray-600 font-sans leading-relaxed text-sm md:text-base pr-8">
                   {item.answer}

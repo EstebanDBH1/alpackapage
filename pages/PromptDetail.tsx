@@ -166,7 +166,7 @@ const PromptDetail: React.FC = () => {
                                     </span>
                                 )}
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-tight mb-6">
+                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6 uppercase">
                                 {prompt.title}
                             </h1>
                             <p className="text-gray-600 font-sans text-lg leading-relaxed border-l-4 border-brand-surface pl-6">

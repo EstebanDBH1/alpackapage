@@ -24,7 +24,7 @@ const Hero: React.FC = () => {
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl sm:text-6xl md:text-6xl font-black tracking-tighter mb-8 leading-[0.9]">
+        <h1 className="text-4xl sm:text-5xl md:text-5xl font-black tracking-tighter mb-8 leading-[0.9]">
           Copia, pega y domina cualquier <span className="text-gray-400" >modelo</span> de
           <span className="bg-brand-surface px-1 rounded-lg">IA.</span>
         </h1>
@@ -55,21 +55,24 @@ const Hero: React.FC = () => {
 
       {/* Featured In */}
       <div className="mt-24 border-t border-brand-surface pt-12">
-        <p className="text-center font-mono text-xs text-gray-400 uppercase tracking-widest mb-8">
-          Con la confianza de equipos en
+        <p className="text-center font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-8">
+          utilizado por equipos en
         </p>
+
 
         {
 
-          /*
-          <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale">
-            <h3 className="text-2xl font-black font-sans">WIRED</h3>
-            <h3 className="text-2xl font-black font-serif italic">Forbes</h3>
-            <h3 className="text-2xl font-black font-mono">TechCrunch</h3>
-            <h3 className="text-2xl font-black font-sans tracking-widest">VERGE</h3>
-            <h3 className="text-2xl font-black font-serif">Vogue</h3>
-          </div>
 
+          /*
+          
+          <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale contrast-200">
+            <span className="text-xl md:text-2xl font-black font-sans">FORBES</span>
+            <span className="text-xl md:text-2xl font-black font-serif italic">WIRED</span>
+            <span className="text-xl md:text-2xl font-black font-mono">NYT</span>
+            <span className="text-xl md:text-2xl font-black font-sans tracking-widest">VERGE</span>
+            <span className="text-xl md:text-2xl font-black font-serif">VOGUE</span>
+          </div>
+          
           */
         }
       </div>

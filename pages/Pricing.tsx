@@ -95,7 +95,7 @@ const Pricing: React.FC = () => {
         <div className="bg-brand-bg min-h-screen">
             {/* Header */}
             <div className="pt-24 pb-12 text-center max-w-4xl mx-auto px-4">
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-[0.9]">
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-[0.9] uppercase">
                     un plan. <br /> poder ilimitado.
                 </h1>
                 <p className="font-mono text-gray-500 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest">

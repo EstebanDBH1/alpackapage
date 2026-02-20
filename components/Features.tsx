@@ -6,15 +6,15 @@ const Features: React.FC = () => {
     <section className="py-24 bg-brand-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4">tareas reales. resultados reales.</h2>
-          <p className="font-mono text-sm text-gray-500">esto es lo que la gente genera con PromptBank</p>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4 uppercase">tareas reales. resultados reales.</h2>
+          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">esto es lo que la gente genera con PromptBank</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1 */}
           <div className="bg-[#1A1A1A] p-8 rounded-xl text-white relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform duration-500 pointer-events-none select-none">
-               <Terminal size={100} strokeWidth={1} />
+              <Terminal size={100} strokeWidth={1} />
             </div>
             <div className="relative z-10">
               <div className="w-10 h-10 bg-brand-surface rounded-lg flex items-center justify-center mb-6 text-black">
@@ -31,7 +31,7 @@ const Features: React.FC = () => {
           {/* Card 2 */}
           <div className="bg-[#1A1A1A] p-8 rounded-xl text-white relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform duration-500 pointer-events-none select-none">
-               <Palette size={100} strokeWidth={1} />
+              <Palette size={100} strokeWidth={1} />
             </div>
             <div className="relative z-10">
               <div className="w-10 h-10 bg-brand-surface rounded-lg flex items-center justify-center mb-6 text-black">
@@ -47,8 +47,8 @@ const Features: React.FC = () => {
 
           {/* Card 3 */}
           <div className="bg-[#1A1A1A] p-8 rounded-xl text-white relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform duration-500 pointer-events-none select-none">
-               <PenTool size={100} strokeWidth={1} />
+            <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform duration-500 pointer-events-none select-none">
+              <PenTool size={100} strokeWidth={1} />
             </div>
             <div className="relative z-10">
               <div className="w-10 h-10 bg-brand-surface rounded-lg flex items-center justify-center mb-6 text-black">

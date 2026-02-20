@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const PromptGrid: React.FC = () => {
   const [prompts, setPrompts] = React.useState<any[]>([]);
+  const [isPaused, setIsPaused] = React.useState(false);
 
   React.useEffect(() => {
     const fetchPrompts = async () => {
@@ -27,22 +28,31 @@ const PromptGrid: React.FC = () => {
       <div className="w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex justify-between items-end">
           <div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-2">dentro de la bóveda</h2>
-            <p className="font-mono text-sm text-gray-500">accede a estos y miles más con tu suscripción.</p>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 uppercase">dentro de la bóveda</h2>
+            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">accede a estos y miles más con tu suscripción.</p>
           </div>
 
-          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4">
+          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4 uppercase tracking-tighter">
             VISTA PREVIA <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
 
         {/* Marquee Container */}
         <div className="relative w-full overflow-hidden">
-          <div className="flex items-start gap-6 w-max animate-marquee hover:pause py-4">
+          {/* Edge Fades */}
+          <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-[#F5F3F1] to-transparent z-20 pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-[#F5F3F1] to-transparent z-20 pointer-events-none"></div>
+
+          <div
+            className="flex items-start gap-6 w-max animate-marquee py-4"
+            style={{ animationPlayState: isPaused ? 'paused' : 'running' }}
+          >
             {marqueePrompts.map((prompt, index) => (
               <Link
                 to={`/prompts/${prompt.id}`}
                 key={`${prompt.id}-${index}`}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
                 className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-none overflow-hidden border border-gray-200 hover:border-black transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl block h-fit"
               >
                 {/* Only show Image if it exists */}
@@ -88,7 +98,7 @@ const PromptGrid: React.FC = () => {
         </div>
 
         <div className="mt-8 md:hidden flex justify-center px-4">
-          <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text">
+          <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text uppercase tracking-tighter">
             VISTA PREVIA <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
@@ -106,9 +116,6 @@ const PromptGrid: React.FC = () => {
         }
         .animate-marquee {
           animation: marquee 40s linear infinite;
-        }
-        .hover\\:pause:hover {
-          animation-play-state: paused;
         }
       `}</style>
     </section>

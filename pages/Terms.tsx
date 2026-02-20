@@ -14,7 +14,7 @@ const Terms: React.FC = () => {
     <div className="bg-brand-bg min-h-screen py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter mb-4 uppercase">
             términos de servicio
           </h1>
           <p className="font-mono text-gray-500 text-xs uppercase tracking-widest">

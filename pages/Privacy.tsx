@@ -14,7 +14,7 @@ const Privacy: React.FC = () => {
     <div className="bg-brand-bg min-h-screen py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter mb-4 uppercase">
             política de privacidad
           </h1>
           <p className="font-mono text-gray-500 text-xs uppercase tracking-widest">
@@ -62,12 +62,12 @@ const Privacy: React.FC = () => {
             Puedes solicitar la eliminación completa de los datos de tu cuenta contactando a privacy@promptbank.ai. Ten en cuenta que no podemos eliminar los registros de pago mantenidos por Paddle por razones fiscales legales.
           </p>
         </Section>
-        
+
         <Section title="6. Intercambio con Terceros">
           <p>
-             No vendemos, intercambiamos ni alquilamos tu información de identificación personal a otros. Compartimos datos solo con:
+            No vendemos, intercambiamos ni alquilamos tu información de identificación personal a otros. Compartimos datos solo con:
           </p>
-           <ul className="list-disc list-inside space-y-2 ml-2">
+          <ul className="list-disc list-inside space-y-2 ml-2">
             <li><strong>Paddle:</strong> Para procesamiento de pagos y cumplimiento fiscal.</li>
             <li><strong>Google Firebase/Auth:</strong> Para servicios de verificación de identidad.</li>
           </ul>
