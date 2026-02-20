@@ -14,25 +14,24 @@ const Hero: React.FC = () => {
     <section className="relative pt-12 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Stats Header */}
-        <div className="flex flex-wrap justify-center gap-8 mb-12 text-xs sm:text-sm font-mono text-gray-500 uppercase tracking-widest">
+        <div className="flex flex-wrap justify-center gap-8 mb-12 text-[10px] sm:text-sm font-mono text-gray-500 uppercase tracking-widest">
           {stats.map((stat, index) => (
             <div key={index} className="flex flex-col items-center">
-              <span className="text-brand-text font-bold text-lg sm:text-xl block mb-1">{stat.value}</span>
+              <span className="text-brand-text font-bold text-[12px] sm:text-xl block mb-1">{stat.value}</span>
               <span>{stat.label}</span>
             </div>
           ))}
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
-          desbloquea <br className="hidden md:block" />
-          <span className="text-gray-400">toda la</span> <span className="bg-brand-surface px-2 rounded-lg">bóveda</span>
+        <h1 className="text-5xl sm:text-6xl md:text-6xl font-black tracking-tighter mb-8 leading-[0.9]">
+          Copia, pega y domina cualquier <span className="text-gray-400" >modelo</span> de
+          <span className="bg-brand-surface px-1 rounded-lg">IA.</span>
         </h1>
 
         {/* Subheadline */}
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 mb-10 font-sans leading-relaxed">
-          Deja de adivinar. Empieza a crear. <br />
-          Obtén acceso ilimitado al mayor banco de prompts probados del mundo por solo $3.90/mes.
+          Optimiza tu flujo de trabajo con nuestra librería de ingeniería de prompts. Herramientas listas para usar que automatizan tus tareas de negocio en segundos.
         </p>
 
         {/* CTAs */}
