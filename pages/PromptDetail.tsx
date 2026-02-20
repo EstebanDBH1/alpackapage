@@ -116,7 +116,7 @@ const PromptDetail: React.FC = () => {
                     <div className="lg:col-span-5 space-y-8">
                         {prompt.image_url && (
                             <div className="relative border-2 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] bg-white">
-                                <div className="aspect-square overflow-hidden relative group">
+                                <div className=" overflow-hidden relative group">
                                     <img
                                         src={prompt.image_url}
                                         alt={prompt.title}
