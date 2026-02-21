@@ -18,7 +18,6 @@ const Home: React.FC = () => {
       <ValueProp />
       <Features />
       <HowItWorks />
-      <Testimonials />
       <Faq />
 
       {/* Bottom CTA similar to reference */}
