@@ -29,10 +29,10 @@ const Login: React.FC = () => {
               <Bot size={40} strokeWidth={1.5} />
             </div>
           </div>
-          <h2 className="text-3xl font-black tracking-tighter text-black mb-2 uppercase">
+          <h2 className="text-3xl font-black tracking-tighter text-black mb-2">
             bienvenido de nuevo
           </h2>
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">
+          <p className="font-mono text-xs text-gray-500 tracking-widest">
             acceso seguro a la bóveda
           </p>
         </div>
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
                   <div className="w-full border-t border-gray-200" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-brand-bg text-gray-400 font-mono text-[10px] uppercase">Con la confianza de 45.2k+ usuarios</span>
+                  <span className="px-2 bg-brand-bg text-gray-400 font-mono text-[10px]">Con la confianza de 45.2k+ usuarios</span>
                 </div>
               </div>
             </div>

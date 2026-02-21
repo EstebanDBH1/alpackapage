@@ -95,10 +95,10 @@ const Pricing: React.FC = () => {
         <div className="bg-brand-bg min-h-screen">
             {/* Header */}
             <div className="pt-24 pb-12 text-center max-w-4xl mx-auto px-4">
-                <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-[0.9] uppercase">
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-[0.9]">
                     un plan. <br /> poder ilimitado.
                 </h1>
-                <p className="font-mono text-gray-500 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest">
+                <p className="font-mono text-gray-500 text-sm md:text-base max-w-2xl mx-auto tracking-widest">
                     Deja de pagar por prompt. Desbloquea todo el banco por menos de un café.
                 </p>
             </div>
@@ -106,7 +106,7 @@ const Pricing: React.FC = () => {
             {/* Pricing Card Section */}
             <section className="pb-24 px-4">
                 <div className="max-w-md mx-auto bg-white border-2 border-black p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative transition-transform hover:-translate-y-1">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-black text-white px-4 py-1 font-mono text-xs uppercase tracking-widest">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-black text-white px-4 py-1 font-mono text-xs tracking-widest">
                         Más Popular
                     </div>
 
@@ -140,7 +140,7 @@ const Pricing: React.FC = () => {
                     <button
                         onClick={handleJoinClick}
                         disabled={isSubscribed}
-                        className={`w-full py-4 font-bold text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 ${isSubscribed
+                        className={`w-full py-4 font-bold text-sm tracking-wider transition-colors flex items-center justify-center gap-2 ${isSubscribed
                             ? 'bg-green-500 text-white cursor-default'
                             : 'bg-brand-text text-brand-bg hover:bg-gray-800'
                             }`}

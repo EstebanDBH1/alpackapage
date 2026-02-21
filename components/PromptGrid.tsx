@@ -33,7 +33,7 @@ const PromptGrid: React.FC = () => {
           </div>
 
           <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4 tracking-tighter">
-            VISTA PREVIA <ArrowRight size={16} className="ml-2" />
+            Vista Previa <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
 
@@ -99,7 +99,7 @@ const PromptGrid: React.FC = () => {
 
         <div className="mt-8 md:hidden flex justify-center px-4">
           <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text tracking-tighter">
-            VISTA PREVIA <ArrowRight size={16} className="ml-2" />
+            Vista Previa <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
       </div>

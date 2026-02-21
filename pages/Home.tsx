@@ -32,7 +32,7 @@ const Home: React.FC = () => {
           </p>
           <Link to="/pricing">
             <button className="bg-brand-text text-brand-bg px-12 py-4 rounded-none font-bold text-lg hover:scale-105 transition-transform shadow-xl tracking-widest">
-              OBTENER ACCESO ILIMITADO →
+              Obtener Acceso Ilimitado →
             </button>
           </Link>
         </div>

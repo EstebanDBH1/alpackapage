@@ -48,13 +48,13 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/prompts" className="text-sm font-bold hover:underline underline-offset-4 decoration-2">PROMPTS</Link>
-            <Link to="/pricing" className="text-sm font-bold hover:underline underline-offset-4 decoration-2">PRECIOS</Link>
+            <Link to="/prompts" className="text-sm font-bold hover:underline underline-offset-4 decoration-2">Prompts</Link>
+            <Link to="/pricing" className="text-sm font-bold hover:underline underline-offset-4 decoration-2">Precios</Link>
 
             {/* User Actions */}
             {user && (
               <Link to="/dashboard" className="text-sm font-bold hover:underline underline-offset-4 decoration-2 flex items-center gap-2">
-                <User size={16} /> MI CUENTA
+                <User size={16} /> Mi Cuenta
               </Link>
             )}
 
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
                 onClick={handleLoginClick}
                 className="bg-brand-text text-brand-bg px-6 py-2 rounded-sm font-bold text-sm hover:opacity-80 transition-opacity"
               >
-                OBTENER ACCESO ($3.90/mes)
+                Obtener Acceso ($3.90/mes)
               </button>
             )}
           </div>
@@ -84,11 +84,11 @@ const Navbar: React.FC = () => {
       {isOpen && (
         <div className="md:hidden bg-brand-bg border-b border-brand-surface absolute w-full">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
-            <Link to="/prompts" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>PROMPTS</Link>
-            <Link to="/pricing" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>PRECIOS</Link>
+            <Link to="/prompts" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Prompts</Link>
+            <Link to="/pricing" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Precios</Link>
 
             {user && (
-              <Link to="/dashboard" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>MI CUENTA</Link>
+              <Link to="/dashboard" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Mi Cuenta</Link>
             )}
 
             {!isSubscribed && (
@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
                   onClick={handleLoginClick}
                   className="bg-brand-text text-brand-bg px-8 py-3 rounded-sm font-bold text-sm w-full"
                 >
-                  OBTENER ACCESO ($3.90/mes)
+                  Obtener Acceso ($3.90/mes)
                 </button>
               </div>
             )}

@@ -58,14 +58,14 @@ const Prompts: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-bg border border-brand-surface mb-8">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span className="text-xs font-mono font-bold tracking-widest text-gray-500 uppercase">
+                        <span className="text-xs font-mono font-bold tracking-widest text-gray-500">
                             BASE DE DATOS ACTUALIZADA DIARIAMENTE
                         </span>
                     </div>
 
                     <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6">
-                        ARCHIVO <br className="hidden md:block" />
-                        <span className="text-gray-300">DE</span> PROMPTS
+                        Archivo <br className="hidden md:block" />
+                        <span className="text-gray-300">de</span> prompts
                     </h1>
 
                     <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-500 mb-10 font-sans leading-relaxed">
@@ -105,7 +105,7 @@ const Prompts: React.FC = () => {
                         <select
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="bg-white border border-gray-200 text-gray-900 text-xs rounded-lg focus:ring-black focus:border-black block w-full p-2.5 font-mono uppercase"
+                            className="bg-white border border-gray-200 text-gray-900 text-xs rounded-lg focus:ring-black focus:border-black block w-full p-2.5 font-mono"
                         >
                             {categories.map((cat) => (
                                 <option key={cat} value={cat}>
@@ -121,7 +121,7 @@ const Prompts: React.FC = () => {
                             <button
                                 key={tier}
                                 onClick={() => setSelectedTier(tier)}
-                                className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors
+                                className={`px-3 py-1.5 text-xs font-bold tracking-wider transition-colors
                                 ${selectedTier === tier
                                         ? 'text-black underline decoration-2 underline-offset-4'
                                         : 'text-gray-400 hover:text-gray-600'}`}
@@ -137,8 +137,8 @@ const Prompts: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex justify-between items-end mb-8">
                     <div>
-                        <h2 className="text-2xl font-black tracking-tight uppercase">Recientes</h2>
-                        <p className="text-xs font-mono text-gray-500 uppercase tracking-widest mt-1">mostrando {filteredPrompts.length} resultados</p>
+                        <h2 className="text-2xl font-black tracking-tight">Recientes</h2>
+                        <p className="text-xs font-mono text-gray-500 tracking-widest mt-1">mostrando {filteredPrompts.length} resultados</p>
                     </div>
                 </div>
 
@@ -174,11 +174,11 @@ const Prompts: React.FC = () => {
                                         />
                                         <div className="absolute top-4 right-4 z-10">
                                             {prompt.is_premium ? (
-                                                <span className="bg-black text-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
+                                                <span className="bg-black text-white px-3 py-1.5 text-[10px] font-bold tracking-wider flex items-center gap-1 shadow-lg">
                                                     <Lock size={12} /> Pro
                                                 </span>
                                             ) : (
-                                                <span className="bg-white text-black border border-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                                <span className="bg-white text-black border border-black px-3 py-1.5 text-[10px] font-bold tracking-wider flex items-center gap-1 shadow-sm">
                                                     <Unlock size={12} /> Free
                                                 </span>
                                             )}
@@ -200,17 +200,17 @@ const Prompts: React.FC = () => {
 
                                     <div className="pt-5 border-t border-gray-100 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[11px] font-black bg-brand-bg border border-brand-surface px-2.5 py-1 text-gray-500 uppercase tracking-widest rounded shadow-sm">
+                                            <span className="text-[11px] font-black bg-brand-bg border border-brand-surface px-2.5 py-1 text-gray-500 tracking-widest rounded shadow-sm">
                                                 {prompt.category || 'General'}
                                             </span>
                                             {prompt.is_premium ? (
-                                                <span className="text-[10px] font-bold text-black border border-black px-2 py-0.5 uppercase tracking-tighter">PRO</span>
+                                                <span className="text-[10px] font-bold text-black border border-black px-2 py-0.5 tracking-tighter">PRO</span>
                                             ) : (
-                                                <span className="text-[10px] font-bold text-green-600 border border-green-600 px-2 py-0.5 uppercase tracking-tighter">FREE</span>
+                                                <span className="text-[10px] font-bold text-green-600 border border-green-600 px-2 py-0.5 tracking-tighter">FREE</span>
                                             )}
                                         </div>
-                                        <div className="flex items-center text-xs font-black tracking-widest uppercase group-hover:translate-x-1 transition-transform">
-                                            EXPLORAR <span className="ml-1 text-lg">→</span>
+                                        <div className="flex items-center text-xs font-black tracking-widest group-hover:translate-x-1 transition-transform">
+                                            Explorar <span className="ml-1 text-lg">→</span>
                                         </div>
                                     </div>
                                 </div>

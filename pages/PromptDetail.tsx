@@ -123,7 +123,7 @@ const PromptDetail: React.FC = () => {
                                         className="w-full h-full object-cover"
                                     />
                                     {prompt.is_premium && (
-                                        <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                                        <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-xs font-bold tracking-wider flex items-center gap-1">
                                             <Lock size={12} /> Premium
                                         </div>
                                     )}
@@ -133,7 +133,7 @@ const PromptDetail: React.FC = () => {
 
                         {/* Technical Specs / Parameters */}
                         <div className="bg-[#F5F3F1] p-6 rounded-none">
-                            <h3 className="font-bold text-xs uppercase tracking-widest mb-4 text-gray-500 border-b border-gray-300 pb-2">
+                            <h3 className="font-bold text-xs tracking-widest mb-4 text-gray-500 border-b border-gray-300 pb-2">
                                 Especificaciones
                             </h3>
                             <div className="space-y-3 font-mono text-sm">
@@ -157,16 +157,16 @@ const PromptDetail: React.FC = () => {
                     <div className="lg:col-span-7 space-y-8">
                         <div>
                             <div className="flex flex-wrap gap-2 mb-4">
-                                <span className="bg-black text-white px-2 py-1 text-[10px] font-mono uppercase tracking-wider">
+                                <span className="bg-black text-white px-2 py-1 text-[10px] font-mono tracking-wider">
                                     {prompt.category}
                                 </span>
                                 {!prompt.image_url && prompt.is_premium && (
-                                    <span className="bg-black text-white px-2 py-1 text-[10px] font-mono uppercase tracking-wider flex items-center gap-1">
+                                    <span className="bg-black text-white px-2 py-1 text-[10px] font-mono tracking-wider flex items-center gap-1">
                                         <Lock size={10} /> Premium
                                     </span>
                                 )}
                             </div>
-                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6 uppercase">
+                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6">
                                 {prompt.title}
                             </h1>
                             <p className="text-gray-600 font-sans text-lg leading-relaxed border-l-4 border-brand-surface pl-6">
@@ -177,7 +177,7 @@ const PromptDetail: React.FC = () => {
                         {/* THE PROMPT BOX */}
                         <div className="relative">
                             <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                                <h3 className="font-bold text-sm tracking-wider flex items-center gap-2">
                                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                                     Prompt
                                 </h3>
@@ -212,7 +212,7 @@ const PromptDetail: React.FC = () => {
                                                     Este prompt está reservado para miembros del banco. Desbloquea acceso completo ahora.
                                                 </p>
                                                 <Link to="/pricing">
-                                                    <button className="bg-white text-black px-6 py-3 font-bold text-sm hover:bg-gray-200 transition-colors uppercase tracking-wider">
+                                                    <button className="bg-white text-black px-6 py-3 font-bold text-sm hover:bg-gray-200 transition-colors tracking-wider">
                                                         Obtener Acceso Pro
                                                     </button>
                                                 </Link>

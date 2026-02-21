@@ -175,10 +175,10 @@ const Dashboard: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h1 className="text-3xl font-black tracking-tighter mb-2 uppercase">
+                            <h1 className="text-3xl font-black tracking-tighter mb-2">
                                 Hola, {user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'}
                             </h1>
-                            <p className="font-mono text-gray-500 text-xs uppercase tracking-widest">
+                            <p className="font-mono text-gray-500 text-xs tracking-widest">
                                 Gestiona tu acceso a la bóveda
                             </p>
                         </div>
@@ -222,22 +222,22 @@ const Dashboard: React.FC = () => {
 
                         {/* Profile Actions */}
                         <div className="bg-white border border-gray-200 p-6">
-                            <h3 className="font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <h3 className="font-bold text-sm tracking-wider mb-6 flex items-center gap-2">
                                 <User size={16} /> Tu Perfil
                             </h3>
                             <div className="space-y-4 mb-6">
                                 <div>
-                                    <label className="block text-[10px] font-mono text-gray-400 uppercase mb-1">Email</label>
+                                    <label className="block text-[10px] font-mono text-gray-400 mb-1">Email</label>
                                     <div className="font-sans font-medium break-all">{user?.email}</div>
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-mono text-gray-400 uppercase mb-1">Proveedor</label>
+                                    <label className="block text-[10px] font-mono text-gray-400 mb-1">Proveedor</label>
                                     <div className="font-sans text-sm text-gray-500">Google Auth</div>
                                 </div>
                             </div>
                             <button
                                 onClick={handleLogout}
-                                className="w-full border border-black text-black py-3 text-xs font-bold uppercase hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+                                className="w-full border border-black text-black py-3 text-xs font-bold hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
                             >
                                 <LogOut size={14} /> Cerrar Sesión
                             </button>
@@ -265,7 +265,7 @@ const Dashboard: React.FC = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                                 <div>
-                                    <label className="block text-[10px] font-mono text-gray-400 uppercase mb-2">Próxima Factura</label>
+                                    <label className="block text-[10px] font-mono text-gray-400 mb-2">Próxima Factura</label>
                                     <div className="flex items-center gap-2 font-bold">
                                         <Clock size={18} className="text-gray-400" />
                                         {isActive && subscription?.current_period_end
@@ -277,7 +277,7 @@ const Dashboard: React.FC = () => {
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-mono text-gray-400 uppercase mb-2">Método de Pago</label>
+                                    <label className="block text-[10px] font-mono text-gray-400 mb-2">Método de Pago</label>
                                     <div className="flex items-center gap-2 font-bold">
                                         <CreditCard size={18} className="text-gray-400" />
                                         {isActive ? 'Paddle' : '-'}
@@ -295,7 +295,7 @@ const Dashboard: React.FC = () => {
                                         <button
                                             onClick={handleManageSubscription}
                                             disabled={updating}
-                                            className="flex-1 bg-black text-white py-4 font-bold text-sm uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+                                            className="flex-1 bg-black text-white py-4 font-bold text-sm tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
                                             <Settings size={16} /> {updating ? 'Procesando...' : 'Gestionar en Paddle'}
                                         </button>
@@ -303,7 +303,7 @@ const Dashboard: React.FC = () => {
                                         <button
                                             onClick={handleCancelSubscription}
                                             disabled={updating}
-                                            className="flex-1 bg-white border border-red-200 text-red-600 py-4 font-bold text-sm uppercase tracking-wider hover:bg-red-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                                            className="flex-1 bg-white border border-red-200 text-red-600 py-4 font-bold text-sm tracking-wider hover:bg-red-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
                                             <AlertTriangle size={16} /> {updating ? 'Procesando...' : 'Cancelar Suscripción'}
                                         </button>
@@ -311,7 +311,7 @@ const Dashboard: React.FC = () => {
                                 ) : (
                                     <button
                                         onClick={() => navigate('/pricing')}
-                                        className="flex-1 bg-black text-white py-4 font-bold text-sm uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
+                                        className="flex-1 bg-black text-white py-4 font-bold text-sm tracking-wider hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
                                     >
                                         <CheckCircle size={16} /> Reactivar / Suscribirse
                                     </button>
@@ -329,7 +329,7 @@ const Dashboard: React.FC = () => {
 
                         {/* Billing History (Mocked for now as we don't store history in DB, only current sub) */}
                         <div className="bg-white border border-gray-200 p-8 opacity-50 pointer-events-none">
-                            <h3 className="font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+                            <h3 className="font-bold text-sm tracking-wider mb-6 flex items-center gap-2">
                                 <FileText size={16} /> Historial de Facturas (Próximamente)
                             </h3>
                             <p className="text-sm">Disponible en el portal de Paddle.</p>

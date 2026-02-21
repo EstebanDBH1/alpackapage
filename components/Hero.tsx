@@ -38,12 +38,12 @@ const Hero: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <Link to="/pricing" className="w-full sm:w-auto">
             <button className="w-full bg-brand-text text-brand-bg px-8 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-gray-200 tracking-tight">
-              ACCESO ILIMITADO <ArrowRight size={20} />
+              Acceso Ilimitado <ArrowRight size={20} />
             </button>
           </Link>
           <Link to="/prompts" className="w-full sm:w-auto">
             <button className="w-full bg-brand-surface text-brand-text border border-gray-200 px-8 py-4 rounded-md font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 tracking-tight">
-              VER PACK DE MUESTRA <Lock size={16} className="text-gray-400" />
+              Ver Pack de Muestra <Lock size={16} className="text-gray-400" />
             </button>
           </Link>
         </div>
