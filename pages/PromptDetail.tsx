@@ -100,7 +100,7 @@ const PromptDetail: React.FC = () => {
             <Helmet>
                 <title>{`${prompt.title} | Prompt Engineering | Alpacka.ai`}</title>
                 <meta name="description" content={prompt.description || `Prompt optimizado para ${prompt.category}. Copia y pega este prompt en ChatGPT o Claude.`} />
-                <link rel="canonical" href={`https://alpacka.ai/prompts/${id}`} />
+                <link rel="canonical" href={`https://alpackaai.xyz/prompts/${id}`} />
             </Helmet>
             {/* Breadcrumb / Back Navigation */}
             <div className="border-b border-brand-surface bg-white/50 backdrop-blur sticky top-20 z-40">

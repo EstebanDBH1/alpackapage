@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alpacka.ai/sitemap.xml
+Sitemap: https://alpackaai.xyz/sitemap.xml

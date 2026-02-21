@@ -97,7 +97,7 @@ const Pricing: React.FC = () => {
             <Helmet>
                 <title>Planes y Precios | Alpacka.ai</title>
                 <meta name="description" content="Un solo plan. Acceso total. Suscríbete por solo $3.90/mes y obtén acceso ilimitado a nuestra base de datos de prompts." />
-                <link rel="canonical" href="https://alpacka.ai/pricing" />
+                <link rel="canonical" href="https://alpackaai.xyz/pricing" />
             </Helmet>
             {/* Header */}
             <div className="pt-24 pb-12 text-center max-w-4xl mx-auto px-4">

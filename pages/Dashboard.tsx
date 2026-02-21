@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
                 }
             });
         } else {
-            alert('No se pudo encontrar el portal de gestión. Por favor refresca la página o contacta a soporte@alpacka.ai');
+            alert('No se pudo encontrar el portal de gestión. Por favor refresca la página o contacta a soporte@alpackaai.xyz');
         }
     };
 

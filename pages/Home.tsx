@@ -16,7 +16,7 @@ const Home: React.FC = () => {
       <Helmet>
         <title>Alpacka.ai | Banco de Prompts para IA e Ingeniería de Prompts</title>
         <meta name="description" content="Consigue los mejores prompts para ChatGPT, Claude y Midjourney. Biblioteca optimizada para automatizar negocios y mejorar productividad." />
-        <link rel="canonical" href="https://alpacka.ai/" />
+        <link rel="canonical" href="https://alpackaai.xyz/" />
       </Helmet>
       <Hero />
       <TrustBar />

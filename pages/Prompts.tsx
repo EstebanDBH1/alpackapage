@@ -56,7 +56,7 @@ const Prompts: React.FC = () => {
             <Helmet>
                 <title>Librería de Prompts | Alpacka.ai</title>
                 <meta name="description" content="Explora más de 1.2M+ de prompts para ChatGPT, Claude y Midjourney. Biblioteca optimizada para automatizar negocios e ingeniería de prompts." />
-                <link rel="canonical" href="https://alpacka.ai/prompts" />
+                <link rel="canonical" href="https://alpackaai.xyz/prompts" />
             </Helmet>
 
             {/* HERO SECTION */}
