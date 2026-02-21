@@ -59,10 +59,7 @@ const Hero: React.FC = () => {
           utilizado por equipos en
         </p>
 
-
         {
-
-
           /*
           
           <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale contrast-200">
