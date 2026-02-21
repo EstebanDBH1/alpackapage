@@ -6,8 +6,8 @@ const Features: React.FC = () => {
     <section className="py-24 bg-brand-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4 uppercase">tareas reales. resultados reales.</h2>
-          <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">esto es lo que la gente genera con PromptBank</p>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4">tareas reales. resultados reales.</h2>
+          <p className="font-mono text-xs text-gray-500 tracking-widest">esto es lo que la gente genera con PromptBank</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

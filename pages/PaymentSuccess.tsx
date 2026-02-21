@@ -30,7 +30,7 @@ const PaymentSuccess: React.FC = () => {
                 </p>
 
                 <Link to="/dashboard" className="block w-full">
-                    <button className="w-full bg-black text-white py-4 font-bold text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                    <button className="w-full bg-black text-white py-4 font-bold text-sm tracking-wider hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                         Ir al Dashboard <ArrowRight size={16} />
                     </button>
                 </Link>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="mb-12 border-l-2 border-brand-surface pl-6">
-    <h2 className="text-xl font-bold mb-4 uppercase tracking-wider">{title}</h2>
+    <h2 className="text-xl font-bold mb-4 tracking-wider">{title}</h2>
     <div className="text-sm md:text-base text-gray-600 font-sans leading-relaxed space-y-4">
       {children}
     </div>
@@ -14,10 +14,10 @@ const Privacy: React.FC = () => {
     <div className="bg-brand-bg min-h-screen py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter mb-4 uppercase">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter mb-4">
             política de privacidad
           </h1>
-          <p className="font-mono text-gray-500 text-xs uppercase tracking-widest">
+          <p className="font-mono text-gray-500 text-xs tracking-widest">
             Última actualización: 26 de Octubre, 2023
           </p>
         </div>

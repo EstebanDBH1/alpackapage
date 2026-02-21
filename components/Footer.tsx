@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 text-sm uppercase tracking-wider text-gray-500">Plataforma</h4>
+            <h4 className="font-bold mb-4 text-sm tracking-wider text-gray-500">Plataforma</h4>
             <ul className="space-y-3 font-mono text-sm">
               <li><Link to="/prompts" className="hover:text-gray-300">Librería de Prompts</Link></li>
               <li><Link to="/pricing" className="hover:text-gray-300">Precios</Link></li>
@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 text-sm uppercase tracking-wider text-gray-500">Soporte</h4>
+            <h4 className="font-bold mb-4 text-sm tracking-wider text-gray-500">Soporte</h4>
             <ul className="space-y-3 font-mono text-sm">
               <li><a href="#" className="hover:text-gray-300">Ayuda</a></li>
               <li><a href="#" className="hover:text-gray-300">Contacto</a></li>

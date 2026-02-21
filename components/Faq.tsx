@@ -31,7 +31,7 @@ const Faq: React.FC = () => {
   return (
     <section className="py-24 bg-brand-bg">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-center mb-16 uppercase">preguntas frecuentes</h2>
+        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-center mb-16">preguntas frecuentes</h2>
         <div className="space-y-4">
           {faqData.map((item, index) => (
             <div key={index} className="border-b border-gray-200">

@@ -28,11 +28,11 @@ const PromptGrid: React.FC = () => {
       <div className="w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex justify-between items-end">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 uppercase">dentro de la bóveda</h2>
-            <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">accede a estos y miles más con tu suscripción.</p>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2">dentro de la bóveda</h2>
+            <p className="font-mono text-xs text-gray-500 tracking-widest">accede a estos y miles más con tu suscripción.</p>
           </div>
 
-          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4 uppercase tracking-tighter">
+          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4 tracking-tighter">
             VISTA PREVIA <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
@@ -66,7 +66,7 @@ const PromptGrid: React.FC = () => {
                     <div className="absolute top-2 right-2 z-10">
                       <span className={`bg-black/70 backdrop-blur-sm text-white px-2 py-1 flex items-center gap-1`}>
                         <Lock size={12} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">{prompt.is_premium ? 'PRO' : 'FREE'}</span>
+                        <span className="text-[10px] font-bold tracking-wider"> {prompt.is_premium ? 'PRO' : 'FREE'} </span>
                       </span>
                     </div>
                   </div>
@@ -84,10 +84,10 @@ const PromptGrid: React.FC = () => {
                   </p>
 
                   <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-2 text-[10px]">
-                    <span className="font-black bg-[#F5F3F1] px-2 py-1 rounded-none text-gray-500 font-mono uppercase tracking-widest border border-gray-100">
+                    <span className="font-black bg-[#F5F3F1] px-2 py-1 rounded-none text-gray-500 font-mono tracking-widest border border-gray-100">
                       {prompt.category || 'General'}
                     </span>
-                    <span className={`font-bold uppercase tracking-wider ${prompt.is_premium ? 'text-black' : 'text-green-600'}`}>
+                    <span className={`font-bold tracking-wider ${prompt.is_premium ? 'text-black' : 'text-green-600'}`}>
                       {prompt.is_premium ? 'PRO' : 'FREE'}
                     </span>
                   </div>
@@ -98,7 +98,7 @@ const PromptGrid: React.FC = () => {
         </div>
 
         <div className="mt-8 md:hidden flex justify-center px-4">
-          <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text uppercase tracking-tighter">
+          <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text tracking-tighter">
             VISTA PREVIA <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>

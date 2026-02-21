@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
     <section className="relative pt-12 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Stats Header */}
-        <div className="flex flex-wrap justify-center gap-8 mb-12 text-[10px] sm:text-sm font-mono text-gray-500 uppercase tracking-widest">
+        <div className="flex flex-wrap justify-center gap-8 mb-12 text-[10px] sm:text-sm font-mono text-gray-500 tracking-widest">
           {stats.map((stat, index) => (
             <div key={index} className="flex flex-col items-center">
               <span className="text-brand-text font-bold text-[12px] sm:text-xl block mb-1">{stat.value}</span>
@@ -37,25 +37,25 @@ const Hero: React.FC = () => {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <Link to="/pricing" className="w-full sm:w-auto">
-            <button className="w-full bg-brand-text text-brand-bg px-8 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-gray-200 uppercase tracking-tight">
+            <button className="w-full bg-brand-text text-brand-bg px-8 py-4 rounded-md font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-gray-200 tracking-tight">
               ACCESO ILIMITADO <ArrowRight size={20} />
             </button>
           </Link>
           <Link to="/prompts" className="w-full sm:w-auto">
-            <button className="w-full bg-brand-surface text-brand-text border border-gray-200 px-8 py-4 rounded-md font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 uppercase tracking-tight">
+            <button className="w-full bg-brand-surface text-brand-text border border-gray-200 px-8 py-4 rounded-md font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 tracking-tight">
               VER PACK DE MUESTRA <Lock size={16} className="text-gray-400" />
             </button>
           </Link>
         </div>
 
-        <div className="mt-8 text-xs font-mono text-gray-400 uppercase tracking-widest">
+        <div className="mt-8 text-xs font-mono text-gray-400 tracking-widest">
           cancela cuando quieras. <Link to="/login" className="text-brand-text hover:underline">acceso instantáneo al registrarte →</Link>
         </div>
       </div>
 
       {/* Featured In */}
       <div className="mt-24 border-t border-brand-surface pt-12">
-        <p className="text-center font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-8">
+        <p className="text-center font-mono text-[10px] text-gray-400 tracking-widest mb-8">
           utilizado por equipos en
         </p>
 

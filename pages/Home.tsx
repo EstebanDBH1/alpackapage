@@ -24,14 +24,14 @@ const Home: React.FC = () => {
       {/* Bottom CTA similar to reference */}
       <section className="bg-brand-bg py-24 border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-6 uppercase">
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-6">
             accede al <span className="underline decoration-4 underline-offset-4 decoration-black">banco completo</span> hoy
           </h2>
-          <p className="font-mono text-sm text-gray-500 mb-10 uppercase tracking-widest">
+          <p className="font-mono text-sm text-gray-500 mb-10 tracking-widest">
             un precio simple. $3.90/mes. cancela cuando quieras.
           </p>
           <Link to="/pricing">
-            <button className="bg-brand-text text-brand-bg px-12 py-4 rounded-none font-bold text-lg hover:scale-105 transition-transform shadow-xl uppercase tracking-widest">
+            <button className="bg-brand-text text-brand-bg px-12 py-4 rounded-none font-bold text-lg hover:scale-105 transition-transform shadow-xl tracking-widest">
               OBTENER ACCESO ILIMITADO →
             </button>
           </Link>

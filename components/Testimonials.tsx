@@ -30,8 +30,8 @@ const Testimonials: React.FC = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-16">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4 uppercase">lo que dicen de nosotros</h2>
-                    <p className="font-mono text-xs text-gray-500 uppercase tracking-widest">+50,000 usuarios optimizando su tiempo</p>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4">lo que dicen de nosotros</h2>
+                    <p className="font-mono text-xs text-gray-500 tracking-widest">+50,000 usuarios optimizando su tiempo</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -51,7 +51,7 @@ const Testimonials: React.FC = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-sm tracking-tight">{t.name}</h4>
-                                    <p className="text-[10px] font-mono text-gray-400 uppercase">{t.role}</p>
+                                    <p className="text-[10px] font-mono text-gray-400">{t.role}</p>
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ const ValueProp: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-black tracking-tighter mb-8 uppercase leading-none">
+                        <h2 className="text-2xl md:text-3xl font-black tracking-tighter mb-8 leading-none">
                             ¿por qué alpackaai? <br />
                             <span className="text-gray-500">el estándar dorado de la ingeniería de prompts.</span>
                         </h2>
@@ -24,7 +24,7 @@ const ValueProp: React.FC = () => {
                                     <Clock size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold mb-1 uppercase text-sm tracking-wide">ahorro de tiempo</h4>
+                                    <h4 className="font-bold mb-1 text-sm tracking-wide">ahorro de tiempo</h4>
                                     <p className="text-gray-500 text-xs">Pasa de horas a segundos en la creación de prompts complejos.</p>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@ const ValueProp: React.FC = () => {
                                     <Shield size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold mb-1 uppercase text-sm tracking-wide">calidad verificada</h4>
+                                    <h4 className="font-bold mb-1 text-sm tracking-wide">calidad verificada</h4>
                                     <p className="text-gray-500 text-xs">Cada prompt ha sido probado en Múltiples iteraciones antes de publicarse.</p>
                                 </div>
                             </div>
@@ -54,8 +54,8 @@ const ValueProp: React.FC = () => {
                                     <p className="text-brand-surface">actúas como un experto arquitecto de datos...</p>
                                     <p className="text-gray-400">analiza los siguientes CSVs y genera un reporte ejecutivo que...</p>
                                     <div className="pt-4 flex justify-between items-center border-t border-white/5 mt-8">
-                                        <span className="text-[10px] uppercase tracking-widest text-gray-600">output esperado: óptimo</span>
-                                        <button className="bg-brand-surface text-brand-text px-4 py-1 rounded-full font-bold text-[10px] uppercase">copiar</button>
+                                        <span className="text-[10px] tracking-widest text-gray-600">output esperado: óptimo</span>
+                                        <button className="bg-brand-surface text-brand-text px-4 py-1 rounded-full font-bold text-[10px]">copiar</button>
                                     </div>
                                 </div>
                             </div>
@@ -63,8 +63,8 @@ const ValueProp: React.FC = () => {
                         {/* Floating Badge */}
                         <div className="absolute -bottom-6 -right-6 bg-brand-surface text-brand-text p-6 rounded-2xl shadow-2xl border-4 border-brand-text animate-bounce-slow">
                             <Sparkles size={24} className="mb-2" />
-                            <p className="font-black text-xl leading-none uppercase">9.8/10</p>
-                            <p className="text-[10px] font-mono uppercase tracking-tighter">calificación promedio</p>
+                            <p className="font-black text-xl leading-none">9.8/10</p>
+                            <p className="text-[10px] font-mono tracking-tighter">calificación promedio</p>
                         </div>
                     </div>
                 </div>

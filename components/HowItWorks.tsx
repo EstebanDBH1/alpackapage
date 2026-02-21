@@ -28,7 +28,7 @@ const HowItWorks: React.FC = () => {
     <section className="py-24 bg-[#111111] text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-brand-surface uppercase">cómo funciona</h2>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-brand-surface">cómo funciona</h2>
         </div>
 
         <div className="space-y-4">
