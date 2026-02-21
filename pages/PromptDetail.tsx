@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, ChevronLeft, AlertCircle, Loader2 } from 'lucide-react';
 import Skeleton from '../components/Skeleton';
+import { Helmet } from 'react-helmet-async';
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -96,6 +97,11 @@ const PromptDetail: React.FC = () => {
 
     return (
         <div className="bg-brand-bg min-h-screen pb-24">
+            <Helmet>
+                <title>{`${prompt.title} | Prompt Engineering | Alpacka.ai`}</title>
+                <meta name="description" content={prompt.description || `Prompt optimizado para ${prompt.category}. Copia y pega este prompt en ChatGPT o Claude.`} />
+                <link rel="canonical" href={`https://alpacka.ai/prompts/${id}`} />
+            </Helmet>
             {/* Breadcrumb / Back Navigation */}
             <div className="border-b border-brand-surface bg-white/50 backdrop-blur sticky top-20 z-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

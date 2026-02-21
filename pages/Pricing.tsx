@@ -4,6 +4,7 @@ import { Check, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Faq from '../components/Faq';
 import { supabase } from '../lib/supabase';
+import { Helmet } from 'react-helmet-async';
 
 const Pricing: React.FC = () => {
     const navigate = useNavigate();
@@ -93,6 +94,11 @@ const Pricing: React.FC = () => {
 
     return (
         <div className="bg-brand-bg min-h-screen">
+            <Helmet>
+                <title>Planes y Precios | Alpacka.ai</title>
+                <meta name="description" content="Un solo plan. Acceso total. Suscríbete por solo $3.90/mes y obtén acceso ilimitado a nuestra base de datos de prompts." />
+                <link rel="canonical" href="https://alpacka.ai/pricing" />
+            </Helmet>
             {/* Header */}
             <div className="pt-24 pb-12 text-center max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-[0.9]">

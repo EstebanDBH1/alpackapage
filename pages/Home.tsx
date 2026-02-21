@@ -8,10 +8,16 @@ import Faq from '../components/Faq';
 import TrustBar from '../components/TrustBar';
 import Testimonials from '../components/Testimonials';
 import ValueProp from '../components/ValueProp';
+import { Helmet } from 'react-helmet-async';
 
 const Home: React.FC = () => {
   return (
     <div className="w-full">
+      <Helmet>
+        <title>Alpacka.ai | Banco de Prompts para IA e Ingeniería de Prompts</title>
+        <meta name="description" content="Consigue los mejores prompts para ChatGPT, Claude y Midjourney. Biblioteca optimizada para automatizar negocios y mejorar productividad." />
+        <link rel="canonical" href="https://alpacka.ai/" />
+      </Helmet>
       <Hero />
       <TrustBar />
       <PromptGrid />

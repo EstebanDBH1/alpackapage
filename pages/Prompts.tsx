@@ -4,6 +4,7 @@ import { Prompt } from '../types';
 import { BadgeCheck, Lock, Search, Filter, Unlock, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Skeleton from '../components/Skeleton';
+import { Helmet } from 'react-helmet-async';
 
 const TIERS = ['Todos', 'Gratis', 'Premium'];
 
@@ -52,6 +53,11 @@ const Prompts: React.FC = () => {
 
     return (
         <div className="bg-brand-bg min-h-screen pb-24">
+            <Helmet>
+                <title>Librería de Prompts | Alpacka.ai</title>
+                <meta name="description" content="Explora más de 1.2M+ de prompts para ChatGPT, Claude y Midjourney. Biblioteca optimizada para automatizar negocios e ingeniería de prompts." />
+                <link rel="canonical" href="https://alpacka.ai/prompts" />
+            </Helmet>
 
             {/* HERO SECTION */}
             <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 overflow-hidden border-b border-gray-200 bg-white">
