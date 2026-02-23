@@ -31,8 +31,8 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-bold mb-4 text-sm tracking-wider text-gray-500">Soporte</h4>
             <ul className="space-y-3 font-mono text-sm">
-              <li><a href="#" className="hover:text-gray-300">Ayuda</a></li>
-              <li><a href="#" className="hover:text-gray-300">Contacto</a></li>
+              <li><a href="#" className="hover:text-gray-300"></a></li>
+              <li><a href="#" className="hover:text-gray-300"></a></li>
               <li><Link to="/terms" className="hover:text-gray-300">Términos de Servicio</Link></li>
               <li><Link to="/privacy" className="hover:text-gray-300">Política de Privacidad</Link></li>
             </ul>
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-mono text-gray-600">
-          <p>© 2025. Todos los derechos reservados.</p>
+          <p>© 2026. Todos los derechos reservados.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <span></span>
             <span></span>

@@ -4,22 +4,30 @@ import { Plus, Minus } from 'lucide-react';
 
 const faqData: FaqItem[] = [
   {
-    question: "¿cuánto cuesta?",
-    answer: "El acceso a PromptBank tiene una tarifa plana de $3.90 USD por mes. Esto te otorga acceso ilimitado a cada prompt en nuestra base de datos."
+    "question": "¿Cuál es el costo y qué incluye?",
+    "answer": "Por solo $3.99 USD al mes, desbloqueas el acceso total a nuestra librería. No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más."
   },
   {
-    question: "¿puedo cancelar mi suscripción?",
-    answer: "Sí, puedes cancelar tu suscripción en cualquier momento desde tu panel de control. Mantendrás el acceso hasta el final de tu ciclo de facturación."
+    "question": "¿Realmente funcionan estos prompts?",
+    "answer": "Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento."
   },
   {
-    question: "¿funcionan con GPT-4?",
-    answer: "Sí. Cada prompt está etiquetado con la versión específica del modelo para la que fue optimizado (ej: GPT-4, Midjourney v6, Stable Diffusion XL)."
+    "question": "¿Con qué modelos de IA puedo usarlos?",
+    "answer": "Están diseñados para brillar en los modelos más potentes como GPT-5, Claude 3 y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E."
   },
   {
-    question: "¿puedo contribuir con prompts?",
-    answer: "Actualmente, nuestro banco es curado por expertos internos y socios seleccionados para asegurar la máxima calidad. No aceptamos envíos públicos por el momento."
+    "question": "¿Puedo cancelar si ya no los necesito?",
+    "answer": "Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado."
+  },
+  {
+    "question": "¿Actualizan el banco de prompts?",
+    "answer": "¡Cada semana! Nuestro equipo de expertos añade nuevos prompts basados en las tendencias del mercado y las peticiones de nuestra comunidad para que nunca te quedes atrás."
+  },
+  {
+    "question": "¿Puedo sugerir un prompt que no esté?",
+    "answer": "¡Nos encantaría! Aunque nuestra curaduría es interna para mantener la calidad premium, escuchamos a nuestros suscriptores. Si necesitas un prompt específico, escríbenos y nuestro equipo lo diseñará para la próxima actualización."
   }
-];
+]
 
 const Faq: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

@@ -2,33 +2,33 @@ import React from 'react';
 
 const steps = [
   {
-    num: '1',
-    title: 'únete al banco',
-    desc: 'Suscríbete por $3.90/mes. Sin cuotas ocultas. Cancela cuando quieras.'
+    "num": "1",
+    "title": "Activa tu acceso",
+    "desc": "Suscríbete por solo $3.99/mes. Sin contratos ni letras pequeñas. Libertad total para cancelar."
   },
   {
-    num: '2',
-    title: 'explora y busca',
-    desc: 'Accede a miles de prompts verificados para los principales modelos de IA.'
+    "num": "2",
+    "title": "Encuentra la solución",
+    "desc": "Navega por una librería curada de prompts de alto nivel, optimizados para los modelos de IA más potentes."
   },
   {
-    num: '3',
-    title: 'copia el código',
-    desc: 'Copia con un clic la cadena exacta, prompts negativos y parámetros.'
+    "num": "3",
+    "title": "Copia con precisión",
+    "desc": "Obtén con un clic la estructura exacta, parámetros técnicos y las instrucciones que otros ignoran."
   },
   {
-    num: '4',
-    title: 'despliega',
-    desc: 'Pégalo en ChatGPT, Midjourney o tu API para resultados instantáneos.'
+    "num": "4",
+    "title": "Domina la IA",
+    "desc": "Pégalo en ChatGPT, Claude o Midjourney y mira cómo la IA entrega resultados profesionales al instante."
   }
-];
+]
 
 const HowItWorks: React.FC = () => {
   return (
     <section className="py-24 bg-[#111111] text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-brand-surface">cómo funciona</h2>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-brand-surface">¿cómo funciona?</h2>
         </div>
 
         <div className="space-y-4">

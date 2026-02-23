@@ -18,33 +18,33 @@ const PromptGrid: React.FC = () => {
     fetchPrompts();
   }, []);
 
-  // Marquee should loop seamlessly, so duplicate the array
   const marqueePrompts = [...prompts, ...prompts, ...prompts];
 
   if (prompts.length === 0) return null;
 
   return (
-    <section className="bg-[#F5F3F1] py-24 overflow-hidden">
+    <section className="bg-zinc-50 py-24 overflow-hidden border-y border-zinc-200">
       <div className="w-full">
+        {/* Header de la sección */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex justify-between items-end">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2">dentro de la bóveda</h2>
-            <p className="font-mono text-xs text-gray-500 tracking-widest">accede a estos y miles más con tu suscripción.</p>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 text-zinc-900 lowercase">dentro de la bóveda</h2>
+            <p className="font-mono text-[10px] md:text-xs text-zinc-400 tracking-[0.2em] uppercase">accede a estos y miles más con tu suscripción</p>
           </div>
 
-          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-brand-text hover:translate-x-1 transition-transform ml-4 tracking-tighter">
-            Vista Previa <ArrowRight size={16} className="ml-2" />
+          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-zinc-900 hover:translate-x-1 transition-transform tracking-tighter lowercase">
+            vista previa <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
 
         {/* Marquee Container */}
         <div className="relative w-full overflow-hidden">
-          {/* Edge Fades */}
-          <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-[#F5F3F1] to-transparent z-20 pointer-events-none"></div>
-          <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-[#F5F3F1] to-transparent z-20 pointer-events-none"></div>
+          {/* Difuminado en los bordes para suavidad visual */}
+          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-zinc-50 to-transparent z-20 pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-zinc-50 to-transparent z-20 pointer-events-none"></div>
 
           <div
-            className="flex items-start gap-6 w-max animate-marquee py-4"
+            className="flex items-start gap-6 w-max animate-marquee py-6"
             style={{ animationPlayState: isPaused ? 'paused' : 'running' }}
           >
             {marqueePrompts.map((prompt, index) => (
@@ -53,42 +53,46 @@ const PromptGrid: React.FC = () => {
                 key={`${prompt.id}-${index}`}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-none overflow-hidden border-2 border-black hover:border-black transition-all duration-300 hover:-translate-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] block h-fit"
+                className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-2xl border border-zinc-200 transition-all duration-500 hover:border-zinc-400 hover:shadow-2xl hover:shadow-zinc-200/50 block h-fit overflow-hidden"
               >
-                {/* Only show Image if it exists */}
+                {/* Imagen con tratamiento sutil */}
                 {prompt.image_url && (
-                  <div className="h-[150px] w-full overflow-hidden relative bg-white border-b border-gray-100 flex items-start justify-start">
+                  <div className="h-[180px] w-full overflow-hidden relative bg-zinc-100 border-b border-zinc-100">
                     <img
                       src={prompt.image_url}
                       alt={prompt.title}
-                      className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                      className="w-full h-full object-cover grayscale opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100"
                     />
-                    <div className="absolute top-2 right-2 z-10">
-                      <span className={`bg-[#D4AF37] backdrop-blur-sm text-white px-2 py-1 flex items-center gap-1 shadow-lg`}>
-                        <Lock size={12} />
-                        <span className="text-[10px] font-bold tracking-wider">PREMIUM</span>
-                      </span>
-                    </div>
+                    {prompt.is_premium && (
+                      <div className="absolute top-3 right-3 z-10">
+                        <span className="bg-zinc-900/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl">
+                          <Lock size={12} className="text-zinc-400" />
+                          <span className="text-[10px] font-bold tracking-widest uppercase">Premium</span>
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* Content Area */}
-                <div className="p-5 flex flex-col">
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <h3 className="font-bold text-base leading-tight line-clamp-2 tracking-tight group-hover:text-black transition-colors">{prompt.title}</h3>
-                    <BadgeCheck size={16} className="text-blue-500 flex-shrink-0 mt-0.5" />
+                {/* Área de Contenido */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <h3 className="font-bold text-base leading-snug tracking-tight text-zinc-900 lowercase line-clamp-2">
+                      {prompt.title}
+                    </h3>
+                    <BadgeCheck size={18} className="text-zinc-400 flex-shrink-0 mt-0.5 group-hover:text-blue-500 transition-colors" />
                   </div>
 
-                  <p className="text-sm text-gray-500 line-clamp-none mb-4 font-sans leading-relaxed">
+                  <p className="text-zinc-500 text-sm font-sans leading-relaxed lowercase line-clamp-2 mb-6">
                     {prompt.description}
                   </p>
 
-                  <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-2 text-[10px]">
-                    <span className="font-black bg-[#F5F3F1] px-2 py-1 rounded-none text-gray-500 font-mono tracking-widest border border-gray-100">
-                      {prompt.category || 'General'}
+                  <div className="flex items-center justify-between border-t border-zinc-50 pt-5 mt-auto">
+                    <span className="font-mono text-[9px] bg-zinc-50 text-zinc-400 px-2 py-1 rounded border border-zinc-100 uppercase tracking-widest">
+                      {prompt.category || 'general'}
                     </span>
-                    <span className={`font-bold tracking-wider ${prompt.is_premium ? 'text-[#D4AF37]' : 'text-green-600'}`}>
-                      {prompt.is_premium ? 'PREMIUM' : 'FREE'}
+                    <span className={`text-[10px] font-black tracking-tighter lowercase ${prompt.is_premium ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                      {prompt.is_premium ? 'exclusivo' : 'gratis'}
                     </span>
                   </div>
                 </div>
@@ -98,24 +102,19 @@ const PromptGrid: React.FC = () => {
         </div>
 
         <div className="mt-8 md:hidden flex justify-center px-4">
-          <Link to="/prompts" className="flex items-center text-sm font-bold text-brand-text tracking-tighter">
-            Vista Previa <ArrowRight size={16} className="ml-2" />
+          <Link to="/prompts" className="flex items-center text-sm font-bold text-zinc-900 tracking-tighter lowercase">
+            vista previa <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
       </div>
 
       <style>{`
         @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            /* Move by one-third of the total width since we triplicated the array */
-            transform: translateX(-33.33%);
-          }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.33%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 50s linear infinite;
         }
       `}</style>
     </section>

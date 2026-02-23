@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, ChevronLeft, AlertCircle, Loader2, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, Sparkles, Terminal } from 'lucide-react';
 import Skeleton from '../components/Skeleton';
 import { Helmet } from 'react-helmet-async';
 
@@ -20,290 +19,182 @@ const PromptDetail: React.FC = () => {
     useEffect(() => {
         const fetchPromptAndUser = async () => {
             setLoading(true);
+            const { data: promptData, error } = await supabase.rpc('get_public_prompts').eq('id', id).single();
 
-            // Fetch Prompt securely
-            const promptPromise = supabase
-                .rpc('get_public_prompts')
-                .eq('id', id)
-                .single();
+            const { data: { user } } = await supabase.auth.getUser();
+            let subscribed = false;
 
-            // Check User Subscription
-            const userPromise = supabase.auth.getUser().then(async ({ data: { user } }) => {
-                if (!user) return false;
-
+            if (user) {
                 const { data: sub } = await supabase
                     .from('subscriptions')
                     .select('subscription_status')
                     .eq('customer_id', user.id)
                     .single();
+                subscribed = sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing');
 
-                return sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing');
-            });
-
-            const [promptResult, isSubscribedResult] = await Promise.all([promptPromise, userPromise]);
-
-            if (promptResult.error) {
-                // Handle error
-            } else {
-                setPrompt(promptResult.data);
-
-                // Check if prompt is saved
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
-                    const { data: saved } = await supabase
-                        .from('saved_prompts')
-                        .select('id')
-                        .eq('user_id', user.id)
-                        .eq('prompt_id', id)
-                        .single();
-                    setIsSaved(!!saved);
-                }
+                const { data: saved } = await supabase
+                    .from('saved_prompts')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .eq('prompt_id', id)
+                    .single();
+                setIsSaved(!!saved);
             }
 
-            setIsSubscribed(!!isSubscribedResult);
+            if (!error) setPrompt(promptData as Prompt);
+            setIsSubscribed(!!subscribed);
             setLoading(false);
         };
-
         fetchPromptAndUser();
     }, [id]);
 
-    const handleSave = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            navigate('/login');
-            return;
-        }
-
-        if (!isSubscribed) {
-            alert('Esta función es exclusiva para usuarios Premium.');
-            navigate('/pricing');
-            return;
-        }
-
-        setSaving(true);
-        try {
-            if (isSaved) {
-                await supabase
-                    .from('saved_prompts')
-                    .delete()
-                    .eq('user_id', user.id)
-                    .eq('prompt_id', id);
-                setIsSaved(false);
-            } else {
-                await supabase
-                    .from('saved_prompts')
-                    .insert({ user_id: user.id, prompt_id: id });
-                setIsSaved(true);
-            }
-        } catch (error) {
-            console.error('Error saving prompt:', error);
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    // ... inside loading check
-    if (loading) {
-        return (
-            <div className="bg-brand-bg min-h-screen pb-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <div className="lg:col-span-5 space-y-8">
-                            <Skeleton className="aspect-square w-full" />
-                            <Skeleton className="h-32 w-full" />
-                        </div>
-                        <div className="lg:col-span-7 space-y-8">
-                            <Skeleton variant="text" className="w-1/4 mb-4" />
-                            <Skeleton variant="text" className="h-12 w-3/4 mb-6" />
-                            <Skeleton variant="text" className="h-24 w-full mb-6" />
-                            <Skeleton className="h-64 w-full" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (!prompt) {
-        return (
-            <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-4">
-                <AlertCircle size={48} className="mb-4 text-gray-400" />
-                <h2 className="text-2xl font-black mb-2">PROMPT NO ENCONTRADO</h2>
-                <Link to="/prompts" className="underline font-bold">Volver al archivo</Link>
-            </div>
-        );
-    }
-
     const handleCopy = () => {
-        if (prompt.content) {
+        if (prompt?.content) {
             navigator.clipboard.writeText(prompt.content);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
     };
 
+    const handleSave = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return navigate('/login');
+        if (!isSubscribed) return navigate('/pricing');
+
+        setSaving(true);
+        try {
+            if (isSaved) {
+                await supabase.from('saved_prompts').delete().eq('user_id', user.id).eq('prompt_id', id);
+                setIsSaved(false);
+            } else {
+                await supabase.from('saved_prompts').insert({ user_id: user.id, prompt_id: id });
+                setIsSaved(true);
+            }
+        } catch (e) { console.error(e); } finally { setSaving(false); }
+    };
+
+    if (loading) return (
+        <div className="min-h-screen bg-white p-8">
+            <div className="max-w-4xl mx-auto space-y-6">
+                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-64 w-full rounded-2xl" />
+            </div>
+        </div>
+    );
+
+    if (!prompt) return (
+        <div className="min-h-screen flex flex-col items-center justify-center font-sans">
+            <AlertCircle size={40} className="text-zinc-300 mb-4" />
+            <h2 className="text-xl font-bold lowercase">prompt no encontrado</h2>
+            <Link to="/prompts" className="text-sm underline mt-2 opacity-50">volver al archivo</Link>
+        </div>
+    );
+
     const isLocked = prompt.is_premium && !isSubscribed;
 
     return (
-        <div className="bg-brand-bg min-h-screen pb-24">
+        <div className="bg-white min-h-screen pb-20 font-sans">
             <Helmet>
-                <title>{`${prompt.title} | Prompt Engineering | Alpacka.ai`}</title>
-                <meta name="description" content={prompt.description || `Prompt optimizado para ${prompt.category}. Copia y pega este prompt en ChatGPT o Claude.`} />
-                <link rel="canonical" href={`https://alpackaai.xyz/prompts/${id}`} />
+                <title>{`${prompt.title} | alpackaai`}</title>
             </Helmet>
-            {/* Breadcrumb / Back Navigation */}
-            <div className="border-b border-brand-surface bg-white/50 backdrop-blur sticky top-20 z-40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="flex items-center text-sm font-mono text-gray-500 hover:text-black transition-colors"
-                    >
-                        <ChevronLeft size={16} className="mr-1" />
-                        VOLVER
+
+            {/* HEADER / NAV */}
+            <nav className="border-b border-zinc-100 bg-white/80 backdrop-blur-md sticky top-16 z-50">
+                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <button onClick={() => navigate(-1)} className="flex items-center text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest">
+                        <ChevronLeft size={16} className="mr-1" /> Volver
                     </button>
+                    <div className="flex gap-4">
+                        <button onClick={handleSave} disabled={saving} className="text-zinc-400 hover:text-zinc-900 transition-colors">
+                            {isSaved ? <BookmarkCheck size={20} className="text-emerald-500" /> : <Bookmark size={20} />}
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </nav>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-
-                    {/* Left Column: Image (Optional) & Technical Specs */}
-                    <div className="lg:col-span-5 space-y-8">
-                        {prompt.image_url && (
-                            <div className="relative border-2 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] bg-white">
-                                <div className=" overflow-hidden relative group">
-                                    <img
-                                        src={prompt.image_url}
-                                        alt={prompt.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    {prompt.is_premium && (
-                                        <div className="absolute top-4 right-4 bg-[#D4AF37] text-white px-3 py-1 text-xs font-bold tracking-wider flex items-center gap-1 shadow-lg">
-                                            <Lock size={12} /> Premium
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+            <main className="max-w-4xl mx-auto px-6 pt-12">
+                {/* TITULO Y META */}
+                <header className="mb-10 text-center md:text-left">
+                    <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                        <span className="px-2 py-1 bg-zinc-100 text-zinc-500 text-[10px] font-mono rounded uppercase tracking-tighter">
+                            {prompt.category}
+                        </span>
+                        {prompt.is_premium && (
+                            <span className="px-2 py-1 bg-amber-50 text-amber-600 text-[10px] font-mono font-bold rounded flex items-center gap-1 border border-amber-100">
+                                <Lock size={10} /> PREMIUM
+                            </span>
                         )}
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-black text-zinc-900 tracking-tighter lowercase mb-4">
+                        {prompt.title}
+                    </h1>
+                    <p className="text-lg text-zinc-500 leading-relaxed lowercase max-w-2xl">
+                        {prompt.description}
+                    </p>
+                </header>
 
-                        {/* Technical Specs / Parameters */}
-                        <div className="bg-[#F5F3F1] p-6 rounded-none">
-                            <h3 className="font-bold text-xs tracking-widest mb-4 text-gray-500 border-b border-gray-300 pb-2">
-                                Especificaciones
-                            </h3>
-                            <div className="space-y-3 font-mono text-sm">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Categoría</span>
-                                    <span className="font-bold">{prompt.category}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">ID Referencia</span>
-                                    <span className="font-bold text-xs">#{prompt.id.slice(0, 8)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Creado</span>
-                                    <span className="font-bold text-xs">{new Date(prompt.created_at).toLocaleDateString()}</span>
-                                </div>
-                            </div>
-                        </div>
+                {/* VISUALIZER (Si es Midjourney o tiene imagen) */}
+                {prompt.image_url && (
+                    <div className="mb-10 rounded-3xl overflow-hidden border border-zinc-100 shadow-2xl shadow-zinc-200/50">
+                        <img src={prompt.image_url} alt={prompt.title} className="w-full h-auto" />
+                    </div>
+                )}
+
+                {/* PROMPT EDITOR / BOX */}
+                <section className="space-y-4">
+                    <div className="flex items-center justify-between px-2">
+                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                            <Terminal size={14} /> Prompt Editor
+                        </h3>
+                        {!isLocked && (
+                            <button
+                                onClick={handleCopy}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-zinc-900 text-white hover:bg-zinc-800'}`}
+                            >
+                                {copied ? <Check size={14} /> : <Copy size={14} />}
+                                {copied ? 'Copiado' : 'Copiar Prompt'}
+                            </button>
+                        )}
                     </div>
 
-                    {/* Right Column: Details & Prompt */}
-                    <div className="lg:col-span-7 space-y-8">
-                        <div>
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                <span className="bg-black text-white px-2 py-1 text-[10px] font-mono tracking-wider">
-                                    {prompt.category}
-                                </span>
-                                {!prompt.image_url && prompt.is_premium && (
-                                    <span className="bg-[#D4AF37] text-white px-2 py-1 text-[10px] font-mono tracking-wider flex items-center gap-1">
-                                        <Lock size={10} /> Premium
-                                    </span>
-                                )}
-                            </div>
-                            <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight mb-6">
-                                {prompt.title}
-                            </h1>
-                            <p className="text-gray-600 font-sans text-lg leading-relaxed border-l-4 border-brand-surface pl-6">
-                                {prompt.description}
-                            </p>
-                        </div>
-
-                        {/* THE PROMPT BOX */}
-                        <div className="relative">
-                            <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-bold text-sm tracking-wider flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                    Prompt
-                                </h3>
-                                {!isLocked && (
-                                    <div className="flex items-center gap-4">
-                                        <button
-                                            onClick={handleSave}
-                                            disabled={saving}
-                                            className="text-xs font-mono font-bold hover:underline flex items-center gap-1"
-                                        >
-                                            {isSaved ? <BookmarkCheck size={14} className="text-[#D4AF37]" /> : <Bookmark size={14} />}
-                                            {isSaved ? 'GUARDADO' : 'GUARDAR'}
-                                        </button>
-                                        <button
-                                            onClick={handleCopy}
-                                            className="text-xs font-mono font-bold hover:underline flex items-center gap-1"
-                                        >
-                                            {copied ? <Check size={14} /> : <Copy size={14} />}
-                                            {copied ? 'COPIADO' : 'COPIAR AL PORTAPAPELES'}
-                                        </button>
+                    <div className="relative group">
+                        <div className={`w-full min-h-[200px] rounded-3xl p-8 md:p-10 font-mono text-base md:text-lg leading-relaxed transition-all border ${isLocked ? 'bg-zinc-50 border-zinc-200 overflow-hidden' : 'bg-zinc-50 border-zinc-100 text-zinc-800'}`}>
+                            {isLocked ? (
+                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-8 backdrop-blur-md bg-white/30">
+                                    <div className="w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center mb-4">
+                                        <Lock className="text-zinc-900" size={24} />
                                     </div>
-                                )}
-                            </div>
-
-                            <div className="relative group">
-                                {/* Background Box for Aesthetic */}
-                                <div className="absolute inset-0 bg-black translate-x-2 translate-y-2 rounded-none"></div>
-
-                                {/* Main Content Box */}
-                                <div className="relative bg-[#111111] text-gray-300 p-6 md:p-8 font-mono text-sm leading-relaxed min-h-[200px] border border-gray-800">
-
-                                    {/* Premium Logic */}
-                                    {isLocked ? (
-                                        <>
-                                            <div className="blur-sm select-none opacity-50" aria-hidden="true">
-                                                {prompt.content || "Lorem ipsum dolor sit amet content hidden..."}
-                                            </div>
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] z-10 text-center p-6">
-                                                <Lock size={32} className="text-white mb-4" />
-                                                <h3 className="text-white font-bold text-xl mb-2">Contenido Premium</h3>
-                                                <p className="text-gray-300 text-xs mb-6 max-w-xs">
-                                                    Este prompt está reservado para miembros del banco. Desbloquea acceso completo ahora.
-                                                </p>
-                                                <Link to="/pricing">
-                                                    <button className="bg-[#D4AF37] text-white px-6 py-3 font-bold text-sm hover:opacity-90 transition-opacity tracking-wider shadow-lg">
-                                                        Obtener Acceso Premium
-                                                    </button>
-                                                </Link>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <code className="block whitespace-pre-wrap">
-                                            {prompt.content}
-                                        </code>
-                                    )}
+                                    <h4 className="font-black text-xl mb-2 lowercase">Contenido Bloqueado</h4>
+                                    <p className="text-sm text-zinc-500 mb-6 max-w-xs lowercase">Este prompt es parte del archivo premium. Suscríbete para desbloquearlo.</p>
+                                    <Link to="/pricing" className="bg-zinc-900 text-white px-8 py-3 rounded-2xl font-bold text-sm hover:scale-105 transition-transform">
+                                        Ver Planes
+                                    </Link>
                                 </div>
-                            </div>
-                        </div>
+                            ) : (
+                                <code className="block whitespace-pre-wrap select-all">
+                                    {prompt.content}
+                                </code>
+                            )}
 
-                        {/* Usage Tips (Placeholder) */}
-                        <div className="bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-900 font-sans">
-                            <p className="font-bold mb-2 flex items-center gap-2">
-                                <AlertCircle size={16} /> Consejo de Uso:
-                            </p>
-                            <p>
-                                Asegúrate de reemplazar cualquier texto entre [CORCHETES] con tus propios detalles antes de ejecutar el prompt para obtener los mejores resultados.
-                            </p>
+                            {/* Marca de agua sutil */}
+                            <div className="absolute bottom-4 right-6 pointer-events-none opacity-20">
+                                <Sparkles size={20} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </section>
+
+                {/* CONSEJO TÉCNICO */}
+                <footer className="mt-8 flex items-start gap-4 p-6 bg-blue-50/50 rounded-2xl border border-blue-100/50">
+                    <AlertCircle className="text-blue-500 shrink-0" size={20} />
+                    <div>
+                        <p className="text-sm text-blue-900 leading-relaxed lowercase">
+                            <span className="font-bold">tip de ingeniería:</span> los parámetros entre <span className="font-mono bg-blue-100 px-1 rounded">[corchetes]</span> son variables. cámbialos por tus datos específicos para obtener el mejor output del modelo.
+                        </p>
+                    </div>
+                </footer>
+            </main>
         </div>
     );
 };
