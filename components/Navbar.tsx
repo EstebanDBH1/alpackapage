@@ -9,26 +9,64 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
 
-      if (user) {
-        const { data: sub } = await supabase
-          .from('subscriptions')
-          .select('subscription_status')
-          .eq('customer_id', user.id)
-          .single();
+        if (user) {
+          const { data: sub } = await supabase
+            .from('subscriptions')
+            .select('subscription_status')
+            .eq('customer_id', user.id)
+            .single();
 
-        if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
-          setIsSubscribed(true);
+          if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+            setIsSubscribed(true);
+          }
         }
+      } catch (error) {
+        console.error('Error in Navbar checkUser:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     checkUser();
+
+    // Listener para cambios de autenticación
+    const { data: { subscription: authListener } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN') {
+          const user = session?.user ?? null;
+          setUser(user);
+
+          if (user) {
+            const { data: sub } = await supabase
+              .from('subscriptions')
+              .select('subscription_status')
+              .eq('customer_id', user.id)
+              .single();
+
+            if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+              setIsSubscribed(true);
+            }
+          }
+          setLoading(false);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setIsSubscribed(false);
+          setLoading(false);
+        }
+      }
+    );
+
+    return () => {
+      authListener.unsubscribe();
+    };
   }, []);
 
   const handleLoginClick = () => {
@@ -53,19 +91,23 @@ const Navbar: React.FC = () => {
             <Link to="/pricing" className="text-sm font-bold hover:underline underline-offset-4 decoration-2">Precios</Link>
 
             {/* User Actions */}
-            {user && (
-              <Link to="/dashboard" className="text-sm font-bold hover:underline underline-offset-4 decoration-2 flex items-center gap-2">
-                <User size={16} /> Mi Cuenta
-              </Link>
-            )}
+            {!loading && (
+              <>
+                {user && (
+                  <Link to="/dashboard" className="text-sm font-bold hover:underline underline-offset-4 decoration-2 flex items-center gap-2">
+                    <User size={16} /> Mi Cuenta
+                  </Link>
+                )}
 
-            {!isSubscribed && (
-              <button
-                onClick={handleLoginClick}
-                className="bg-brand-text text-brand-bg px-6 py-2 rounded-sm font-bold text-sm hover:opacity-80 transition-opacity"
-              >
-                Obtener Acceso ($3.90/mes)
-              </button>
+                {!isSubscribed && (
+                  <button
+                    onClick={handleLoginClick}
+                    className="bg-brand-text text-brand-bg px-6 py-2 rounded-sm font-bold text-sm hover:opacity-80 transition-opacity"
+                  >
+                    Obtener Acceso ($3.90/mes)
+                  </button>
+                )}
+              </>
             )}
           </div>
 
@@ -88,19 +130,23 @@ const Navbar: React.FC = () => {
             <Link to="/prompts" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Prompts</Link>
             <Link to="/pricing" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Precios</Link>
 
-            {user && (
-              <Link to="/dashboard" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Mi Cuenta</Link>
-            )}
+            {!loading && (
+              <>
+                {user && (
+                  <Link to="/dashboard" className="block px-3 py-2 text-base font-bold hover:bg-brand-surface w-full text-center" onClick={() => setIsOpen(false)}>Mi Cuenta</Link>
+                )}
 
-            {!isSubscribed && (
-              <div className="pt-4 pb-2 w-full">
-                <button
-                  onClick={handleLoginClick}
-                  className="bg-brand-text text-brand-bg px-8 py-3 rounded-sm font-bold text-sm w-full"
-                >
-                  Obtener Acceso ($3.90/mes)
-                </button>
-              </div>
+                {!isSubscribed && (
+                  <div className="pt-4 pb-2 w-full">
+                    <button
+                      onClick={handleLoginClick}
+                      className="bg-brand-text text-brand-bg px-8 py-3 rounded-sm font-bold text-sm w-full"
+                    >
+                      Obtener Acceso ($3.90/mes)
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
