@@ -71,25 +71,31 @@ const Dashboard: React.FC = () => {
     const handleManageSubscription = async () => {
         if (!subscription) return;
 
-        // According to documentation: "The simplest way to cancel/manage a subscription is to use management_urls"
-        // These are temporary URLs that should be fetched fresh or passed from Paddle events.
-        if (subscription.update_url) {
-            window.open(subscription.update_url, '_blank');
-            return;
-        }
+        setUpdating(true);
+        try {
+            // Buscamos el customer_id de Paddle. 
+            // Según tu solicitud, viene del frontend (puede estar en subscription.metadata o perfiles)
+            const paddleCustomerId = subscription.metadata?.paddle_customer_id || subscription.metadata?.customer_id;
 
-        // Alternative: Use Paddle.js SDK as a fallback to open the management portal
-        if (window.Paddle) {
-            window.Paddle.Checkout.open({
-                subscriptionId: subscription.subscription_id,
-                settings: {
-                    displayMode: "overlay",
-                    theme: "light",
-                    locale: "es",
-                }
+            if (!paddleCustomerId || !paddleCustomerId.startsWith('ctm_')) {
+                throw new Error('No se encontró un ID de cliente de Paddle válido (ctm_...)');
+            }
+
+            const { data, error } = await supabase.functions.invoke('create-portal-session', {
+                body: { customer_id: paddleCustomerId }
             });
-        } else {
-            alert('No se pudo encontrar el portal de gestión. Por favor refresca la página o contacta a soporte@alpackaai.xyz');
+
+            if (error) throw error;
+            if (data?.urls?.general?.overview) {
+                window.open(data.urls.general.overview, '_blank');
+            } else {
+                throw new Error('No se recibió la URL del portal');
+            }
+        } catch (err: any) {
+            console.error('Error al generar portal:', err);
+            alert('Error: ' + (err.message || 'No se pudo abrir el portal de gestión.'));
+        } finally {
+            setUpdating(false);
         }
     };
 
@@ -100,15 +106,32 @@ const Dashboard: React.FC = () => {
             return;
         }
 
-        // 1. Doc: "The simplest way to cancel is to use management_urls.cancel"
-        if (subscription.cancel_url) {
-            window.open(subscription.cancel_url, '_blank');
-            return;
-        }
-
-        // 2. Doc: "You can also cancel a subscription via the API (effective_from: next_billing_period)"
         setUpdating(true);
         try {
+            // 1. Intentamos obtener el link dinámico de cancelación de Paddle vía la Edge Function
+            const paddleCustomerId = subscription.metadata?.paddle_customer_id || subscription.metadata?.customer_id;
+
+            if (paddleCustomerId && paddleCustomerId.startsWith('ctm_')) {
+                const { data, error } = await supabase.functions.invoke('create-portal-session', {
+                    body: { customer_id: paddleCustomerId }
+                });
+
+                if (!error && data?.urls?.subscriptions) {
+                    // Buscamos el link de cancelación específico para esta suscripción
+                    const subInfo = data.urls.subscriptions.find((s: any) => s.subscription_id === subscription.subscription_id);
+                    if (subInfo?.cancel) {
+                        window.open(subInfo.cancel, '_blank');
+                        return;
+                    }
+                }
+            }
+
+            // 2. Si fallan los links dinámicos o no es Paddle, usamos el método tradicional (API)
+            if (subscription.cancel_url) {
+                window.open(subscription.cancel_url, '_blank');
+                return;
+            }
+
             const { data, error } = await supabase.functions.invoke('cancel-paddle-subscription', {
                 body: {
                     subscriptionID: subscription.subscription_id,
@@ -120,20 +143,8 @@ const Dashboard: React.FC = () => {
             alert('Tu suscripción ha sido programada para cancelarse al final del periodo actual.');
             window.location.reload();
         } catch (err: any) {
-            console.error('Error in API cancel:', err);
-            // 3. Last Fallback: Use Paddle.js overlay
-            if (window.Paddle) {
-                window.Paddle.Checkout.open({
-                    subscriptionId: subscription.subscription_id,
-                    settings: {
-                        displayMode: "overlay",
-                        theme: "light",
-                        locale: "es",
-                    }
-                });
-            } else {
-                alert('Hubo un error al procesar la cancelación: ' + (err.message || 'Error de conexión'));
-            }
+            console.error('Error in cancellation:', err);
+            alert('No pudimos procesar la cancelación automáticamente. Por favor, revisa tu correo electrónico (el mensaje de confirmación de tu suscripción tiene un link para gestionarla) o contacta a soporte@alpackaai.xyz');
         } finally {
             setUpdating(false);
         }
