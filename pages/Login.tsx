@@ -2,6 +2,7 @@ import React from 'react';
 import { Bot } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import AlpacaIcon from '@/components/AlpacaIcon';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -25,15 +26,17 @@ const Login: React.FC = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-black text-white rounded-none flex items-center justify-center shadow-lg">
-              <Bot size={40} strokeWidth={1.5} />
+            <div className="">
+              <span className="text-4xl">
+                <AlpacaIcon />
+              </span>
             </div>
           </div>
           <h2 className="text-3xl font-black tracking-tighter text-black mb-2">
-            bienvenido de nuevo
+            bienvenido
           </h2>
           <p className="font-mono text-xs text-gray-500 tracking-widest">
-            acceso seguro a la bóveda
+
           </p>
         </div>
 

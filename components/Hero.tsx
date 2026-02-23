@@ -54,25 +54,7 @@ const Hero: React.FC = () => {
       </div>
 
       {/* Featured In */}
-      <div className="mt-24 border-t border-brand-surface pt-12">
-        <p className="text-center font-mono text-[10px] text-gray-400 tracking-widest mb-8">
-          utilizado por equipos en
-        </p>
 
-        {
-          /*
-          
-          <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale contrast-200">
-            <span className="text-xl md:text-2xl font-black font-sans">FORBES</span>
-            <span className="text-xl md:text-2xl font-black font-serif italic">WIRED</span>
-            <span className="text-xl md:text-2xl font-black font-mono">NYT</span>
-            <span className="text-xl md:text-2xl font-black font-sans tracking-widest">VERGE</span>
-            <span className="text-xl md:text-2xl font-black font-serif">VOGUE</span>
-          </div>
-          
-          */
-        }
-      </div>
     </section>
   );
 };

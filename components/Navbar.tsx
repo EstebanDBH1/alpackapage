@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Bot, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import AlpacaIcon from './AlpacaIcon';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +43,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
             <Link to="/" className="font-bold text-xl tracking-tighter">
-              Alpacka.<span className="">ai</span>
+              <AlpacaIcon />
             </Link>
           </div>
 
