@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { User, CreditCard, LogOut, Settings, AlertTriangle, CheckCircle, Clock, FileText, Loader2 } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { User, CreditCard, LogOut, Settings, AlertTriangle, CheckCircle, Clock, FileText, Loader2, Bookmark, ArrowUpRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Subscription } from '../types';
 import Skeleton from '../components/Skeleton';
@@ -10,6 +10,7 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [subscription, setSubscription] = useState<Subscription | null>(null);
+    const [savedPrompts, setSavedPrompts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,6 +32,25 @@ const Dashboard: React.FC = () => {
             if (sub) {
                 setSubscription(sub);
             }
+
+            // Fetch Saved Prompts
+            const { data: saved } = await supabase
+                .from('saved_prompts')
+                .select(`
+                    id,
+                    prompt_id,
+                    prompts (
+                        id,
+                        title,
+                        category
+                    )
+                `)
+                .eq('user_id', user.id);
+
+            if (saved) {
+                setSavedPrompts(saved);
+            }
+
             setLoading(false);
         };
 
@@ -149,8 +169,6 @@ const Dashboard: React.FC = () => {
             setUpdating(false);
         }
     }
-
-
 
     // ... inside loading check
     if (loading) {
@@ -329,13 +347,43 @@ const Dashboard: React.FC = () => {
                                         <CheckCircle size={16} /> Reactivar / Suscribirse
                                     </button>
                                 )}
-
                             </div>
 
                             {subscription?.cancel_at_period_end && (
                                 <div className="mt-6 bg-yellow-50 border border-yellow-200 p-4 text-xs text-yellow-800 font-sans flex items-start gap-3">
                                     <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
                                     <p>Tu suscripción ha sido cancelada. Mantendrás el acceso hasta el final del periodo actual ({new Date(subscription.current_period_end!).toLocaleDateString()}).</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Saved Prompts Section */}
+                        <div className="bg-white border-2 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <h3 className="font-bold text-sm tracking-wider mb-6 flex items-center gap-2">
+                                <Bookmark size={16} /> Tus Prompts Guardados
+                            </h3>
+
+                            {savedPrompts.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {savedPrompts.map((item) => (
+                                        <Link
+                                            key={item.id}
+                                            to={`/prompts/${item.prompts.id}`}
+                                            className="group border border-gray-100 p-4 hover:border-black transition-colors flex justify-between items-center"
+                                        >
+                                            <div>
+                                                <span className="text-[10px] font-mono text-gray-400 block mb-1 uppercase tracking-widest">{item.prompts.category}</span>
+                                                <h4 className="font-bold text-sm group-hover:underline">{item.prompts.title}</h4>
+                                            </div>
+                                            <ArrowUpRight size={18} className="text-gray-300 group-hover:text-black transition-colors" />
+                                        </Link>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-200">
+                                    <Bookmark size={32} className="mx-auto text-gray-300 mb-4 opacity-50" />
+                                    <p className="text-gray-500 text-sm font-sans mb-4">Aún no has guardado ningún prompt.</p>
+                                    <Link to="/prompts" className="text-xs font-bold underline hover:text-black tracking-widest">EXPLORAR LA BÓVEDA</Link>
                                 </div>
                             )}
                         </div>

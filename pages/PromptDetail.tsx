@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, ChevronLeft, AlertCircle, Loader2 } from 'lucide-react';
+import { Copy, Check, Lock, ChevronLeft, AlertCircle, Loader2, Bookmark, BookmarkCheck } from 'lucide-react';
 import Skeleton from '../components/Skeleton';
 import { Helmet } from 'react-helmet-async';
 
@@ -14,6 +14,8 @@ const PromptDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [copied, setCopied] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         const fetchPromptAndUser = async () => {
@@ -44,6 +46,18 @@ const PromptDetail: React.FC = () => {
                 // Handle error
             } else {
                 setPrompt(promptResult.data);
+
+                // Check if prompt is saved
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data: saved } = await supabase
+                        .from('saved_prompts')
+                        .select('id')
+                        .eq('user_id', user.id)
+                        .eq('prompt_id', id)
+                        .single();
+                    setIsSaved(!!saved);
+                }
             }
 
             setIsSubscribed(!!isSubscribedResult);
@@ -52,6 +66,41 @@ const PromptDetail: React.FC = () => {
 
         fetchPromptAndUser();
     }, [id]);
+
+    const handleSave = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
+        if (!isSubscribed) {
+            alert('Esta función es exclusiva para usuarios Premium.');
+            navigate('/pricing');
+            return;
+        }
+
+        setSaving(true);
+        try {
+            if (isSaved) {
+                await supabase
+                    .from('saved_prompts')
+                    .delete()
+                    .eq('user_id', user.id)
+                    .eq('prompt_id', id);
+                setIsSaved(false);
+            } else {
+                await supabase
+                    .from('saved_prompts')
+                    .insert({ user_id: user.id, prompt_id: id });
+                setIsSaved(true);
+            }
+        } catch (error) {
+            console.error('Error saving prompt:', error);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     // ... inside loading check
     if (loading) {
@@ -188,13 +237,23 @@ const PromptDetail: React.FC = () => {
                                     Prompt
                                 </h3>
                                 {!isLocked && (
-                                    <button
-                                        onClick={handleCopy}
-                                        className="text-xs font-mono font-bold hover:underline flex items-center gap-1"
-                                    >
-                                        {copied ? <Check size={14} /> : <Copy size={14} />}
-                                        {copied ? 'COPIADO' : 'COPIAR AL PORTAPAPELES'}
-                                    </button>
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            onClick={handleSave}
+                                            disabled={saving}
+                                            className="text-xs font-mono font-bold hover:underline flex items-center gap-1"
+                                        >
+                                            {isSaved ? <BookmarkCheck size={14} className="text-[#D4AF37]" /> : <Bookmark size={14} />}
+                                            {isSaved ? 'GUARDADO' : 'GUARDAR'}
+                                        </button>
+                                        <button
+                                            onClick={handleCopy}
+                                            className="text-xs font-mono font-bold hover:underline flex items-center gap-1"
+                                        >
+                                            {copied ? <Check size={14} /> : <Copy size={14} />}
+                                            {copied ? 'COPIADO' : 'COPIAR AL PORTAPAPELES'}
+                                        </button>
+                                    </div>
                                 )}
                             </div>
 
