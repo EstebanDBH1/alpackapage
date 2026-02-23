@@ -168,7 +168,7 @@ const Prompts: React.FC = () => {
                             <Link
                                 to={`/prompts/${prompt.id}`}
                                 key={prompt.id}
-                                className="break-inside-avoid mb-8 group relative bg-white border border-gray-200 transition-all duration-300 flex flex-col overflow-hidden rounded-none shadow-sm hover:shadow-md"
+                                className="break-inside-avoid mb-12 group relative bg-white border-2 border-black transition-all duration-300 flex flex-col overflow-hidden rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1"
                             >
                                 {/* Only show Image if it exists */}
                                 {prompt.image_url && (

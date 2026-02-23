@@ -53,7 +53,7 @@ const PromptGrid: React.FC = () => {
                 key={`${prompt.id}-${index}`}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-none overflow-hidden border border-gray-200 hover:border-black transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-xl block h-fit"
+                className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-none overflow-hidden border-2 border-black hover:border-black transition-all duration-300 hover:-translate-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] block h-fit"
               >
                 {/* Only show Image if it exists */}
                 {prompt.image_url && (

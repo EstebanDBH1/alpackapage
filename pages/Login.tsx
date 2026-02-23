@@ -41,7 +41,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="mt-10">
-          <div className="bg-brand-bg border border-gray-200 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none p-8">
+          <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none p-8 relative">
             <div className="mb-6 text-center">
               <p className="text-sm font-bold mb-1">Inicia sesión o Regístrate</p>
               <p className="text-xs text-gray-500 font-sans">Usa tu cuenta de Google para acceder a tu suscripción.</p>
