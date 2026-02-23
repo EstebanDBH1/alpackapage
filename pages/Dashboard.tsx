@@ -220,7 +220,9 @@ const Dashboard: React.FC = () => {
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-12">
                                     <div className="font-bold text-lg tracking-tighter">PROMPTBANK</div>
-                                    <div className="font-mono text-xs border border-white/30 px-2 py-1 rounded">{isActive ? 'PRO' : 'FREE'}</div>
+                                    <div className={`font-mono text-[10px] px-2 py-1 rounded border ${isActive ? 'bg-[#D4AF37] border-[#D4AF37] text-white' : 'border-white/30 text-white'}`}>
+                                        {isActive ? 'PREMIUM' : 'FREE'}
+                                    </div>
                                 </div>
                                 <div className="font-mono text-sm text-gray-400 mb-1">MIEMBRO</div>
                                 <div className="font-bold text-xl mb-6 truncate">{user?.user_metadata?.full_name || user?.email}</div>

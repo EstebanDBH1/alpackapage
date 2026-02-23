@@ -180,8 +180,8 @@ const Prompts: React.FC = () => {
                                         />
                                         <div className="absolute top-4 right-4 z-10">
                                             {prompt.is_premium ? (
-                                                <span className="bg-black text-white px-3 py-1.5 text-[10px] font-bold tracking-wider flex items-center gap-1 shadow-lg">
-                                                    <Lock size={12} /> Pro
+                                                <span className="bg-[#D4AF37] text-white px-3 py-1.5 text-[10px] font-bold tracking-wider flex items-center gap-1 shadow-lg">
+                                                    <Lock size={12} /> Premium
                                                 </span>
                                             ) : (
                                                 <span className="bg-white text-black border border-black px-3 py-1.5 text-[10px] font-bold tracking-wider flex items-center gap-1 shadow-sm">
@@ -210,7 +210,7 @@ const Prompts: React.FC = () => {
                                                 {prompt.category || 'General'}
                                             </span>
                                             {prompt.is_premium ? (
-                                                <span className="text-[10px] font-bold text-black border border-black px-2 py-0.5 tracking-tighter">PRO</span>
+                                                <span className="text-[10px] font-bold text-[#D4AF37] border border-[#D4AF37] px-2 py-0.5 tracking-tighter uppercase">Premium</span>
                                             ) : (
                                                 <span className="text-[10px] font-bold text-green-600 border border-green-600 px-2 py-0.5 tracking-tighter">FREE</span>
                                             )}

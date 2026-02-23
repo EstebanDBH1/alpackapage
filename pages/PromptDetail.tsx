@@ -129,7 +129,7 @@ const PromptDetail: React.FC = () => {
                                         className="w-full h-full object-cover"
                                     />
                                     {prompt.is_premium && (
-                                        <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-xs font-bold tracking-wider flex items-center gap-1">
+                                        <div className="absolute top-4 right-4 bg-[#D4AF37] text-white px-3 py-1 text-xs font-bold tracking-wider flex items-center gap-1 shadow-lg">
                                             <Lock size={12} /> Premium
                                         </div>
                                     )}
@@ -167,7 +167,7 @@ const PromptDetail: React.FC = () => {
                                     {prompt.category}
                                 </span>
                                 {!prompt.image_url && prompt.is_premium && (
-                                    <span className="bg-black text-white px-2 py-1 text-[10px] font-mono tracking-wider flex items-center gap-1">
+                                    <span className="bg-[#D4AF37] text-white px-2 py-1 text-[10px] font-mono tracking-wider flex items-center gap-1">
                                         <Lock size={10} /> Premium
                                     </span>
                                 )}
@@ -218,8 +218,8 @@ const PromptDetail: React.FC = () => {
                                                     Este prompt está reservado para miembros del banco. Desbloquea acceso completo ahora.
                                                 </p>
                                                 <Link to="/pricing">
-                                                    <button className="bg-white text-black px-6 py-3 font-bold text-sm hover:bg-gray-200 transition-colors tracking-wider">
-                                                        Obtener Acceso Pro
+                                                    <button className="bg-[#D4AF37] text-white px-6 py-3 font-bold text-sm hover:opacity-90 transition-opacity tracking-wider shadow-lg">
+                                                        Obtener Acceso Premium
                                                     </button>
                                                 </Link>
                                             </div>

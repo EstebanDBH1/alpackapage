@@ -64,9 +64,9 @@ const PromptGrid: React.FC = () => {
                       className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                     />
                     <div className="absolute top-2 right-2 z-10">
-                      <span className={`bg-black/70 backdrop-blur-sm text-white px-2 py-1 flex items-center gap-1`}>
+                      <span className={`bg-[#D4AF37] backdrop-blur-sm text-white px-2 py-1 flex items-center gap-1 shadow-lg`}>
                         <Lock size={12} />
-                        <span className="text-[10px] font-bold tracking-wider"> {prompt.is_premium ? 'PRO' : 'FREE'} </span>
+                        <span className="text-[10px] font-bold tracking-wider">PREMIUM</span>
                       </span>
                     </div>
                   </div>
@@ -87,8 +87,8 @@ const PromptGrid: React.FC = () => {
                     <span className="font-black bg-[#F5F3F1] px-2 py-1 rounded-none text-gray-500 font-mono tracking-widest border border-gray-100">
                       {prompt.category || 'General'}
                     </span>
-                    <span className={`font-bold tracking-wider ${prompt.is_premium ? 'text-black' : 'text-green-600'}`}>
-                      {prompt.is_premium ? 'PRO' : 'FREE'}
+                    <span className={`font-bold tracking-wider ${prompt.is_premium ? 'text-[#D4AF37]' : 'text-green-600'}`}>
+                      {prompt.is_premium ? 'PREMIUM' : 'FREE'}
                     </span>
                   </div>
                 </div>
