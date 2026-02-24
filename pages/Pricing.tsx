@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Zap, ShieldCheck, creditCard, Clock } from 'lucide-react';
+import { Check, Zap, ShieldCheck, CreditCard, Clock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Faq from '../components/Faq';
 import { supabase } from '../lib/supabase';
@@ -52,7 +52,12 @@ const Pricing: React.FC = () => {
 
         window.Paddle.Initialize({ token: clientToken });
         window.Paddle.Checkout.open({
-            settings: { displayMode: "overlay", theme: "light", locale: "es" },
+            settings: {
+                displayMode: "overlay",
+                theme: "light",
+                locale: "es",
+                successUrl: `${window.location.origin}/payment-success`
+            },
             items: [{ priceId: priceId, quantity: 1 }],
             customer: { email: user.email },
             customData: { supabase_user_id: String(user.id) }

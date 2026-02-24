@@ -1,41 +1,149 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle, ArrowRight, Sparkles, Zap, BookOpen, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Helmet } from 'react-helmet-async';
+
+const REDIRECT_SECONDS = 7;
 
 const PaymentSuccess: React.FC = () => {
     const navigate = useNavigate();
+    const [countdown, setCountdown] = useState(REDIRECT_SECONDS);
+    const [isVerifying, setIsVerifying] = useState(true);
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
+    // Verifica la suscripción en Supabase (Paddle webhook puede tardar unos segundos)
     useEffect(() => {
-        // Redirect to dashboard after 5 seconds automatically
-        const timer = setTimeout(() => {
-            navigate('/dashboard');
-        }, 5000);
+        let attempts = 0;
+        const maxAttempts = 6;
 
-        return () => clearTimeout(timer);
+        const checkSubscription = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                setIsVerifying(false);
+                return;
+            }
+
+            const { data: sub } = await supabase
+                .from('subscriptions')
+                .select('subscription_status')
+                .eq('customer_id', user.id)
+                .single();
+
+            if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+                setIsConfirmed(true);
+                setIsVerifying(false);
+            } else {
+                attempts++;
+                if (attempts < maxAttempts) {
+                    // Reintenta cada 2 segundos mientras Paddle procesa el webhook
+                    setTimeout(checkSubscription, 2000);
+                } else {
+                    // Aunque no confirmemos, seguimos adelante (el webhook llega después)
+                    setIsVerifying(false);
+                }
+            }
+        };
+
+        checkSubscription();
+    }, []);
+
+    // Countdown y redirección automática
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    navigate('/dashboard');
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(interval);
     }, [navigate]);
 
+    const perks = [
+        { icon: Zap, text: 'Acceso ilimitado a 1.2M+ prompts' },
+        { icon: BookOpen, text: 'Actualizaciones diarias de contenido' },
+        { icon: Sparkles, text: 'Uso comercial incluido' },
+    ];
+
     return (
-        <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4">
-            <div className="bg-white border-2 border-black p-8 md:p-12 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] max-w-lg w-full text-center">
-                <div className="flex justify-center mb-6">
-                    <div className="bg-green-100 p-4 rounded-full">
-                        <CheckCircle size={48} className="text-green-600" />
+        <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4 py-20">
+            <Helmet>
+                <title>¡Suscripción activada! | alpackaai</title>
+            </Helmet>
+
+            <div className="max-w-lg w-full">
+                {/* Card principal */}
+                <div className="bg-white border border-zinc-200 rounded-[32px] p-10 shadow-sm text-center">
+
+                    {/* Icono animado */}
+                    <div className="flex justify-center mb-8">
+                        <div className="relative">
+                            <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center">
+                                <CheckCircle size={36} className="text-white" strokeWidth={2} />
+                            </div>
+                            {/* Ping animation */}
+                            <span className="absolute inset-0 rounded-full bg-zinc-900 animate-ping opacity-10" />
+                        </div>
                     </div>
-                </div>
 
-                <h1 className="text-3xl font-black tracking-tighter mb-4">¡Pago exitoso!</h1>
-                <p className="font-mono text-gray-500 mb-8">
-                    Tu suscripción ha sido procesada correctamente. Ya tienes acceso ilimitado a todo el banco de prompts.
-                </p>
+                    {/* Título */}
+                    <h1 className="text-3xl font-black tracking-tight text-zinc-900 mb-3 lowercase">
+                        ¡ya eres premium!
+                    </h1>
+                    <p className="text-zinc-500 text-sm leading-relaxed mb-8 lowercase">
+                        tu suscripción está activa. bienvenido al banco de prompts más completo en español.
+                    </p>
 
-                <Link to="/dashboard" className="block w-full">
-                    <button className="w-full bg-black text-white py-4 font-bold text-sm tracking-wider hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                    {/* Estado de verificación */}
+                    {isVerifying && (
+                        <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 mb-6 font-mono">
+                            <Loader2 size={12} className="animate-spin" />
+                            verificando suscripción...
+                        </div>
+                    )}
+                    {!isVerifying && isConfirmed && (
+                        <div className="flex items-center justify-center gap-2 text-xs text-emerald-600 mb-6 font-mono bg-emerald-50 rounded-xl py-2 px-4">
+                            <CheckCircle size={12} />
+                            suscripción confirmada
+                        </div>
+                    )}
+
+                    {/* Perks */}
+                    <ul className="space-y-3 mb-10 text-left">
+                        {perks.map(({ icon: Icon, text }, i) => (
+                            <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
+                                <div className="w-8 h-8 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-center shrink-0">
+                                    <Icon size={14} className="text-zinc-900" />
+                                </div>
+                                <span className="font-medium lowercase">{text}</span>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Botón CTA */}
+                    <button
+                        onClick={() => navigate('/dashboard')}
+                        className="w-full bg-zinc-900 text-white py-4 rounded-2xl font-bold text-sm hover:bg-zinc-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    >
                         Ir al Dashboard <ArrowRight size={16} />
                     </button>
-                </Link>
 
-                <p className="text-xs text-gray-400 mt-6 font-mono">
-                    Serás redirigido automáticamente en 5 segundos...
+                    {/* Countdown */}
+                    <p className="text-xs text-zinc-400 mt-5 font-mono">
+                        redirigiendo en <span className="font-bold text-zinc-600">{countdown}s</span>...
+                    </p>
+                </div>
+
+                {/* Separador pequeño */}
+                <p className="text-center text-xs text-zinc-400 mt-6 font-mono lowercase">
+                    ¿algún problema? escríbenos a{' '}
+                    <a href="mailto:soporte@alpackaai.xyz" className="underline hover:text-zinc-600 transition-colors">
+                        soporte@alpackaai.xyz
+                    </a>
                 </p>
             </div>
         </div>
