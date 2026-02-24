@@ -33,7 +33,7 @@ const Pricing: React.FC = () => {
                     .from('subscriptions')
                     .select('subscription_status')
                     .eq('customer_id', user.id)
-                    .single();
+                    .maybeSingle();
                 if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
                     setIsSubscribed(true);
                 }

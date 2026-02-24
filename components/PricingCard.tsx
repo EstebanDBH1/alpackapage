@@ -28,7 +28,7 @@ const PricingCard: React.FC = () => {
                     .from('subscriptions')
                     .select('subscription_status')
                     .eq('customer_id', user.id)
-                    .single();
+                    .maybeSingle();
                 if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
                     setIsSubscribed(true);
                 }
@@ -48,7 +48,12 @@ const PricingCard: React.FC = () => {
 
         window.Paddle.Initialize({ token: clientToken });
         window.Paddle.Checkout.open({
-            settings: { displayMode: 'overlay', theme: 'light', locale: 'es' },
+            settings: {
+                displayMode: 'overlay',
+                theme: 'light',
+                locale: 'es',
+                successUrl: `${window.location.origin}/payment-success`
+            },
             items: [{ priceId: priceId, quantity: 1 }],
             customer: { email: user.email },
             customData: { supabase_user_id: String(user.id) },
@@ -134,8 +139,8 @@ const PricingCard: React.FC = () => {
                                 onClick={handleJoinClick}
                                 disabled={isSubscribed || loading}
                                 className={`w-full py-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${isSubscribed
-                                        ? 'bg-emerald-50 text-emerald-600 cursor-default'
-                                        : 'bg-zinc-900 text-white hover:bg-black active:scale-[0.98] shadow-lg hover:shadow-xl'
+                                    ? 'bg-emerald-50 text-emerald-600 cursor-default'
+                                    : 'bg-zinc-900 text-white hover:bg-black active:scale-[0.98] shadow-lg hover:shadow-xl'
                                     }`}
                             >
                                 {isSubscribed ? (

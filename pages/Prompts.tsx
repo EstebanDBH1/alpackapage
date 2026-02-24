@@ -42,7 +42,7 @@ const Prompts: React.FC = () => {
                     .from('subscriptions')
                     .select('subscription_status')
                     .eq('customer_id', user.id)
-                    .single();
+                    .maybeSingle();
                 if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
                     setIsSubscribed(true);
                 }
@@ -102,7 +102,12 @@ const Prompts: React.FC = () => {
 
         window.Paddle.Initialize({ token: clientToken });
         window.Paddle.Checkout.open({
-            settings: { displayMode: 'overlay', theme: 'light', locale: 'es' },
+            settings: {
+                displayMode: 'overlay',
+                theme: 'light',
+                locale: 'es',
+                successUrl: `${window.location.origin}/payment-success`
+            },
             items: [{ priceId: priceId, quantity: 1 }],
             customer: { email: user.email },
             customData: { supabase_user_id: String(user.id) },

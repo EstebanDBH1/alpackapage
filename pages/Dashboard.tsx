@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
                 .from('subscriptions')
                 .select('*')
                 .eq('customer_id', user.id)
-                .single();
+                .maybeSingle();
 
             if (sub) {
                 setSubscription(sub);

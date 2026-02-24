@@ -12,22 +12,16 @@ const PaymentSuccess: React.FC = () => {
     const [isVerifying, setIsVerifying] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
 
-    // Verifica la suscripción en Supabase (Paddle webhook puede tardar unos segundos)
     useEffect(() => {
         let attempts = 0;
-        const maxAttempts = 6;
+        const maxAttempts = 5;
+        let timeoutId: ReturnType<typeof setTimeout>;
 
-        const checkSubscription = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                setIsVerifying(false);
-                return;
-            }
-
+        const checkSubscription = async (userId: string) => {
             const { data: sub } = await supabase
                 .from('subscriptions')
                 .select('subscription_status')
-                .eq('customer_id', user.id)
+                .eq('customer_id', userId)
                 .single();
 
             if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
@@ -36,16 +30,27 @@ const PaymentSuccess: React.FC = () => {
             } else {
                 attempts++;
                 if (attempts < maxAttempts) {
-                    // Reintenta cada 2 segundos mientras Paddle procesa el webhook
-                    setTimeout(checkSubscription, 2000);
+                    // Reintenta cada 2 segundos esperando que el webhook de Paddle llegue
+                    timeoutId = setTimeout(() => checkSubscription(userId), 2000);
                 } else {
-                    // Aunque no confirmemos, seguimos adelante (el webhook llega después)
                     setIsVerifying(false);
                 }
             }
         };
 
-        checkSubscription();
+        const init = async () => {
+            // getSession() lee la sesión LOCAL (sin llamada al servidor), evita 403
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) {
+                setIsVerifying(false);
+                return;
+            }
+            checkSubscription(session.user.id);
+        };
+
+        init();
+
+        return () => clearTimeout(timeoutId);
     }, []);
 
     // Countdown y redirección automática
@@ -85,7 +90,6 @@ const PaymentSuccess: React.FC = () => {
                             <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center">
                                 <CheckCircle size={36} className="text-white" strokeWidth={2} />
                             </div>
-                            {/* Ping animation */}
                             <span className="absolute inset-0 rounded-full bg-zinc-900 animate-ping opacity-10" />
                         </div>
                     </div>
@@ -138,7 +142,6 @@ const PaymentSuccess: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Separador pequeño */}
                 <p className="text-center text-xs text-zinc-400 mt-6 font-mono lowercase">
                     ¿algún problema? escríbenos a{' '}
                     <a href="mailto:soporte@alpackaai.xyz" className="underline hover:text-zinc-600 transition-colors">
