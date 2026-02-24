@@ -25,11 +25,19 @@ const Prompts: React.FC = () => {
 
     // Load Paddle
     useEffect(() => {
-        if (window.Paddle) { setScriptLoaded(true); return; }
+        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
+        const initPaddle = () => {
+            if (!window.Paddle || !clientToken) return;
+            const isSandbox = clientToken.startsWith('test_');
+            if (isSandbox) window.Paddle.Environment.set('sandbox');
+            window.Paddle.Initialize({ token: clientToken });
+            setScriptLoaded(true);
+        };
+        if (window.Paddle) { initPaddle(); return; }
         const script = document.createElement('script');
         script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
         script.async = true;
-        script.onload = () => setScriptLoaded(true);
+        script.onload = initPaddle;
         document.body.appendChild(script);
     }, []);
 
@@ -97,10 +105,8 @@ const Prompts: React.FC = () => {
         if (!scriptLoaded || !window.Paddle) return;
         setCheckoutLoading(true);
 
-        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
         const priceId = import.meta.env.VITE_PADDLE_PRICE_ID?.trim();
 
-        window.Paddle.Initialize({ token: clientToken });
         window.Paddle.Checkout.open({
             settings: {
                 displayMode: 'overlay',
