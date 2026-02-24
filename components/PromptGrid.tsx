@@ -28,8 +28,8 @@ const PromptGrid: React.FC = () => {
         {/* Header de la sección */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex justify-between items-end">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 text-zinc-900 lowercase">dentro de la bóveda</h2>
-            <p className="font-mono text-[10px] md:text-xs text-zinc-400 tracking-[0.2em] uppercase">accede a estos y miles más con tu suscripción</p>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 text-zinc-900 lowercase">Accede a todo el contenido</h2>
+            <p className="font-mono text-[10px] md:text-xs text-zinc-400 tracking-[0.2em] uppercase">accede a estos y miles más</p>
           </div>
 
           <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-zinc-900 hover:translate-x-1 transition-transform tracking-tighter lowercase">
