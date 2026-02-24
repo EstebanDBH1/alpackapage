@@ -19,7 +19,9 @@ const PromptDetail: React.FC = () => {
     useEffect(() => {
         const fetchPromptAndUser = async () => {
             setLoading(true);
-            const { data: promptData, error } = await supabase.rpc('get_public_prompts').eq('id', id).single();
+            const { data: promptData, error } = await supabase
+                .rpc('get_prompt_detail', { prompt_id: id })
+                .single();
 
             const { data: { user } } = await supabase.auth.getUser();
             let subscribed = false;
@@ -29,7 +31,7 @@ const PromptDetail: React.FC = () => {
                     .from('subscriptions')
                     .select('subscription_status')
                     .eq('customer_id', user.id)
-                    .single();
+                    .maybeSingle();
                 subscribed = sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing');
 
                 const { data: saved } = await supabase
@@ -37,7 +39,7 @@ const PromptDetail: React.FC = () => {
                     .select('id')
                     .eq('user_id', user.id)
                     .eq('prompt_id', id)
-                    .single();
+                    .maybeSingle();
                 setIsSaved(!!saved);
             }
 
