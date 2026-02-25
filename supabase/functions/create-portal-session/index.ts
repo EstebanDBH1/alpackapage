@@ -2,8 +2,8 @@
  * Supabase Edge Function: create-portal-session
  * 
  * Genera URLs de sesión de portal de Paddle Billing para que el usuario
- * gestione su suscripción. Valida que el customer_id pertenezca al usuario
- * autenticado antes de hacer la petición a Paddle.
+ * gestione su suscripción. Busca el paddle_customer_id de múltiples fuentes
+ * y crea una portal session en la API de Paddle.
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
             });
         }
 
-        // 2. Crear cliente Supabase con SERVICE ROLE para verificar el user
+        // 2. Crear cliente Supabase con SERVICE ROLE
         const supabaseAdmin = createClient(
             Deno.env.get('SUPABASE_URL') ?? '',
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
@@ -45,49 +45,29 @@ Deno.serve(async (req) => {
             });
         }
 
-        // 4. Obtener el customer_id del body
-        const { customer_id } = await req.json();
-
-        if (!customer_id) {
-            return new Response(JSON.stringify({ error: 'customer_id es requerido' }), {
-                status: 400,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            });
-        }
-
-        // 5. Verificar que el customer_id pertenece al usuario autenticado
+        // 4. Buscar la suscripción del usuario en nuestra DB
         const { data: subscription, error: subError } = await supabaseAdmin
             .from('subscriptions')
-            .select('customer_id')
+            .select('subscription_id, metadata, customer_id')
             .eq('customer_id', user.id)
             .maybeSingle();
 
         if (subError || !subscription) {
+            console.error('No subscription found for user:', user.id, subError);
             return new Response(JSON.stringify({ error: 'No se encontró suscripción para este usuario' }), {
-                status: 403,
+                status: 404,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             });
         }
 
-        // 6. Obtener el paddle_customer_id de metadata de forma segura
-        const { data: subWithMeta } = await supabaseAdmin
-            .from('subscriptions')
-            .select('metadata')
-            .eq('customer_id', user.id)
-            .maybeSingle();
+        console.log('Subscription found:', subscription.subscription_id);
+        console.log('Metadata:', JSON.stringify(subscription.metadata));
 
-        const paddleCustomerId = subWithMeta?.metadata?.paddle_customer_id
-            || subWithMeta?.metadata?.customer_id;
+        // 5. Obtener el paddle_customer_id
+        // Primero intentar desde metadata (saved by webhook)
+        let paddleCustomerId = subscription.metadata?.paddle_customer_id;
 
-        // Validar que el customer_id enviado coincide con el de la suscripción del usuario
-        if (!paddleCustomerId || customer_id !== paddleCustomerId) {
-            return new Response(JSON.stringify({ error: 'customer_id no autorizado' }), {
-                status: 403,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            });
-        }
-
-        // 7. Hacer la petición a Paddle
+        // Si no está en metadata, obtenerlo desde la API de Paddle usando el subscription_id
         const PADDLE_API_KEY = Deno.env.get('PADDLE_API_KEY');
         const PADDLE_API_URL = Deno.env.get('PADDLE_ENV') === 'production'
             ? 'https://api.paddle.com'
@@ -97,7 +77,56 @@ Deno.serve(async (req) => {
             throw new Error('PADDLE_API_KEY no está configurada');
         }
 
-        const response = await fetch(`${PADDLE_API_URL}/customers/${customer_id}/portal-sessions`, {
+        if (!paddleCustomerId && subscription.subscription_id) {
+            console.log('paddle_customer_id not in metadata, fetching from Paddle API...');
+
+            // Fetch subscription details from Paddle to get the customer_id
+            const subResponse = await fetch(`${PADDLE_API_URL}/subscriptions/${subscription.subscription_id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${PADDLE_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (subResponse.ok) {
+                const subData = await subResponse.json();
+                paddleCustomerId = subData.data?.customer_id;
+                console.log('Got paddle_customer_id from Paddle API:', paddleCustomerId);
+
+                // Save it to metadata for future use
+                if (paddleCustomerId) {
+                    const existingMetadata = subscription.metadata || {};
+                    await supabaseAdmin
+                        .from('subscriptions')
+                        .update({
+                            metadata: {
+                                ...existingMetadata,
+                                paddle_customer_id: paddleCustomerId,
+                                paddle_subscription_id: subscription.subscription_id,
+                            }
+                        })
+                        .eq('customer_id', user.id);
+                    console.log('Saved paddle_customer_id to metadata for future use');
+                }
+            } else {
+                console.error('Failed to fetch subscription from Paddle:', await subResponse.text());
+            }
+        }
+
+        if (!paddleCustomerId || !paddleCustomerId.startsWith('ctm_')) {
+            return new Response(JSON.stringify({
+                error: 'No se pudo obtener el ID de cliente de Paddle. Contacta soporte.'
+            }), {
+                status: 500,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        // 6. Crear portal session en Paddle
+        console.log('Creating portal session for customer:', paddleCustomerId);
+
+        const response = await fetch(`${PADDLE_API_URL}/customers/${paddleCustomerId}/portal-sessions`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${PADDLE_API_KEY}`,
@@ -108,12 +137,15 @@ Deno.serve(async (req) => {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error('Error de Paddle:', data);
+            console.error('Error de Paddle:', JSON.stringify(data));
             return new Response(JSON.stringify({ error: data.error || 'Error al conectar con Paddle' }), {
                 status: response.status,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             });
         }
+
+        console.log('Portal session created successfully');
+        console.log('URLs:', JSON.stringify(data.data?.urls));
 
         return new Response(JSON.stringify({ urls: data.data.urls }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -121,6 +153,7 @@ Deno.serve(async (req) => {
         });
 
     } catch (error) {
+        console.error('Error:', error.message);
         return new Response(JSON.stringify({ error: error.message }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 500,

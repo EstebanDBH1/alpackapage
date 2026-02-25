@@ -93,27 +93,44 @@ const Dashboard: React.FC = () => {
 
         setUpdating(true);
         try {
-            // Buscamos el customer_id de Paddle. 
-            // Según tu solicitud, viene del frontend (puede estar en subscription.metadata o perfiles)
-            const paddleCustomerId = subscription.metadata?.paddle_customer_id || subscription.metadata?.customer_id;
-
-            if (!paddleCustomerId || !paddleCustomerId.startsWith('ctm_')) {
-                throw new Error('No se encontró un ID de cliente de Paddle válido (ctm_...)');
-            }
-
             const { data, error } = await supabase.functions.invoke('create-portal-session', {
-                body: { customer_id: paddleCustomerId }
+                body: {}
             });
 
-            if (error) throw error;
+            console.log('Portal response data:', data);
+            console.log('Portal response error:', error);
+
+            // If error, try to read the response body for debug info
+            if (error) {
+                // The data field may contain the JSON body even on error
+                if (data?.debug) {
+                    console.error('Debug steps:', data.debug);
+                }
+                // Try to get context from FunctionsHttpError
+                if (error.context) {
+                    try {
+                        const errorBody = await error.context.json();
+                        console.error('Error body:', errorBody);
+                        if (errorBody?.debug) {
+                            console.error('Debug steps:', errorBody.debug);
+                            alert('Error debug: ' + JSON.stringify(errorBody.debug, null, 2));
+                            return;
+                        }
+                    } catch (e) {
+                        // context may not be json
+                    }
+                }
+                throw error;
+            }
             if (data?.urls?.general?.overview) {
                 window.open(data.urls.general.overview, '_blank');
             } else {
+                console.error('Data received but no URLs:', data);
                 throw new Error('No se recibió la URL del portal');
             }
         } catch (err: any) {
             console.error('Error al generar portal:', err);
-            alert('Error: ' + (err.message || 'No se pudo abrir el portal de gestión.'));
+            alert('Error: ' + (err.message || 'No se pudo abrir el portal de gestión. Por favor contacta soporte@alpackaai.xyz'));
         } finally {
             setUpdating(false);
         }
@@ -128,38 +145,35 @@ const Dashboard: React.FC = () => {
 
         setUpdating(true);
         try {
-            // 1. Intentamos obtener el link dinámico de cancelación de Paddle vía la Edge Function
-            const paddleCustomerId = subscription.metadata?.paddle_customer_id || subscription.metadata?.customer_id;
+            // 1. Intentar abrir el portal de Paddle para que el usuario cancele desde ahí
+            const { data, error } = await supabase.functions.invoke('create-portal-session', {
+                body: {}
+            });
 
-            if (paddleCustomerId && paddleCustomerId.startsWith('ctm_')) {
-                const { data, error } = await supabase.functions.invoke('create-portal-session', {
-                    body: { customer_id: paddleCustomerId }
-                });
-
-                if (!error && data?.urls?.subscriptions) {
-                    // Buscamos el link de cancelación específico para esta suscripción
-                    const subInfo = data.urls.subscriptions.find((s: any) => s.subscription_id === subscription.subscription_id);
-                    if (subInfo?.cancel) {
-                        window.open(subInfo.cancel, '_blank');
-                        return;
-                    }
+            if (!error && data?.urls?.subscriptions) {
+                // Buscar el link de cancelación para esta suscripción
+                const subInfo = data.urls.subscriptions.find((s: any) => s.id === subscription.subscription_id);
+                if (subInfo?.cancel_subscription) {
+                    window.open(subInfo.cancel_subscription, '_blank');
+                    return;
                 }
             }
 
-            // 2. Si fallan los links dinámicos o no es Paddle, usamos el método tradicional (API)
-            if (subscription.cancel_url) {
-                window.open(subscription.cancel_url, '_blank');
+            // Si encontramos el portal general, abrirlo (el usuario puede cancelar desde ahí)
+            if (!error && data?.urls?.general?.overview) {
+                window.open(data.urls.general.overview, '_blank');
                 return;
             }
 
-            const { data, error } = await supabase.functions.invoke('cancel-paddle-subscription', {
+            // 2. Fallback: usar la edge function de cancelación directa
+            const { data: cancelData, error: cancelError } = await supabase.functions.invoke('cancel-paddle-subscription', {
                 body: {
                     subscriptionID: subscription.subscription_id,
                     userID: user.id
                 }
             });
 
-            if (error) throw error;
+            if (cancelError) throw cancelError;
             alert('Tu suscripción ha sido programada para cancelarse al final del periodo actual.');
             window.location.reload();
         } catch (err: any) {
