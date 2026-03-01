@@ -5,7 +5,7 @@ import { Plus, Minus } from 'lucide-react';
 const faqData: FaqItem[] = [
   {
     "question": "¿Cuál es el costo y qué incluye?",
-    "answer": "Por solo $3.99 USD al mes, desbloqueas el acceso total a nuestra librería. No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más."
+    "answer": "Por solo $4 USD al mes, desbloqueas el acceso total a nuestra librería. No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más."
   },
   {
     "question": "¿Realmente funcionan estos prompts?",

@@ -4,7 +4,7 @@ const steps = [
   {
     "num": "1",
     "title": "Activa tu acceso",
-    "desc": "Suscríbete por solo $3.99/mes. Sin contratos ni letras pequeñas. Libertad total para cancelar."
+    "desc": "Suscríbete por solo $4/mes. Sin contratos ni letras pequeñas. Libertad total para cancelar."
   },
   {
     "num": "2",

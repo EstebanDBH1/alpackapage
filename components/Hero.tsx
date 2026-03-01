@@ -8,7 +8,7 @@ const Hero: React.FC = () => {
   // Animated counter for social proof
   useEffect(() => {
     let start = 0;
-    const end = 1247;
+    const end = 100;
     const duration = 1800;
     const step = Math.ceil(end / (duration / 16));
     const timer = setInterval(() => {
@@ -46,10 +46,10 @@ const Hero: React.FC = () => {
 
         {/* Subheadline */}
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-zinc-500 mb-4 font-sans leading-relaxed">
-          más de <strong className="text-zinc-900">1,200 prompts de ingeniería</strong> listos para copiar y usar.
+          más de <strong className="text-zinc-900">100 prompts de ingeniería</strong> listos para copiar y usar.
           resultados profesionales en segundos, no en horas.
         </p>
-
+        z
         {/* Mini social proof under headline */}
         <div className="flex flex-wrap justify-center items-center gap-5 mb-10 text-xs font-mono text-zinc-400">
           <span className="flex items-center gap-1.5">
@@ -62,7 +62,7 @@ const Hero: React.FC = () => {
             99.2% de éxito en primera respuesta
           </span>
           <span className="text-zinc-200">|</span>
-          <span>$3.90/mes — menos que un café</span>
+          <span>$4/mes — menos que un café</span>
         </div>
 
         {/* CTAs */}

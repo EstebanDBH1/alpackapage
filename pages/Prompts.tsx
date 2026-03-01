@@ -130,7 +130,7 @@ const Prompts: React.FC = () => {
         <div className="bg-white min-h-screen pb-24 font-sans">
             <Helmet>
                 <title>Banco de Prompts de IA | alpackaai</title>
-                <meta name="description" content="Más de 1,200 prompts de ingeniería para ChatGPT, Claude y Midjourney. Resultados profesionales en segundos. Acceso ilimitado por $3.90/mes." />
+                <meta name="description" content="100+ prompts para todas las tareas comerciales. Resultados profesionales en segundos. Acceso ilimitado por $4/mes." />
             </Helmet>
 
             {/* ── STICKY PREMIUM BANNER (solo para no suscritos) ─────────────── */}
@@ -139,8 +139,8 @@ const Prompts: React.FC = () => {
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                         <Sparkles size={16} className="text-yellow-400 flex-shrink-0" />
                         <p className="text-xs font-mono tracking-wide truncate">
-                            <span className="text-yellow-400 font-bold">estás viendo solo una parte del banco.</span>
-                            {' '}por $3.90/mes desbloqueas más de 1,200 prompts premium al instante.
+                            <span className="text-yellow-400 font-bold"></span>
+                            {' '}Desbloqueas todo el contenido.
                         </p>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
@@ -186,7 +186,7 @@ const Prompts: React.FC = () => {
                     </h1>
 
                     <p className="text-center max-w-xl mx-auto text-base md:text-lg text-zinc-500 mb-8 leading-relaxed">
-                        más de <strong className="text-zinc-900">1,200 estructuras probadas</strong> para que la IA entienda exactamente lo que necesitas —
+                        más de <strong className="text-zinc-900">100 estructuras probadas</strong> para que la IA entienda exactamente lo que necesitas —
                         sin prueba y error, sin resultados genéricos.
                     </p>
 
@@ -195,7 +195,7 @@ const Prompts: React.FC = () => {
                         {[
                             { value: '1,200+', label: 'prompts disponibles' },
                             { value: '99.2%', label: 'de éxito en primera respuesta' },
-                            { value: '$3.90', label: 'acceso ilimitado al mes' },
+                            { value: '$4', label: 'acceso ilimitado al mes' },
                         ].map((stat) => (
                             <div key={stat.label}>
                                 <p className="text-xl font-black tracking-tighter text-zinc-900">{stat.value}</p>
@@ -278,7 +278,7 @@ const Prompts: React.FC = () => {
                             className="hidden md:flex items-center gap-2 bg-zinc-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-black transition-all hover:-translate-y-0.5 shadow-lg"
                         >
                             <Sparkles size={13} className="text-yellow-400" />
-                            hazte premium — $3.90/mes
+                            hazte premium — $4/mes
                             <ArrowRight size={13} />
                         </button>
                     )}
@@ -314,17 +314,15 @@ const Prompts: React.FC = () => {
                                         membresía activa en segundos
                                     </span>
                                     <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-white mb-3 leading-tight">
-                                        estos son solo los primeros.<br />
-                                        <span className="text-zinc-400">hay más de 1,200 esperándote.</span>
+                                        Desbloquea todo el<br />
+                                        <span className="text-zinc-400">contenido.</span>
                                     </h3>
                                     <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-sm mx-auto md:mx-0">
-                                        los miembros premium obtienen prompts estructurados para marketing, código, ventas,
-                                        análisis y más. no genéricos — construidos para dar resultados a la primera.
-                                        todo por <span className="text-white font-bold">$3.90 al mes</span>, menos que un café.
+
                                     </p>
 
                                     <ul className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
-                                        {['acceso a 1,200+ prompts', 'uso comercial incluido', 'actualizaciones semanales', 'cancela con un clic'].map((item) => (
+                                        {['acceso a 100+ prompts', 'actualizaciones semanales', 'cancela con un clic'].map((item) => (
                                             <li key={item} className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
                                                 <Check size={12} className="text-emerald-400" strokeWidth={3} />
                                                 {item}
@@ -358,7 +356,7 @@ const Prompts: React.FC = () => {
                                     <div className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center backdrop-blur-sm w-56">
                                         <p className="text-zinc-500 text-[10px] font-mono tracking-widest mb-2">precio mensual</p>
                                         <div className="flex items-baseline justify-center gap-1 mb-1">
-                                            <span className="text-5xl font-black tracking-tighter text-white">$3.90</span>
+                                            <span className="text-5xl font-black tracking-tighter text-white">$4</span>
                                         </div>
                                         <p className="text-zinc-500 text-[10px] font-mono mb-5">/mes · cancela cuando quieras</p>
                                         <div className="h-px bg-white/10 mb-5"></div>
@@ -455,7 +453,7 @@ const Prompts: React.FC = () => {
                         <div>
                             <p className="font-mono text-[10px] text-zinc-400 tracking-widest mb-1 uppercase">sin contrato · cancela cuando quieras</p>
                             <h3 className="text-xl font-black tracking-tight text-zinc-900">
-                                accede a los 1,200+ prompts por <span className="underline decoration-4 underline-offset-4 decoration-zinc-300">$3.90/mes</span>
+                                accede a los 100+ prompts por <span className="underline decoration-4 underline-offset-4 decoration-zinc-300">$4/mes</span>
                             </h3>
                         </div>
                         <button

@@ -45,7 +45,7 @@ const Terms: React.FC = () => {
             Nuestro proceso de pedido es realizado por nuestro revendedor en línea Paddle.com. Paddle.com es el Vendedor Autorizado (Merchant of Record) para todos nuestros pedidos. Paddle proporciona todas las consultas de servicio al cliente y maneja las devoluciones.
           </p>
           <p>
-            <strong>Facturación:</strong> Se te cobrará una tarifa plana de $3.90 USD por mes. La suscripción se renueva automáticamente a menos que se cancele al menos 24 horas antes del final del período de facturación actual.
+            <strong>Facturación:</strong> Se te cobrará una tarifa plana de $4 USD por mes. La suscripción se renueva automáticamente a menos que se cancele al menos 24 horas antes del final del período de facturación actual.
           </p>
           <p>
             <strong>Cancelaciones:</strong> Puedes cancelar tu suscripción en cualquier momento a través del panel de control de tu cuenta o contactando al soporte de Paddle. El acceso al Servicio continuará hasta el final de tu ciclo de facturación actual.

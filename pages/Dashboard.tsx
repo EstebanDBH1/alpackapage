@@ -302,7 +302,7 @@ const Dashboard: React.FC = () => {
                                 </div>
                                 {isActive && (
                                     <div className="text-right">
-                                        <div className="text-3xl font-black tracking-tighter">$3.90</div>
+                                        <div className="text-3xl font-black tracking-tighter">$4</div>
                                         <div className="text-xs text-gray-400 font-mono">/mes</div>
                                     </div>
                                 )}

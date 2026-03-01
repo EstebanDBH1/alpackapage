@@ -83,7 +83,7 @@ const Pricing: React.FC = () => {
                     un plan. <br /> <span className="text-zinc-400">acceso total.</span>
                 </h1>
                 <p className="text-lg text-zinc-500 max-w-xl mx-auto leading-relaxed lowercase">
-                    olvida los créditos y las suscripciones costosas. desbloquea todo el banco de prompts por lo que cuesta un café al mes.
+                    Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
                 </p>
             </div>
 
@@ -106,7 +106,7 @@ const Pricing: React.FC = () => {
 
                         <div className="mb-10">
                             <div className="flex items-baseline gap-1">
-                                <span className="text-6xl font-black tracking-tighter text-zinc-900">$3.90</span>
+                                <span className="text-6xl font-black tracking-tighter text-zinc-900">$4</span>
                                 <span className="text-zinc-400 font-medium lowercase">/mes</span>
                             </div>
                             <p className="text-zinc-400 text-xs mt-4 lowercase">facturación mensual. cancela cuando quieras sin dramas.</p>
@@ -114,9 +114,8 @@ const Pricing: React.FC = () => {
 
                         <ul className="space-y-5 mb-10">
                             {[
-                                'Acceso ilimitado a 1.2M+ prompts',
+                                'Acceso ilimitado a 100+',
                                 'Actualizaciones diarias',
-                                'Uso comercial incluido',
                                 'Búsqueda técnica avanzada',
                                 'Soporte prioritario'
                             ].map((feature, i) => (

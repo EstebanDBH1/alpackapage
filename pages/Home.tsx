@@ -63,13 +63,12 @@ const Home: React.FC = () => {
             <span className="text-zinc-400">con prompts genéricos?</span>
           </h2>
           <p className="font-sans text-base text-zinc-400 mb-10 max-w-lg mx-auto leading-relaxed">
-            cada día sin alpackaai es un día en que tu competencia trabaja más rápido que tú.
-            <strong className="text-white"> por $3.90 al mes</strong>, eso cambia hoy.
+            <strong className="text-white"> por $4 al mes</strong>, eso cambia hoy.
           </p>
           <Link to="/pricing">
             <button className="group inline-flex items-center gap-3 bg-white text-zinc-900 px-12 py-5 rounded-2xl font-bold text-lg hover:bg-zinc-100 transition-all shadow-2xl hover:-translate-y-0.5 active:translate-y-0">
               <Sparkles size={20} className="text-yellow-500" />
-              hazte premium — $3.90/mes
+              hazte premium — $4/mes
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>

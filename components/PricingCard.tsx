@@ -68,9 +68,8 @@ const PricingCard: React.FC = () => {
     };
 
     const features = [
-        'acceso ilimitado a 1,200+ prompts',
+        'acceso ilimitado a 100+ prompts',
         'actualizaciones semanales garantizadas',
-        'uso comercial incluido',
         'búsqueda avanzada por categoría',
         'guarda tus prompts favoritos',
         'soporte prioritario 24/7',
@@ -122,7 +121,7 @@ const PricingCard: React.FC = () => {
                             {/* Price */}
                             <div className="mb-8">
                                 <div className="flex items-baseline gap-1">
-                                    <span className="text-[64px] font-black tracking-tighter text-zinc-900 leading-none">$3.90</span>
+                                    <span className="text-[64px] font-black tracking-tighter text-zinc-900 leading-none">$4</span>
                                     <span className="text-zinc-400 font-medium text-sm">/mes</span>
                                 </div>
                                 <p className="text-zinc-400 text-xs mt-3">facturación mensual. cancela cuando quieras.</p>
@@ -174,7 +173,7 @@ const PricingCard: React.FC = () => {
                             </div>
                             <div>
                                 <h4 className="font-bold text-zinc-900 text-sm mb-1">sin tasas ocultas</h4>
-                                <p className="text-zinc-500 text-xs leading-relaxed">el precio es final. sin créditos ni recargas. siempre $3.90.</p>
+                                <p className="text-zinc-500 text-xs leading-relaxed">el precio es final. sin créditos ni recargas. siempre $4.</p>
                             </div>
                         </div>
 
