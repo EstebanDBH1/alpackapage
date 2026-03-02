@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, Sparkles, Terminal } from 'lucide-react';
+import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, Sparkles, Terminal, Download } from 'lucide-react';
 import Skeleton from '../components/Skeleton';
 import { Helmet } from 'react-helmet-async';
+import jsPDF from 'jspdf';
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -56,6 +57,213 @@ const PromptDetail: React.FC = () => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
+    };
+
+    // ── PDF generation (multi-page, line-by-line) ──────────────────────────────
+    const handleDownloadPdf = () => {
+        if (!prompt?.content) return;
+
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const pageW = doc.internal.pageSize.getWidth();   // 210 mm
+        const pageH = doc.internal.pageSize.getHeight();  // 297 mm
+        const ML = 18;                 // left margin
+        const MR = 18;                 // right margin
+        const textW = pageW - ML - MR;   // full usable width
+        const HEADER = 30;                 // header block height
+        const FOOTER = 12;                 // footer reserved at bottom
+        const BOTTOM = pageH - FOOTER;     // y limit before footer
+
+        // ── Helper: draw brand header on current page ────────────────────────
+        const drawHeader = () => {
+            doc.setFillColor(24, 24, 27); // zinc-900
+            doc.rect(0, 0, pageW, HEADER, 'F');
+            // brand name
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(255, 255, 255);
+            doc.text('alpackaai', ML, 12);
+            // tagline
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(161, 161, 170);
+            doc.text('banco de prompts de ia', ML, 21);
+            // category top-right
+            if (prompt?.category) {
+                doc.setFontSize(7);
+                doc.text(prompt.category.toUpperCase(), pageW - MR, 14, { align: 'right' });
+            }
+        };
+
+        // ── Helper: draw footer with page numbers ────────────────────────────
+        const drawFooter = (pageNum: number, totalPages: number) => {
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, BOTTOM, pageW, FOOTER + 2, 'F');
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(161, 161, 170);
+            const date = new Date().toLocaleDateString('es-ES');
+            doc.text(`alpackaai.com  \u00b7  generado el ${date}`, ML, pageH - 5);
+            doc.text(
+                `pag. ${pageNum} / ${totalPages}   \u00b7   \u00a9 ${new Date().getFullYear()} alpackaai`,
+                pageW - MR, pageH - 5, { align: 'right' }
+            );
+        };
+
+        // ── Build all lines first so we know total pages ─────────────────────
+        // Title lines
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(19);
+        const titleLines: string[] = doc.splitTextToSize(prompt.title || '', textW);
+
+        // Description lines
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        const descLines: string[] = prompt.description
+            ? doc.splitTextToSize(prompt.description, textW)
+            : [];
+
+        // Content lines
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(9);
+        const contentLines: string[] = doc.splitTextToSize(prompt.content, textW - 10);
+
+        // ── Calculate how many pages we'll need ──────────────────────────────
+        const LINE_TITLE = 9;   // mm per title line
+        const LINE_DESC = 6;   // mm per desc line
+        const LINE_CONTENT = 5.5; // mm per content line
+        const availFirst = BOTTOM - (HEADER + 12);
+
+        // rough estimate pass (we'll do a real render below)
+        let simY = HEADER + 12;
+        let simPages = 1;
+        const advance = (h: number) => {
+            if (simY + h > BOTTOM) { simPages++; simY = HEADER + 10; }
+            simY += h;
+        };
+        titleLines.forEach(() => advance(LINE_TITLE));
+        simY += 4;
+        if (descLines.length) { descLines.forEach(() => advance(LINE_DESC)); simY += 10; }
+        advance(1); // divider
+        simY += 8;  // PROMPT label
+        const BOX_PAD_X = 6;
+        const BOX_PAD_Y = 5;
+        // content box chunks
+        let ci = 0;
+        while (ci < contentLines.length) {
+            const avail = BOTTOM - simY - BOX_PAD_Y * 2;
+            const perChunk = Math.max(1, Math.floor(avail / LINE_CONTENT));
+            const chunk = contentLines.slice(ci, ci + perChunk);
+            const boxH = chunk.length * LINE_CONTENT + BOX_PAD_Y * 2;
+            advance(boxH + 4);
+            ci += perChunk;
+            if (ci < contentLines.length) { simPages++; simY = HEADER + 10; }
+        }
+        const totalPages = simPages;
+
+        // ── Real render ──────────────────────────────────────────────────────
+        let page = 1;
+        drawHeader();
+        let y = HEADER + 12;
+
+        const ensureSpace = (needed: number): boolean => {
+            if (y + needed > BOTTOM) {
+                drawFooter(page, totalPages);
+                doc.addPage();
+                page++;
+                drawHeader();
+                y = HEADER + 10;
+                return true;
+            }
+            return false;
+        };
+
+        // Title
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(19);
+        doc.setTextColor(24, 24, 27);
+        titleLines.forEach((line: string) => {
+            ensureSpace(LINE_TITLE);
+            doc.text(line, ML, y);
+            y += LINE_TITLE;
+        });
+        y += 4;
+
+        // Description
+        if (descLines.length) {
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(113, 113, 122);
+            descLines.forEach((line: string) => {
+                ensureSpace(LINE_DESC);
+                doc.text(line, ML, y);
+                y += LINE_DESC;
+            });
+            y += 10;
+        }
+
+        // Divider
+        ensureSpace(4);
+        doc.setDrawColor(228, 228, 231);
+        doc.setLineWidth(0.25);
+        doc.line(ML, y, pageW - MR, y);
+        y += 8;
+
+        // "PROMPT" label
+        ensureSpace(7);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.5);
+        doc.setTextColor(161, 161, 170);
+        doc.text('PROMPT', ML, y);
+        y += 9;
+
+        // Content box — chunked across pages
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(39, 39, 42);
+
+        let ci2 = 0;
+        while (ci2 < contentLines.length) {
+            // How many lines fit in remaining space on this page?
+            const avail = BOTTOM - y - BOX_PAD_Y * 2 - 2;
+            const perChunk = Math.max(1, Math.floor(avail / LINE_CONTENT));
+            const chunk = contentLines.slice(ci2, ci2 + perChunk);
+            const boxH = chunk.length * LINE_CONTENT + BOX_PAD_Y * 2;
+
+            // Draw light grey box
+            doc.setFillColor(248, 248, 248);
+            doc.setDrawColor(228, 228, 231);
+            doc.setLineWidth(0.2);
+            doc.roundedRect(ML, y, textW, boxH, 2, 2, 'FD');
+
+            // Draw text inside box
+            let ty = y + BOX_PAD_Y + LINE_CONTENT - 1;
+            chunk.forEach((line: string) => {
+                doc.text(line, ML + BOX_PAD_X, ty);
+                ty += LINE_CONTENT;
+            });
+
+            y += boxH + 4;
+            ci2 += perChunk;
+
+            // If more lines remain, go to next page
+            if (ci2 < contentLines.length) {
+                drawFooter(page, totalPages);
+                doc.addPage();
+                page++;
+                drawHeader();
+                y = HEADER + 10;
+            }
+        }
+
+        // Footer on last page
+        drawFooter(page, totalPages);
+
+        // ── Save ────────────────────────────────────────────────────────────
+        const fileName = (prompt.title || 'prompt')
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '') + '.pdf';
+        doc.save(fileName);
     };
 
     const handleSave = async () => {
@@ -136,7 +344,7 @@ const PromptDetail: React.FC = () => {
                     </p>
                 </header>
 
-                {/* VISUALIZER (Si es Midjourney o tiene imagen) */}
+                {/* IMAGE */}
                 {prompt.image_url && (
                     <div className="mb-10 rounded-3xl overflow-hidden border border-zinc-100 shadow-2xl shadow-zinc-200/50">
                         <img src={prompt.image_url} alt={prompt.title} className="w-full h-auto" />
@@ -150,13 +358,23 @@ const PromptDetail: React.FC = () => {
                             <Terminal size={14} /> Prompt Editor
                         </h3>
                         {!isLocked && (
-                            <button
-                                onClick={handleCopy}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-zinc-900 text-white hover:bg-zinc-800'}`}
-                            >
-                                {copied ? <Check size={14} /> : <Copy size={14} />}
-                                {copied ? 'Copiado' : 'Copiar Prompt'}
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={handleDownloadPdf}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-200 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-all"
+                                    title="Descargar como PDF"
+                                >
+                                    <Download size={14} />
+                                    PDF
+                                </button>
+                                <button
+                                    onClick={handleCopy}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-zinc-900 text-white hover:bg-zinc-800'}`}
+                                >
+                                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                                    {copied ? 'Copiado' : 'Copiar prompt'}
+                                </button>
+                            </div>
                         )}
                     </div>
 
