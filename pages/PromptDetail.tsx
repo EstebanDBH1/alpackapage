@@ -102,7 +102,7 @@ const PromptDetail: React.FC = () => {
             doc.setFontSize(7);
             doc.setTextColor(161, 161, 170);
             const date = new Date().toLocaleDateString('es-ES');
-            doc.text(`alpackaai.com  \u00b7  generado el ${date}`, ML, pageH - 5);
+            doc.text(`alpackaai  \u00b7  generado el ${date}`, ML, pageH - 5);
             doc.text(
                 `pag. ${pageNum} / ${totalPages}   \u00b7   \u00a9 ${new Date().getFullYear()} alpackaai`,
                 pageW - MR, pageH - 5, { align: 'right' }
