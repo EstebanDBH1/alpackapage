@@ -130,7 +130,7 @@ const Prompts: React.FC = () => {
         <div className="bg-white min-h-screen pb-24 font-sans">
             <Helmet>
                 <title>Banco de Prompts de IA | alpackaai</title>
-                <meta name="description" content="100+ prompts para todas las tareas comerciales. Resultados profesionales en segundos. Acceso ilimitado por $4/mes." />
+                <meta name="description" content="Prompts para todas las tareas comerciales. Resultados profesionales en segundos. Acceso ilimitado por $4/mes." />
             </Helmet>
 
             {/* ── STICKY PREMIUM BANNER (solo para no suscritos) ─────────────── */}
@@ -193,7 +193,7 @@ const Prompts: React.FC = () => {
                     {/* Stats row */}
                     <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-8 text-center">
                         {[
-                            { value: '1,200+', label: 'prompts disponibles' },
+                            { value: '150+', label: 'prompts disponibles' },
                             { value: '99.2%', label: 'de éxito en primera respuesta' },
                             { value: '$4', label: 'acceso ilimitado al mes' },
                         ].map((stat) => (
