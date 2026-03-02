@@ -155,17 +155,16 @@ const Prompts: React.FC = () => {
                     {/* live pill */}
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-50 border border-zinc-200 mb-8">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-zinc-400 uppercase">banco actualizado hoy</span>
+                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-zinc-400 ">banco actualizado hoy</span>
                     </div>
 
                     {/* headline */}
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-zinc-900 leading-[0.92] mb-5">
-                        prompts que hacen<br />
-                        <span className="text-zinc-300">que la IA te entienda.</span>
+                    <h1 className="text-4xl sm:text-5xl md:text-5xl font-black tracking-tighter text-zinc-900 leading-[0.92] mb-5">
+                        Encuentra el prompt perfecto para impulsar tu trabajo
                     </h1>
 
                     <p className="text-zinc-500 text-base md:text-lg max-w-lg mx-auto leading-relaxed mb-8">
-                        más de <strong className="text-zinc-900">150 estructuras probadas</strong> para marketing, ventas y productividad — sin prueba y error.
+                        más de <strong className="text-zinc-900">150 estructuras probadas</strong> para marketing, ventas y productividad — y mucho más.
                     </p>
 
 
