@@ -1,101 +1,77 @@
 import React from 'react';
+import {
+  Globe, Brain, PenLine, Code2, BarChart2, Search,
+  Lightbulb, Scale, BookOpen, TrendingUp, FlaskConical, Target
+} from 'lucide-react';
 
-const casesDeUso = [
-  {
-    emoji: "🌍",
-    title: "dominio de idiomas",
-    description: "practica conversación real, corrige gramática y entiende modismos. usa prompts de inmersión para aprender cualquier lengua sin salir de casa."
-  },
-  {
-    emoji: "🧠",
-    title: "aprendizaje acelerado",
-    description: "domina temas complejos en minutos. usa técnicas de síntesis y analogías para absorber conocimientos mucho más rápido de lo normal."
-  },
-  {
-    emoji: "✍️",
-    title: "escritura y tono",
-    description: "redacta artículos y correos que conectan. clona tu propio estilo de escritura para que la ai mantenga tu esencia en cada texto."
-  },
-  {
-    emoji: "💻",
-    title: "código y sistemas",
-    description: "genera scripts, componentes web o resuelve errores de lógica. construye herramientas potentes aunque no sepas programar."
-  },
-  {
-    emoji: "📊",
-    title: "análisis de datos",
-    description: "olvida las fórmulas complejas. describe lo que necesitas y obtén macros, cálculos y análisis avanzados de tus hojas de cálculo."
-  },
-  {
-    emoji: "🕵️",
-    title: "investigación profunda",
-    description: "analiza mercados o temas históricos. extrae puntos clave de documentos interminables y reportes técnicos sin perder el hilo."
-  },
-  {
-    emoji: "💡",
-    title: "estrategia creativa",
-    description: "desbloquea ideas de negocio, nombres de marca y planes de marketing basados en tendencias reales y actuales."
-  },
-  {
-    emoji: "⚖️",
-    title: "asistencia legal",
-    description: "revisa contratos y detecta cláusulas de riesgo. traduce el lenguaje jurídico a términos sencillos y fáciles de entender."
-  },
-  {
-    emoji: "📚",
-    title: "resúmenes de valor",
-    description: "convierte libros y pdfs largos en notas accionables. extrae la sabiduría de cualquier texto en segundos."
-  },
-  {
-    emoji: "💰",
-    title: "modelos de negocio",
-    description: "crea planes de venta y propuestas de valor sólidas. usa la ai como un consultor estratégico para escalar tus proyectos."
-  },
-  {
-    emoji: "🧪",
-    title: "ingeniería de prompts",
-    description: "aprende la estructura técnica para hablarle a la ai de forma efectiva y obtener resultados precisos a la primera."
-  },
-  {
-    emoji: "🌱",
-    title: "hábitos y rutina",
-    description: "diseña planes de estudio, agendas y sistemas de productividad personalizados para optimizar cada minuto de tu día."
-  }
+const cases = [
+  { Icon: Globe,        title: "dominio de idiomas",      description: "practica conversación real, corrige gramática y entiende modismos con inmersión total." },
+  { Icon: Brain,        title: "aprendizaje acelerado",   description: "domina temas complejos en minutos usando síntesis y analogías de alto nivel." },
+  { Icon: PenLine,      title: "escritura y tono",        description: "redacta artículos y correos que conectan, manteniendo tu voz en cada texto." },
+  { Icon: Code2,        title: "código y sistemas",       description: "genera scripts, componentes web y resuelve bugs aunque no sepas programar." },
+  { Icon: BarChart2,    title: "análisis de datos",       description: "describe lo que necesitas y obtén macros, cálculos y análisis avanzados al instante." },
+  { Icon: Search,       title: "investigación profunda",  description: "extrae puntos clave de documentos y reportes técnicos sin perder el hilo." },
+  { Icon: Lightbulb,    title: "estrategia creativa",     description: "ideas de negocio, nombres de marca y planes de marketing basados en tendencias reales." },
+  { Icon: Scale,        title: "asistencia legal",        description: "revisa contratos y traduce el lenguaje jurídico a términos claros y accionables." },
+  { Icon: BookOpen,     title: "resúmenes de valor",      description: "convierte libros y pdfs extensos en notas accionables en segundos." },
+  { Icon: TrendingUp,   title: "modelos de negocio",      description: "planes de venta y propuestas de valor sólidas con un consultor estratégico siempre disponible." },
+  { Icon: FlaskConical, title: "ingeniería de prompts",   description: "aprende la estructura técnica para hablarle a la ia de forma efectiva a la primera." },
+  { Icon: Target,       title: "hábitos y rutina",        description: "planes de estudio, agendas y sistemas de productividad totalmente personalizados." },
 ];
 
 const Features: React.FC = () => {
   return (
-    <section className="py-24 bg-white text-zinc-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-4 text-zinc-900 lowercase">
-            tareas reales. resultados reales.
-          </h2>
-          <p className="font-mono text-xs text-zinc-500 tracking-widest uppercase">
-            todo lo que puedes construir y aprender con alpackaai
+    <section className="py-20 md:py-28" style={{ backgroundColor: 'white' }}>
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+
+        {/* Section header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-16">
+          <div className="max-w-xl">
+            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#8B7E74' }}>
+              — casos de uso
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
+              Tareas reales.<br />
+              <em className="not-italic font-sans font-bold">Resultados reales.</em>
+            </h2>
+          </div>
+          <p className="text-sm max-w-xs md:text-right leading-relaxed pb-1" style={{ color: '#8B7E74' }}>
+            todo lo que puedes construir, aprender y automatizar con alpacka.ai.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {casesDeUso.map((item, index) => (
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {cases.map((item, index) => (
             <div
               key={index}
-              className="bg-zinc-50 p-8 rounded-xl border border-zinc-200 relative overflow-hidden group transition-all duration-300 hover:border-zinc-300 hover:bg-zinc-100/50"
+              className="group p-6 rounded-2xl border transition-all duration-150 hover:-translate-y-0.5"
+              style={{ backgroundColor: '#FAF9F5', borderColor: '#E3DCD3' }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(201,106,60,0.07)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
+                (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+              }}
             >
-              <div className="relative z-10">
-                <span className="block text-3xl mb-6 transition-transform duration-300 group-hover:scale-110">
-                  {item.emoji}
-                </span>
-                <h3 className="text-xl font-bold mb-3 text-zinc-900 lowercase">
-                  {item.title}
-                </h3>
-                <p className="text-zinc-500 text-sm font-sans leading-relaxed lowercase">
-                  {item.description}
-                </p>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 border transition-colors group-hover:border-orange-200"
+                style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
+              >
+                <item.Icon size={15} style={{ color: '#8B7E74' }} className="group-hover:text-brand-accent transition-colors" />
               </div>
+              <h3 className="font-semibold text-sm mb-2 leading-snug" style={{ color: '#1D1B18' }}>
+                {item.title}
+              </h3>
+              <p className="text-[13px] leading-relaxed" style={{ color: '#8B7E74' }}>
+                {item.description}
+              </p>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

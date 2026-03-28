@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, Sparkles, Terminal, Download } from 'lucide-react';
-import Skeleton from '../components/Skeleton';
+import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import jsPDF from 'jspdf';
+
+function getCategoryEmoji(cat: string): string {
+    const map: Record<string, string> = {
+        marketing: '📣', copywriting: '✍️', ventas: '💰',
+        productividad: '⚡', estrategia: '♟️', redes: '📱',
+        email: '📧', negocio: '💼', contenido: '🎨',
+        datos: '📊', 'ideas de negocio': '💡', finanzas: '📈',
+    };
+    return map[cat?.toLowerCase()] ?? '•';
+}
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -59,83 +68,60 @@ const PromptDetail: React.FC = () => {
         }
     };
 
-    // ── PDF generation (multi-page, line-by-line) ──────────────────────────────
     const handleDownloadPdf = () => {
         if (!prompt?.content) return;
 
         const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-        const pageW = doc.internal.pageSize.getWidth();   // 210 mm
-        const pageH = doc.internal.pageSize.getHeight();  // 297 mm
-        const ML = 18;                 // left margin
-        const MR = 18;                 // right margin
-        const textW = pageW - ML - MR;   // full usable width
-        const HEADER = 30;                 // header block height
-        const FOOTER = 12;                 // footer reserved at bottom
-        const BOTTOM = pageH - FOOTER;     // y limit before footer
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const ML = 18, MR = 18;
+        const textW = pageW - ML - MR;
+        const HEADER = 30, FOOTER = 12;
+        const BOTTOM = pageH - FOOTER;
 
-        // ── Helper: draw brand header on current page ────────────────────────
         const drawHeader = () => {
-            doc.setFillColor(24, 24, 27); // zinc-900
+            doc.setFillColor(26, 20, 16);
             doc.rect(0, 0, pageW, HEADER, 'F');
-            // brand name
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
             doc.setTextColor(255, 255, 255);
-            doc.text('alpackaai', ML, 12);
-            // tagline
+            doc.text('alpacka.ai', ML, 12);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(7);
-            doc.setTextColor(161, 161, 170);
-            doc.text('banco de prompts de ia', ML, 21);
-            // category top-right
+            doc.setTextColor(139, 126, 116);
+            doc.text('biblioteca de prompts', ML, 21);
             if (prompt?.category) {
                 doc.setFontSize(7);
                 doc.text(prompt.category.toUpperCase(), pageW - MR, 14, { align: 'right' });
             }
         };
 
-        // ── Helper: draw footer with page numbers ────────────────────────────
         const drawFooter = (pageNum: number, totalPages: number) => {
-            doc.setFillColor(255, 255, 255);
-            doc.rect(0, BOTTOM, pageW, FOOTER + 2, 'F');
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(7);
-            doc.setTextColor(161, 161, 170);
+            doc.setTextColor(139, 126, 116);
             const date = new Date().toLocaleDateString('es-ES');
-            doc.text(`alpackaai  \u00b7  generado el ${date}`, ML, pageH - 5);
+            doc.text(`alpacka.ai  ·  generado el ${date}`, ML, pageH - 5);
             doc.text(
-                `pag. ${pageNum} / ${totalPages}   \u00b7   \u00a9 ${new Date().getFullYear()} alpackaai`,
+                `pág. ${pageNum} / ${totalPages}   ·   © ${new Date().getFullYear()} alpacka.ai`,
                 pageW - MR, pageH - 5, { align: 'right' }
             );
         };
 
-        // ── Build all lines first so we know total pages ─────────────────────
-        // Title lines
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(19);
         const titleLines: string[] = doc.splitTextToSize(prompt.title || '', textW);
-
-        // Description lines
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        const descLines: string[] = prompt.description
-            ? doc.splitTextToSize(prompt.description, textW)
-            : [];
-
-        // Content lines
+        const descLines: string[] = prompt.description ? doc.splitTextToSize(prompt.description, textW) : [];
         doc.setFont('courier', 'normal');
         doc.setFontSize(9);
         const contentLines: string[] = doc.splitTextToSize(prompt.content, textW - 10);
 
-        // ── Calculate how many pages we'll need ──────────────────────────────
-        const LINE_TITLE = 9;   // mm per title line
-        const LINE_DESC = 6;   // mm per desc line
-        const LINE_CONTENT = 5.5; // mm per content line
-        const availFirst = BOTTOM - (HEADER + 12);
+        const LINE_TITLE = 9, LINE_DESC = 6, LINE_CONTENT = 5.5;
+        const BOX_PAD_X = 6, BOX_PAD_Y = 5;
 
-        // rough estimate pass (we'll do a real render below)
-        let simY = HEADER + 12;
-        let simPages = 1;
+        let simY = HEADER + 12, simPages = 1;
         const advance = (h: number) => {
             if (simY + h > BOTTOM) { simPages++; simY = HEADER + 10; }
             simY += h;
@@ -143,11 +129,7 @@ const PromptDetail: React.FC = () => {
         titleLines.forEach(() => advance(LINE_TITLE));
         simY += 4;
         if (descLines.length) { descLines.forEach(() => advance(LINE_DESC)); simY += 10; }
-        advance(1); // divider
-        simY += 8;  // PROMPT label
-        const BOX_PAD_X = 6;
-        const BOX_PAD_Y = 5;
-        // content box chunks
+        advance(1); simY += 8;
         let ci = 0;
         while (ci < contentLines.length) {
             const avail = BOTTOM - simY - BOX_PAD_Y * 2;
@@ -160,92 +142,65 @@ const PromptDetail: React.FC = () => {
         }
         const totalPages = simPages;
 
-        // ── Real render ──────────────────────────────────────────────────────
         let page = 1;
         drawHeader();
         let y = HEADER + 12;
 
-        const ensureSpace = (needed: number): boolean => {
+        const ensureSpace = (needed: number) => {
             if (y + needed > BOTTOM) {
                 drawFooter(page, totalPages);
                 doc.addPage();
                 page++;
                 drawHeader();
                 y = HEADER + 10;
-                return true;
             }
-            return false;
         };
 
-        // Title
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(19);
-        doc.setTextColor(24, 24, 27);
-        titleLines.forEach((line: string) => {
-            ensureSpace(LINE_TITLE);
-            doc.text(line, ML, y);
-            y += LINE_TITLE;
-        });
+        doc.setTextColor(29, 27, 24);
+        titleLines.forEach((line: string) => { ensureSpace(LINE_TITLE); doc.text(line, ML, y); y += LINE_TITLE; });
         y += 4;
 
-        // Description
         if (descLines.length) {
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(113, 113, 122);
-            descLines.forEach((line: string) => {
-                ensureSpace(LINE_DESC);
-                doc.text(line, ML, y);
-                y += LINE_DESC;
-            });
+            doc.setTextColor(139, 126, 116);
+            descLines.forEach((line: string) => { ensureSpace(LINE_DESC); doc.text(line, ML, y); y += LINE_DESC; });
             y += 10;
         }
 
-        // Divider
         ensureSpace(4);
-        doc.setDrawColor(228, 228, 231);
+        doc.setDrawColor(227, 220, 211);
         doc.setLineWidth(0.25);
         doc.line(ML, y, pageW - MR, y);
         y += 8;
 
-        // "PROMPT" label
         ensureSpace(7);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(7.5);
-        doc.setTextColor(161, 161, 170);
+        doc.setTextColor(139, 126, 116);
         doc.text('PROMPT', ML, y);
         y += 9;
 
-        // Content box — chunked across pages
         doc.setFont('courier', 'normal');
         doc.setFontSize(9);
         doc.setTextColor(39, 39, 42);
 
         let ci2 = 0;
         while (ci2 < contentLines.length) {
-            // How many lines fit in remaining space on this page?
             const avail = BOTTOM - y - BOX_PAD_Y * 2 - 2;
             const perChunk = Math.max(1, Math.floor(avail / LINE_CONTENT));
             const chunk = contentLines.slice(ci2, ci2 + perChunk);
             const boxH = chunk.length * LINE_CONTENT + BOX_PAD_Y * 2;
-
-            // Draw light grey box
-            doc.setFillColor(248, 248, 248);
-            doc.setDrawColor(228, 228, 231);
+            doc.setFillColor(250, 249, 245);
+            doc.setDrawColor(227, 220, 211);
             doc.setLineWidth(0.2);
             doc.roundedRect(ML, y, textW, boxH, 2, 2, 'FD');
-
-            // Draw text inside box
             let ty = y + BOX_PAD_Y + LINE_CONTENT - 1;
-            chunk.forEach((line: string) => {
-                doc.text(line, ML + BOX_PAD_X, ty);
-                ty += LINE_CONTENT;
-            });
-
+            chunk.forEach((line: string) => { doc.text(line, ML + BOX_PAD_X, ty); ty += LINE_CONTENT; });
             y += boxH + 4;
             ci2 += perChunk;
-
-            // If more lines remain, go to next page
             if (ci2 < contentLines.length) {
                 drawFooter(page, totalPages);
                 doc.addPage();
@@ -254,15 +209,9 @@ const PromptDetail: React.FC = () => {
                 y = HEADER + 10;
             }
         }
-
-        // Footer on last page
         drawFooter(page, totalPages);
 
-        // ── Save ────────────────────────────────────────────────────────────
-        const fileName = (prompt.title || 'prompt')
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '') + '.pdf';
+        const fileName = (prompt.title || 'prompt').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '.pdf';
         doc.save(fileName);
     };
 
@@ -270,7 +219,6 @@ const PromptDetail: React.FC = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return navigate('/login');
         if (!isSubscribed) return navigate('/pricing');
-
         setSaving(true);
         try {
             if (isSaved) {
@@ -283,137 +231,261 @@ const PromptDetail: React.FC = () => {
         } catch (e) { console.error(e); } finally { setSaving(false); }
     };
 
+    // ── Loading ──────────────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="min-h-screen bg-white p-8">
-            <div className="max-w-4xl mx-auto space-y-6">
-                <Skeleton className="h-8 w-32" />
-                <Skeleton className="h-12 w-3/4" />
-                <Skeleton className="h-64 w-full rounded-2xl" />
+        <div className="min-h-screen" style={{ backgroundColor: '#FAF9F5' }}>
+            <div className="max-w-3xl mx-auto px-6 pt-16 space-y-6">
+                <div className="h-4 w-24 rounded-full animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
+                <div className="h-10 w-2/3 rounded-xl animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
+                <div className="h-5 w-full rounded-lg animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
+                <div className="h-64 w-full rounded-2xl animate-pulse mt-8" style={{ backgroundColor: '#F0EAE1' }} />
             </div>
         </div>
     );
 
+    // ── Not found ────────────────────────────────────────────────────────────────
     if (!prompt) return (
-        <div className="min-h-screen flex flex-col items-center justify-center font-sans">
-            <AlertCircle size={40} className="text-zinc-300 mb-4" />
-            <h2 className="text-xl font-bold lowercase">prompt no encontrado</h2>
-            <Link to="/prompts" className="text-sm underline mt-2 opacity-50">volver al archivo</Link>
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: '#FAF9F5' }}>
+            <AlertCircle size={36} style={{ color: '#C8BEB5' }} />
+            <h2 className="font-display text-2xl" style={{ color: '#1D1B18' }}>prompt no encontrado</h2>
+            <Link to="/prompts" className="font-mono text-xs underline" style={{ color: '#8B7E74' }}>
+                volver a la biblioteca
+            </Link>
         </div>
     );
 
     const isLocked = prompt.is_premium && !isSubscribed;
 
     return (
-        <div className="bg-white min-h-screen pb-20 font-sans">
+        <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
             <Helmet>
-                <title>{`${prompt.title} | alpackaai`}</title>
+                <title>{`${prompt.title} | alpacka.ai`}</title>
             </Helmet>
 
-            {/* HEADER / NAV */}
-            <nav className="border-b border-zinc-100 bg-white/80 backdrop-blur-md sticky top-16 z-50">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <button onClick={() => navigate(-1)} className="flex items-center text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest">
-                        <ChevronLeft size={16} className="mr-1" /> Volver
+            {/* ── Sub-nav ──────────────────────────────────────────────────────── */}
+            <div
+                className="sticky top-16 z-40 border-b backdrop-blur-md"
+                style={{ backgroundColor: 'rgba(250,249,245,0.92)', borderColor: '#E3DCD3' }}
+            >
+                <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-colors"
+                        style={{ color: '#8B7E74' }}
+                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
+                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                    >
+                        <ChevronLeft size={14} />
+                        biblioteca
                     </button>
-                    <div className="flex gap-4">
-                        <button onClick={handleSave} disabled={saving} className="text-zinc-400 hover:text-zinc-900 transition-colors">
-                            {isSaved ? <BookmarkCheck size={20} className="text-emerald-500" /> : <Bookmark size={20} />}
-                        </button>
-                    </div>
+
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="transition-colors"
+                        style={{ color: isSaved ? '#C96A3C' : '#8B7E74' }}
+                        title={isSaved ? 'Quitar de guardados' : 'Guardar prompt'}
+                        onMouseEnter={e => !isSaved && ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
+                        onMouseLeave={e => !isSaved && ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                    >
+                        {isSaved
+                            ? <BookmarkCheck size={20} />
+                            : <Bookmark size={20} />
+                        }
+                    </button>
                 </div>
-            </nav>
+            </div>
 
-            <main className="max-w-4xl mx-auto px-6 pt-12">
-                {/* TITULO Y META */}
-                <header className="mb-10 text-center md:text-left">
-                    <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-                        <span className="px-2 py-1 bg-zinc-100 text-zinc-500 text-[10px] font-mono rounded uppercase tracking-tighter">
-                            {prompt.category}
+            {/* ── Main ─────────────────────────────────────────────────────────── */}
+            <main className="max-w-3xl mx-auto px-6 pt-14 pb-8">
+
+                {/* Meta tags */}
+                <div className="flex flex-wrap items-center gap-2 mb-6">
+                    <span
+                        className="font-mono text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border"
+                        style={{ backgroundColor: '#F0EAE1', color: '#8B7E74', borderColor: '#E3DCD3' }}
+                    >
+                        {getCategoryEmoji(prompt.category)} {prompt.category || 'general'}
+                    </span>
+                    {prompt.is_premium && (
+                        <span
+                            className="font-mono text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5"
+                            style={{ backgroundColor: '#FAF0E8', color: '#C96A3C', border: '1px solid #F5D9C8' }}
+                        >
+                            <Lock size={9} />
+                            premium
                         </span>
-                        {prompt.is_premium && (
-                            <span className="px-2 py-1 bg-amber-50 text-amber-600 text-[10px] font-mono font-bold rounded flex items-center gap-1 border border-amber-100">
-                                <Lock size={10} /> PREMIUM
-                            </span>
-                        )}
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-black text-zinc-900 tracking-tighter lowercase mb-4">
-                        {prompt.title}
-                    </h1>
-                    <p className="text-lg text-zinc-500 leading-relaxed lowercase max-w-2xl">
-                        {prompt.description}
-                    </p>
-                </header>
+                    )}
+                </div>
 
-                {/* IMAGE */}
-                {prompt.image_url && (
-                    <div className="mb-10 rounded-3xl overflow-hidden border border-zinc-100 shadow-2xl shadow-zinc-200/50">
-                        <img src={prompt.image_url} alt={prompt.title} className="w-full h-auto" />
-                    </div>
-                )}
+                {/* Title */}
+                <h1
+                    className="font-display leading-[1.04] tracking-tight mb-5"
+                    style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: '#1D1B18' }}
+                >
+                    {prompt.title}
+                </h1>
 
-                {/* PROMPT EDITOR / BOX */}
-                <section className="space-y-4">
-                    <div className="flex items-center justify-between px-2">
-                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                            <Terminal size={14} /> Prompt Editor
-                        </h3>
+                {/* Description */}
+                <p className="text-lg leading-relaxed mb-10" style={{ color: '#8B7E74' }}>
+                    {prompt.description}
+                </p>
+
+                {/* Divider */}
+                <div className="h-px mb-10" style={{ backgroundColor: '#E3DCD3' }} />
+
+                {/* ── Prompt section ───────────────────────────────────────────── */}
+                <section>
+
+                    {/* Action bar */}
+                    <div className="flex items-center justify-between mb-4">
+                        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: '#C8BEB5' }}>
+                            prompt
+                        </p>
                         {!isLocked && (
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={handleDownloadPdf}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-200 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-all"
+                                    className="flex items-center gap-1.5 font-mono text-[11px] font-bold px-3 py-2 rounded-lg border transition-all hover:-translate-y-0.5"
+                                    style={{ borderColor: '#E3DCD3', color: '#8B7E74', backgroundColor: 'white' }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+                                        (e.currentTarget as HTMLElement).style.color = '#C96A3C';
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
+                                        (e.currentTarget as HTMLElement).style.color = '#8B7E74';
+                                    }}
                                     title="Descargar como PDF"
                                 >
-                                    <Download size={14} />
+                                    <Download size={13} />
                                     PDF
                                 </button>
                                 <button
                                     onClick={handleCopy}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-zinc-900 text-white hover:bg-zinc-800'}`}
+                                    className="flex items-center gap-1.5 font-mono text-[11px] font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shadow-sm"
+                                    style={copied
+                                        ? { backgroundColor: '#22c55e', color: 'white', border: '1px solid transparent' }
+                                        : { backgroundColor: '#C96A3C', color: 'white', border: '1px solid transparent' }
+                                    }
                                 >
-                                    {copied ? <Check size={14} /> : <Copy size={14} />}
-                                    {copied ? 'Copiado' : 'Copiar prompt'}
+                                    {copied ? <Check size={13} /> : <Copy size={13} />}
+                                    {copied ? 'copiado' : 'copiar prompt'}
                                 </button>
                             </div>
                         )}
                     </div>
 
-                    <div className="relative group">
-                        <div className={`w-full min-h-[200px] rounded-3xl p-8 md:p-10 font-mono text-base md:text-lg leading-relaxed transition-all border ${isLocked ? 'bg-zinc-50 border-zinc-200 overflow-hidden' : 'bg-zinc-50 border-zinc-100 text-zinc-800'}`}>
-                            {isLocked ? (
-                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-8 backdrop-blur-md bg-white/30">
-                                    <div className="w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center mb-4">
-                                        <Lock className="text-zinc-900" size={24} />
-                                    </div>
-                                    <h4 className="font-black text-xl mb-2 lowercase">Contenido Bloqueado</h4>
-                                    <p className="text-sm text-zinc-500 mb-6 max-w-xs lowercase">Este prompt es parte del archivo premium. Suscríbete para desbloquearlo.</p>
-                                    <Link to="/pricing" className="bg-zinc-900 text-white px-8 py-3 rounded-2xl font-bold text-sm hover:scale-105 transition-transform">
-                                        Ver Planes
-                                    </Link>
-                                </div>
-                            ) : (
-                                <code className="block whitespace-pre-wrap select-all">
-                                    {prompt.content}
-                                </code>
-                            )}
+                    {/* Content box */}
+                    <div
+                        className="relative rounded-2xl overflow-hidden"
+                        style={{ border: '1px solid #2D2520' }}
+                    >
+                        {/* Top bar (terminal-style) */}
+                        <div
+                            className="flex items-center gap-2 px-5 py-3 border-b"
+                            style={{ backgroundColor: '#221E1A', borderColor: '#2D2520' }}
+                        >
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
+                            <span className="font-mono text-[10px] ml-2" style={{ color: '#4D433C' }}>
+                                prompt.txt
+                            </span>
+                        </div>
 
-                            {/* Marca de agua sutil */}
-                            <div className="absolute bottom-4 right-6 pointer-events-none opacity-20">
-                                <Sparkles size={20} />
-                            </div>
+                        {/* Content area */}
+                        <div
+                            className="relative min-h-[220px]"
+                            style={{ backgroundColor: '#1A1410' }}
+                        >
+                            {isLocked ? (
+                                <>
+                                    {/* Blurred preview lines */}
+                                    <div className="p-8 select-none pointer-events-none" style={{ filter: 'blur(5px)', opacity: 0.25 }}>
+                                        <p className="font-mono text-sm leading-relaxed" style={{ color: '#C8BEB5' }}>
+                                            Actúa como un experto en [área] con más de 10 años de experiencia.
+                                            Tu objetivo es [objetivo principal] teniendo en cuenta [contexto
+                                            relevante]. Debes [instrucción 1], [instrucción 2] y asegurarte
+                                            de que el resultado cumpla con [criterio de calidad]. Responde
+                                            siempre en español y estructura tu respuesta con [formato]...
+                                        </p>
+                                    </div>
+
+                                    {/* Lock overlay */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8" style={{ background: 'linear-gradient(to bottom, rgba(26,20,16,0) 0%, rgba(26,20,16,0.85) 30%, rgba(26,20,16,1) 60%)' }}>
+                                        <div
+                                            className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-xl"
+                                            style={{ backgroundColor: '#221E1A', border: '1px solid #3D352E' }}
+                                        >
+                                            <Lock size={22} style={{ color: '#C96A3C' }} />
+                                        </div>
+                                        <h4 className="font-display text-2xl text-white mb-2">
+                                            Contenido premium
+                                        </h4>
+                                        <p className="text-sm mb-7 max-w-xs leading-relaxed" style={{ color: '#8B7E74' }}>
+                                            Suscríbete para acceder a este prompt y a los 150+ del archivo.
+                                        </p>
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            <Link
+                                                to="/pricing"
+                                                className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-3.5 rounded-xl transition-all hover:-translate-y-0.5 shadow-lg"
+                                                style={{ backgroundColor: '#C96A3C', color: 'white' }}
+                                            >
+                                                ver planes
+                                                <ArrowRight size={14} />
+                                            </Link>
+                                            <Link
+                                                to="/login?redirect=/prompts"
+                                                className="inline-flex items-center justify-center font-mono text-xs font-bold px-6 py-3.5 rounded-xl transition-colors"
+                                                style={{ border: '1px solid #3D352E', color: '#8B7E74' }}
+                                                onMouseEnter={e => {
+                                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+                                                    (e.currentTarget as HTMLElement).style.color = '#C96A3C';
+                                                }}
+                                                onMouseLeave={e => {
+                                                    (e.currentTarget as HTMLElement).style.borderColor = '#3D352E';
+                                                    (e.currentTarget as HTMLElement).style.color = '#8B7E74';
+                                                }}
+                                            >
+                                                ya tengo cuenta →
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <pre
+                                    className="p-8 font-mono text-sm leading-relaxed whitespace-pre-wrap select-all overflow-x-auto"
+                                    style={{ color: '#D6CBC2' }}
+                                >
+                                    {prompt.content}
+                                </pre>
+                            )}
                         </div>
                     </div>
                 </section>
 
-                {/* CONSEJO TÉCNICO */}
-                <footer className="mt-8 flex items-start gap-4 p-6 bg-blue-50/50 rounded-2xl border border-blue-100/50">
-                    <AlertCircle className="text-blue-500 shrink-0" size={20} />
-                    <div>
-                        <p className="text-sm text-blue-900 leading-relaxed lowercase">
-                            <span className="font-bold">tip de ingeniería:</span> los parámetros entre <span className="font-mono bg-blue-100 px-1 rounded">[corchetes]</span> son variables. cámbialos por tus datos específicos para obtener el mejor output del modelo.
+                {/* ── Tip ─────────────────────────────────────────────────────── */}
+                {!isLocked && (
+                    <div
+                        className="mt-6 flex items-start gap-4 p-5 rounded-2xl border"
+                        style={{ backgroundColor: '#FAF0E8', borderColor: '#F5D9C8' }}
+                    >
+                        <AlertCircle size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#C96A3C' }} />
+                        <p className="text-sm leading-relaxed" style={{ color: '#8B7E74' }}>
+                            <span className="font-semibold" style={{ color: '#C96A3C' }}>Tip:</span>{' '}
+                            los parámetros entre{' '}
+                            <code
+                                className="font-mono text-xs px-1.5 py-0.5 rounded"
+                                style={{ backgroundColor: '#F5D9C8', color: '#C96A3C' }}
+                            >
+                                [corchetes]
+                            </code>{' '}
+                            son variables. reemplázalos con tus datos específicos para obtener el mejor output del modelo.
                         </p>
                     </div>
-                </footer>
+                )}
+
             </main>
         </div>
     );

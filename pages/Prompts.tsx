@@ -1,13 +1,12 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { BadgeCheck, Lock, Search, Unlock, Sparkles, ArrowRight, Zap, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Lock, Search, Sparkles, ArrowRight, Zap, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 const PAGE_SIZE = 12;
 
-// ── Category icons/emojis map ─────────────────────────────────────────────────
 const CATEGORY_EMOJIS: Record<string, string> = {
     todas: '✦',
     marketing: '📣',
@@ -43,7 +42,6 @@ const Prompts: React.FC = () => {
     const gridRef = useRef<HTMLDivElement>(null);
     const pillsRef = useRef<HTMLDivElement>(null);
 
-    // Load Paddle
     useEffect(() => {
         const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
         const initPaddle = () => {
@@ -133,55 +131,69 @@ const Prompts: React.FC = () => {
     const secondBatch = paginatedPrompts.slice(6);
     const showUpsell = !isSubscribed && !loading && filteredPrompts.length > 0 && currentPage === 1;
 
-    // scroll pills horizontally
     const scrollPills = (dir: 'left' | 'right') => {
         if (!pillsRef.current) return;
         pillsRef.current.scrollBy({ left: dir === 'left' ? -200 : 200, behavior: 'smooth' });
     };
 
     return (
-        <div className="bg-white min-h-screen pb-24 font-sans">
+        <div className="min-h-screen pb-32" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
             <Helmet>
-                <title>Banco de Prompts de IA | alpackaai</title>
-                <meta name="description" content="Prompts para todas las tareas comerciales. Resultados profesionales en segundos. Acceso ilimitado por $4/mes." />
+                <title>Biblioteca de Prompts | alpacka.ai</title>
+                <meta name="description" content="150+ prompts probados para marketing, ventas y productividad. Resultados profesionales desde el primer intento. $4/mes." />
             </Helmet>
 
-            {/* ── HERO ──────────────────────────────────────────────────────────── */}
-            <section className="relative pt-16 pb-16 overflow-hidden bg-white border-b border-zinc-100">
-                {/* subtle dot grid */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle,#e4e4e7_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_70%_90%_at_50%_0%,#000_40%,transparent_100%)] opacity-50 pointer-events-none" />
+            {/* ── HERO ──────────────────────────────────────────────────────── */}
+            <section className="pt-20 pb-16 border-b border-brand-border">
+                <div className="max-w-5xl mx-auto px-6 sm:px-8">
 
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-                    {/* live pill */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-50 border border-zinc-200 mb-8">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-zinc-400 ">banco actualizado hoy</span>
-                    </div>
-
-                    {/* headline */}
-                    <h1 className="text-4xl sm:text-5xl md:text-5xl font-black tracking-tighter text-zinc-900 leading-[0.92] mb-5">
-                        Encuentra el prompt perfecto para impulsar tu trabajo
-                    </h1>
-
-                    <p className="text-zinc-500 text-base md:text-lg max-w-lg mx-auto leading-relaxed mb-8">
-                        más de <strong className="text-zinc-900">150 estructuras probadas</strong> para marketing, ventas y productividad — y mucho más.
+                    {/* Label */}
+                    <p className="font-mono text-[11px] text-brand-muted tracking-[0.18em] uppercase mb-7 flex items-center gap-2">
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        biblioteca actualizada hoy
                     </p>
 
+                    {/* Headline */}
+                    <h1 className="font-display text-5xl sm:text-6xl md:text-[68px] leading-[1.02] tracking-tight text-brand-text mb-6 max-w-3xl">
+                        El arsenal de prompts que convierte IA en{' '}
+                        <em className="not-italic text-brand-accent">resultados.</em>
+                    </h1>
 
-                    {/* Search bar */}
-                    <div className="max-w-2xl mx-auto">
-                        <div className="relative bg-white border border-zinc-200 rounded-2xl flex items-center px-4 py-1 shadow-lg shadow-zinc-100 focus-within:border-zinc-400 focus-within:shadow-xl transition-all">
-                            <Search className="text-zinc-300 flex-shrink-0 mr-3" size={18} />
+                    <p className="text-brand-muted text-lg max-w-xl leading-relaxed mb-10">
+                        Más de <strong className="text-brand-text font-semibold">150 estructuras probadas</strong> para
+                        marketing, ventas y productividad. Copia, pega, ejecuta.
+                    </p>
+
+                    {/* Stats row */}
+                    <div className="flex flex-wrap items-center gap-6 mb-10">
+                        {[
+                            { value: '150+', label: 'prompts' },
+                            { value: '12', label: 'categorías' },
+                            { value: '$4', label: '/mes acceso total' },
+                        ].map(stat => (
+                            <div key={stat.label} className="flex items-baseline gap-2">
+                                <span className="font-display text-3xl font-semibold text-brand-text">{stat.value}</span>
+                                <span className="font-mono text-[11px] text-brand-muted tracking-widest uppercase">{stat.label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Search */}
+                    <div className="max-w-2xl">
+                        <div
+                            className="flex items-center gap-3 px-5 py-1 rounded-2xl border border-brand-border bg-white focus-within:border-brand-accent/60 transition-colors shadow-sm"
+                        >
+                            <Search size={16} className="text-brand-muted flex-shrink-0" />
                             <input
                                 type="text"
-                                placeholder='busca por tema: "email de ventas", "análisis de datos"...'
+                                placeholder='busca: "email de ventas", "análisis de datos"…'
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full bg-transparent border-none py-3.5 text-sm focus:ring-0 outline-none placeholder:text-zinc-300 text-zinc-900"
+                                className="w-full bg-transparent border-none py-4 text-sm focus:ring-0 outline-none placeholder:text-brand-muted/50 text-brand-text"
                             />
                             {searchQuery && (
-                                <button onClick={() => setSearchQuery('')} className="ml-2 text-zinc-300 hover:text-zinc-600 transition-colors flex-shrink-0">
-                                    <X size={15} />
+                                <button onClick={() => setSearchQuery('')} className="flex-shrink-0 text-brand-muted hover:text-brand-text transition-colors">
+                                    <X size={14} />
                                 </button>
                             )}
                         </div>
@@ -189,17 +201,36 @@ const Prompts: React.FC = () => {
                 </div>
             </section>
 
-            {/* ── FILTER BAR ───────────────────────────────────────────────── */}
-            <div className="sticky top-16 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-100">
+            {/* ── FILTER BAR ────────────────────────────────────────────────── */}
+            <div className="sticky top-16 z-40 border-b border-brand-border backdrop-blur-md" style={{ backgroundColor: 'rgba(250,249,245,0.92)' }}>
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 py-3 flex items-center gap-3">
 
-                {/* Row 1: Select + Tier toggle */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-2 flex items-center gap-3">
+                    {/* Tier toggle */}
+                    <div className="flex-shrink-0 flex items-center gap-0.5 bg-brand-surface rounded-xl p-1">
+                        {(['todos', 'gratis', 'premium'] as const).map(tier => (
+                            <button
+                                key={tier}
+                                onClick={() => setSelectedTier(tier)}
+                                className={`px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold tracking-wide transition-all whitespace-nowrap ${
+                                    selectedTier === tier
+                                        ? 'bg-white text-brand-text shadow-sm'
+                                        : 'text-brand-muted hover:text-brand-text'
+                                }`}
+                            >
+                                {tier}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-px h-5 bg-brand-border flex-shrink-0" />
+
                     {/* Category select */}
                     <div className="relative flex-shrink-0">
                         <select
                             value={selectedCategory}
                             onChange={e => setSelectedCategory(e.target.value)}
-                            className="appearance-none bg-zinc-50 border border-zinc-200 text-zinc-900 text-xs font-bold rounded-xl px-4 pr-8 py-2 focus:outline-none focus:border-zinc-400 cursor-pointer lowercase transition-all hover:border-zinc-300"
+                            className="appearance-none font-mono text-[11px] font-bold pr-7 pl-3 py-2 rounded-xl border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent cursor-pointer transition-colors hover:border-brand-accent"
                         >
                             {categories.map(cat => (
                                 <option key={cat} value={cat}>
@@ -207,66 +238,32 @@ const Prompts: React.FC = () => {
                                 </option>
                             ))}
                         </select>
-                        {/* chevron icon */}
-                        <ChevronRight size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none rotate-90" />
+                        <ChevronRight size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none rotate-90" />
                     </div>
 
-                    {/* Separator */}
-                    <div className="w-px h-5 bg-zinc-100 flex-shrink-0" />
+                    {/* Divider */}
+                    <div className="w-px h-5 bg-brand-border flex-shrink-0" />
 
-                    {/* Tier toggle */}
-                    <div className="flex-shrink-0 flex items-center gap-1 bg-zinc-100 p-1 rounded-xl">
-                        {['todos', 'gratis', 'premium'].map(tier => (
-                            <button
-                                key={tier}
-                                onClick={() => setSelectedTier(tier)}
-                                className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all whitespace-nowrap
-                                    ${selectedTier === tier ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
-                            >
-                                {tier}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Premium CTA (desktop) */}
-                    {!isSubscribed && !loading && (
-                        <button
-                            onClick={handleSubscribe}
-                            className="ml-auto hidden md:flex items-center gap-2 bg-zinc-900 text-white text-[11px] font-bold px-4 py-2 rounded-xl hover:bg-black transition-all hover:-translate-y-0.5 shadow-lg"
-                        >
-                            <Sparkles size={12} className="text-yellow-400" />
-                            hazte premium — $4/mes
-                            <ArrowRight size={12} />
-                        </button>
-                    )}
-                </div>
-
-                {/* Row 2: Pills slider */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 flex items-center gap-2">
-                    {/* Scroll left */}
+                    {/* Category pills */}
                     <button
                         onClick={() => scrollPills('left')}
-                        className="flex-shrink-0 hidden sm:flex items-center justify-center w-6 h-6 rounded-full border border-zinc-200 text-zinc-400 hover:border-zinc-400 hover:text-zinc-700 transition-all"
+                        className="flex-shrink-0 hidden sm:flex items-center justify-center w-6 h-6 rounded-full border border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent transition-colors"
                     >
                         <ChevronLeft size={12} />
                     </button>
 
-                    {/* Pills */}
-                    <div
-                        ref={pillsRef}
-                        className="flex items-center gap-2 overflow-x-auto scrollbar-hide flex-1 py-0.5"
-                    >
+                    <div ref={pillsRef} className="flex items-center gap-2 overflow-x-auto flex-1 py-0.5" style={{ scrollbarWidth: 'none' }}>
                         {categories.map(cat => {
                             const isActive = selectedCategory === cat;
                             return (
                                 <button
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
-                                    className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap
-                                        ${isActive
-                                            ? 'bg-zinc-900 text-white shadow-sm'
-                                            : 'bg-zinc-50 text-zinc-500 border border-zinc-200 hover:border-zinc-400 hover:text-zinc-800'
-                                        }`}
+                                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono font-bold transition-all whitespace-nowrap ${
+                                        isActive
+                                            ? 'bg-brand-text text-white'
+                                            : 'border border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent'
+                                    }`}
                                 >
                                     <span className="text-sm leading-none">{getCategoryEmoji(cat)}</span>
                                     {cat}
@@ -275,70 +272,94 @@ const Prompts: React.FC = () => {
                         })}
                     </div>
 
-                    {/* Scroll right */}
                     <button
                         onClick={() => scrollPills('right')}
-                        className="flex-shrink-0 hidden sm:flex items-center justify-center w-6 h-6 rounded-full border border-zinc-200 text-zinc-400 hover:border-zinc-400 hover:text-zinc-700 transition-all"
+                        className="flex-shrink-0 hidden sm:flex items-center justify-center w-6 h-6 rounded-full border border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent transition-colors"
                     >
                         <ChevronRight size={12} />
                     </button>
-                </div>
 
+                    {/* Desktop premium CTA */}
+                    {!isSubscribed && !loading && (
+                        <button
+                            onClick={handleSubscribe}
+                            className="ml-auto hidden md:flex items-center gap-2 text-[11px] font-mono font-bold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5"
+                            style={{ backgroundColor: '#C96A3C', color: 'white' }}
+                        >
+                            <Sparkles size={11} />
+                            premium · $4/mes
+                            <ArrowRight size={11} />
+                        </button>
+                    )}
+                </div>
             </div>
 
-            {/* ── GRID ──────────────────────────────────────────────────────────── */}
-            <div ref={gridRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            {/* ── GRID ──────────────────────────────────────────────────────── */}
+            <div ref={gridRef} className="max-w-7xl mx-auto px-6 sm:px-8 py-10">
 
                 {/* Results header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h2 className="text-lg font-black tracking-tight text-zinc-900">
+                        <p className="font-mono text-[10px] text-brand-muted tracking-[0.2em] uppercase mb-1">
+                            {filteredPrompts.length} prompts · pág. {currentPage}/{totalPages || 1}
+                        </p>
+                        <h2 className="font-display text-2xl text-brand-text">
                             {searchQuery
-                                ? <>resultados para <span className="text-zinc-400">"{searchQuery}"</span></>
+                                ? <>resultados para <em className="text-brand-muted not-italic">"{searchQuery}"</em></>
                                 : selectedCategory === 'todas' ? 'todos los prompts' : selectedCategory
                             }
                         </h2>
-                        <p className="text-[10px] font-mono text-zinc-400 tracking-widest mt-0.5 uppercase">
-                            {filteredPrompts.length} prompts · pág. {currentPage}/{totalPages || 1}
-                        </p>
                     </div>
-
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {Array.from({ length: 8 }).map((_, i) => (
-                            <div key={i} className="bg-zinc-50 rounded-2xl h-64 animate-pulse" />
+                            <div key={i} className="rounded-2xl h-56 animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
                         ))}
                     </div>
                 ) : filteredPrompts.length > 0 ? (
                     <>
                         {/* First batch */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-5">
-                            {firstBatch.map(prompt => (
-                                <PromptCard key={prompt.id} prompt={prompt} />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
+                            {firstBatch.map((prompt, i) => (
+                                <PromptCard
+                                    key={prompt.id}
+                                    prompt={prompt}
+                                    index={(currentPage - 1) * PAGE_SIZE + i}
+                                />
                             ))}
                         </div>
 
-                        {/* Upsell card between batches */}
+                        {/* Upsell banner between batches */}
                         {showUpsell && (
-                            <div className="my-8 rounded-3xl bg-zinc-900 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden shadow-2xl">
-                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_90%_40%,rgba(255,255,255,0.05),transparent)] pointer-events-none" />
-                                <div className="absolute -top-14 -right-14 w-56 h-56 rounded-full bg-white/[0.03] border border-white/5 pointer-events-none" />
+                            <div
+                                className="my-8 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden"
+                                style={{ backgroundColor: '#1A1410' }}
+                            >
+                                {/* Subtle texture */}
+                                <div className="absolute inset-0 opacity-[0.04]" style={{
+                                    backgroundImage: 'radial-gradient(circle, #C96A3C 1px, transparent 1px)',
+                                    backgroundSize: '32px 32px'
+                                }} />
 
-                                <div className="flex-1 text-center md:text-left relative z-10">
-                                    <span className="inline-flex items-center gap-2 text-[10px] font-mono text-zinc-500 tracking-[0.2em] mb-4">
+                                <div className="flex-1 relative z-10 text-center md:text-left">
+                                    <p className="font-mono text-[10px] tracking-[0.22em] uppercase mb-5 flex items-center gap-2 justify-center md:justify-start" style={{ color: '#8B7E74' }}>
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                         membresía activa en segundos
-                                    </span>
-                                    <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-white mb-3 leading-tight">
-                                        Desbloquea todo el<br />
-                                        <span className="text-zinc-400">contenido premium.</span>
+                                    </p>
+                                    <h3 className="font-display text-3xl md:text-4xl leading-tight text-white mb-4">
+                                        Desbloquea cada prompt.<br />
+                                        <em className="not-italic" style={{ color: '#C96A3C' }}>Cero límites.</em>
                                     </h3>
                                     <ul className="flex flex-wrap gap-x-6 gap-y-2 justify-center md:justify-start mb-8">
-                                        {['acceso a 150+ prompts', 'actualizaciones semanales', 'cancela con un clic'].map(item => (
-                                            <li key={item} className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
-                                                <Check size={12} className="text-emerald-400" strokeWidth={3} />
+                                        {[
+                                            'acceso a 150+ prompts',
+                                            'actualizaciones semanales',
+                                            'cancela con un clic',
+                                        ].map(item => (
+                                            <li key={item} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#C8BEB5' }}>
+                                                <Check size={11} className="text-emerald-400" strokeWidth={3} />
                                                 {item}
                                             </li>
                                         ))}
@@ -347,16 +368,26 @@ const Prompts: React.FC = () => {
                                         <button
                                             onClick={handleSubscribe}
                                             disabled={checkoutLoading}
-                                            className="group flex items-center justify-center gap-2 bg-white text-zinc-900 font-bold text-sm px-8 py-4 rounded-2xl hover:bg-zinc-100 transition-all shadow-xl hover:-translate-y-0.5"
+                                            className="group inline-flex items-center justify-center gap-2 font-bold text-sm px-8 py-4 rounded-2xl transition-all hover:-translate-y-0.5 shadow-xl"
+                                            style={{ backgroundColor: '#C96A3C', color: 'white' }}
                                         >
-                                            <Zap size={15} fill="currentColor" className="text-zinc-700" />
+                                            <Zap size={14} fill="currentColor" />
                                             {checkoutLoading ? 'cargando...' : (user ? 'suscribirme ahora' : 'hazte premium')}
-                                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                            <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                                         </button>
                                         {!user && (
                                             <Link
                                                 to="/login?redirect=/prompts"
-                                                className="flex items-center justify-center gap-2 border border-zinc-700 text-zinc-400 font-bold text-sm px-6 py-4 rounded-2xl hover:border-zinc-500 hover:text-zinc-300 transition-all"
+                                                className="inline-flex items-center justify-center gap-2 border font-bold text-sm px-6 py-4 rounded-2xl transition-all"
+                                                style={{ borderColor: '#3D352E', color: '#8B7E74' }}
+                                                onMouseEnter={e => {
+                                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+                                                    (e.currentTarget as HTMLElement).style.color = '#C96A3C';
+                                                }}
+                                                onMouseLeave={e => {
+                                                    (e.currentTarget as HTMLElement).style.borderColor = '#3D352E';
+                                                    (e.currentTarget as HTMLElement).style.color = '#8B7E74';
+                                                }}
                                             >
                                                 ya tengo cuenta →
                                             </Link>
@@ -364,14 +395,18 @@ const Prompts: React.FC = () => {
                                     </div>
                                 </div>
 
+                                {/* Price block */}
                                 <div className="flex-shrink-0 relative z-10">
-                                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center w-52">
-                                        <p className="text-zinc-500 text-[10px] font-mono tracking-widest mb-2">precio mensual</p>
-                                        <span className="text-5xl font-black tracking-tighter text-white">$4</span>
-                                        <p className="text-zinc-500 text-[10px] font-mono mt-1 mb-4">/mes · cancela cuando quieras</p>
-                                        <div className="h-px bg-white/10 mb-4" />
-                                        <p className="text-zinc-400 text-xs">
-                                            equivale a <span className="text-white font-bold">$0.13/día</span>
+                                    <div
+                                        className="rounded-3xl p-8 text-center w-52"
+                                        style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                                    >
+                                        <p className="font-mono text-[10px] tracking-widest mb-2 uppercase" style={{ color: '#8B7E74' }}>precio mensual</p>
+                                        <span className="font-display text-6xl text-white">$4</span>
+                                        <p className="font-mono text-[10px] mt-1 mb-4" style={{ color: '#8B7E74' }}>/mes · cancela cuando quieras</p>
+                                        <div className="h-px mb-4" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
+                                        <p className="text-xs" style={{ color: '#8B7E74' }}>
+                                            equivale a <span className="text-white font-semibold">$0.13/día</span>
                                         </p>
                                     </div>
                                 </div>
@@ -380,23 +415,28 @@ const Prompts: React.FC = () => {
 
                         {/* Second batch */}
                         {secondBatch.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                                {secondBatch.map(prompt => (
-                                    <PromptCard key={prompt.id} prompt={prompt} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                {secondBatch.map((prompt, i) => (
+                                    <PromptCard
+                                        key={prompt.id}
+                                        prompt={prompt}
+                                        index={(currentPage - 1) * PAGE_SIZE + 6 + i}
+                                    />
                                 ))}
                             </div>
                         )}
                     </>
                 ) : (
-                    <div className="text-center py-24 bg-zinc-50 rounded-3xl">
-                        <Search className="mx-auto text-zinc-200 mb-4" size={40} />
-                        <h3 className="text-base font-black mb-2 text-zinc-900">ningún prompt coincide</h3>
-                        <p className="text-sm text-zinc-400 mb-6 max-w-xs mx-auto">
-                            intenta con palabras más generales, o explora todas las categorías.
+                    <div className="text-center py-24 rounded-3xl" style={{ backgroundColor: '#F0EAE1' }}>
+                        <Search className="mx-auto mb-5" size={36} style={{ color: '#C8BEB5' }} />
+                        <h3 className="font-display text-2xl text-brand-text mb-2">ningún prompt coincide</h3>
+                        <p className="text-sm text-brand-muted mb-7 max-w-xs mx-auto leading-relaxed">
+                            prueba con palabras más generales o explora todas las categorías.
                         </p>
                         <button
                             onClick={() => { setSelectedCategory('todas'); setSelectedTier('todos'); setSearchQuery(''); }}
-                            className="text-xs font-bold bg-zinc-900 text-white px-6 py-3 rounded-xl"
+                            className="font-mono text-xs font-bold px-6 py-3 rounded-xl transition-all hover:-translate-y-0.5"
+                            style={{ backgroundColor: '#1A1410', color: 'white' }}
                         >
                             ver todos los prompts
                         </button>
@@ -405,11 +445,11 @@ const Prompts: React.FC = () => {
 
                 {/* Pagination */}
                 {!loading && totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2 mt-14">
+                    <div className="flex items-center justify-center gap-2 mt-16">
                         <button
                             onClick={() => goToPage(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-mono font-bold border border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                             ← anterior
                         </button>
@@ -419,7 +459,7 @@ const Prompts: React.FC = () => {
                                 const isNear = Math.abs(page - currentPage) <= 1;
                                 if (!isEdge && !isNear) {
                                     if (page === 2 || page === totalPages - 1) {
-                                        return <span key={page} className="text-zinc-300 text-xs px-1">···</span>;
+                                        return <span key={page} className="text-brand-muted text-xs px-1">···</span>;
                                     }
                                     return null;
                                 }
@@ -427,10 +467,12 @@ const Prompts: React.FC = () => {
                                     <button
                                         key={page}
                                         onClick={() => goToPage(page)}
-                                        className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${currentPage === page
-                                            ? 'bg-zinc-900 text-white shadow-lg'
-                                            : 'border border-zinc-200 text-zinc-600 hover:bg-zinc-50'
-                                            }`}
+                                        className={`w-10 h-10 rounded-xl text-xs font-mono font-bold transition-all border ${
+                                            currentPage === page
+                                                ? 'border-transparent text-white'
+                                                : 'border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent'
+                                        }`}
+                                        style={currentPage === page ? { backgroundColor: '#C96A3C' } : {}}
                                     >
                                         {page}
                                     </button>
@@ -440,7 +482,7 @@ const Prompts: React.FC = () => {
                         <button
                             onClick={() => goToPage(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-mono font-bold border border-brand-border text-brand-muted hover:border-brand-accent hover:text-brand-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                             siguiente →
                         </button>
@@ -448,23 +490,28 @@ const Prompts: React.FC = () => {
                 )}
             </div>
 
-            {/* ── BOTTOM CTA ─────────────────────────────────────────────────── */}
+            {/* ── BOTTOM CTA ────────────────────────────────────────────────── */}
             {!isSubscribed && !loading && filteredPrompts.length > 0 && (
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div className="bg-zinc-50 border border-zinc-100 rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 mt-4">
+                    <div
+                        className="rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-brand-border"
+                        style={{ backgroundColor: '#F0EAE1' }}
+                    >
                         <div>
-                            <p className="font-mono text-[10px] text-zinc-400 tracking-widest mb-1 uppercase">sin contrato · cancela cuando quieras</p>
-                            <h3 className="text-xl font-black tracking-tight text-zinc-900">
-                                accede a los 150+ prompts por <span className="underline decoration-4 underline-offset-4 decoration-zinc-300">$4/mes</span>
+                            <p className="font-mono text-[10px] text-brand-muted tracking-widest mb-1.5 uppercase">sin contrato · cancela cuando quieras</p>
+                            <h3 className="font-display text-2xl text-brand-text">
+                                Accede a los 150+ prompts por{' '}
+                                <span style={{ color: '#C96A3C' }}>$4/mes</span>
                             </h3>
                         </div>
                         <button
                             onClick={handleSubscribe}
-                            className="flex-shrink-0 group flex items-center gap-2 bg-zinc-900 text-white font-bold text-sm px-8 py-4 rounded-2xl hover:bg-black transition-all shadow-lg hover:-translate-y-0.5"
+                            className="group flex-shrink-0 inline-flex items-center gap-2 font-bold text-sm px-8 py-4 rounded-2xl transition-all hover:-translate-y-0.5 shadow-lg"
+                            style={{ backgroundColor: '#C96A3C', color: 'white' }}
                         >
-                            <Sparkles size={15} className="text-yellow-400" />
+                            <Sparkles size={14} />
                             hazte premium
-                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                     </div>
                 </div>
@@ -474,50 +521,76 @@ const Prompts: React.FC = () => {
 };
 
 // ── Prompt Card ────────────────────────────────────────────────────────────────
-const PromptCard: React.FC<{ prompt: any }> = ({ prompt }) => (
+const PromptCard: React.FC<{ prompt: any; index: number }> = ({ prompt, index }) => (
     <Link
         to={`/prompts/${prompt.id}`}
-        className="group relative bg-white border border-zinc-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-zinc-200/60 hover:-translate-y-1 transition-all duration-200 flex flex-col"
+        className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1"
+        style={{
+            backgroundColor: 'white',
+            border: '1px solid #E3DCD3',
+        }}
+        onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+            (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 30px rgba(201,106,60,0.10)';
+        }}
+        onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
+            (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+        }}
     >
-        {/* Image */}
-        <div className="relative bg-zinc-50 overflow-hidden">
-            {prompt.image_url ? (
-                <img
-                    src={prompt.image_url}
-                    alt={prompt.title}
-                    className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                />
-            ) : (
-                <div className="w-full h-36 flex items-center justify-center">
-                    <BadgeCheck size={32} className="text-zinc-200" />
-                </div>
-            )}
-            {/* Badge */}
-            <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest flex items-center gap-1 backdrop-blur-sm shadow-md
-                ${prompt.is_premium
-                    ? 'bg-zinc-900/90 text-white border border-white/10'
-                    : 'bg-white/90 text-zinc-700 border border-zinc-200'
-                }`}
-            >
-                {prompt.is_premium ? <Lock size={8} /> : <Unlock size={8} />}
-                {prompt.is_premium ? 'PREMIUM' : 'GRATIS'}
-            </span>
-        </div>
+        {/* Premium accent bar */}
+        {prompt.is_premium && (
+            <div className="h-0.5 w-full" style={{ backgroundColor: '#C96A3C' }} />
+        )}
 
-        {/* Body */}
-        <div className="p-5 flex flex-col flex-1">
-            <h3 className="font-bold text-base leading-snug text-zinc-900 lowercase mb-2 group-hover:text-zinc-600 transition-colors line-clamp-2">
+        <div className="p-6 flex flex-col flex-1">
+            {/* Top row: index + tier */}
+            <div className="flex items-center justify-between mb-5">
+                <span className="font-mono text-[11px]" style={{ color: '#C8BEB5' }}>
+                    {String(index + 1).padStart(2, '0')}
+                </span>
+                <span
+                    className="font-mono text-[9px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase"
+                    style={prompt.is_premium
+                        ? { backgroundColor: '#FAF0E8', color: '#C96A3C' }
+                        : { backgroundColor: '#F0EAE1', color: '#8B7E74' }
+                    }
+                >
+                    {prompt.is_premium
+                        ? <span className="flex items-center gap-1"><Lock size={7} />premium</span>
+                        : 'gratis'
+                    }
+                </span>
+            </div>
+
+            {/* Title */}
+            <h3
+                className="font-display text-xl leading-snug mb-3 transition-colors line-clamp-2"
+                style={{ color: '#1D1B18' }}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#C96A3C')}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#1D1B18')}
+            >
                 {prompt.title}
             </h3>
-            <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2 mb-4 flex-1">
+
+            {/* Description */}
+            <p className="text-sm leading-relaxed line-clamp-2 flex-1 mb-5" style={{ color: '#8B7E74' }}>
                 {prompt.description}
             </p>
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-50">
-                <span className="text-[9px] font-mono bg-zinc-50 text-zinc-400 border border-zinc-100 px-2 py-1 rounded-md uppercase tracking-widest">
-                    {prompt.category || 'general'}
+
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid #F0EAE1' }}>
+                <span
+                    className="font-mono text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-md"
+                    style={{ backgroundColor: '#FAF9F5', color: '#8B7E74', border: '1px solid #E3DCD3' }}
+                >
+                    {getCategoryEmoji(prompt.category?.toLowerCase() ?? '')} {prompt.category || 'general'}
                 </span>
-                <span className="text-[11px] font-black text-zinc-900 lowercase inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    explorar <span className="text-base">→</span>
+                <span
+                    className="font-mono text-[11px] font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1"
+                    style={{ color: '#C96A3C' }}
+                >
+                    abrir →
                 </span>
             </div>
         </div>

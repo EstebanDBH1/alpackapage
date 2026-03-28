@@ -3,6 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 /* Custom Utilities */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -35,5 +45,5 @@
 }
 
 .skeleton {
-    @apply animate-pulse bg-gray-200 rounded;
+    @apply animate-pulse bg-[#E3DCD3] rounded;
 }

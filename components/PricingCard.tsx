@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Zap, ShieldCheck, Clock, Sparkles, ArrowRight, Star } from 'lucide-react';
+import { Check, Zap, ShieldCheck, Clock, Sparkles, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -50,16 +50,9 @@ const PricingCard: React.FC = () => {
         if (!user) return navigate('/login?redirect=/pricing');
         if (!scriptLoaded || !window.Paddle) return;
         setLoading(true);
-
         const priceId = import.meta.env.VITE_PADDLE_PRICE_ID?.trim();
-
         window.Paddle.Checkout.open({
-            settings: {
-                displayMode: 'overlay',
-                theme: 'light',
-                locale: 'es',
-                successUrl: `${window.location.origin}/payment-success`
-            },
+            settings: { displayMode: 'overlay', theme: 'light', locale: 'es', successUrl: `${window.location.origin}/payment-success` },
             items: [{ priceId: priceId, quantity: 1 }],
             customer: { email: user.email },
             customData: { supabase_user_id: String(user.id) },
@@ -68,143 +61,171 @@ const PricingCard: React.FC = () => {
     };
 
     const features = [
-        'acceso ilimitado a 100+ prompts',
+        'acceso ilimitado a 150+ prompts',
         'actualizaciones semanales garantizadas',
         'búsqueda avanzada por categoría',
         'guarda tus prompts favoritos',
-        'soporte prioritario 24/7',
+        'cancela cuando quieras',
     ];
 
     return (
-        <section className="py-24 bg-zinc-50 relative overflow-hidden">
-            {/* BG decoration */}
-            <div className="absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:24px_24px] opacity-40"></div>
+        <section className="py-20 md:py-28 relative overflow-hidden" style={{ backgroundColor: '#FAF9F5' }}>
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at 25% 50%, #EDE4D8 0%, transparent 55%)' }}
+            />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 relative z-10">
 
                 {/* Section header */}
-                <div className="text-center mb-14">
-                    <span className="inline-flex items-center gap-2 text-[11px] font-mono text-zinc-500 tracking-[0.2em] uppercase mb-4">
-                        <Star size={11} className="fill-yellow-400 text-yellow-400" />
-                        precio único — sin sorpresas
-                        <Star size={11} className="fill-yellow-400 text-yellow-400" />
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-zinc-900 mb-4 leading-tight">
-                        todo el banco. <span className="text-zinc-400">un solo precio.</span>
-                    </h2>
-                    <p className="text-base text-zinc-500 font-sans max-w-md mx-auto">
-                        invierte menos que un café al mes y ahorra horas de trabajo cada día.
+                <div className="mb-14 md:mb-16">
+                    <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#8B7E74' }}>
+                        — precio
                     </p>
+                    <h2 className="font-display font-bold text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
+                        Todo el banco.<br />
+                        <span style={{ color: '#C96A3C' }}>Un solo precio.</span>
+                    </h2>
                 </div>
 
-                {/* Card + Social proof layout */}
-                <div className="flex flex-col lg:flex-row items-center gap-12 justify-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
-                    {/* Pricing Card */}
-                    <div className="relative w-full max-w-[380px]">
-                        {/* Glow */}
-                        <div className="absolute -inset-6 bg-gradient-to-b from-zinc-200/60 to-transparent rounded-[48px] blur-3xl -z-10"></div>
+                    {/* ── Pricing card — dark ── */}
+                    <div
+                        className="rounded-3xl p-10 relative overflow-hidden"
+                        style={{ backgroundColor: '#1A1410' }}
+                    >
+                        {/* Subtle dot texture */}
+                        <div
+                            className="absolute inset-0 pointer-events-none opacity-[0.04]"
+                            style={{ backgroundImage: 'radial-gradient(circle, #C96A3C 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+                        />
 
-                        <div className="bg-white border border-zinc-200 rounded-[32px] p-10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                            {/* Badge */}
-                            <div className="flex justify-between items-start mb-8">
+                        <div className="relative z-10">
+                            {/* Top row */}
+                            <div className="flex items-center justify-between mb-10">
                                 <div>
-                                    <h3 className="font-bold text-zinc-900 text-xl">membresía pro</h3>
-                                    <p className="text-zinc-400 text-xs font-mono tracking-widest mt-1">full access</p>
+                                    <h3 className="font-display font-semibold text-lg mb-0.5" style={{ color: 'rgba(255,255,255,0.88)' }}>
+                                        membresía pro
+                                    </h3>
+                                    <p className="font-mono text-[10px] tracking-[0.15em] uppercase" style={{ color: '#4D433C' }}>
+                                        full access
+                                    </p>
                                 </div>
-                                <span className="bg-zinc-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-full tracking-wider flex items-center gap-1">
-                                    <Sparkles size={9} className="text-yellow-400" />
+                                <span
+                                    className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold px-3 py-1.5 rounded-full tracking-wider"
+                                    style={{ backgroundColor: 'rgba(201,106,60,0.15)', color: '#C96A3C', border: '1px solid rgba(201,106,60,0.2)' }}
+                                >
+                                    <Sparkles size={9} />
                                     popular
                                 </span>
                             </div>
 
                             {/* Price */}
-                            <div className="mb-8">
-                                <div className="flex items-baseline gap-1">
-                                    <span className="text-[64px] font-black tracking-tighter text-zinc-900 leading-none">$4</span>
-                                    <span className="text-zinc-400 font-medium text-sm">/mes</span>
+                            <div className="pb-10 mb-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                                <div className="flex items-start gap-1">
+                                    <span className="font-display text-xl font-medium mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>$</span>
+                                    <span className="font-display font-bold leading-none tracking-tight" style={{ fontSize: '6rem', color: 'white' }}>4</span>
+                                    <span className="font-display text-sm font-medium mt-auto mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>/mes</span>
                                 </div>
-                                <p className="text-zinc-400 text-xs mt-3">facturación mensual. cancela cuando quieras.</p>
+                                <p className="font-mono text-[11px] tracking-wider" style={{ color: '#4D433C' }}>
+                                    facturación mensual · cancela cuando quieras
+                                </p>
                             </div>
 
                             {/* Features */}
                             <ul className="space-y-4 mb-10">
                                 {features.map((feat, i) => (
-                                    <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
-                                        <div className="w-5 h-5 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0">
-                                            <Check size={11} className="text-zinc-900" strokeWidth={3} />
+                                    <li key={i} className="flex items-center gap-3.5 text-sm">
+                                        <div
+                                            className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                                            style={{ backgroundColor: 'rgba(201,106,60,0.15)', border: '1px solid rgba(201,106,60,0.2)' }}
+                                        >
+                                            <Check size={10} style={{ color: '#C96A3C' }} strokeWidth={3} />
                                         </div>
-                                        <span className="font-medium">{feat}</span>
+                                        <span style={{ color: 'rgba(255,255,255,0.55)' }}>{feat}</span>
                                     </li>
                                 ))}
                             </ul>
 
-                            {/* CTA Button */}
+                            {/* CTA */}
                             <button
                                 onClick={handleJoinClick}
                                 disabled={isSubscribed || loading}
-                                className={`w-full py-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${isSubscribed
-                                    ? 'bg-emerald-50 text-emerald-600 cursor-default'
-                                    : 'bg-zinc-900 text-white hover:bg-black active:scale-[0.98] shadow-lg hover:shadow-xl'
-                                    }`}
+                                className="w-full py-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2.5 hover:-translate-y-0.5"
+                                style={isSubscribed
+                                    ? { backgroundColor: 'rgba(34,197,94,0.1)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.2)', cursor: 'default' }
+                                    : { backgroundColor: '#C96A3C', color: 'white', boxShadow: '0 8px 24px rgba(201,106,60,0.25)' }
+                                }
+                                onMouseEnter={e => !isSubscribed && !loading && ((e.currentTarget as HTMLElement).style.backgroundColor = '#AF5A30')}
+                                onMouseLeave={e => !isSubscribed && !loading && ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
                             >
                                 {isSubscribed ? (
-                                    <><Check size={16} strokeWidth={3} /> plan activo</>
+                                    <><Check size={14} strokeWidth={2.5} /> plan activo</>
                                 ) : loading ? (
-                                    <span className="opacity-70">cargando...</span>
+                                    <span style={{ opacity: 0.6 }}>cargando...</span>
                                 ) : (
-                                    <><Zap size={16} fill="currentColor" /> {user ? 'suscribirse ahora' : 'hazte premium'} <ArrowRight size={14} className="ml-1" /></>
+                                    <><Zap size={13} fill="currentColor" /> {user ? 'suscribirse ahora' : 'hazte premium'} <ArrowRight size={13} /></>
                                 )}
                             </button>
 
-                            {/* Micro trust */}
-                            <p className="text-center text-[10px] font-mono text-zinc-400 mt-4 tracking-wider">
+                            <p className="text-center font-mono text-[10px] tracking-widest mt-4" style={{ color: '#3D352E' }}>
                                 pago seguro vía paddle · ssl 256-bit
                             </p>
                         </div>
                     </div>
 
-                    {/* Right side: trust props */}
-                    <div className="w-full max-w-sm space-y-6">
+                    {/* ── Right: trust + ROI ── */}
+                    <div className="space-y-4">
 
-                        <div className="flex gap-4 p-5 bg-white rounded-2xl border border-zinc-100 shadow-sm">
-                            <div className="w-10 h-10 bg-zinc-50 rounded-xl flex items-center justify-center shrink-0 border border-zinc-100">
-                                <ShieldCheck size={18} className="text-zinc-700" />
+                        {[
+                            { icon: ShieldCheck, title: 'sin tasas ocultas', desc: 'el precio es final. sin créditos ni recargas. siempre $4, sin asteriscos.' },
+                            { icon: Clock,       title: 'cancela en un clic', desc: 'sin burocracia. mantienes el acceso hasta que termine tu periodo pagado.' },
+                            { icon: Zap,         title: 'acceso inmediato',   desc: 'en segundos desbloqueas todo el banco. sin esperas, sin validaciones.' },
+                        ].map(({ icon: Icon, title, desc }) => (
+                            <div
+                                key={title}
+                                className="flex gap-5 p-6 rounded-2xl border transition-all hover:-translate-y-0.5"
+                                style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
+                                onMouseEnter={e => {
+                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
+                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(201,106,60,0.07)';
+                                }}
+                                onMouseLeave={e => {
+                                    (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
+                                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                                }}
+                            >
+                                <div
+                                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border"
+                                    style={{ backgroundColor: '#FAF9F5', borderColor: '#E3DCD3' }}
+                                >
+                                    <Icon size={15} style={{ color: '#8B7E74' }} />
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold text-sm mb-1" style={{ color: '#1D1B18' }}>{title}</h4>
+                                    <p className="text-xs leading-relaxed" style={{ color: '#8B7E74' }}>{desc}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className="font-bold text-zinc-900 text-sm mb-1">sin tasas ocultas</h4>
-                                <p className="text-zinc-500 text-xs leading-relaxed">el precio es final. sin créditos ni recargas. siempre $4.</p>
-                            </div>
-                        </div>
+                        ))}
 
-                        <div className="flex gap-4 p-5 bg-white rounded-2xl border border-zinc-100 shadow-sm">
-                            <div className="w-10 h-10 bg-zinc-50 rounded-xl flex items-center justify-center shrink-0 border border-zinc-100">
-                                <Clock size={18} className="text-zinc-700" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-zinc-900 text-sm mb-1">cancela en un clic</h4>
-                                <p className="text-zinc-500 text-xs leading-relaxed">sin burocracia. mantienes el acceso hasta que termine tu periodo.</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4 p-5 bg-white rounded-2xl border border-zinc-100 shadow-sm">
-                            <div className="w-10 h-10 bg-zinc-50 rounded-xl flex items-center justify-center shrink-0 border border-zinc-100">
-                                <Zap size={18} className="text-zinc-700" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-zinc-900 text-sm mb-1">acceso inmediato</h4>
-                                <p className="text-zinc-500 text-xs leading-relaxed">en segundos desbloqueas todo el banco. sin esperas, sin validaciones.</p>
-                            </div>
-                        </div>
-
-                        {/* ROI calculation */}
-                        <div className="p-5 bg-zinc-900 rounded-2xl text-white">
-                            <p className="text-[10px] font-mono text-zinc-400 tracking-widest mb-2">calcula tu roi</p>
-                            <p className="text-sm font-semibold leading-relaxed">
-                                si ahorras <span className="text-yellow-400 font-bold">2 horas/semana</span> en prompts,
-                                alpackaai te cuesta <span className="text-yellow-400 font-bold">$0.09/hora</span> de tiempo recuperado.
+                        {/* ROI panel */}
+                        <div
+                            className="p-7 rounded-2xl"
+                            style={{ backgroundColor: '#1A1410' }}
+                        >
+                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-3" style={{ color: '#4D433C' }}>
+                                calcula tu roi
+                            </p>
+                            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                                si ahorras{' '}
+                                <span className="font-semibold" style={{ color: '#C96A3C' }}>2 horas/semana</span>{' '}
+                                en prompts, alpacka.ai te cuesta{' '}
+                                <span className="font-semibold" style={{ color: '#C96A3C' }}>$0.09/hora</span>{' '}
+                                de tiempo recuperado.
                             </p>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap"
     rel="stylesheet">
   <script>
     tailwind.config = {
@@ -42,16 +42,22 @@
         extend: {
           colors: {
             brand: {
-              bg: '#FDFCFC',
-              surface: '#F5F3F1',
-              text: '#000000',
-              accent: '#000000', // Using black as the primary accent per instructions
-              highlight: '#e5e5e5'
+              bg: '#FAF9F5',
+              surface: '#F0EAE1',
+              text: '#1D1B18',
+              accent: '#C96A3C',
+              'accent-hover': '#AF5A30',
+              'accent-light': '#F7EDE5',
+              muted: '#8B7E74',
+              border: '#E3DCD3',
+              dark: '#1A1410',
+              'dark-surface': '#221E1A',
             }
           },
           fontFamily: {
-            mono: ['"Space Mono"', 'monospace'],
-            sans: ['Arial', 'sans-serif'],
+            sans: ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
           }
         }
       }
@@ -59,22 +65,27 @@
   </script>
   <style>
     body {
-      background-color: #FDFCFC;
-      color: #000000;
+      background-color: #FAF9F5;
+      color: #1D1B18;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Custom Scrollbar for that brutalist feel */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 5px;
     }
 
     ::-webkit-scrollbar-track {
-      background: #FDFCFC;
+      background: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #000000;
-      border-radius: 0px;
+      background: #C8BEB5;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A09690;
     }
   </style>
   <script type="importmap">

@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import PaymentSuccess from './pages/PaymentSuccess';
+import SavedPromptsPage from './pages/SavedPromptsPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -28,7 +29,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-brand-bg text-brand-text font-mono selection:bg-black selection:text-white">
+      <div className="flex flex-col min-h-screen bg-brand-bg text-brand-text font-sans antialiased selection:bg-zinc-900 selection:text-white">
         <Navbar />
         <main className="flex-grow">
           <Routes>
@@ -37,6 +38,7 @@ const App: React.FC = () => {
             <Route path="/prompts/:id" element={<PromptDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/guardados" element={<SavedPromptsPage />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/terms" element={<Terms />} />

@@ -1,7 +1,14 @@
 import React from 'react';
 import { supabase } from '../lib/supabase';
-import { BadgeCheck, ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+const CATEGORY_EMOJIS: Record<string, string> = {
+  marketing: '📣', copywriting: '✍️', ventas: '💰',
+  productividad: '⚡', estrategia: '♟️', redes: '📱',
+  email: '📧', negocio: '💼', contenido: '🎨',
+  datos: '📊', 'ideas de negocio': '💡', finanzas: '📈',
+};
 
 const PromptGrid: React.FC = () => {
   const [prompts, setPrompts] = React.useState<any[]>([]);
@@ -9,10 +16,7 @@ const PromptGrid: React.FC = () => {
 
   React.useEffect(() => {
     const fetchPrompts = async () => {
-      const { data } = await supabase
-        .rpc('get_public_prompts')
-        .limit(10);
-
+      const { data } = await supabase.rpc('get_public_prompts').limit(10);
       if (data) setPrompts(data);
     };
     fetchPrompts();
@@ -23,29 +27,46 @@ const PromptGrid: React.FC = () => {
   if (prompts.length === 0) return null;
 
   return (
-    <section className="bg-zinc-50 py-24 overflow-hidden border-y border-zinc-200">
+    <section className="py-24 overflow-hidden border-y" style={{ backgroundColor: '#F0EAE1', borderColor: '#E3DCD3' }}>
       <div className="w-full">
-        {/* Header de la sección */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex justify-between items-end">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 text-zinc-900 lowercase">Accede a todo el contenido</h2>
-            <p className="font-mono text-[10px] md:text-xs text-zinc-400 tracking-[0.2em] uppercase">accede a estos y miles más</p>
-          </div>
 
-          <Link to="/prompts" className="hidden md:flex items-center text-sm font-bold text-zinc-900 hover:translate-x-1 transition-transform tracking-tighter lowercase">
-            vista previa <ArrowRight size={16} className="ml-2" />
+        {/* Header */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 mb-12 flex justify-between items-end">
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-3" style={{ color: '#8B7E74' }}>
+              — biblioteca de prompts
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
+              Una muestra de<br />
+              <em className="not-italic font-sans font-bold">lo que te espera.</em>
+            </h2>
+          </div>
+          <Link
+            to="/prompts"
+            className="hidden md:flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-colors hover:-translate-y-0.5 transition-transform"
+            style={{ color: '#8B7E74' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+          >
+            ver todos <ArrowRight size={13} />
           </Link>
         </div>
 
-        {/* Marquee Container */}
+        {/* Marquee */}
         <div className="relative w-full overflow-hidden">
-          {/* Difuminado en los bordes para suavidad visual */}
-          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-zinc-50 to-transparent z-20 pointer-events-none"></div>
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-zinc-50 to-transparent z-20 pointer-events-none"></div>
+          {/* Edge fades */}
+          <div
+            className="absolute top-0 left-0 w-28 h-full z-20 pointer-events-none"
+            style={{ background: 'linear-gradient(to right, #F0EAE1, transparent)' }}
+          />
+          <div
+            className="absolute top-0 right-0 w-28 h-full z-20 pointer-events-none"
+            style={{ background: 'linear-gradient(to left, #F0EAE1, transparent)' }}
+          />
 
           <div
-            className="flex items-start gap-6 w-max animate-marquee py-6"
-            style={{ animationPlayState: isPaused ? 'paused' : 'running' }}
+            className="flex items-stretch gap-4 w-max py-4"
+            style={{ animation: `marquee 55s linear infinite`, animationPlayState: isPaused ? 'paused' : 'running' }}
           >
             {marqueePrompts.map((prompt, index) => (
               <Link
@@ -53,46 +74,52 @@ const PromptGrid: React.FC = () => {
                 key={`${prompt.id}-${index}`}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                className="w-[280px] md:w-[320px] flex-shrink-0 group relative bg-white rounded-2xl border border-zinc-200 transition-all duration-500 hover:border-zinc-400 hover:shadow-2xl hover:shadow-zinc-200/50 block h-fit overflow-hidden"
+                className="w-[280px] md:w-[300px] flex-shrink-0 flex flex-col rounded-2xl transition-all duration-200 hover:-translate-y-1"
+                style={{
+                  backgroundColor: 'white',
+                  border: '1px solid #E3DCD3',
+                }}
+                onFocus={() => setIsPaused(true)}
+                onBlur={() => setIsPaused(false)}
               >
-                {/* Imagen con tratamiento sutil */}
-                {prompt.image_url && (
-                  <div className="h-[180px] w-full overflow-hidden relative bg-zinc-100 border-b border-zinc-100">
-                    <img
-                      src={prompt.image_url}
-                      alt={prompt.title}
-                      className="w-full h-full object-cover grayscale opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100"
-                    />
-                    {prompt.is_premium && (
-                      <div className="absolute top-3 right-3 z-10">
-                        <span className="bg-zinc-900/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl">
-                          <Lock size={12} className="text-zinc-400" />
-                          <span className="text-[10px] font-bold tracking-widest uppercase">Premium</span>
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                {/* Premium bar */}
+                {prompt.is_premium && (
+                  <div className="h-0.5 rounded-t-2xl" style={{ backgroundColor: '#C96A3C' }} />
                 )}
 
-                {/* Área de Contenido */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <h3 className="font-bold text-base leading-snug tracking-tight text-zinc-900 lowercase line-clamp-2">
-                      {prompt.title}
-                    </h3>
-                    <BadgeCheck size={18} className="text-zinc-400 flex-shrink-0 mt-0.5 group-hover:text-blue-500 transition-colors" />
+                <div className="p-6 flex flex-col flex-1">
+                  {/* Top: category + tier */}
+                  <div className="flex items-center justify-between mb-5">
+                    <span
+                      className="font-mono text-[9px] uppercase tracking-widest px-2 py-1 rounded-md"
+                      style={{ backgroundColor: '#FAF9F5', color: '#8B7E74', border: '1px solid #E3DCD3' }}
+                    >
+                      {CATEGORY_EMOJIS[prompt.category?.toLowerCase()] ?? '•'} {prompt.category || 'general'}
+                    </span>
+                    {prompt.is_premium && (
+                      <span
+                        className="font-mono text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1"
+                        style={{ backgroundColor: '#FAF0E8', color: '#C96A3C' }}
+                      >
+                        <Lock size={8} /> premium
+                      </span>
+                    )}
                   </div>
 
-                  <p className="text-zinc-500 text-sm font-sans leading-relaxed lowercase line-clamp-2 mb-6">
+                  {/* Title */}
+                  <h3 className="font-display text-lg leading-snug mb-3 line-clamp-2 flex-1" style={{ color: '#1D1B18' }}>
+                    {prompt.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm leading-relaxed line-clamp-2" style={{ color: '#8B7E74' }}>
                     {prompt.description}
                   </p>
 
-                  <div className="flex items-center justify-between border-t border-zinc-50 pt-5 mt-auto">
-                    <span className="font-mono text-[9px] bg-zinc-50 text-zinc-400 px-2 py-1 rounded border border-zinc-100 uppercase tracking-widest">
-                      {prompt.category || 'general'}
-                    </span>
-                    <span className={`text-[10px] font-black tracking-tighter lowercase ${prompt.is_premium ? 'text-zinc-900' : 'text-zinc-400'}`}>
-                      {prompt.is_premium ? 'exclusivo' : 'gratis'}
+                  {/* Footer */}
+                  <div className="flex items-center justify-end mt-5 pt-4" style={{ borderTop: '1px solid #F0EAE1' }}>
+                    <span className="font-mono text-[10px] font-bold" style={{ color: '#C96A3C' }}>
+                      ver →
                     </span>
                   </div>
                 </div>
@@ -101,20 +128,23 @@ const PromptGrid: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-8 md:hidden flex justify-center px-4">
-          <Link to="/prompts" className="flex items-center text-sm font-bold text-zinc-900 tracking-tighter lowercase">
-            vista previa <ArrowRight size={16} className="ml-2" />
+        {/* Mobile link */}
+        <div className="mt-8 md:hidden flex justify-center px-6">
+          <Link
+            to="/prompts"
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest"
+            style={{ color: '#8B7E74' }}
+          >
+            ver todos los prompts <ArrowRight size={13} />
           </Link>
         </div>
+
       </div>
 
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-33.33%); }
-        }
-        .animate-marquee {
-          animation: marquee 50s linear infinite;
         }
       `}</style>
     </section>
