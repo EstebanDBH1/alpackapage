@@ -153,7 +153,7 @@ const Dashboard: React.FC = () => {
                                 {initials}
                             </div>
                             <div>
-                                <h1 className="font-display font-bold text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+                                <h1 className="font-display font-semibold text-xl md:text-2xl leading-tight" style={{ color: '#1D1B18' }}>
                                     Hola, {firstName}
                                 </h1>
                                 <p className="text-sm mt-0.5" style={{ color: '#8B7E74' }}>

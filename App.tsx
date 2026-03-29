@@ -35,6 +35,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/prompts" element={<Prompts />} />
+            <Route path="/prompts/categoria/:category" element={<Prompts />} />
             <Route path="/prompts/:id" element={<PromptDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />

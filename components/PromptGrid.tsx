@@ -36,9 +36,9 @@ const PromptGrid: React.FC = () => {
             <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-3" style={{ color: '#8B7E74' }}>
               — biblioteca de prompts
             </p>
-            <h2 className="font-display text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
-              Una muestra de<br />
-              <em className="not-italic font-sans font-bold">lo que te espera.</em>
+            <h2 className="font-display font-medium text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+              Prompts reales.<br />
+              <span className="font-semibold" style={{ color: '#C96A3C' }}>Listos para usar.</span>
             </h2>
           </div>
           <Link
@@ -82,9 +82,20 @@ const PromptGrid: React.FC = () => {
                 onFocus={() => setIsPaused(true)}
                 onBlur={() => setIsPaused(false)}
               >
+                {/* Image preview */}
+                {prompt.image_url && (
+                  <div className="w-full overflow-hidden rounded-t-2xl flex-shrink-0">
+                    <img
+                      src={prompt.image_url}
+                      alt={prompt.title}
+                      className="w-full h-auto block"
+                    />
+                  </div>
+                )}
+
                 {/* Premium bar */}
                 {prompt.is_premium && (
-                  <div className="h-0.5 rounded-t-2xl" style={{ backgroundColor: '#C96A3C' }} />
+                  <div className={`h-0.5 ${prompt.image_url ? '' : 'rounded-t-2xl'}`} style={{ backgroundColor: '#C96A3C' }} />
                 )}
 
                 <div className="p-6 flex flex-col flex-1">

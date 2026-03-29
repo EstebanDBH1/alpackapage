@@ -15,35 +15,45 @@ const Faq: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-20 md:py-28 bg-white">
+    <section className="py-20 md:py-28" style={{ backgroundColor: 'white' }}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="mb-12 md:mb-14">
-          <p className="font-mono text-[10px] text-brand-muted/50 tracking-[0.2em] uppercase mb-4">— preguntas</p>
-          <h2 className="font-display italic font-light text-3xl md:text-4xl text-brand-text leading-tight">
-            lo que suelen<br />
-            <span className="not-italic font-sans font-bold text-brand-text text-3xl md:text-4xl">preguntarnos.</span>
+          <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#C8BEB5' }}>
+            — preguntas
+          </p>
+          <h2 className="font-display font-medium text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+            Preguntas frecuentes.<br />
+            <span className="font-semibold">Respuestas directas.</span>
           </h2>
         </div>
 
-        <div className="divide-y divide-brand-border">
+        <div style={{ borderTop: '1px solid #F0EAE1' }}>
           {faqData.map((item, index) => (
-            <div key={index}>
+            <div key={index} style={{ borderBottom: '1px solid #F0EAE1' }}>
               <button
-                className="w-full py-6 flex justify-between items-start text-left focus:outline-none group gap-6"
+                className="w-full py-6 flex justify-between items-start text-left focus:outline-none gap-6"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
-                <span className="text-[15px] font-semibold text-brand-text group-hover:text-brand-muted transition-colors leading-snug">
+                <span
+                  className="text-[15px] font-semibold leading-snug transition-colors"
+                  style={{ color: openIndex === index ? '#C96A3C' : '#1D1B18' }}
+                >
                   {item.question}
                 </span>
                 <ChevronDown
-                  size={18}
-                  className={`flex-shrink-0 text-brand-muted/50 mt-0.5 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
+                  size={16}
+                  className={`flex-shrink-0 mt-0.5 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
+                  style={{ color: '#C8BEB5' }}
                 />
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
-                <p className="text-brand-muted text-sm leading-relaxed">
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  openIndex === index ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <p className="text-sm leading-relaxed" style={{ color: '#8B7E74' }}>
                   {item.answer}
                 </p>
               </div>

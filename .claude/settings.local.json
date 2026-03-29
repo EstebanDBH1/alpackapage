@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(find:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__list_tables",
+      "Bash(curl -s \"https://ovwufkzgxrhmtspnnfou.supabase.co/rest/v1/rpc/get_public_prompts\" -X POST -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92d3Vma3pneHJobXRzcG5uZm91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTA3MTcsImV4cCI6MjA4NjIyNjcxN30.g6Hj5IXm7iQvc51pX_Ezubh9r0EZY_cYxuAqGonMQa0\" -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(curl:*)"
     ]
   }
 }

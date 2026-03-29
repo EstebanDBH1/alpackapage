@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Zap, ShieldCheck, Clock, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, Zap, ShieldCheck, Clock, Sparkles, ArrowRight, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -65,7 +65,7 @@ const PricingCard: React.FC = () => {
         'actualizaciones semanales garantizadas',
         'búsqueda avanzada por categoría',
         'guarda tus prompts favoritos',
-        'cancela cuando quieras',
+        'cancela cuando quieras, sin drama',
     ];
 
     return (
@@ -82,9 +82,9 @@ const PricingCard: React.FC = () => {
                     <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#8B7E74' }}>
                         — precio
                     </p>
-                    <h2 className="font-display font-bold text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
-                        Todo el banco.<br />
-                        <span style={{ color: '#C96A3C' }}>Un solo precio.</span>
+                    <h2 className="font-display font-medium text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+                        Acceso completo.<br />
+                        <span className="font-semibold" style={{ color: '#C96A3C' }}>Un solo precio. Sin sorpresas.</span>
                     </h2>
                 </div>
 
@@ -95,7 +95,6 @@ const PricingCard: React.FC = () => {
                         className="rounded-3xl p-10 relative overflow-hidden"
                         style={{ backgroundColor: '#1A1410' }}
                     >
-                        {/* Subtle dot texture */}
                         <div
                             className="absolute inset-0 pointer-events-none opacity-[0.04]"
                             style={{ backgroundImage: 'radial-gradient(circle, #C96A3C 1px, transparent 1px)', backgroundSize: '24px 24px' }}
@@ -109,7 +108,7 @@ const PricingCard: React.FC = () => {
                                         membresía pro
                                     </h3>
                                     <p className="font-mono text-[10px] tracking-[0.15em] uppercase" style={{ color: '#4D433C' }}>
-                                        full access
+                                        acceso completo
                                     </p>
                                 </div>
                                 <span
@@ -117,20 +116,28 @@ const PricingCard: React.FC = () => {
                                     style={{ backgroundColor: 'rgba(201,106,60,0.15)', color: '#C96A3C', border: '1px solid rgba(201,106,60,0.2)' }}
                                 >
                                     <Sparkles size={9} />
-                                    popular
+                                    precio de lanzamiento
                                 </span>
                             </div>
 
                             {/* Price */}
-                            <div className="pb-10 mb-10" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                                <div className="flex items-start gap-1">
-                                    <span className="font-display text-xl font-medium mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>$</span>
-                                    <span className="font-display font-bold leading-none tracking-tight" style={{ fontSize: '6rem', color: 'white' }}>4</span>
-                                    <span className="font-display text-sm font-medium mt-auto mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>/mes</span>
+                            <div className="pb-8 mb-8" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                                <div className="flex items-start gap-1 mb-2">
+                                    <span className="font-display text-xl font-medium mt-3" style={{ color: 'rgba(255,255,255,0.3)' }}>$</span>
+                                    <span className="font-display font-semibold leading-none tracking-tight" style={{ fontSize: '4.5rem', color: 'white' }}>4</span>
+                                    <span className="font-display text-sm font-medium mt-auto mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>/mes</span>
                                 </div>
-                                <p className="font-mono text-[11px] tracking-wider" style={{ color: '#4D433C' }}>
-                                    facturación mensual · cancela cuando quieras
-                                </p>
+                                <div className="flex items-center gap-3 flex-wrap">
+                                    <span className="font-mono text-[10px] tracking-wider" style={{ color: '#4D433C' }}>
+                                        = $0.13/día · menos que un café
+                                    </span>
+                                    <span
+                                        className="font-mono text-[9px] font-bold px-2 py-0.5 rounded"
+                                        style={{ backgroundColor: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.2)', textDecoration: 'line-through' }}
+                                    >
+                                        vs $80/hr freelancer
+                                    </span>
+                                </div>
                             </div>
 
                             {/* Features */}
@@ -165,23 +172,57 @@ const PricingCard: React.FC = () => {
                                 ) : loading ? (
                                     <span style={{ opacity: 0.6 }}>cargando...</span>
                                 ) : (
-                                    <><Zap size={13} fill="currentColor" /> {user ? 'suscribirse ahora' : 'hazte premium'} <ArrowRight size={13} /></>
+                                    <><Zap size={13} fill="currentColor" /> {user ? 'suscribirme ahora' : 'quiero acceso completo'} <ArrowRight size={13} /></>
                                 )}
                             </button>
 
                             <p className="text-center font-mono text-[10px] tracking-widest mt-4" style={{ color: '#3D352E' }}>
-                                pago seguro vía paddle · ssl 256-bit
+                                pago seguro · cancela en un clic · sin preguntas
                             </p>
                         </div>
                     </div>
 
-                    {/* ── Right: trust + ROI ── */}
+                    {/* ── Right: trust + value anchoring ── */}
                     <div className="space-y-4">
 
+                        {/* Value anchoring card */}
+                        <div
+                            className="p-7 rounded-2xl border"
+                            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
+                        >
+                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#C8BEB5' }}>
+                                calcula tu roi
+                            </p>
+                            <div className="space-y-3">
+                                {[
+                                    { label: '1 email de ventas con freelancer', cost: '~$80', muted: true },
+                                    { label: '1 estrategia de marketing', cost: '~$200', muted: true },
+                                    { label: '1 mes de alpacka.ai (150 prompts)', cost: '$4', muted: false },
+                                ].map((item, i) => (
+                                    <div key={i} className="flex items-center justify-between gap-4">
+                                        <span className="text-sm" style={{ color: item.muted ? '#C8BEB5' : '#1D1B18', textDecoration: item.muted ? 'line-through' : 'none' }}>
+                                            {item.label}
+                                        </span>
+                                        <span
+                                            className="font-mono font-bold text-sm flex-shrink-0"
+                                            style={{ color: item.muted ? '#E3DCD3' : '#C96A3C' }}
+                                        >
+                                            {item.cost}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-5 pt-5" style={{ borderTop: '1px solid #F0EAE1' }}>
+                                <p className="text-xs leading-relaxed" style={{ color: '#8B7E74' }}>
+                                    con un solo prompt que funcione, <strong style={{ color: '#1D1B18' }}>ya recuperaste la inversión del mes.</strong>
+                                </p>
+                            </div>
+                        </div>
+
                         {[
-                            { icon: ShieldCheck, title: 'sin tasas ocultas', desc: 'el precio es final. sin créditos ni recargas. siempre $4, sin asteriscos.' },
-                            { icon: Clock,       title: 'cancela en un clic', desc: 'sin burocracia. mantienes el acceso hasta que termine tu periodo pagado.' },
-                            { icon: Zap,         title: 'acceso inmediato',   desc: 'en segundos desbloqueas todo el banco. sin esperas, sin validaciones.' },
+                            { icon: Lock, title: 'sin riesgo', desc: 'Cancelas cuando quieres, sin formularios, sin emails de retención. Tu decisión, tu timing.' },
+                            { icon: ShieldCheck, title: 'precio que no varía', desc: '$4 es $4. Sin créditos que vencen, sin tiers, sin asteriscos. Acceso completo desde el primer día.' },
+                            { icon: Clock, title: 'el precio puede subir', desc: 'El precio de lanzamiento no es permanente. Quienes entren ahora lo mantienen bloqueado para siempre.' },
                         ].map(({ icon: Icon, title, desc }) => (
                             <div
                                 key={title}
@@ -208,24 +249,6 @@ const PricingCard: React.FC = () => {
                                 </div>
                             </div>
                         ))}
-
-                        {/* ROI panel */}
-                        <div
-                            className="p-7 rounded-2xl"
-                            style={{ backgroundColor: '#1A1410' }}
-                        >
-                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-3" style={{ color: '#4D433C' }}>
-                                calcula tu roi
-                            </p>
-                            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                                si ahorras{' '}
-                                <span className="font-semibold" style={{ color: '#C96A3C' }}>2 horas/semana</span>{' '}
-                                en prompts, alpacka.ai te cuesta{' '}
-                                <span className="font-semibold" style={{ color: '#C96A3C' }}>$0.09/hora</span>{' '}
-                                de tiempo recuperado.
-                            </p>
-                        </div>
-
                     </div>
                 </div>
             </div>

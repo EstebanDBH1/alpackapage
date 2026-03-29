@@ -1,107 +1,137 @@
 import React from 'react';
-import { ArrowRight, Lock, Sparkles } from 'lucide-react';
+import { ArrowRight, Lock, Sparkles, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+const mockPrompts = [
+  { category: 'marketing', emoji: '📣', title: 'Campaña de lanzamiento de 30 días con calendario editorial y guiones', premium: true },
+  { category: 'copywriting', emoji: '✍️', title: 'Email de ventas que convierte sin sonar a bot corporativo', premium: true },
+  { category: 'estrategia', emoji: '♟️', title: 'Análisis competitivo con plan de acción ejecutable para tu nicho', premium: false },
+];
 
 const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-16 pb-24 overflow-hidden" style={{ backgroundColor: '#FAF9F5' }}>
-      {/* Warm ambient gradient */}
+    <section className="relative overflow-hidden pt-14 pb-20 md:pt-20 md:pb-28" style={{ backgroundColor: '#FAF9F5' }}>
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% -10%, #EDE4D8 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 55% at 65% 20%, #EDE4D8 0%, transparent 65%)' }}
       />
 
-      <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10 w-full">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 lg:gap-20 items-center">
 
-        {/* Status label */}
-        <div className="flex items-center gap-2.5 mb-10">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-          <span className="font-mono text-[11px] tracking-[0.18em] uppercase" style={{ color: '#8B7E74' }}>
-            más de 150 prompts activos · actualizado esta semana
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h1 className="mb-8">
-          <span className="block font-display italic font-light leading-[0.92] tracking-tight" style={{ fontSize: 'clamp(3rem, 9vw, 7.5rem)', color: '#1D1B18' }}>
-            deja de improvisar
-          </span>
-          <span className="block font-sans font-black leading-[0.9] tracking-tighter" style={{ fontSize: 'clamp(2.6rem, 8vw, 6.5rem)', color: '#1D1B18' }}>
-            con la ia.
-          </span>
-        </h1>
-
-        {/* Subheading + CTA side by side on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-end">
-
+          {/* ── Left ── */}
           <div>
-            <p className="text-base md:text-lg leading-relaxed mb-10" style={{ color: '#8B7E74' }}>
-              más de <strong className="font-semibold" style={{ color: '#1D1B18' }}>150 prompts de ingeniería</strong> listos
-              para copiar y usar. resultados profesionales en segundos, no en horas.
+
+            {/* Social proof bar */}
+            <div className="inline-flex items-center gap-2.5 mb-8 px-3.5 py-2 rounded-full border" style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}>
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={10} className="fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <span className="font-mono text-[10px] tracking-wide" style={{ color: '#8B7E74' }}>
+                +500 usuarios activos · precio de lanzamiento
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="mb-6">
+              <span
+                className="block font-display font-medium leading-[1.1] tracking-tight"
+                style={{ fontSize: 'clamp(1.9rem, 4.5vw, 3rem)', color: '#1D1B18' }}
+              >
+                La IA que tienes es buena.
+              </span>
+              <span
+                className="block font-display font-semibold leading-[1.1] tracking-tight"
+                style={{ fontSize: 'clamp(1.9rem, 4.5vw, 3rem)', color: '#C96A3C' }}
+              >
+                Tus prompts, no.
+              </span>
+            </h1>
+
+            <p className="text-base leading-relaxed mb-8 max-w-md" style={{ color: '#8B7E74' }}>
+              <strong className="font-semibold" style={{ color: '#1D1B18' }}>150+ estructuras probadas</strong> que hacen que
+              ChatGPT, Claude y Gemini entreguen resultados profesionales
+              en la primera respuesta. Sin iteraciones. Sin frustración.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <Link to="/pricing" className="w-full sm:w-auto">
                 <button
-                  className="group w-full inline-flex items-center justify-center gap-2.5 font-semibold text-sm px-9 py-4 rounded-xl transition-all hover:-translate-y-0.5 shadow-lg"
-                  style={{ backgroundColor: '#C96A3C', color: 'white', boxShadow: '0 8px 24px rgba(201,106,60,0.22)' }}
+                  className="group w-full inline-flex items-center justify-center gap-2.5 font-semibold text-sm px-8 py-4 rounded-xl transition-all hover:-translate-y-0.5"
+                  style={{ backgroundColor: '#C96A3C', color: 'white', boxShadow: '0 8px 24px rgba(201,106,60,0.25)' }}
                   onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#AF5A30')}
                   onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
                 >
-                  <Sparkles size={15} style={{ color: 'rgba(255,220,160,0.9)' }} />
-                  hazte premium
-                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  <Sparkles size={14} style={{ color: 'rgba(255,220,160,0.9)' }} />
+                  quiero acceso — $4/mes
+                  <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </Link>
               <Link to="/prompts" className="w-full sm:w-auto">
                 <button
-                  className="w-full inline-flex items-center justify-center gap-2 font-semibold text-sm px-8 py-4 rounded-xl transition-all hover:-translate-y-0.5"
+                  className="w-full inline-flex items-center justify-center gap-2 font-semibold text-sm px-7 py-4 rounded-xl transition-all hover:-translate-y-0.5"
                   style={{ backgroundColor: 'white', color: '#1D1B18', border: '1px solid #E3DCD3' }}
                   onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = '#C96A3C')}
                   onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3')}
                 >
-                  explorar prompts
-                  <Lock size={13} style={{ color: '#8B7E74' }} />
+                  ver los 150+ prompts
+                  <Lock size={12} style={{ color: '#8B7E74' }} />
                 </button>
               </Link>
             </div>
 
-            {/* Risk reversal */}
+            {/* Trust micro-copy */}
             <p className="font-mono text-[10px] tracking-widest" style={{ color: '#C8BEB5' }}>
-              sin contrato · cancela cuando quieras · acceso instantáneo
+              acceso instantáneo · sin contrato · cancela cuando quieras
             </p>
           </div>
 
-          {/* Stats block */}
-          <div
-            className="rounded-3xl p-8 border grid grid-cols-2 gap-6"
-            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
-          >
-            {[
-              { value: '150+', label: 'prompts listos' },
-              { value: '$4', label: 'por mes' },
-              { value: '12', label: 'categorías' },
-              { value: '99%', label: 'éxito primer intento' },
-            ].map(stat => (
-              <div key={stat.label}>
-                <p className="font-display text-4xl leading-none mb-1.5" style={{ color: '#1D1B18' }}>
-                  {stat.value}
-                </p>
-                <p className="font-mono text-[10px] tracking-widest uppercase" style={{ color: '#8B7E74' }}>
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-
-            <div className="col-span-2 pt-4" style={{ borderTop: '1px solid #F0EAE1' }}>
-              <p className="text-xs leading-relaxed" style={{ color: '#8B7E74' }}>
-                compatible con <strong style={{ color: '#1D1B18' }}>ChatGPT, Claude, Gemini</strong> y todos los modelos modernos.
-              </p>
+          {/* ── Right: prompt cards ── */}
+          <div className="hidden lg:block relative">
+            <div className="space-y-3">
+              {mockPrompts.map((p, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl p-5 border"
+                  style={{
+                    backgroundColor: 'white',
+                    borderColor: i === 0 ? '#C96A3C' : '#E3DCD3',
+                    transform: i === 1 ? 'translateX(20px)' : 'none',
+                    opacity: i === 2 ? 0.5 : 1,
+                    boxShadow: i === 0 ? '0 4px 20px rgba(201,106,60,0.1)' : 'none',
+                  }}
+                >
+                  {p.premium && <div className="h-0.5 w-full -mt-5 mb-4 rounded-t-sm" style={{ backgroundColor: '#C96A3C' }} />}
+                  <div className="flex items-center justify-between mb-3">
+                    <span
+                      className="font-mono text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md"
+                      style={{ backgroundColor: '#F0EAE1', color: '#8B7E74', border: '1px solid #E3DCD3' }}
+                    >
+                      {p.emoji} {p.category}
+                    </span>
+                    {p.premium && (
+                      <span className="font-mono text-[9px] font-bold flex items-center gap-1" style={{ color: '#C96A3C' }}>
+                        <Lock size={8} /> premium
+                      </span>
+                    )}
+                  </div>
+                  <p className="font-display font-medium text-sm leading-snug" style={{ color: '#1D1B18' }}>{p.title}</p>
+                  <div className="mt-3.5 pt-3 flex justify-end" style={{ borderTop: '1px solid #F0EAE1' }}>
+                    <span className="font-mono text-[10px] font-bold" style={{ color: '#C96A3C' }}>abrir →</span>
+                  </div>
+                </div>
+              ))}
             </div>
+            <div
+              className="absolute -bottom-4 left-0 right-0 h-28 pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, transparent, #FAF9F5)' }}
+            />
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   );

@@ -1,26 +1,36 @@
 import React from 'react';
 
+const models = [
+  { name: 'ChatGPT', note: 'OpenAI' },
+  { name: 'Claude', note: 'Anthropic' },
+  { name: 'Gemini', note: 'Google' },
+  { name: 'Mistral', note: 'Mistral AI' },
+  { name: 'Midjourney', note: 'Imágenes' },
+  { name: 'DALL·E', note: 'OpenAI' },
+  { name: 'Perplexity', note: 'Búsqueda' },
+];
+
 const TrustBar: React.FC = () => {
-    return (
-        <div className="py-12 md:py-14 bg-white border-y border-brand-border">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <p className="text-center font-mono text-[10px] text-brand-muted/40 tracking-[0.2em] mb-10 uppercase">
-                    compatible con los mejores modelos del mundo
-                </p>
-                <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-                    {['openai', 'anthropic', 'mistral', 'midjourney', 'google'].map((brand, i) => (
-                        <span
-                            key={brand}
-                            className="text-base md:text-lg font-bold text-brand-text/20 tracking-tight hover:text-brand-text/35 transition-colors cursor-default select-none"
-                            style={{ fontStyle: brand === 'anthropic' ? 'italic' : 'normal', fontFamily: brand === 'mistral' ? '"Space Mono", monospace' : undefined }}
-                        >
-                            {brand}
-                        </span>
-                    ))}
-                </div>
-            </div>
+  return (
+    <div className="py-10 border-y" style={{ backgroundColor: '#FAF9F5', borderColor: '#E3DCD3' }}>
+      <div className="max-w-5xl mx-auto px-6 sm:px-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <p className="font-mono text-[10px] tracking-[0.2em] uppercase flex-shrink-0" style={{ color: '#C8BEB5' }}>
+            compatible con
+          </p>
+          <div className="w-px h-4 self-center hidden sm:block" style={{ backgroundColor: '#E3DCD3' }} />
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
+            {models.map(m => (
+              <div key={m.name} className="flex items-center gap-1.5">
+                <span className="font-semibold text-sm" style={{ color: '#1D1B18' }}>{m.name}</span>
+                <span className="font-mono text-[9px] tracking-widest uppercase" style={{ color: '#C8BEB5' }}>{m.note}</span>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default TrustBar;

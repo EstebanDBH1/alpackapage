@@ -39,15 +39,11 @@ All routes are defined in `App.tsx`:
 
 **Paddle integration:** Checkout SDK is loaded dynamically. Opens as an overlay with user email pre-filled and Supabase user ID in custom data. Success redirects to `/payment-success`. The `supabase/functions/create-portal-session` Edge Function (Deno) handles sensitive Paddle API calls server-side.
 
-**Data fetching:** Supabase client is initialized in `lib/`. Prompts are fetched via `get_public_prompts()` RPC; individual prompt content is fetched via `get_prompt_detail(prompt_id)` RPC. The `saved_prompts` table joins users to bookmarked prompts.
-
-**Subscription table schema:** The `subscriptions` table uses `subscription_status` (not `status`) and `customer_id` which equals the Supabase `user.id` — not a Paddle customer ID. Active states are `active` and `trialing`.
-
-**UI language:** All user-facing copy (alerts, labels, buttons) is in Spanish.
+**Data fetching:** Supabase client is initialized in `lib/`. Prompts are fetched via `get_public_prompts()` RPC. The `saved_prompts` table joins users to bookmarked prompts.
 
 ### Styling
 
-Tailwind CSS loaded via CDN (configured inline in `index.html`). Brand palette: `#FDFCFC` background, `#F5F3F1` surface, black accent. Font: Space Mono (Google Fonts). Custom Tailwind brand colors are defined in the `<script>` block inside `index.html` — add new colors there, not in a config file.
+ Tailwind CSS loaded via CDN (configured inline in `index.html`). Brand palette: `#FDFCFC` background, `#F5F3F1` surface, black accent. Font: Space Mono (Google Fonts). Custom Tailwind brand colors are defined in the `<script>` block inside `index.html` — add new colors there, not in a config file.
 
 ### Path Alias
 
@@ -64,11 +60,3 @@ Supabase service role key and Paddle API key are used only in Edge Functions (no
 ### Deployment
 
 Deployed on Vercel. `vercel.json` rewrites all routes to `index.html` for client-side routing. The Supabase Edge Function (`supabase/functions/create-portal-session/`) is deployed separately via Supabase CLI.
-
-A `cancel-paddle-subscription` Edge Function is referenced in `pages/Dashboard.tsx` as a fallback but has no corresponding file in `supabase/functions/` — it is not deployed.
-
-### Other Dependencies
-
-- `react-helmet-async` — used in pages for SEO `<title>` and `<meta>` tags
-- `jsPDF` — used in `pages/PromptDetail.tsx` for PDF export of prompt content
-- `lucide-react` — icon library used throughout

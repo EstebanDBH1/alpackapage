@@ -3,29 +3,32 @@ import { Star } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Alex Rivera',
-    role: 'Full-stack Developer',
-    content: 'He ahorrado horas de depuración. Los prompts de SQL son simplemente perfectos. Desde que lo uso, mis pull requests se revisan solos.',
-    avatar: 'AR',
+    name: 'Laura M.',
+    role: 'Fundadora de SaaS',
+    avatar: 'LM',
+    content: 'Usé el prompt de campaña de lanzamiento y tuvimos 80 registros en la primera semana. Antes tardaba 3 días en armar algo así. Ahora lo hago en 30 minutos.',
+    metric: '80 leads en 7 días',
   },
   {
-    name: 'Elena Gómez',
-    role: 'Content Creator',
-    content: 'Mis hilos de Twitter ahora tienen 10 veces más engagement. Brutal.',
-    avatar: 'EG',
+    name: 'Diego R.',
+    role: 'Consultor independiente',
+    avatar: 'DR',
+    content: 'Cerré un cliente de $6,000 con la propuesta que generé usando el prompt de propuesta de valor. El cliente me preguntó si tenía equipo detrás. Era solo yo y alpacka.',
+    metric: '$6,000 en una propuesta',
   },
   {
-    name: 'Marcus Chen',
-    role: 'Product Designer',
-    content: 'La sección de Midjourney es una joya. Resultados consistentes en minutos.',
-    avatar: 'MC',
+    name: 'Ana B.',
+    role: 'Content Manager',
+    avatar: 'AB',
+    content: 'Gestiono el contenido de 4 marcas yo sola. Sin alpacka era imposible. Ahora entrego calendarios editoriales completos en una tarde. Los $4/mes son lo mejor que invierto.',
+    metric: '4 marcas · 1 persona',
   },
 ];
 
-const Stars: React.FC<{ size?: number }> = ({ size = 12 }) => (
+const Stars: React.FC = () => (
   <div className="flex gap-0.5">
     {[...Array(5)].map((_, i) => (
-      <Star key={i} size={size} className="fill-amber-400 text-amber-400" />
+      <Star key={i} size={12} className="fill-amber-400 text-amber-400" />
     ))}
   </div>
 );
@@ -39,19 +42,19 @@ const Testimonials: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-14">
           <div>
             <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#8B7E74' }}>
-              — testimonios
+              — resultados reales
             </p>
-            <h2 className="font-display text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
-              Lo que dicen<br />
-              <em className="not-italic font-sans font-bold">de nosotros.</em>
+            <h2 className="font-display font-medium text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+              Lo que cambia cuando<br />
+              <span className="font-semibold">tienes los prompts correctos.</span>
             </h2>
           </div>
           <p className="text-sm max-w-xs md:text-right pb-1 leading-relaxed" style={{ color: '#8B7E74' }}>
-            +50 usuarios optimizando su flujo de trabajo diario
+            +500 usuarios mejorando sus resultados con IA cada semana
           </p>
         </div>
 
-        {/* Grid: 1 large + 2 small */}
+        {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
 
           {/* Featured */}
@@ -60,12 +63,18 @@ const Testimonials: React.FC = () => {
             style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
           >
             <div>
-              <Stars size={14} />
-              <p className="font-display italic font-light text-2xl md:text-[1.7rem] leading-snug mt-6 mb-8" style={{ color: '#1D1B18' }}>
+              <Stars />
+              <p className="font-display font-normal text-lg md:text-xl leading-snug mt-6 mb-6" style={{ color: '#1D1B18' }}>
                 "{testimonials[0].content}"
               </p>
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full font-mono text-[10px] font-bold"
+                style={{ backgroundColor: '#FAF0E8', color: '#C96A3C', border: '1px solid #F5D9C8' }}
+              >
+                → {testimonials[0].metric}
+              </div>
             </div>
-            <div className="flex items-center gap-3 pt-6" style={{ borderTop: '1px solid #F0EAE1' }}>
+            <div className="flex items-center gap-3 pt-6 mt-6" style={{ borderTop: '1px solid #F0EAE1' }}>
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm border"
                 style={{ backgroundColor: '#F0EAE1', color: '#1D1B18', borderColor: '#E3DCD3' }}
@@ -81,19 +90,25 @@ const Testimonials: React.FC = () => {
 
           {/* Two smaller */}
           <div className="lg:col-span-2 flex flex-col gap-4">
-            {testimonials.slice(1).map((t) => (
+            {testimonials.slice(1).map(t => (
               <div
                 key={t.name}
                 className="rounded-3xl p-7 border flex-1 flex flex-col justify-between"
                 style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
               >
                 <div>
-                  <Stars size={11} />
-                  <p className="text-sm leading-relaxed mt-4 mb-6" style={{ color: '#8B7E74' }}>
+                  <Stars />
+                  <p className="text-sm leading-relaxed mt-4 mb-4" style={{ color: '#8B7E74' }}>
                     "{t.content}"
                   </p>
+                  <div
+                    className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full font-mono text-[9px] font-bold"
+                    style={{ backgroundColor: '#FAF0E8', color: '#C96A3C', border: '1px solid #F5D9C8' }}
+                  >
+                    → {t.metric}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 pt-5" style={{ borderTop: '1px solid #F0EAE1' }}>
+                <div className="flex items-center gap-3 pt-5 mt-5" style={{ borderTop: '1px solid #F0EAE1' }}>
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs border"
                     style={{ backgroundColor: '#FAF0E8', color: '#C96A3C', borderColor: '#F5D9C8' }}

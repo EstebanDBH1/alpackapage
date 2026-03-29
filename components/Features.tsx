@@ -30,13 +30,13 @@ const Features: React.FC = () => {
             <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#8B7E74' }}>
               — casos de uso
             </p>
-            <h2 className="font-display text-3xl md:text-4xl leading-tight" style={{ color: '#1D1B18' }}>
-              Tareas reales.<br />
-              <em className="not-italic font-sans font-bold">Resultados reales.</em>
+            <h2 className="font-display font-medium text-2xl md:text-3xl leading-tight" style={{ color: '#1D1B18' }}>
+              Un prompt para cada tarea.<br />
+              <span className="font-semibold">150+ casos cubiertos.</span>
             </h2>
           </div>
           <p className="text-sm max-w-xs md:text-right leading-relaxed pb-1" style={{ color: '#8B7E74' }}>
-            todo lo que puedes construir, aprender y automatizar con alpacka.ai.
+            desde marketing y ventas hasta análisis de datos y estrategia.
           </p>
         </div>
 

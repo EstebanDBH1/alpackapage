@@ -318,10 +318,21 @@ const PromptDetail: React.FC = () => {
                     )}
                 </div>
 
+                {/* Image */}
+                {prompt.image_url && (
+                    <div className="w-full rounded-2xl overflow-hidden mb-8">
+                        <img
+                            src={prompt.image_url}
+                            alt={prompt.title}
+                            className="w-full h-auto block"
+                        />
+                    </div>
+                )}
+
                 {/* Title */}
                 <h1
-                    className="font-display leading-[1.04] tracking-tight mb-5"
-                    style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: '#1D1B18' }}
+                    className="font-display font-semibold leading-[1.06] tracking-tight mb-5"
+                    style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: '#1D1B18' }}
                 >
                     {prompt.title}
                 </h1>
@@ -420,7 +431,7 @@ const PromptDetail: React.FC = () => {
                                         >
                                             <Lock size={22} style={{ color: '#C96A3C' }} />
                                         </div>
-                                        <h4 className="font-display text-2xl text-white mb-2">
+                                        <h4 className="font-display font-semibold text-lg text-white mb-2">
                                             Contenido premium
                                         </h4>
                                         <p className="text-sm mb-7 max-w-xs leading-relaxed" style={{ color: '#8B7E74' }}>
