@@ -155,20 +155,13 @@ const Login: React.FC = () => {
               className="mb-6 rounded-2xl p-4 border"
               style={{ backgroundColor: '#FFF8F0', borderColor: '#F5D5BE' }}
             >
-              <p className="font-semibold text-sm mb-1" style={{ color: '#1D1B18' }}>
-                Abrí esta página en tu navegador
-              </p>
-              <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7E74' }}>
-                Estás dentro de {browser.appName}. Google bloquea el inicio de sesión desde apps — tenés que abrirlo en {browser.isAndroid ? 'Chrome' : 'Safari'}.
+              <p className="text-sm mb-3" style={{ color: '#8B7E74' }}>
+                Para iniciar sesión con Google, abre esta página en {browser.isAndroid ? 'Chrome' : 'Safari'}.
               </p>
 
-              {/* iOS step-by-step instructions */}
               {showIOSInstructions && (
-                <div className="mb-3 p-3 rounded-xl text-xs space-y-1.5" style={{ backgroundColor: '#F0EAE1', color: '#5A4D45' }}>
-                  <p className="font-semibold mb-1" style={{ color: '#1D1B18' }}>Cómo abrirlo en Safari:</p>
-                  <p>1. Tocá el ícono <strong>···</strong> o <strong>⋮</strong> (tres puntos) arriba o abajo de la pantalla.</p>
-                  <p>2. Seleccioná <strong>"Abrir en Safari"</strong> o <strong>"Abrir en navegador"</strong>.</p>
-                  <p>3. Volvé a intentar iniciar sesión con Google.</p>
+                <div className="mb-3 p-3 rounded-xl text-xs space-y-1" style={{ backgroundColor: '#F0EAE1', color: '#5A4D45' }}>
+                  <p>Toca <strong>···</strong> o <strong>⋮</strong> y selecciona <strong>"Abrir en Safari"</strong>.</p>
                 </div>
               )}
 
@@ -180,7 +173,7 @@ const Login: React.FC = () => {
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
               >
                 <ExternalLink size={13} />
-                {browser.isAndroid ? 'Abrir en Chrome' : 'Ver instrucciones para Safari'}
+                {browser.isAndroid ? 'Continuar en Chrome' : 'Continuar en Safari'}
               </button>
             </div>
           )}
@@ -251,7 +244,7 @@ const Login: React.FC = () => {
 
           {/* Terms */}
           <p className="mt-8 text-xs text-center leading-relaxed" style={{ color: '#C8BEB5' }}>
-            Al continuar, aceptás nuestros{' '}
+            Al continuar, aceptas nuestros{' '}
             <Link to="/terms" className="underline underline-offset-2 transition-colors hover:text-brand-muted" style={{ color: '#8B7E74' }}>Términos</Link>
             {' '}y{' '}
             <Link to="/privacy" className="underline underline-offset-2 transition-colors hover:text-brand-muted" style={{ color: '#8B7E74' }}>Privacidad</Link>.
