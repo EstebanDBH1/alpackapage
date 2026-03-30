@@ -124,7 +124,7 @@ const Prompts: React.FC = () => {
         <div className="min-h-screen" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
             <Helmet>
                 <title>{selectedCategory !== 'todas' ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} · Prompts | alpacka.ai` : 'Biblioteca de Prompts | alpacka.ai'}</title>
-                <meta name="description" content="150+ prompts probados para marketing, ventas y productividad. $4/mes." />
+                <meta name="description" content="300+ prompts probados para todo lo que necesitas. Organizados por categoría, listos para copiar y usar hoy. $4/mes." />
             </Helmet>
 
             {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
@@ -139,14 +139,17 @@ const Prompts: React.FC = () => {
                                 biblioteca · actualizada hoy
                             </p>
                             <h1
-                                className="font-display font-medium leading-tight tracking-tight"
+                                className="font-display font-medium leading-tight tracking-tight mb-2"
                                 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', color: '#1D1B18' }}
                             >
-                                150+ prompts de ingeniería.<br />
+                                300+ prompts para todo.{' '}
                                 <span className="font-semibold" style={{ color: '#C96A3C' }}>
                                     Listos para usar.
                                 </span>
                             </h1>
+                            <p className="text-sm max-w-md" style={{ color: '#8B7E74', lineHeight: 1.6 }}>
+                                Para lo que necesites — probados, organizados por categoría y listos para copiar y usar hoy mismo.
+                            </p>
                         </div>
 
                         {/* Stats + CTA */}
@@ -347,10 +350,10 @@ const Prompts: React.FC = () => {
                                             style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)', lineHeight: 1.25 }}
                                         >
                                             Estás viendo solo una parte.<br />
-                                            <span style={{ color: '#C96A3C' }}>Desbloquea los 150+ prompts.</span>
+                                            <span style={{ color: '#C96A3C' }}>Desbloquea los 300+ prompts completos.</span>
                                         </h3>
                                         <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6">
-                                            {['acceso a todos los prompts', 'actualizaciones semanales', 'cancela cuando quieras'].map(item => (
+                                            {['todas las categorías', 'actualizaciones semanales', 'cancela cuando quieras'].map(item => (
                                                 <span key={item} className="flex items-center gap-1.5 text-xs" style={{ color: '#8B7E74' }}>
                                                     <Check size={9} style={{ color: '#C96A3C' }} strokeWidth={3} />
                                                     {item}
@@ -530,10 +533,10 @@ const Prompts: React.FC = () => {
                                 precio de lanzamiento
                             </p>
                             <h3 className="font-display font-medium text-lg sm:text-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                                Acceso completo a los 150+ prompts.{' '}
+                                Acceso completo a los 300+ prompts.{' '}
                                 <span style={{ color: '#C96A3C' }}>$4 al mes.</span>
                             </h3>
-                            <p className="text-xs mt-1.5" style={{ color: '#4D433C' }}>
+                            <p className="text-xs mt-1.5" style={{ color: '#4D443C' }}>
                                 Sin contrato · cancela cuando quieras · acceso instantáneo
                             </p>
                         </div>
