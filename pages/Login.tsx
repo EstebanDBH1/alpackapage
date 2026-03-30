@@ -1,13 +1,26 @@
 import React from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, ExternalLink } from 'lucide-react';
 import AlpacaIcon from '@/components/AlpacaIcon';
+
+function detectInAppBrowser(): { inApp: boolean; isAndroid: boolean; appName: string } {
+  const ua = navigator.userAgent;
+  const isAndroid = /Android/i.test(ua);
+  if (/Instagram|Threads/i.test(ua)) return { inApp: true, isAndroid, appName: 'Instagram / Threads' };
+  if (/FBAN|FBAV|FB_IAB/i.test(ua)) return { inApp: true, isAndroid, appName: 'Facebook' };
+  if (/Twitter/i.test(ua)) return { inApp: true, isAndroid, appName: 'X / Twitter' };
+  if (/musical_ly|BytedanceWebview|TikTok/i.test(ua)) return { inApp: true, isAndroid, appName: 'TikTok' };
+  if (/LinkedInApp/i.test(ua)) return { inApp: true, isAndroid, appName: 'LinkedIn' };
+  if (/Snapchat/i.test(ua)) return { inApp: true, isAndroid, appName: 'Snapchat' };
+  return { inApp: false, isAndroid, appName: '' };
+}
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect') || '/dashboard';
+  const browser = React.useMemo(() => detectInAppBrowser(), []);
 
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -24,6 +37,20 @@ const Login: React.FC = () => {
       if (error) throw error;
     } catch {
       alert('Error al iniciar sesión. Por favor intenta de nuevo.');
+    }
+  };
+
+  const handleOpenInBrowser = () => {
+    const url = window.location.href;
+    if (browser.isAndroid) {
+      // Intent URL abre Chrome en Android
+      window.location.href = `intent://${url.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
+    } else {
+      // En iOS copiar URL es lo más confiable; como fallback intentamos x-safari
+      try {
+        navigator.clipboard.writeText(url);
+      } catch {}
+      alert('Copia esta URL y pégala en Safari:\n\n' + url);
     }
   };
 
@@ -112,6 +139,31 @@ const Login: React.FC = () => {
               Inicia sesión o crea tu cuenta con Google para acceder a tu suscripción.
             </p>
           </div>
+
+          {/* In-app browser warning */}
+          {browser.inApp && (
+            <div
+              className="mb-6 rounded-2xl p-4 border"
+              style={{ backgroundColor: '#FFF8F0', borderColor: '#F5D5BE' }}
+            >
+              <p className="font-semibold text-sm mb-1" style={{ color: '#1D1B18' }}>
+                Abrí esta página en tu navegador
+              </p>
+              <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7E74' }}>
+                Estás dentro de {browser.appName}. Google no permite iniciar sesión desde apps — necesitás abrirlo en Chrome o Safari.
+              </p>
+              <button
+                onClick={handleOpenInBrowser}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all"
+                style={{ backgroundColor: '#C96A3C', color: 'white' }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#AF5A30')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
+              >
+                <ExternalLink size={13} />
+                {browser.isAndroid ? 'Abrir en Chrome' : 'Abrir en Safari'}
+              </button>
+            </div>
+          )}
 
           {/* Google button */}
           <button
