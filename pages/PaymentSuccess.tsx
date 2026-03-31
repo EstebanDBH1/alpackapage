@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowRight, Sparkles, Zap, BookOpen, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Helmet } from 'react-helmet-async';
 
 const REDIRECT_SECONDS = 7;
 
@@ -76,10 +75,6 @@ const PaymentSuccess: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4 py-20">
-            <Helmet>
-                <title>¡Suscripción activada! | alpackaai</title>
-            </Helmet>
-
             <div className="max-w-lg w-full">
                 {/* Card principal */}
                 <div className="bg-white border border-zinc-200 rounded-[32px] p-10 shadow-sm text-center">

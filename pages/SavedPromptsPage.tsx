@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Helmet } from 'react-helmet-async';
 import SavedPrompts from '../components/SavedPrompts';
 import { ChevronLeft, LayoutDashboard } from 'lucide-react';
 
@@ -34,10 +33,6 @@ const SavedPromptsPage: React.FC = () => {
 
     return (
         <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5' }}>
-            <Helmet>
-                <title>Prompts guardados | alpacka.ai</title>
-            </Helmet>
-
             {/* Sub-nav */}
             <div
                 className="sticky top-16 z-40 border-b backdrop-blur-md"

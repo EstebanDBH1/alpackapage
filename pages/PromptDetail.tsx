@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import jsPDF from 'jspdf';
 
 function getCategoryEmoji(cat: string): string {
@@ -258,10 +257,6 @@ const PromptDetail: React.FC = () => {
 
     return (
         <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
-            <Helmet>
-                <title>{`${prompt.title} | alpacka.ai`}</title>
-            </Helmet>
-
             {/* ── Sub-nav ──────────────────────────────────────────────────────── */}
             <div
                 className="sticky top-16 z-40 border-b backdrop-blur-md"

@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Lock, Search, Sparkles, ArrowRight, Zap, Check, X, ChevronDown } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 const PAGE_SIZE = 12;
 
@@ -122,11 +121,6 @@ const Prompts: React.FC = () => {
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
-            <Helmet>
-                <title>{selectedCategory !== 'todas' ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} · Prompts | alpacka.ai` : 'Biblioteca de Prompts | alpacka.ai'}</title>
-                <meta name="description" content="300+ prompts probados para todo lo que necesitas. Organizados por categoría, listos para copiar y usar hoy. $4/mes." />
-            </Helmet>
-
             {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
             <div className="border-b" style={{ backgroundColor: 'white', borderColor: '#F0EAE1' }}>
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 sm:pb-10">

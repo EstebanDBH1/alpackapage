@@ -9,18 +9,11 @@ import TrustBar from '../components/TrustBar';
 import Testimonials from '../components/Testimonials';
 import ValueProp from '../components/ValueProp';
 import PricingCard from '../components/PricingCard';
-import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Sparkles, X, Check } from 'lucide-react';
 
 const Home: React.FC = () => {
   return (
     <div className="w-full">
-      <Helmet>
-        <title>Alpacka.ai | Banco de Prompts para IA e Ingeniería de Prompts</title>
-        <meta name="description" content="150+ prompts probados para ChatGPT, Claude y Gemini. Marketing, ventas y productividad. $4/mes." />
-        <link rel="canonical" href="https://alpackaai.xyz/" />
-      </Helmet>
-
       {/* 1. HOOK */}
       <Hero />
 

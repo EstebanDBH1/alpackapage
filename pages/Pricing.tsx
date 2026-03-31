@@ -3,7 +3,6 @@ import { Check, Zap, ShieldCheck, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Faq from '../components/Faq';
 import { supabase } from '../lib/supabase';
-import { Helmet } from 'react-helmet-async';
 
 const Pricing: React.FC = () => {
     const navigate = useNavigate();
@@ -62,10 +61,6 @@ const Pricing: React.FC = () => {
 
     return (
         <div className="bg-brand-bg min-h-screen font-sans">
-            <Helmet>
-                <title>Precios | alpackaai</title>
-            </Helmet>
-
             {/* HERO */}
             <div className="pt-24 pb-16 md:pt-32 md:pb-20 max-w-4xl mx-auto px-5 sm:px-6">
                 <p className="font-mono text-[10px] text-brand-muted/50 tracking-[0.2em] uppercase mb-5">— precios</p>

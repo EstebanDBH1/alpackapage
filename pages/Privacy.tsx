@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
 const Section: React.FC<{ number: string; title: string; children: React.ReactNode }> = ({ number, title, children }) => (
@@ -17,11 +16,6 @@ const Section: React.FC<{ number: string; title: string; children: React.ReactNo
 const Privacy: React.FC = () => {
   return (
     <div className="bg-white min-h-screen pb-24 font-sans">
-      <Helmet>
-        <title>Política de Privacidad | alpackaai</title>
-        <meta name="description" content="Política de privacidad de alpackaai — cómo recopilamos, usamos y protegemos tus datos." />
-      </Helmet>
-
       {/* Header */}
       <div className="border-b border-zinc-100 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
