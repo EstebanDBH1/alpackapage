@@ -269,7 +269,7 @@ const Ebook: React.FC = () => {
                 }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: RED }} />
                   <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: RED, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                    oferta por tiempo limitado
+                    El recurso #1 para dominar el prompting
                   </span>
                 </div>
 
