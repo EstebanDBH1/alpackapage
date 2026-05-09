@@ -7,7 +7,13 @@
       "mcp__claude_ai_Supabase__execute_sql",
       "mcp__claude_ai_Supabase__list_tables",
       "Bash(curl -s \"https://ovwufkzgxrhmtspnnfou.supabase.co/rest/v1/rpc/get_public_prompts\" -X POST -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92d3Vma3pneHJobXRzcG5uZm91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2NTA3MTcsImV4cCI6MjA4NjIyNjcxN30.g6Hj5IXm7iQvc51pX_Ezubh9r0EZY_cYxuAqGonMQa0\" -H \"Content-Type: application/json\" -d '{}')",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:ebook-v2-gold.vercel.app)",
+      "mcp__claude_ai_Vercel__web_fetch_vercel_url",
+      "Bash(python3 -c \"print\\(open\\(r'C:\\\\Users\\\\ebanb\\\\.claude\\\\projects\\\\C--Users-ebanb-Desktop-Alpackaai-page\\\\98feaea9-31db-44e2-bf9b-efc6a3601aaa\\\\tool-results\\\\mcp-claude_ai_Vercel-web_fetch_vercel_url-1778365022606.txt'\\).read\\(\\)[0:80000]\\)\")",
+      "PowerShell(Get-Content *)",
+      "Bash(grep -o '\"[^\"]*[áéíóúñ¿¡][^\"]*\"' \"C:\\\\Users\\\\ebanb\\\\.claude\\\\projects\\\\C--Users-ebanb-Desktop-Alpackaai-page\\\\98feaea9-31db-44e2-bf9b-efc6a3601aaa\\\\tool-results\\\\mcp-claude_ai_Vercel-web_fetch_vercel_url-1778365022606.txt\")",
+      "Read(//tmp/**)"
     ]
   }
 }

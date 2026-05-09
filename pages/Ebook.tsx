@@ -142,92 +142,93 @@ const AIMarquee: React.FC = () => {
 const Ebook: React.FC = () => {
 
   const checkItems = [
-    'Más de 200 prompts universales y categorizados',
-    'Organizados por categoría y caso de uso real',
-    'Compatible con ChatGPT, Claude, Gemini, DeepSeek y más',
-    'Descarga inmediata — empieza en 2 minutos',
-    'Actualizaciones gratuitas para siempre',
+    '+200 prompts universales listos para copiar y pegar',
+    'Funciona con ChatGPT, Gemini, Claude, Copilot y más',
+    'Acceso instantáneo a biblioteca privada en Notion',
+    'Actualizaciones de por vida — sin costo adicional',
+    'Garantía de satisfacción de 30 días',
   ];
 
   const contentItems = [
-    { title: 'Negocios y Emprendimiento', desc: 'Planes de negocio, pitch decks, análisis competitivos y propuestas que realmente cierran tratos.' },
-    { title: 'Marketing y Ventas', desc: 'Emails que convierten, copy para anuncios, estrategias de contenido y campañas de 30 días en minutos.' },
-    { title: 'Redes Sociales', desc: 'Calendarios editoriales listos, captions para viralizarte y guiones completos para Reels y TikTok.' },
-    { title: 'Productividad Personal', desc: 'Planificación, toma de decisiones difíciles, gestión del tiempo y automatización de tareas repetitivas.' },
-    { title: 'Programación y Tech', desc: 'Debugging, revisión de código, documentación técnica y diseño de arquitectura de software.' },
-    { title: 'Escritura y Copywriting', desc: 'Artículos, guiones, storytelling y textos que enganchan desde la primera oración.' },
-    { title: 'Educación y Formación', desc: 'Temarios completos, evaluaciones, explicaciones adaptadas y material didáctico en segundos.' },
-    { title: 'Consultoría y Estrategia', desc: 'Frameworks de análisis, reportes ejecutivos y sesiones de consultoría estructuradas al instante.' },
+    { title: '200+ Prompts Optimizados', desc: 'Prompts probados para obtener resultados inmediatos y de alta calidad.' },
+    { title: 'Productividad Total', desc: 'Optimiza tu flujo de trabajo tanto en el ámbito personal como profesional.' },
+    { title: 'Contenido y Copywriting', desc: 'Crea textos persuasivos y contenido creativo en segundos.' },
+    { title: 'Marketing y Ventas', desc: 'Estrategias y copys enfocados en la conversión y el crecimiento de tu negocio.' },
+    { title: 'Comunicación Avanzada', desc: 'Domina técnicas para comunicarte con ChatGPT, Gemini, Claude y cualquier modelo como un experto.' },
+    { title: 'Implementación Real', desc: 'Ejemplos prácticos de cómo aplicar cada prompt en casos de uso reales, listos para ejecutar hoy.' },
+    { title: 'Plantillas y Formularios', desc: 'Estructuras prediseñadas para simplemente copiar, pegar y obtener resultados profesionales al instante.' },
+    { title: 'Guía de Buenas Prácticas', desc: 'Principios y técnicas de prompt engineering para sacarle el máximo a cualquier IA, siempre.' },
+    { title: 'Actualizaciones de por Vida', desc: 'Acceso permanente a nuevos prompts y mejoras sin costo adicional.' },
   ];
 
   const whyItems = [
     {
       icon: <Target size={22} style={{ color: RED }} />,
-      title: 'Resultados desde la primera respuesta',
-      desc: 'Cada prompt tiene contexto, rol y formato definido. No más iteraciones. No más pérdida de tiempo. La IA entiende exactamente lo que necesitas.',
+      title: 'Prompts que funcionan en cualquier IA',
+      desc: 'Diseñados bajo principios de ingeniería del lenguaje que funcionan en ChatGPT, Gemini, Claude, Copilot y cualquier modelo que salga en el futuro. 100% universal.',
     },
     {
       icon: <Zap size={22} style={{ color: RED }} />,
-      title: 'Recupera 10 horas a la semana',
-      desc: 'Lo que antes tomaba 2 horas ahora toma 10 minutos. Por $10, el retorno de inversión es en las primeras 2 horas de uso.',
+      title: 'Multiplica tu productividad desde el día 1',
+      desc: 'Un solo recurso para optimizar tu flujo de trabajo personal y profesional. Lo que antes tomaba 2 horas ahora toma 10 minutos.',
     },
     {
       icon: <BookOpen size={22} style={{ color: RED }} />,
-      title: '+200 prompts probados en entornos reales',
-      desc: 'No son prompts genéricos de internet. Son estructuras que han funcionado en negocios reales, proyectos reales, resultados reales.',
+      title: '+200 prompts organizados y listos para usar',
+      desc: 'No son prompts genéricos. Son estructuras organizadas por caso de uso real, listas para copiar, pegar y ejecutar en segundos en cualquier IA.',
     },
     {
       icon: <TrendingUp size={22} style={{ color: RED }} />,
-      title: 'La ventaja que otros no tienen',
-      desc: 'Mientras la mayoría lucha con IA mediocre, tú tendrás la estructura exacta para obtener outputs de nivel profesional, siempre.',
+      title: 'Acceso de por vida con actualizaciones',
+      desc: 'A medida que salgan nuevas IAs, añadimos prompts adaptados sin costo adicional para ti. Una sola compra, valor permanente.',
     },
   ];
 
   const bonusItems = [
     {
       num: '01',
-      title: 'Framework CIDE: Crea tus propios prompts',
-      desc: 'El sistema exacto detrás de cada prompt del libro. Una vez que lo entiendes, puedes crear prompts de alta calidad para cualquier situación, en cualquier momento.',
-      value: 'Valor: $15',
+      title: '50 Prompts Exclusivos para Nichos Específicos',
+      desc: '50 prompts adicionales para nichos específicos, compatibles con ChatGPT, Gemini, Claude y Copilot. Directo al grano para tu industria o sector.',
+      value: 'Valor: $27',
     },
     {
       num: '02',
-      title: 'Prompt Maestro para Reuniones',
-      desc: 'Convierte cualquier reunión en una lista de acciones concretas, responsables y fechas. El prompt que más nos piden. Úsalo mañana mismo.',
-      value: 'Valor: $10',
+      title: 'Guía de Prompt Engineering Universal',
+      desc: 'Resumen rápido con los mejores prompts para cada IA: ChatGPT, Gemini, Claude y más. Siempre a mano cuando lo necesites.',
+      value: 'Valor: $27',
     },
     {
       num: '03',
-      title: 'Pack LinkedIn: 15 prompts extra',
-      desc: 'Optimiza tu perfil, genera contenido que genera seguidores y posiciónate como referente en tu industria. Incluido sin costo adicional.',
-      value: 'Valor: $12',
+      title: 'Acceso de Por Vida + Actualizaciones Permanentes',
+      desc: 'A medida que aparezcan nuevos modelos y plataformas, añadiremos prompts optimizados sin costo adicional para ti. Una compra, valor eterno.',
+      value: 'Incluido',
     },
   ];
 
   const faqs = [
     {
-      q: '¿Funciona con cualquier IA? ¿ChatGPT, Claude, Gemini...?',
-      a: 'Sí, al 100%. Todos los prompts funcionan con cualquier IA generativa: ChatGPT (gratuito o Plus), Claude, Gemini, DeepSeek, Perplexity y cualquier otro modelo. La estructura es lo que importa, no el modelo que uses.',
+      q: '¿Cómo recibo el acceso después de la compra?',
+      a: 'Inmediatamente después de completar tu pago, recibirás un email con el enlace de acceso directo a nuestra biblioteca privada en Notion. La entrega es instantánea.',
     },
     {
-      q: '¿Necesito experiencia en inteligencia artificial?',
-      a: 'Para nada. El libro está diseñado para que cualquier persona — sin importar su nivel técnico — pueda copiar, pegar y obtener resultados profesionales de inmediato. Si sabes escribir en cualquier chat de IA, sabes usar este libro.',
+      q: '¿Funciona con ChatGPT, Gemini, Claude y otras IAs?',
+      a: '¡Sí! Los prompts están diseñados bajo principios de ingeniería del lenguaje que funcionan en cualquier IA generativa: ChatGPT (GPT-4/5), Gemini, Claude, Copilot y cualquier modelo que salga en el futuro. El contenido es 100% universal.',
     },
     {
-      q: '¿Cómo recibo el ebook después de pagar?',
-      a: 'Recibirás un correo electrónico en los primeros 5 minutos después del pago con el enlace de descarga. Acceso instantáneo, 24/7. Sin esperas. Sin trámites.',
+      q: '¿Qué formato tiene el eBook?',
+      a: 'Más que un simple PDF, recibirás acceso a una base de datos dinámica en Notion. Esto te permite copiar y pegar los prompts fácilmente, filtrarlos por categorías, por IA y acceder a actualizaciones en tiempo real.',
     },
     {
-      q: '¿Y si el libro no es lo que esperaba?',
-      a: 'Tienes 30 días completos para solicitar un reembolso, sin preguntas, sin formularios. Un solo correo es suficiente y te devolvemos el 100% de tu dinero. La garantía existe porque estamos completamente seguros del valor que vas a obtener.',
+      q: '¿Recibiré actualizaciones cuando salgan nuevas IAs?',
+      a: 'Sí, tendrás acceso de por vida a la página de Notion. A medida que aparezcan nuevos modelos y plataformas, añadiremos prompts optimizados sin costo adicional para ti.',
     },
     {
-      q: '¿Los prompts se actualizan cuando evolucionan las IAs?',
-      a: 'Sí. Tienes acceso gratuito a todas las actualizaciones futuras. A medida que evolucionan los modelos de IA, la plantilla evoluciona contigo. Una sola compra, valor permanente.',
+      q: '¿Cómo funciona la garantía?',
+      a: 'Si no estás satisfecho con la biblioteca de prompts por cualquier razón, simplemente envíanos un email dentro de los 30 días posteriores a la compra y te reembolsaremos el 100% de tu dinero. Sin preguntas.',
     },
     {
-      q: '¿En qué formato está? ¿Cómo accedo a los prompts?',
-      a: 'Es una plantilla de Notion. Cuando compras, recibes acceso a un workspace completo con todos los prompts organizados por categoría. Puedes duplicarlo a tu cuenta gratuita de Notion y acceder desde cualquier dispositivo: computadora, tablet o teléfono.',
+      q: '¿Necesito experiencia previa con IAs?',
+      a: 'No, la guía está diseñada tanto para principiantes como para usuarios avanzados. Incluimos instrucciones claras de cómo usar cada prompt en distintas IAs para obtener los mejores resultados.',
     },
   ];
 
@@ -268,7 +269,7 @@ const Ebook: React.FC = () => {
                 }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: RED }} />
                   <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: RED, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                    precio de lanzamiento
+                    oferta por tiempo limitado
                   </span>
                 </div>
 
@@ -281,9 +282,8 @@ const Ebook: React.FC = () => {
                   color: 'white',
                   marginBottom: 22,
                 }}>
-                  El Ebook de Prompts<br />
-                  <span style={{ color: RED }}>que Realmente</span><br />
-                  Necesitas
+                  El <span style={{ color: RED }}>Único eBook</span> de Prompts<br />
+                  <span>que realmente necesitas</span>
                 </h1>
 
                 {/* Subheadline */}
@@ -351,7 +351,7 @@ const Ebook: React.FC = () => {
 
                 {/* Urgency note */}
                 <p style={{ color: TEXT_DIM, fontSize: 12, fontFamily: '"JetBrains Mono", monospace', marginTop: 14, letterSpacing: '0.05em' }}>
-                  ⚡ Precio de lanzamiento — puede subir sin previo aviso
+                  ⏰ Oferta por tiempo limitado — el precio subirá pronto
                 </p>
               </div>
 
@@ -501,10 +501,10 @@ const Ebook: React.FC = () => {
                   lineHeight: 1.15,
                 }}>
                   ¿Por Qué Este{' '}
-                  <span style={{ color: RED }}>Libro?</span>
+                  <span style={{ color: RED }}>Ebook?</span>
                 </h2>
                 <p style={{ color: TEXT_MUTED, fontSize: 'clamp(15px, 1.4vw, 17px)', lineHeight: 1.8, maxWidth: 440, marginBottom: 20 }}>
-                  Hay miles de prompts gratis en internet. Los puedes buscar en Google ahora mismo. El problema es que son genéricos, sin contexto y generan resultados mediocres.
+                  No es solo una lista de prompts. Es un sistema completo para dominar cualquier IA.
                 </p>
                 <p style={{ color: TEXT_MUTED, fontSize: 'clamp(15px, 1.4vw, 17px)', lineHeight: 1.8, maxWidth: 440 }}>
                   Este libro es diferente. Cada prompt tiene{' '}
@@ -558,7 +558,7 @@ const Ebook: React.FC = () => {
 
             <div className="text-center mb-16">
               <p style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: RED, marginBottom: 14 }}>
-                incluido sin costo extra — valor $37
+                incluido sin costo extra — valorado en $97
               </p>
               <h2 style={{
                 fontFamily: '"Bricolage Grotesque", sans-serif',
@@ -570,8 +570,8 @@ const Ebook: React.FC = () => {
                 Bonus{' '}
                 <span style={{ color: RED }}>Exclusivos</span>
               </h2>
-              <p style={{ color: TEXT_MUTED, fontSize: 'clamp(14px, 1.3vw, 17px)', maxWidth: 480, margin: '0 auto' }}>
-                Todo esto viene incluido con tu compra. Sin costos adicionales. Sin suscripciones.
+              <p style={{ color: TEXT_MUTED, fontSize: 'clamp(14px, 1.3vw, 17px)', maxWidth: 520, margin: '0 auto' }}>
+                Además del eBook, recibirás estos bonos gratis — listos para usar en cualquier IA.
               </p>
             </div>
 
@@ -643,11 +643,11 @@ const Ebook: React.FC = () => {
             </h2>
 
             <p style={{ color: TEXT_MUTED, fontSize: 'clamp(15px, 1.5vw, 18px)', lineHeight: 1.85, marginBottom: 16, maxWidth: 560, margin: '0 auto 16px' }}>
-              Tienes <strong style={{ color: 'white' }}>30 días completos</strong> para explorar la plantilla, aplicar los prompts y ver los resultados. Si por cualquier razón sientes que no valió la pena, te devolvemos el{' '}
-              <strong style={{ color: 'white' }}>100% de tu dinero</strong>. Sin formularios. Sin preguntas.
+              Si el eBook no supera tus expectativas, te devolvemos el{' '}
+              <strong style={{ color: 'white' }}>100% de tu dinero</strong>. Sin preguntas, sin complicaciones. Tu satisfacción es nuestra prioridad.
             </p>
             <p style={{ color: TEXT_DIM, fontSize: 'clamp(13px, 1.1vw, 15px)', lineHeight: 1.75, maxWidth: 500, margin: '0 auto' }}>
-              La garantía no es letra pequeña — es nuestra manera de decirte que estamos completamente seguros de que este libro va a cambiar cómo usas la IA para siempre.
+              Tienes <strong style={{ color: 'rgba(255,255,255,0.5)' }}>30 días completos</strong> para explorar la biblioteca, aplicar los prompts y ver los resultados. Sin riesgo, sin letra pequeña.
             </p>
 
           </div>
@@ -707,13 +707,13 @@ const Ebook: React.FC = () => {
               lineHeight: 1.1,
               marginBottom: 18,
             }}>
-              Cada semana sin los prompts correctos<br />
-              son horas que{' '}
-              <span style={{ color: RED }}>no recuperas.</span>
+              Domina ChatGPT, Gemini, Claude<br />
+              y cualquier IA{' '}
+              <span style={{ color: RED }}>desde hoy.</span>
             </h2>
 
             <p style={{ color: TEXT_MUTED, fontSize: 'clamp(15px, 1.5vw, 18px)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 48px' }}>
-              Por $10 —menos de lo que cuesta un café— tienes acceso inmediato a +200 prompts, 3 bonuses exclusivos y actualizaciones de por vida. Sin suscripciones. Sin letra pequeña.
+              Por $10 tienes acceso inmediato a +200 prompts universales, bonuses exclusivos valorados en $97 y actualizaciones de por vida. Sin suscripciones. Sin letra pequeña.
             </p>
 
             {/* Pricing card */}
@@ -739,17 +739,18 @@ const Ebook: React.FC = () => {
               <div className="flex items-baseline justify-center gap-4 mb-8">
                 <span style={{ fontFamily: '"Bricolage Grotesque", sans-serif', fontWeight: 800, fontSize: 64, color: 'white', lineHeight: 1 }}>$10</span>
                 <div>
-                  <p style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: TEXT_DIM, textDecoration: 'line-through' }}>$37</p>
+                  <p style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: TEXT_DIM, textDecoration: 'line-through' }}>$97</p>
                   <p style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: TEXT_DIM }}>pago único</p>
                 </div>
               </div>
 
               <div className="space-y-3.5 mb-10 text-left">
                 {[
-                  '+200 prompts listos para usar',
-                  '8 categorías completas',
-                  '3 bonuses exclusivos (valor $37)',
-                  'Actualizaciones de por vida',
+                  '+200 prompts universales listos para usar',
+                  'Compatible con ChatGPT, Gemini, Claude y más',
+                  'Biblioteca privada en Notion',
+                  '3 bonuses exclusivos (valorados en $97)',
+                  'Actualizaciones de por vida sin costo',
                   'Garantía total de 30 días',
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
