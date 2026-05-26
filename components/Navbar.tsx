@@ -42,49 +42,97 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-brand-bg/90 backdrop-blur-xl border-b border-brand-border/50">
+    <nav
+      className="sticky top-0 z-50 w-full border-b"
+      style={{
+        backgroundColor: 'rgba(255,255,255,0.88)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        borderColor: '#e4e4e1',
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
-            <AlpacaIcon className="w-6 h-6" />
-            <span className="font-display italic font-light text-xl text-brand-text leading-none">
-              alpacka<span className="not-italic font-sans font-bold text-[13px] text-brand-muted">.ai</span>
+          <Link to="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+            <AlpacaIcon className="w-5 h-5" />
+            <span style={{ fontFamily: '"Bricolage Grotesque", sans-serif', fontStyle: 'italic', fontWeight: 300, fontSize: 18, color: '#1a1a1a', lineHeight: 1 }}>
+              alpacka<span style={{ fontStyle: 'normal', fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: '#a8a5a1' }}>.ai</span>
             </span>
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-1">
-            <Link to="/prompts" className="text-[13px] font-medium text-brand-muted hover:text-brand-text transition-colors px-3 py-2 rounded-lg hover:bg-brand-surface">prompts</Link>
-            <Link to="/pricing" className="text-[13px] font-medium text-brand-muted hover:text-brand-text transition-colors px-3 py-2 rounded-lg hover:bg-brand-surface">precios</Link>
+          <div className="hidden md:flex items-center gap-0.5">
+            <Link
+              to="/prompts"
+              className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
+              style={{ color: '#787774' }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
+                (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = '#787774';
+                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+              }}
+            >
+              prompts
+            </Link>
+            <Link
+              to="/pricing"
+              className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
+              style={{ color: '#787774' }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
+                (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = '#787774';
+                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+              }}
+            >
+              precios
+            </Link>
 
             {user ? (
               <div className="relative ml-2">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-8 h-8 bg-brand-text text-brand-bg rounded-full flex items-center justify-center font-semibold text-sm hover:bg-brand-dark transition-all"
+                  className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm transition-all"
+                  style={{ backgroundColor: '#1a1a1a', color: 'white' }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#333')}
+                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#1a1a1a')}
                 >
                   {getInitials()}
                 </button>
 
                 {isDropdownOpen && (
                   <>
-                    <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
-                    <div className="absolute right-0 mt-2 w-56 bg-white border border-brand-border rounded-2xl shadow-xl shadow-[#1A1410]/10 z-20 overflow-hidden py-1.5">
-                      <div className="px-4 py-3 border-b border-brand-border">
-                        <p className="text-[11px] text-brand-muted truncate font-mono">{user.email}</p>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)} />
+                    <div
+                      className="absolute right-0 mt-2 w-56 rounded-2xl z-20 overflow-hidden py-1.5"
+                      style={{ backgroundColor: 'white', border: '1px solid #e4e4e1', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}
+                    >
+                      <div className="px-4 py-3" style={{ borderBottom: '1px solid #f0efec' }}>
+                        <p className="font-mono text-[11px] truncate" style={{ color: '#a8a5a1' }}>{user.email}</p>
                       </div>
                       <Link
                         to="/dashboard"
-                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-brand-text hover:bg-brand-surface transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm transition-colors"
+                        style={{ color: '#1a1a1a' }}
                         onClick={() => setIsDropdownOpen(false)}
+                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3')}
+                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
                       >
-                        <User size={14} className="text-brand-muted" /> mi cuenta
+                        <User size={14} style={{ color: '#a8a5a1' }} /> mi cuenta
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors border-t border-brand-border text-left"
+                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-left transition-colors"
+                        style={{ color: '#ef4444', borderTop: '1px solid #f0efec' }}
+                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#fff5f5')}
+                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
                       >
                         <LogOut size={14} /> salir
                       </button>
@@ -96,13 +144,25 @@ const Navbar: React.FC = () => {
               <div className="flex items-center gap-2 ml-2">
                 <button
                   onClick={() => navigate('/login')}
-                  className="text-[13px] font-medium text-brand-muted hover:text-brand-text px-3 py-2 rounded-lg hover:bg-brand-surface transition-colors"
+                  className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
+                  style={{ color: '#787774' }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.color = '#787774';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                  }}
                 >
                   entrar
                 </button>
                 <button
                   onClick={() => navigate('/pricing')}
-                  className="bg-brand-accent text-white px-4 py-2 rounded-lg font-semibold text-[13px] hover:bg-brand-accent-hover transition-all shadow-sm"
+                  className="font-semibold text-[13px] px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5"
+                  style={{ backgroundColor: '#000', color: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#222')}
+                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#000')}
                 >
                   acceso total
                 </button>
@@ -112,7 +172,13 @@ const Navbar: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-brand-muted p-2 rounded-lg hover:bg-brand-surface transition-colors">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg transition-colors"
+              style={{ color: '#787774' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
+            >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
@@ -121,20 +187,58 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-brand-bg/95 backdrop-blur-xl border-b border-brand-border px-5 pt-2 pb-7 space-y-px">
-          <Link to="/prompts" className="flex items-center py-3.5 text-sm font-medium text-brand-text border-b border-brand-border/40" onClick={() => setIsOpen(false)}>prompts</Link>
-          <Link to="/pricing" className="flex items-center py-3.5 text-sm font-medium text-brand-text border-b border-brand-border/40" onClick={() => setIsOpen(false)}>precios</Link>
+        <div
+          className="md:hidden border-b px-5 pt-2 pb-7 space-y-px"
+          style={{ backgroundColor: 'rgba(255,255,255,0.97)', borderColor: '#e4e4e1' }}
+        >
+          <Link
+            to="/prompts"
+            className="flex items-center py-3.5 text-sm font-medium"
+            style={{ color: '#1a1a1a', borderBottom: '1px solid #f0efec' }}
+            onClick={() => setIsOpen(false)}
+          >
+            prompts
+          </Link>
+          <Link
+            to="/pricing"
+            className="flex items-center py-3.5 text-sm font-medium"
+            style={{ color: '#1a1a1a', borderBottom: '1px solid #f0efec' }}
+            onClick={() => setIsOpen(false)}
+          >
+            precios
+          </Link>
           {!user ? (
             <div className="pt-5 space-y-2.5">
-              <button onClick={() => { navigate('/login'); setIsOpen(false); }} className="w-full py-3.5 text-sm font-semibold text-brand-text border border-brand-border rounded-xl bg-white">entrar</button>
-              <button onClick={() => { navigate('/pricing'); setIsOpen(false); }} className="w-full py-3.5 text-sm font-semibold bg-brand-accent text-white rounded-xl">acceso total</button>
+              <button
+                onClick={() => { navigate('/login'); setIsOpen(false); }}
+                className="w-full py-3.5 text-sm font-semibold rounded-xl transition-colors"
+                style={{ color: '#1a1a1a', border: '1px solid #e4e4e1', backgroundColor: 'white' }}
+              >
+                entrar
+              </button>
+              <button
+                onClick={() => { navigate('/pricing'); setIsOpen(false); }}
+                className="w-full py-3.5 text-sm font-semibold rounded-xl transition-all"
+                style={{ backgroundColor: '#000', color: 'white' }}
+              >
+                acceso total
+              </button>
             </div>
           ) : (
             <div className="pt-4 space-y-px">
-              <Link to="/dashboard" className="flex items-center gap-2 py-3.5 text-sm font-medium text-brand-text" onClick={() => setIsOpen(false)}>
-                <User size={14} className="text-brand-muted" /> mi cuenta
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 py-3.5 text-sm font-medium"
+                style={{ color: '#1a1a1a' }}
+                onClick={() => setIsOpen(false)}
+              >
+                <User size={14} style={{ color: '#a8a5a1' }} /> mi cuenta
               </Link>
-              <button onClick={handleLogout} className="flex items-center gap-2 py-3.5 text-sm font-medium text-red-500 w-full text-left">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 py-3.5 text-sm font-medium w-full text-left"
+                style={{ color: '#ef4444' }}
+              >
                 <LogOut size={14} /> salir
               </button>
             </div>
