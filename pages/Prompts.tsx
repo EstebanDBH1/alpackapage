@@ -30,6 +30,18 @@ const Prompts: React.FC = () => {
     const [checkoutLoading, setCheckoutLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const gridRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                searchRef.current?.focus();
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, []);
 
     useEffect(() => {
         const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
@@ -122,81 +134,56 @@ const Prompts: React.FC = () => {
     return (
         <div className="min-h-screen" style={{ backgroundColor: '#f7f6f3', color: '#1a1a1a' }}>
 
-            {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
-            <div style={{ backgroundColor: 'white', borderBottom: '1px solid #e4e4e1' }}>
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 sm:pb-10">
+            {/* ── HERO ────────────────────────────────────────────────────────── */}
+            <div style={{ backgroundColor: 'white', borderBottom: '1px solid #e4e4e1', position: 'relative', overflow: 'hidden' }}>
+                {/* Soft glow */}
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                    <div style={{ position: 'absolute', left: '50%', top: '-120px', transform: 'translateX(-50%)', width: 620, height: 620, borderRadius: '50%', background: 'radial-gradient(circle, #000, transparent 70%)', filter: 'blur(90px)', opacity: 0.04 }} />
+                </div>
 
-                    {/* Top row */}
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-                        <div>
-                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-3 flex items-center gap-2" style={{ color: '#a8a5a1' }}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                biblioteca · actualizada hoy
-                            </p>
-                            <h1
-                                className="font-display font-bold leading-tight tracking-tight mb-2"
-                                style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', color: '#1a1a1a', letterSpacing: '-0.03em' }}
-                            >
-                                Prompts que funcionan{' '}
-                                <span style={{
-                                    background: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    backgroundClip: 'text',
-                                }}>
-                                    en la primera.
-                                </span>
-                            </h1>
-                            <p className="text-sm max-w-md" style={{ color: '#787774', lineHeight: 1.6 }}>
-                                150+ prompts curados por especialistas. Filtra, copia y úsalos con ChatGPT, Claude o Gemini ahora mismo.
-                            </p>
-                        </div>
+                <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-10 sm:pb-14 text-center">
 
-                        {/* Stats + CTA */}
-                        <div className="flex flex-col items-start sm:items-end gap-3 flex-shrink-0">
-                            <div className="flex items-center gap-5">
-                                {[
-                                    { value: loading ? '···' : `${prompts.length}`, label: 'prompts' },
-                                    { value: loading ? '·' : `${categories.length - 1}`, label: 'categorías' },
-                                ].map(s => (
-                                    <div key={s.label} className="text-right">
-                                        <p className="font-display font-bold text-lg leading-none" style={{ color: '#1a1a1a', letterSpacing: '-0.02em' }}>{s.value}</p>
-                                        <p className="font-mono text-[9px] tracking-widest uppercase mt-0.5" style={{ color: '#a8a5a1' }}>{s.label}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            {!isSubscribed && !loading && (
-                                <button
-                                    onClick={handleSubscribe}
-                                    className="inline-flex items-center gap-2 font-semibold text-xs px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5"
-                                    style={{ backgroundColor: '#000', color: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
-                                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#222')}
-                                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#000')}
-                                >
-                                    <Sparkles size={12} />
-                                    acceso completo · $4/mes
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    {/* Badge */}
+                    <p className="font-mono text-[10px] tracking-[0.2em] uppercase mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ color: '#787774', backgroundColor: '#f7f6f3', border: '1px solid #e4e4e1' }}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        la biblioteca de prompts #1 en español
+                    </p>
 
-                    {/* Search bar */}
-                    <div
-                        className="flex items-center gap-3 px-4 sm:px-5 rounded-2xl border transition-colors"
-                        style={{ backgroundColor: '#f7f6f3', borderColor: '#e4e4e1' }}
+                    {/* Headline */}
+                    <h1
+                        className="font-display font-bold tracking-tight mb-5"
+                        style={{ fontSize: 'clamp(2rem, 6vw, 3.6rem)', color: '#1a1a1a', letterSpacing: '-0.04em', lineHeight: 1.05 }}
                     >
-                        <Search size={15} style={{ color: '#c4c2bf', flexShrink: 0 }} />
+                        La biblioteca de prompts{' '}
+                        <span style={{ color: '#000' }}>
+                            más potente, abierta para ti.
+                        </span>
+                    </h1>
+
+                    {/* Subheadline */}
+                    <p className="text-base sm:text-lg max-w-xl mx-auto mb-9" style={{ color: '#787774', lineHeight: 1.6 }}>
+                        Prompts curados y listos para usar con ChatGPT, Claude, Gemini y todos los modelos.
+                        Filtra por categoría, copia y úsalos ahora mismo.
+                    </p>
+
+                    {/* Search bar — prominent */}
+                    <div
+                        className="flex items-center gap-3 px-4 sm:px-5 rounded-2xl border max-w-2xl mx-auto transition-colors"
+                        style={{ backgroundColor: 'white', borderColor: '#e4e4e1', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}
+                    >
+                        <Search size={18} style={{ color: '#c4c2bf', flexShrink: 0 }} />
                         <input
+                            ref={searchRef}
                             type="text"
                             placeholder="Busca por tema, categoría o caso de uso…"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="w-full bg-transparent border-none py-4 text-sm focus:ring-0 outline-none"
+                            className="w-full bg-transparent border-none py-4 sm:py-5 text-sm sm:text-base focus:ring-0 outline-none text-left"
                             style={{ color: '#1a1a1a' }}
-                            onFocus={e => (e.currentTarget.closest('div') as HTMLElement).style.borderColor = '#a78bfa'}
+                            onFocus={e => (e.currentTarget.closest('div') as HTMLElement).style.borderColor = '#000'}
                             onBlur={e => (e.currentTarget.closest('div') as HTMLElement).style.borderColor = '#e4e4e1'}
                         />
-                        {searchQuery && (
+                        {searchQuery ? (
                             <button
                                 onClick={() => setSearchQuery('')}
                                 className="flex-shrink-0 p-1 rounded-lg transition-colors"
@@ -204,7 +191,41 @@ const Prompts: React.FC = () => {
                                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#1a1a1a')}
                                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#c4c2bf')}
                             >
-                                <X size={14} />
+                                <X size={16} />
+                            </button>
+                        ) : (
+                            <kbd
+                                className="hidden sm:inline-flex items-center gap-0.5 font-mono text-[10px] font-bold px-2 py-1 rounded-md flex-shrink-0"
+                                style={{ backgroundColor: '#f7f6f3', color: '#a8a5a1', border: '1px solid #e4e4e1' }}
+                            >
+                                ⌘K
+                            </kbd>
+                        )}
+                    </div>
+
+                    {/* Stats + CTA */}
+                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 mt-9">
+                        <div className="flex items-center gap-8">
+                            {[
+                                { value: loading ? '···' : `${prompts.length}+`, label: 'prompts' },
+                                { value: loading ? '·' : `${categories.length - 1}`, label: 'categorías' },
+                            ].map(s => (
+                                <div key={s.label} className="text-center">
+                                    <p className="font-display font-bold text-xl leading-none" style={{ color: '#1a1a1a', letterSpacing: '-0.02em' }}>{s.value}</p>
+                                    <p className="font-mono text-[9px] tracking-widest uppercase mt-1" style={{ color: '#a8a5a1' }}>{s.label}</p>
+                                </div>
+                            ))}
+                        </div>
+                        {!isSubscribed && !loading && (
+                            <button
+                                onClick={handleSubscribe}
+                                className="inline-flex items-center gap-2 font-semibold text-xs px-4 py-2.5 rounded-xl transition-all hover:-translate-y-0.5"
+                                style={{ backgroundColor: '#000', color: 'white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#222')}
+                                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#000')}
+                            >
+                                <Sparkles size={12} />
+                                acceso completo · $4/mes
                             </button>
                         )}
                     </div>

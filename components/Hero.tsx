@@ -180,7 +180,7 @@ const Hero: React.FC = () => {
               className="block font-display font-bold"
               style={{ fontSize: 'clamp(2.6rem, 6.5vw, 5rem)', lineHeight: 1.07, color: '#1a1a1a' }}
             >
-              La IA que tienes es buena.
+              La bilblioteca de prompts #1
             </span>
             <span
               className="block font-display font-bold"
@@ -190,7 +190,7 @@ const Hero: React.FC = () => {
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
               }}
             >
-              Tus prompts, no.
+              de todo internet
             </span>
           </h1>
 
