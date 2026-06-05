@@ -188,6 +188,52 @@ const DarkBlob: React.FC<{ color: string; size: number; x: string; y: string; op
   <div style={{ position: 'absolute', left: x, top: y, width: size, height: size, borderRadius: '50%', background: color, filter: `blur(${size * 0.48}px)`, opacity: op, pointerEvents: 'none' }} />
 );
 
+/* ─── Compatible-with marquee (brutalist) ──────────────────────── */
+const AI_TOOLS = [
+  'ChatGPT', 'GPT-5', 'Claude', 'Claude 3.7 Sonnet', 'Gemini', 'Gemini 2.5',
+  'Grok', 'DeepSeek', 'Llama', 'Mistral', 'Microsoft Copilot', 'GitHub Copilot',
+  'Perplexity', 'Qwen', 'Midjourney', 'DALL·E', 'Stable Diffusion', 'Cursor',
+  'Notion AI', 'Poe', 'Le Chat', 'Kimi',
+];
+
+const CompatibleMarquee: React.FC = () => {
+  const row = [...AI_TOOLS, ...AI_TOOLS];
+  return (
+    <div className="bg-white border-y border-gray-200 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 pt-6 flex items-center justify-center">
+        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+          compatible con todas las IA del momento
+        </span>
+      </div>
+
+      <div className="relative w-full overflow-hidden py-6">
+        {/* Edge fades */}
+        <div className="absolute top-0 left-0 w-24 h-full z-20 pointer-events-none" style={{ background: 'linear-gradient(to right, #ffffff, transparent)' }} />
+        <div className="absolute top-0 right-0 w-24 h-full z-20 pointer-events-none" style={{ background: 'linear-gradient(to left, #ffffff, transparent)' }} />
+
+        <div className="flex items-center gap-3 w-max" style={{ animation: 'marquee-tools 40s linear infinite' }}>
+          {row.map((tool, i) => (
+            <div
+              key={`${tool}-${i}`}
+              className="flex-shrink-0 flex items-center gap-2 border border-gray-200 px-5 py-2.5 transition-colors hover:border-gray-900"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+              <span className="font-space text-sm font-bold uppercase tracking-wide text-gray-900 whitespace-nowrap">{tool}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes marquee-tools {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 /* ─── Home ──────────────────────────────────────────────────────── */
 const Home: React.FC = () => {
   return (
@@ -196,27 +242,23 @@ const Home: React.FC = () => {
       {/* 1. HERO */}
       <Hero />
 
-      {/* 2. COMPATIBLE CON (slim bar) */}
-      <div style={{ backgroundColor: '#f7f6f3', borderTop: '1px solid #e4e4e1', borderBottom: '1px solid #e4e4e1', padding: '14px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
-          <span style={{ fontFamily: 'monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a8a5a1', marginRight: 8 }}>compatible con</span>
-          {['ChatGPT', 'Claude', 'Gemini', 'Mistral', 'Copilot', 'Perplexity', 'Grok'].map(name => (
-            <span key={name} style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', padding: '2px 10px', backgroundColor: 'white', border: '1px solid #e4e4e1', borderRadius: 6 }}>{name}</span>
-          ))}
-        </div>
-      </div>
+      {/* 2. COMPATIBLE CON (marquee) */}
+      <CompatibleMarquee />
 
       {/* 3. PROBLEMA */}
-      <section style={{ backgroundColor: 'white', borderBottom: '1px solid #e4e4e1' }}>
+      <section className="bg-white border-b border-gray-200">
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '88px 32px' }}>
 
           <FadeIn>
-            <div style={{ marginBottom: 48 }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, backgroundColor: '#fff3f3', border: '1px solid #fecaca', borderRadius: 100, padding: '4px 12px', marginBottom: 18 }}>
-                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#ef4444', letterSpacing: '0.1em', textTransform: 'uppercase' }}>el problema</span>
-              </div>
-              <h2 style={{ fontFamily: '"Bricolage Grotesque", sans-serif', fontWeight: 800, fontSize: 'clamp(1.7rem, 3.2vw, 2.6rem)', color: '#1a1a1a', letterSpacing: '-0.025em', lineHeight: 1.15, maxWidth: 560 }}>
+            <div className="mb-12">
+              <span className="inline-flex items-center gap-2 border border-gray-200 px-3 py-1.5 mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-gray-900" />
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">el problema</span>
+              </span>
+              <h2
+                className="font-space font-bold uppercase text-gray-900"
+                style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)', letterSpacing: '-0.01em', lineHeight: 1.15, maxWidth: 600 }}
+              >
                 El 90% usa la IA a diario y sigue obteniendo resultados mediocres.
               </h2>
             </div>
@@ -229,16 +271,16 @@ const Home: React.FC = () => {
               { input: '"ayúdame con mis redes sociales"', output: '3 reescrituras después, sigues sin el contenido.', delay: 160 },
             ].map((item, i) => (
               <FadeIn key={i} delay={item.delay}>
-                <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #e4e4e1', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <div style={{ padding: '12px 16px', backgroundColor: '#f7f6f3', borderBottom: '1px solid #e4e4e1', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                    <span style={{ fontFamily: 'monospace', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#a8a5a1', flexShrink: 0, marginTop: 2 }}>prompt</span>
-                    <p style={{ fontFamily: 'monospace', fontSize: 11, color: '#1a1a1a', lineHeight: 1.4 }}>{item.input}</p>
+                <div className="border border-gray-200 bg-white overflow-hidden h-full transition-colors hover:border-gray-900">
+                  <div className="flex items-start gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-gray-400 flex-shrink-0 mt-0.5">prompt</span>
+                    <p className="font-mono text-[11px] text-gray-900 leading-snug">{item.input}</p>
                   </div>
-                  <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'flex-start', gap: 8, backgroundColor: 'white' }}>
-                    <div style={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: '#fee2e2', border: '1px solid #fca5a5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                      <X size={7} style={{ color: '#ef4444' }} strokeWidth={3} />
-                    </div>
-                    <p style={{ fontSize: 13, color: '#787774', lineHeight: 1.55 }}>{item.output}</p>
+                  <div className="flex items-start gap-2.5 px-4 py-3.5 bg-white">
+                    <span className="w-4 h-4 border border-gray-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <X size={8} className="text-gray-900" strokeWidth={3} />
+                    </span>
+                    <p className="text-[13px] text-gray-600 leading-relaxed">{item.output}</p>
                   </div>
                 </div>
               </FadeIn>
@@ -246,20 +288,18 @@ const Home: React.FC = () => {
           </div>
 
           <FadeIn delay={200}>
-            <div style={{ backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe', borderRadius: 16, padding: '22px 26px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
-              <div style={{ flex: 1, minWidth: 240 }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: '#1a1a1a', marginBottom: 4 }}>No es la IA. Son los prompts.</p>
-                <p style={{ fontSize: 14, color: '#787774', lineHeight: 1.7 }}>
-                  Con la estructura correcta, ChatGPT, Claude y Gemini entregan resultados profesionales en la <strong style={{ color: '#6366f1' }}>primera respuesta</strong>.
+            <div className="border border-gray-900 bg-white px-7 py-6 flex flex-wrap items-center gap-6">
+              <div className="flex-1" style={{ minWidth: 240 }}>
+                <p className="font-space font-bold text-sm uppercase tracking-wide text-gray-900 mb-1.5">No es la IA. Son los prompts.</p>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Con la estructura correcta, ChatGPT, Claude y Gemini entregan resultados profesionales en la <strong className="text-gray-900 border-b border-gray-900">primera respuesta</strong>.
                 </p>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              <div className="flex flex-col gap-2">
                 {['contexto claro', 'formato definido', 'rol asignado'].map(tag => (
-                  <div key={tag} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                    <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Check size={8} style={{ color: '#6366f1' }} strokeWidth={3} />
-                    </div>
-                    <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, color: '#6366f1', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{tag}</span>
+                  <div key={tag} className="flex items-center gap-2 border border-gray-200 px-3 py-1.5">
+                    <span className="text-gray-900 font-bold text-xs leading-none">•</span>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-gray-900">{tag}</span>
                   </div>
                 ))}
               </div>

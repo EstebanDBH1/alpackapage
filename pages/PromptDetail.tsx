@@ -2,18 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, ChevronLeft, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
+import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
-
-function getCategoryEmoji(cat: string): string {
-    const map: Record<string, string> = {
-        marketing: '📣', copywriting: '✍️', ventas: '💰',
-        productividad: '⚡', estrategia: '♟️', redes: '📱',
-        email: '📧', negocio: '💼', contenido: '🎨',
-        datos: '📊', 'ideas de negocio': '💡', finanzas: '📈',
-    };
-    return map[cat?.toLowerCase()] ?? '•';
-}
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -232,23 +222,23 @@ const PromptDetail: React.FC = () => {
 
     // ── Loading ──────────────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="min-h-screen" style={{ backgroundColor: '#FAF9F5' }}>
-            <div className="max-w-3xl mx-auto px-6 pt-16 space-y-6">
-                <div className="h-4 w-24 rounded-full animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
-                <div className="h-10 w-2/3 rounded-xl animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
-                <div className="h-5 w-full rounded-lg animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
-                <div className="h-64 w-full rounded-2xl animate-pulse mt-8" style={{ backgroundColor: '#F0EAE1' }} />
+        <div className="bg-white font-space">
+            <div className="max-w-3xl mx-auto px-6 py-16 space-y-6">
+                <div className="h-4 w-24 animate-pulse bg-gray-100" />
+                <div className="h-10 w-2/3 animate-pulse bg-gray-100" />
+                <div className="h-5 w-full animate-pulse bg-gray-50" />
+                <div className="h-64 w-full animate-pulse mt-8 bg-gray-50" />
             </div>
         </div>
     );
 
     // ── Not found ────────────────────────────────────────────────────────────────
     if (!prompt) return (
-        <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: '#FAF9F5' }}>
-            <AlertCircle size={36} style={{ color: '#C8BEB5' }} />
-            <h2 className="font-display text-2xl" style={{ color: '#1D1B18' }}>prompt no encontrado</h2>
-            <Link to="/prompts" className="font-mono text-xs underline" style={{ color: '#8B7E74' }}>
-                volver a la biblioteca
+        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 bg-white font-space text-gray-900">
+            <AlertCircle size={36} className="text-gray-300" />
+            <h2 className="font-bold text-2xl uppercase tracking-tight">Prompt no encontrado</h2>
+            <Link to="/prompts" className="text-xs uppercase tracking-wider underline hover:text-gray-500">
+                Volver al catálogo
             </Link>
         </div>
     );
@@ -256,238 +246,155 @@ const PromptDetail: React.FC = () => {
     const isLocked = prompt.is_premium && !isSubscribed;
 
     return (
-        <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5', color: '#1D1B18' }}>
-            {/* ── Sub-nav ──────────────────────────────────────────────────────── */}
-            <div
-                className="sticky top-16 z-40 border-b backdrop-blur-md"
-                style={{ backgroundColor: 'rgba(250,249,245,0.92)', borderColor: '#E3DCD3' }}
-            >
-                <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="bg-white text-gray-900 font-space">
+            <main className="max-w-3xl mx-auto px-6 py-16">
+
+                {/* Back + Save */}
+                <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-colors"
-                        style={{ color: '#8B7E74' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                        className="text-xs uppercase tracking-wider hover:underline flex items-center gap-2"
                     >
-                        <ChevronLeft size={14} />
-                        biblioteca
+                        <span>←</span> Volver al catálogo
                     </button>
 
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="transition-colors"
-                        style={{ color: isSaved ? '#C96A3C' : '#8B7E74' }}
+                        className={`transition-colors ${isSaved ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'}`}
                         title={isSaved ? 'Quitar de guardados' : 'Guardar prompt'}
-                        onMouseEnter={e => !isSaved && ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
-                        onMouseLeave={e => !isSaved && ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
                     >
-                        {isSaved
-                            ? <BookmarkCheck size={20} />
-                            : <Bookmark size={20} />
-                        }
+                        {isSaved ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
                     </button>
                 </div>
-            </div>
 
-            {/* ── Main ─────────────────────────────────────────────────────────── */}
-            <main className="max-w-3xl mx-auto px-6 pt-14 pb-8">
-
-                {/* Meta tags */}
-                <div className="flex flex-wrap items-center gap-2 mb-6">
-                    <span
-                        className="font-mono text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border"
-                        style={{ backgroundColor: '#F0EAE1', color: '#8B7E74', borderColor: '#E3DCD3' }}
-                    >
-                        {getCategoryEmoji(prompt.category)} {prompt.category || 'general'}
+                {/* Category + premium tag */}
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="inline-block px-3 py-1 text-xs font-bold bg-gray-100 uppercase tracking-wider">
+                        {prompt.category || 'general'}
                     </span>
                     {prompt.is_premium && (
-                        <span
-                            className="font-mono text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5"
-                            style={{ backgroundColor: '#FAF0E8', color: '#C96A3C', border: '1px solid #F5D9C8' }}
-                        >
-                            <Lock size={9} />
-                            premium
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider border border-gray-200 text-gray-500">
+                            <Lock size={10} /> Premium
                         </span>
                     )}
                 </div>
 
-                {/* Image */}
-                {prompt.image_url && (
-                    <div className="w-full rounded-2xl overflow-hidden mb-8">
-                        <img
-                            src={prompt.image_url}
-                            alt={prompt.title}
-                            className="w-full h-auto block"
-                        />
-                    </div>
-                )}
-
                 {/* Title */}
-                <h1
-                    className="font-display font-semibold leading-[1.06] tracking-tight mb-5"
-                    style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: '#1D1B18' }}
-                >
+                <h1 className="text-[28px] md:text-[35px] font-bold leading-tight mb-5">
                     {prompt.title}
                 </h1>
 
+                {/* Image */}
+                {prompt.image_url && (
+                    <div className="w-full overflow-hidden border border-gray-200 mb-8">
+                        <img src={prompt.image_url} alt={prompt.title} className="w-full h-auto block" />
+                    </div>
+                )}
+
                 {/* Description */}
-                <p className="text-lg leading-relaxed mb-10" style={{ color: '#8B7E74' }}>
-                    {prompt.description}
-                </p>
+                {prompt.description && (
+                    <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-10">
+                        {prompt.description}
+                    </p>
+                )}
 
-                {/* Divider */}
-                <div className="h-px mb-10" style={{ backgroundColor: '#E3DCD3' }} />
-
-                {/* ── Prompt section ───────────────────────────────────────────── */}
-                <section>
-
-                    {/* Action bar */}
-                    <div className="flex items-center justify-between mb-4">
-                        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: '#C8BEB5' }}>
-                            prompt
-                        </p>
+                {/* ── Caja de Código Minimalista ─────────────────────────────── */}
+                <div className="border border-gray-200 mb-8 overflow-hidden bg-gray-50">
+                    {/* Header */}
+                    <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-white">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                            <span className="text-xs text-gray-500 uppercase tracking-widest font-bold">
+                                PROMPT_SYSTEM
+                            </span>
+                        </div>
                         {!isLocked && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-4">
                                 <button
                                     onClick={handleDownloadPdf}
-                                    className="flex items-center gap-1.5 font-mono text-[11px] font-bold px-3 py-2 rounded-lg border transition-all hover:-translate-y-0.5"
-                                    style={{ borderColor: '#E3DCD3', color: '#8B7E74', backgroundColor: 'white' }}
-                                    onMouseEnter={e => {
-                                        (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
-                                        (e.currentTarget as HTMLElement).style.color = '#C96A3C';
-                                    }}
-                                    onMouseLeave={e => {
-                                        (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
-                                        (e.currentTarget as HTMLElement).style.color = '#8B7E74';
-                                    }}
+                                    className="text-xs uppercase tracking-widest font-bold hover:text-gray-500 transition-colors flex items-center gap-1.5 focus:outline-none"
                                     title="Descargar como PDF"
                                 >
-                                    <Download size={13} />
-                                    PDF
+                                    <Download size={14} />
+                                    <span>PDF</span>
                                 </button>
                                 <button
                                     onClick={handleCopy}
-                                    className="flex items-center gap-1.5 font-mono text-[11px] font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shadow-sm"
-                                    style={copied
-                                        ? { backgroundColor: '#22c55e', color: 'white', border: '1px solid transparent' }
-                                        : { backgroundColor: '#C96A3C', color: 'white', border: '1px solid transparent' }
-                                    }
+                                    className={`text-xs uppercase tracking-widest font-bold transition-colors flex items-center gap-1.5 focus:outline-none ${copied ? 'text-green-600' : 'hover:text-gray-500'}`}
                                 >
-                                    {copied ? <Check size={13} /> : <Copy size={13} />}
-                                    {copied ? 'copiado' : 'copiar prompt'}
+                                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                                    <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
                                 </button>
                             </div>
                         )}
                     </div>
 
-                    {/* Content box */}
-                    <div
-                        className="relative rounded-2xl overflow-hidden"
-                        style={{ border: '1px solid #2D2520' }}
-                    >
-                        {/* Top bar (terminal-style) */}
-                        <div
-                            className="flex items-center gap-2 px-5 py-3 border-b"
-                            style={{ backgroundColor: '#221E1A', borderColor: '#2D2520' }}
-                        >
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#3D352E' }} />
-                            <span className="font-mono text-[10px] ml-2" style={{ color: '#4D433C' }}>
-                                prompt.txt
-                            </span>
-                        </div>
+                    {/* Content area */}
+                    {isLocked ? (
+                        <div className="relative">
+                            {/* Blurred preview */}
+                            <div className="p-6 select-none pointer-events-none" style={{ filter: 'blur(5px)', opacity: 0.4 }}>
+                                <p className="text-gray-800 text-sm md:text-base leading-relaxed font-mono">
+                                    Actúa como un experto en [área] con más de 10 años de experiencia.
+                                    Tu objetivo es [objetivo principal] teniendo en cuenta [contexto
+                                    relevante]. Debes [instrucción 1], [instrucción 2] y asegurarte
+                                    de que el resultado cumpla con [criterio de calidad]. Responde
+                                    siempre en español y estructura tu respuesta con [formato]...
+                                </p>
+                            </div>
 
-                        {/* Content area */}
-                        <div
-                            className="relative min-h-[220px]"
-                            style={{ backgroundColor: '#1A1410' }}
-                        >
-                            {isLocked ? (
-                                <>
-                                    {/* Blurred preview lines */}
-                                    <div className="p-8 select-none pointer-events-none" style={{ filter: 'blur(5px)', opacity: 0.25 }}>
-                                        <p className="font-mono text-sm leading-relaxed" style={{ color: '#C8BEB5' }}>
-                                            Actúa como un experto en [área] con más de 10 años de experiencia.
-                                            Tu objetivo es [objetivo principal] teniendo en cuenta [contexto
-                                            relevante]. Debes [instrucción 1], [instrucción 2] y asegurarte
-                                            de que el resultado cumpla con [criterio de calidad]. Responde
-                                            siempre en español y estructura tu respuesta con [formato]...
-                                        </p>
-                                    </div>
-
-                                    {/* Lock overlay */}
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8" style={{ background: 'linear-gradient(to bottom, rgba(26,20,16,0) 0%, rgba(26,20,16,0.85) 30%, rgba(26,20,16,1) 60%)' }}>
-                                        <div
-                                            className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-xl"
-                                            style={{ backgroundColor: '#221E1A', border: '1px solid #3D352E' }}
-                                        >
-                                            <Lock size={22} style={{ color: '#C96A3C' }} />
-                                        </div>
-                                        <h4 className="font-display font-semibold text-lg text-white mb-2">
-                                            Contenido premium
-                                        </h4>
-                                        <p className="text-sm mb-7 max-w-xs leading-relaxed" style={{ color: '#8B7E74' }}>
-                                            Suscríbete para acceder a este prompt y a los 150+ del archivo.
-                                        </p>
-                                        <div className="flex flex-col sm:flex-row gap-3">
-                                            <Link
-                                                to="/pricing"
-                                                className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-3.5 rounded-xl transition-all hover:-translate-y-0.5 shadow-lg"
-                                                style={{ backgroundColor: '#C96A3C', color: 'white' }}
-                                            >
-                                                ver planes
-                                                <ArrowRight size={14} />
-                                            </Link>
-                                            <Link
-                                                to="/login?redirect=/prompts"
-                                                className="inline-flex items-center justify-center font-mono text-xs font-bold px-6 py-3.5 rounded-xl transition-colors"
-                                                style={{ border: '1px solid #3D352E', color: '#8B7E74' }}
-                                                onMouseEnter={e => {
-                                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
-                                                    (e.currentTarget as HTMLElement).style.color = '#C96A3C';
-                                                }}
-                                                onMouseLeave={e => {
-                                                    (e.currentTarget as HTMLElement).style.borderColor = '#3D352E';
-                                                    (e.currentTarget as HTMLElement).style.color = '#8B7E74';
-                                                }}
-                                            >
-                                                ya tengo cuenta →
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <pre
-                                    className="p-8 font-mono text-sm leading-relaxed whitespace-pre-wrap select-all overflow-x-auto"
-                                    style={{ color: '#D6CBC2' }}
-                                >
-                                    {prompt.content}
-                                </pre>
-                            )}
+                            {/* Lock overlay */}
+                            <div
+                                className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
+                                style={{ background: 'linear-gradient(to bottom, rgba(249,250,251,0) 0%, rgba(249,250,251,0.9) 35%, rgba(249,250,251,1) 65%)' }}
+                            >
+                                <div className="w-14 h-14 flex items-center justify-center mb-5 border border-gray-200 bg-white">
+                                    <Lock size={22} className="text-gray-900" />
+                                </div>
+                                <h4 className="font-bold text-lg uppercase tracking-tight mb-2">
+                                    Contenido Premium
+                                </h4>
+                                <p className="text-gray-500 text-xs md:text-sm mb-7 max-w-xs leading-relaxed">
+                                    Suscríbete para acceder a este prompt y a más de 500 del archivo.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <Link
+                                        to="/pricing"
+                                        className="inline-flex items-center justify-center gap-2 border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 px-7 py-3 text-xs uppercase tracking-wider font-bold transition-all duration-300"
+                                    >
+                                        Ver planes
+                                        <ArrowRight size={14} />
+                                    </Link>
+                                    <Link
+                                        to="/login?redirect=/prompts"
+                                        className="inline-flex items-center justify-center border border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900 px-6 py-3 text-xs uppercase tracking-wider font-bold transition-all"
+                                    >
+                                        Ya tengo cuenta →
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    ) : (
+                        <div className="p-6 overflow-x-auto">
+                            <pre className="text-gray-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words font-mono select-all">
+                                {prompt.content}
+                            </pre>
+                        </div>
+                    )}
+                </div>
 
                 {/* ── Tip ─────────────────────────────────────────────────────── */}
                 {!isLocked && (
-                    <div
-                        className="mt-6 flex items-start gap-4 p-5 rounded-2xl border"
-                        style={{ backgroundColor: '#FAF0E8', borderColor: '#F5D9C8' }}
-                    >
-                        <AlertCircle size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#C96A3C' }} />
-                        <p className="text-sm leading-relaxed" style={{ color: '#8B7E74' }}>
-                            <span className="font-semibold" style={{ color: '#C96A3C' }}>Tip:</span>{' '}
+                    <div className="flex items-start gap-3 p-5 border border-gray-200 bg-gray-50">
+                        <AlertCircle size={16} className="flex-shrink-0 mt-0.5 text-gray-900" />
+                        <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
+                            <span className="font-bold text-gray-900 uppercase tracking-wider">Tip:</span>{' '}
                             los parámetros entre{' '}
-                            <code
-                                className="font-mono text-xs px-1.5 py-0.5 rounded"
-                                style={{ backgroundColor: '#F5D9C8', color: '#C96A3C' }}
-                            >
+                            <code className="font-mono text-xs px-1.5 py-0.5 bg-gray-200 text-gray-900">
                                 [corchetes]
                             </code>{' '}
-                            son variables. reemplázalos con tus datos específicos para obtener el mejor output del modelo.
+                            son variables. Reemplázalos con tus datos específicos para obtener el mejor output del modelo.
                         </p>
                     </div>
                 )}

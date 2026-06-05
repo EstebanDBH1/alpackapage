@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User } from 'lucide-react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { supabase } from '../lib/supabase';
 import AlpacaIcon from './AlpacaIcon';
 
@@ -8,7 +9,9 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const navRef = useRef<HTMLElement>(null);
+  const tl = useRef<gsap.core.Timeline | null>(null);
 
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -23,11 +26,43 @@ const Navbar: React.FC = () => {
     return () => { subscription.unsubscribe(); };
   }, []);
 
+  // ── Construye el timeline una sola vez (scope = nav, cleanup automático) ──
+  useGSAP(() => {
+    const menu = navRef.current!.querySelector('.mobile-menu') as HTMLElement;
+    gsap.set(menu, { height: 0, overflow: 'hidden' });
+
+    // Estado base de las 3 barras: centradas vertical/horizontalmente y separadas ±6px.
+    // GSAP es el dueño de TODAS las transformaciones para que la X cierre exacta.
+    gsap.set('.hb-line', { xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
+    gsap.set('.hb-top', { y: -6 });
+    gsap.set('.hb-mid', { y: 0 });
+    gsap.set('.hb-bot', { y: 6 });
+
+    tl.current = gsap.timeline({
+      paused: true,
+      defaults: { duration: 0.4, ease: 'power3.inOut' },
+    })
+      // Hamburguesa → X (todas convergen al centro)
+      .to('.hb-top', { y: 0, rotate: 45 }, 0)
+      .to('.hb-mid', { opacity: 0, scaleX: 0, duration: 0.25, ease: 'power2.out' }, 0)
+      .to('.hb-bot', { y: 0, rotate: -45 }, 0)
+      // Reveal del panel
+      .to(menu, { height: 'auto', duration: 0.45 }, 0)
+      // Stagger de los enlaces
+      .from('.mobile-link', { autoAlpha: 0, y: -10, stagger: 0.06, duration: 0.3, ease: 'power2.out' }, 0.15);
+  }, { scope: navRef });
+
+  // ── Reproduce / revierte según el estado ──
+  useGSAP(() => {
+    if (!tl.current) return;
+    if (isOpen) tl.current.play();
+    else tl.current.reverse();
+  }, { dependencies: [isOpen], scope: navRef });
+
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      setIsDropdownOpen(false);
       setIsOpen(false);
       navigate('/');
     } catch (error) {
@@ -35,216 +70,99 @@ const Navbar: React.FC = () => {
     }
   };
 
-  const getInitials = () => {
-    if (!user) return '?';
-    const name = user.user_metadata?.full_name || user.email || '';
-    return name.charAt(0).toLowerCase();
-  };
-
   return (
-    <nav
-      className="sticky top-0 z-50 w-full border-b"
-      style={{
-        backgroundColor: 'rgba(255,255,255,0.88)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-        borderColor: '#e4e4e1',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14">
+    <nav ref={navRef} className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 font-space text-gray-900">
+      <div className="flex justify-between items-center px-6 py-4 md:px-10">
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-            <AlpacaIcon className="w-5 h-5" />
-            <span style={{ fontFamily: '"Bricolage Grotesque", sans-serif', fontStyle: 'italic', fontWeight: 300, fontSize: 18, color: '#1a1a1a', lineHeight: 1 }}>
-              alpacka<span style={{ fontStyle: 'normal', fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: '#a8a5a1' }}>.ai</span>
-            </span>
-          </Link>
+        {/* Logo — solo el icono */}
+        <Link to="/" className="hover:opacity-70 transition-opacity" aria-label="Inicio">
+          <AlpacaIcon className="w-5 h-auto" />
+        </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-0.5">
-            <Link
-              to="/prompts"
-              className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
-              style={{ color: '#787774' }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
-                (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.color = '#787774';
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-              }}
-            >
-              prompts
-            </Link>
-            <Link
-              to="/pricing"
-              className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
-              style={{ color: '#787774' }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
-                (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.color = '#787774';
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-              }}
-            >
-              precios
-            </Link>
+        {/* Navegación de escritorio */}
+        <div className="hidden md:flex items-center gap-6 text-sm">
+          <Link to="/prompts" className="uppercase hover:underline">Prompts</Link>
+          <Link to="/pricing" className="uppercase hover:underline">Precios</Link>
 
-            {user ? (
-              <div className="relative ml-2">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm transition-all"
-                  style={{ backgroundColor: '#1a1a1a', color: 'white' }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#333')}
-                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#1a1a1a')}
-                >
-                  {getInitials()}
-                </button>
+          <span className="w-px h-4 bg-gray-200" />
 
-                {isDropdownOpen && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)} />
-                    <div
-                      className="absolute right-0 mt-2 w-56 rounded-2xl z-20 overflow-hidden py-1.5"
-                      style={{ backgroundColor: 'white', border: '1px solid #e4e4e1', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}
-                    >
-                      <div className="px-4 py-3" style={{ borderBottom: '1px solid #f0efec' }}>
-                        <p className="font-mono text-[11px] truncate" style={{ color: '#a8a5a1' }}>{user.email}</p>
-                      </div>
-                      <Link
-                        to="/dashboard"
-                        className="flex items-center gap-2.5 px-4 py-3 text-sm transition-colors"
-                        style={{ color: '#1a1a1a' }}
-                        onClick={() => setIsDropdownOpen(false)}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
-                      >
-                        <User size={14} style={{ color: '#a8a5a1' }} /> mi cuenta
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-left transition-colors"
-                        style={{ color: '#ef4444', borderTop: '1px solid #f0efec' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#fff5f5')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
-                      >
-                        <LogOut size={14} /> salir
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 ml-2">
-                <button
-                  onClick={() => navigate('/login')}
-                  className="text-[13px] font-medium px-3 py-2 rounded-lg transition-colors"
-                  style={{ color: '#787774' }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
-                    (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3';
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.color = '#787774';
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                  }}
-                >
-                  entrar
-                </button>
-                <button
-                  onClick={() => navigate('/pricing')}
-                  className="font-semibold text-[13px] px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5"
-                  style={{ backgroundColor: '#000', color: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#222')}
-                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#000')}
-                >
-                  acceso total
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg transition-colors"
-              style={{ color: '#787774' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f3')}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'transparent')}
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div
-          className="md:hidden border-b px-5 pt-2 pb-7 space-y-px"
-          style={{ backgroundColor: 'rgba(255,255,255,0.97)', borderColor: '#e4e4e1' }}
-        >
-          <Link
-            to="/prompts"
-            className="flex items-center py-3.5 text-sm font-medium"
-            style={{ color: '#1a1a1a', borderBottom: '1px solid #f0efec' }}
-            onClick={() => setIsOpen(false)}
-          >
-            prompts
-          </Link>
-          <Link
-            to="/pricing"
-            className="flex items-center py-3.5 text-sm font-medium"
-            style={{ color: '#1a1a1a', borderBottom: '1px solid #f0efec' }}
-            onClick={() => setIsOpen(false)}
-          >
-            precios
-          </Link>
-          {!user ? (
-            <div className="pt-5 space-y-2.5">
-              <button
-                onClick={() => { navigate('/login'); setIsOpen(false); }}
-                className="w-full py-3.5 text-sm font-semibold rounded-xl transition-colors"
-                style={{ color: '#1a1a1a', border: '1px solid #e4e4e1', backgroundColor: 'white' }}
-              >
-                entrar
-              </button>
-              <button
-                onClick={() => { navigate('/pricing'); setIsOpen(false); }}
-                className="w-full py-3.5 text-sm font-semibold rounded-xl transition-all"
-                style={{ backgroundColor: '#000', color: 'white' }}
-              >
-                acceso total
-              </button>
-            </div>
-          ) : (
-            <div className="pt-4 space-y-px">
+          {user ? (
+            <div className="flex items-center gap-4 text-xs">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 py-3.5 text-sm font-medium"
-                style={{ color: '#1a1a1a' }}
-                onClick={() => setIsOpen(false)}
+                className="text-gray-500 font-bold uppercase tracking-wider border-b border-gray-200 pb-0.5 hover:text-gray-900 transition-colors"
               >
-                <User size={14} style={{ color: '#a8a5a1' }} /> mi cuenta
+                Mi cuenta
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 py-3.5 text-sm font-medium w-full text-left"
-                style={{ color: '#ef4444' }}
+                className="hover:text-red-500 transition-colors uppercase font-bold tracking-wider"
               >
-                <LogOut size={14} /> salir
+                Salir
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-5 text-xs">
+              <button
+                onClick={() => navigate('/login')}
+                className="hover:underline font-bold uppercase tracking-wider"
+              >
+                Acceder
+              </button>
+              <button
+                onClick={() => navigate('/pricing')}
+                className="border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-4 py-2 uppercase tracking-wider font-bold transition-all duration-300"
+              >
+                Acceso total
               </button>
             </div>
           )}
         </div>
-      )}
+
+        {/* Botón hamburguesa (móvil) */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden relative w-6 h-6 focus:outline-none"
+          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isOpen}
+        >
+          <span className="hb-line hb-top absolute top-1/2 left-1/2 h-0.5 w-6 bg-gray-900 rounded-full" />
+          <span className="hb-line hb-mid absolute top-1/2 left-1/2 h-0.5 w-6 bg-gray-900 rounded-full" />
+          <span className="hb-line hb-bot absolute top-1/2 left-1/2 h-0.5 w-6 bg-gray-900 rounded-full" />
+        </button>
+      </div>
+
+      {/* Menú móvil (siempre en el DOM; animado con GSAP) */}
+      <div className="mobile-menu md:hidden bg-white border-t border-gray-100">
+        <div className="flex flex-col gap-4 px-6 py-5 text-sm uppercase tracking-wider font-bold">
+          <Link to="/prompts" className="mobile-link hover:text-gray-500" onClick={() => setIsOpen(false)}>Prompts</Link>
+          <Link to="/pricing" className="mobile-link hover:text-gray-500" onClick={() => setIsOpen(false)}>Precios</Link>
+
+          <div className="mobile-link h-px bg-gray-100 w-full my-1" />
+
+          {user ? (
+            <>
+              <Link to="/dashboard" className="mobile-link hover:text-gray-500" onClick={() => setIsOpen(false)}>Mi cuenta</Link>
+              <button onClick={handleLogout} className="mobile-link hover:text-red-500 text-left">Salir</button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => { navigate('/login'); setIsOpen(false); }}
+                className="mobile-link hover:text-gray-500 text-left"
+              >
+                Acceder
+              </button>
+              <button
+                onClick={() => { navigate('/pricing'); setIsOpen(false); }}
+                className="mobile-link border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 px-4 py-3 text-center transition-all duration-300"
+              >
+                Acceso total
+              </button>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 };

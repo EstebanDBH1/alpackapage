@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpacka AI - Hero Section & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            transition: background-color 0.5s ease;
+        }
+        #mobile-menu {
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+        input::placeholder {
+            color: #9ca3af;
+        }
+        /* Barra de scroll personalizada y minimalista */
+        ::-webkit-scrollbar { width: 6px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+        /* Cuadrícula de ingeniería sutil para vistas especiales */
+        .tech-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+        }
+        
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .pulse-dot {
+            animation: subtle-pulse 2s infinite ease-in-out;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Difuminado estricto para prompts premium bloqueados */
+        .blur-code {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 pt-20 transition-all duration-500">
+
+    <!-- Toast Notification (Reemplazo de alert) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-gray-900 text-white text-xs uppercase tracking-wider px-6 py-4 border border-gray-700 hidden opacity-0 shadow-lg">
+        <span id="toast-message">Prompt copiado al portapapeles</span>
+    </div>
+
+    <!-- Menú de navegación principal -->
+    <nav class="fixed top-0 left-0 w-full bg-white z-50 flex justify-between items-center px-6 py-6 md:px-16 border-b border-transparent hover:border-gray-100 transition-colors">
+        <div class="font-bold tracking-tighter cursor-pointer" onclick="goToCatalog()">alpacka.ai</div>
+        
+        <!-- Navegación de Escritorio -->
+        <div class="hidden md:flex items-center gap-6 text-sm">
+            <a href="#" onclick="goToCatalog()" class="hover:underline">BLOG</a>
+            <a href="#" onclick="goToCatalog()" class="hover:underline">HERRAMIENTAS</a>
+            <a href="#" id="nav-premium" onclick="goToPricing()" class="hover:underline text-gray-400 hover:text-gray-900 transition-colors font-bold">PREMIUM</a>
+            
+            <span class="w-px h-4 bg-gray-200" id="nav-separator"></span>
+            
+            <!-- Estado de Sesión Dinámico -->
+            <div id="nav-auth-container" class="flex items-center gap-4">
+                <button id="nav-login-btn" onclick="showLogin()" class="hover:underline font-bold uppercase tracking-wider text-xs">Acceder</button>
+                <div id="nav-user-info" class="hidden flex items-center gap-4 text-xs">
+                    <span id="nav-user-email" class="text-gray-500 font-bold border-b border-gray-200 pb-0.5">ALEX@ALPACKA.AI</span>
+                    <button onclick="handleLogout()" class="hover:text-red-500 transition-colors uppercase font-bold tracking-wider">Salir</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de Menú Móvil -->
+        <button id="menu-btn" class="md:hidden text-sm uppercase tracking-wider font-bold focus:outline-none hover:text-gray-500 transition-colors">
+            Menu
+        </button>
+    </nav>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobile-menu" class="fixed top-[73px] left-0 w-full z-40 md:hidden bg-white px-6 border-b">
+        <div class="flex flex-col gap-4 py-4 text-sm uppercase tracking-wider font-bold">
+            <a href="#" onclick="goToCatalog(); toggleMenu()" class="hover:text-gray-500">Blog</a>
+            <a href="#" onclick="goToCatalog(); toggleMenu()" class="hover:text-gray-500">Herramientas</a>
+            <a href="#" onclick="goToPricing(); toggleMenu()" class="hover:text-gray-500">Premium</a>
+            <div class="h-px bg-gray-100 w-full my-1"></div>
+            <div id="mobile-auth-container">
+                <button id="mobile-login-btn" onclick="showLogin(); toggleMenu()" class="hover:text-gray-500 text-left w-full">Acceder</button>
+                <div id="mobile-user-info" class="hidden flex-col gap-3">
+                    <span id="mobile-user-email" class="text-gray-400 text-xs">ALEX@ALPACKA.AI</span>
+                    <button onclick="handleLogout(); toggleMenu()" class="hover:text-red-500 text-left text-xs text-gray-900">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content" class="flex flex-col items-center justify-center px-6 py-16">
+        
+        <!-- View 1: Catalog -->
+        <div id="catalog-view" class="w-full flex flex-col items-center">
+            <div class="max-w-3xl w-full text-center mb-12">
+                <!-- Título y subtítulo dinámicos -->
+                <h1 id="hero-title" class="font-bold leading-tight mb-6 md:mb-8 text-[28px] md:text-[35px] uppercase">
+                    LA BIBLIOTECA DE PROMPTS #1 DE TODO INTERNET.
+                </h1>
+                <p id="hero-subtitle" class="text-gray-600 max-w-2xl mx-auto leading-relaxed text-[14px] md:text-[15px] mb-10">
+                    Prompts gratuitos y seleccionados para IA compatibles con ChatGPT, Claude, Gemini, Midjourney y los principales modelos del mercado.
+                </p>
+
+                <!-- Barra de búsqueda -->
+                <div class="max-w-xl mx-auto mb-8">
+                    <input type="text" id="search-input" placeholder="Buscar un prompt..." 
+                        class="w-full px-6 py-4 border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors text-sm">
+                </div>
+
+                <!-- Barra de Estado de Filtrado -->
+                <div class="max-w-2xl mx-auto mb-4 flex justify-between items-center px-1 border-b border-gray-100 pb-2">
+                    <span class="text-[9px] text-gray-400 uppercase tracking-widest font-bold">FILTRAR POR RAMA</span>
+                    <span id="results-count" class="text-[9px] text-gray-400 font-mono">05 PROMPTS DISPONIBLES</span>
+                </div>
+
+                <!-- Selector de categorías deslizante con fade mask -->
+                <div class="relative w-full max-w-2xl mx-auto">
+                    <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10"></div>
+                    
+                    <div class="overflow-x-auto no-scrollbar flex gap-2.5 py-2 px-6 justify-start md:justify-center items-center select-none" id="category-filters">
+                        <!-- Botones de filtrado inyectados por JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rejilla de tarjetas de prompts -->
+            <div id="prompts-grid" class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+                <!-- Cards inyectadas aquí -->
+            </div>
+        </div>
+
+        <!-- View 1.5: Pricing View (Brutalista & Minimalista) -->
+        <div id="pricing-view" class="hidden w-full max-w-5xl mx-auto py-12 flex flex-col items-center">
+            
+            <!-- Encabezado de Pricing -->
+            <div class="text-center max-w-2xl mb-16">
+                <span class="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">un plan.</span>
+                <h1 class="font-bold text-[32px] md:text-[45px] leading-none uppercase mb-6 tracking-tight">
+                    acceso total.
+                </h1>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed font-mono">
+                    Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
+                </p>
+            </div>
+
+            <!-- Tarjeta de Membresía (Sin efectos decorativos, diseño profesional) -->
+            <div class="w-full max-w-md border border-gray-900 p-8 md:p-12 mb-16 relative bg-white flex flex-col justify-between">
+                <!-- Popular Badge -->
+                <div class="absolute -top-3.5 right-6 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border border-gray-900">
+                    Popular
+                </div>
+
+                <div>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-bold mb-2">Membresía Pro</span>
+                    <h2 class="text-xl font-bold uppercase tracking-tight mb-6">Full Access</h2>
+                    
+                    <div class="flex items-baseline gap-2 mb-6 pb-6 border-b border-gray-100">
+                        <span class="text-4xl md:text-5xl font-bold tracking-tighter">$ 4</span>
+                        <span class="text-xs text-gray-500 uppercase tracking-wider font-mono">/mes</span>
+                    </div>
+
+                    <p class="text-gray-400 text-[10px] uppercase tracking-wide leading-relaxed mb-8">
+                        facturación mensual · cancela cuando quieras sin dramas.
+                    </p>
+
+                    <!-- Lista de Características -->
+                    <ul class="space-y-4 mb-10 text-xs font-mono text-gray-700">
+                        <li class="flex items-center gap-3">
+                            <span class="text-black font-bold">•</span> Acceso ilimitado a 100+
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-black font-bold">•</span> Actualizaciones diarias
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-black font-bold">•</span> Búsqueda técnica avanzada
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-black font-bold">•</span> Soporte prioritario
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Botón de unirse (Diseño plano y serio) -->
+                <div>
+                    <button id="pricing-subscribe-btn" onclick="handleSubscribe()" class="w-full border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white py-4 text-xs uppercase tracking-widest font-bold transition-colors duration-200 focus:outline-none">
+                        Unirse al banco
+                    </button>
+                    <span class="block text-center text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-4">
+                        pago seguro vía paddle · ssl 256-bit
+                    </span>
+                </div>
+            </div>
+
+            <!-- Grilla de Beneficios Secundarios -->
+            <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 border-t border-b border-gray-100 py-12 px-4">
+                <div class="text-left flex flex-col gap-2">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-900">Sin tasas ocultas</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed font-mono">
+                        El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.
+                    </p>
+                </div>
+                <div class="text-left flex flex-col gap-2">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-900">Flexibilidad total</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed font-mono">
+                        Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.
+                    </p>
+                </div>
+                <div class="text-left flex flex-col gap-2">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-gray-900">Pago seguro</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed font-mono">
+                        Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Section con el copy exacto -->
+            <div class="w-full max-w-3xl flex flex-col items-center">
+                <span class="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">preguntas</span>
+                <h3 class="font-bold text-2xl uppercase tracking-tight mb-3">Preguntas frecuentes.</h3>
+                <p class="text-gray-500 text-xs uppercase tracking-wider mb-12">Respuestas directas.</p>
+
+                <!-- Acordeones de Preguntas Frecuentes -->
+                <div class="w-full flex flex-col border-t border-gray-200">
+                    
+                    <!-- FAQ 1 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Cuál es el costo y qué incluye?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                El costo es de solo $4 USD al mes. Te otorga acceso inmediato e ilimitado a todo nuestro catálogo de más de 100 prompts avanzados de ingeniería de nivel senior, actualizaciones de contenido diarias, filtrado semántico inteligente y soporte premium prioritario.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Realmente funcionan estos prompts?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                Sí. Cada prompt ha sido estructurado, testeado y perfeccionado por nuestro equipo de ingenieros de prompts. El uso de variables claras, restricciones estrictas y definiciones precisas de rol garantizan respuestas de calidad óptima sin alucinaciones.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Con qué modelos de IA puedo usarlos?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                Están diseñados para funcionar perfectamente con cualquier modelo de lenguaje de gran escala contemporáneo, incluyendo GPT-4, Claude 3.5 Sonnet, Gemini Pro, Llama 3, así como prompts dedicados para generadores de imagen como Midjourney.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Puedo cancelar si ya no los necesito?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                Por supuesto. La cancelación se realiza de forma automática con un solo clic desde tu panel de usuario sin llamadas ni explicaciones complejas. Mantendrás acceso a los recursos premium hasta el final de tu período de facturación actual.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Actualizan el banco de prompts?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                Sí, actualizamos nuestro banco a diario para asegurar que los prompts sigan siendo eficientes tras los cambios de APIs de los proveedores de LLMs, y añadimos nuevas plantillas basadas en las últimas tendencias tecnológicas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="border-b border-gray-200 py-5">
+                        <button onclick="toggleFaq(this)" class="w-full flex justify-between items-center text-left font-bold text-xs md:text-sm uppercase tracking-wide py-2 focus:outline-none hover:text-gray-500 transition-colors">
+                            <span>¿Puedo sugerir un prompt que no esté?</span>
+                            <span class="faq-icon font-mono text-base transition-transform duration-300">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="text-gray-600 text-xs leading-relaxed py-4 font-mono">
+                                ¡Nos encantaría! Aunque nuestra curaduría es interna para mantener la calidad premium, escuchamos a nuestros suscriptores. Si necesitas un prompt específico, escríbenos y nuestro equipo lo diseñará para la próxima actualización.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- View 2: Detail -->
+        <div id="detail-view" class="hidden w-full max-w-3xl">
+            <button onclick="hideDetail()" class="text-xs uppercase tracking-wider mb-8 hover:underline flex items-center gap-2 focus:outline-none">
+                <span>←</span> Volver al catálogo
+            </button>
+            <div id="detail-content" class="text-left">
+                <!-- Detail inyectado aquí -->
+            </div>
+        </div>
+
+        <!-- View 3: Login View (Brutalista & Tecnológico) -->
+        <div id="login-view" class="hidden w-full max-w-md mx-auto py-12 text-center">
+            <button onclick="goToCatalog()" class="group text-[10px] uppercase tracking-widest mb-10 hover:text-gray-500 transition-colors flex items-center gap-2 mx-auto focus:outline-none">
+                <span class="inline-block transform group-hover:-translate-x-1 transition-transform duration-300">←</span> Volver al inicio
+            </button>
+
+            <!-- Contenedor del Login -->
+            <div class="relative border border-gray-100 p-8 md:p-12 bg-white flex flex-col items-center shadow-[0_12px_40px_rgba(0,0,0,0.03)] overflow-hidden">
+                <div class="absolute top-0 left-0 h-[2px] bg-gray-900 w-0" id="login-loader-bar"></div>
+
+                <!-- Status del sistema -->
+                <div class="flex items-center gap-1.5 mb-8 text-[8px] text-gray-400 uppercase tracking-widest font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-dot"></span>
+                    <span>Secure Gateway Active</span>
+                </div>
+
+                <span class="inline-block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-4">ALPACKA.AI AUTH</span>
+                
+                <h2 class="font-bold text-2xl uppercase tracking-tight leading-none mb-3">
+                    Identificación
+                </h2>
+                
+                <p class="text-gray-400 text-xs leading-relaxed mb-8 max-w-xs mx-auto">
+                    Conéctate de forma instantánea mediante tu proveedor seguro de Google.
+                </p>
+
+                <!-- Botón de Google premium interactivo -->
+                <button id="google-login-btn-view" onclick="executeGoogleLogin()" class="flex items-center justify-center gap-3 border border-gray-900 text-gray-900 bg-white hover:bg-gray-900 hover:text-white px-6 py-4 text-xs uppercase tracking-wider font-bold transition-all duration-300 w-full mb-6 relative overflow-hidden group">
+                    <svg class="w-4 h-4 transition-transform group-hover:scale-110 duration-300" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.87-2.6-2.87-4.53-5.84-4.53z"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span class="relative z-10">Continuar con Google</span>
+                </button>
+
+                <p class="text-[8px] text-gray-400 uppercase tracking-widest leading-normal max-w-[250px]">
+                    Al acceder, declaras conformidad con nuestros estándares de privacidad y cifrado.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const prompts = [
+            { 
+                id: 1, 
+                title: 'Planificador de Estrategia SEO Semántica', 
+                cat: 'Marketing', 
+                premium: true,
+                excerpt: 'Diseña una estrategia de contenido SEO completa basada en mapas de cobertura semántica, clusters de palabras clave y objetivos B2B...', 
+                full: `[ROL]
+Actúa como un Director de SEO y Estratega de Contenidos Senior especializado en SaaS B2B en el sector de la ciberseguridad corporativa.
+
+[CONTEXTO Y OBJETIVO]
+Queremos posicionar orgánicamente un nuevo producto SaaS B2B que ofrece análisis de vulnerabilidades en tiempo real para infraestructura cloud. Nuestro público objetivo son CISOs (Chief Information Security Officers) y directores de IT en empresas medianas y grandes.
+
+[TAREA]
+Crea un plan maestro de estrategia SEO semántica de 3 meses. El plan debe estructurarse mediante Topic Clusters para maximizar la autoridad tópica (Topical Authority).
+
+[INSTRUCCIONES PASO A PASO]
+1. Identifica el "Pilar de Contenido" (Pillar Page) principal.
+2. Desarrolla exactamente 5 subtemas (Cluster Content) que orbiten de forma directa alrededor del Pilar.
+3. Para cada subtema, define:
+   - Palabra clave principal (con intención de búsqueda transaccional o informativa de alto valor).
+   - Intención de búsqueda específica del CISO (ej. Comparar herramientas, justificar presupuesto, entender un riesgo técnico).
+   - Título sugerido optimizado para CTR (Click-Through Rate).
+   - Esquema/estructura recomendada de encabezados (H1, H2, H3).
+4. Explica la estrategia de enlazado interno recomendado entre el Pilar y los Clusters utilizando texto estructurado explicativo.
+
+[RESTRICCIONES Y TONO]
+- No utilices palabras clave genéricas como "seguridad informática". Enfócate en "seguridad cloud", "compliance de seguridad", "auditoría DevSecOps".
+- El tono debe ser altamente técnico, autoritario pero accesible, evitando rodeos innecesarios.
+- Utiliza Markdown para estructurar la respuesta final de forma sumamente profesional.` 
+            },
+            { 
+                id: 2, 
+                title: 'Arquitecto de Rendimiento React', 
+                cat: 'Desarrollo', 
+                premium: true,
+                excerpt: 'Optimiza componentes complejos, reduce renders innecesarios y soluciona problemas de rendimiento con useMemo y useCallback...', 
+                full: `[ROL]
+Actúa como un Frontend Architect principal con amplia experiencia en la optimización de aplicaciones de alto rendimiento utilizando React 18+ y TypeScript.
+
+[CONTEXTO]
+Tenemos una aplicación financiera donde se renderiza una tabla interactiva con actualizaciones en tiempo real (más de 1,000 registros). Al escribir en la barra de búsqueda o al cambiar filtros dinámicos, los usuarios experimentan lag en la interfaz y caídas en los cuadros por segundo (FPS).
+
+[TAREA]
+Escribe un plan detallado de refactorización y proporciona el código óptimo para resolver el problema de rendimiento, explicando tus decisiones técnicas.
+
+[ESPECIFICACIONES DE LA TAREA]
+1. Demuestra cómo aislar el estado que cambia con frecuencia para que no afecte a todo el árbol de componentes principales.
+2. Utiliza useMemo para memorizar cálculos costosos (ej. filtrado de 1,000 elementos) y useCallback para memorizar funciones controladoras de eventos pasadas a componentes secundarios memorizados con React.memo.
+3. Explica detalladamente bajo qué condiciones específicas estos hooks de optimización podrían ser contraproducentes (overhead innecesario).
+4. Proporciona el componente refactorizado bajo un estándar de desarrollo estricto, limpio de efectos secundarios y completamente tipado con TypeScript.
+
+[RESTRICCIONES]
+- El código final debe ser modular y explicarse mediante comentarios de código detallados que expliquen el flujo de renderizado en cada ciclo.` 
+            },
+            { 
+                id: 3, 
+                title: 'Editor Técnico AI y Auditor de Artículos', 
+                cat: 'Escritura', 
+                premium: false,
+                excerpt: 'Revisa, audita y mejora borradores de ingeniería para elevar su claridad, profesionalismo y engagement con un tono senior...', 
+                full: `[ROL]
+Actúa como un Editor en Jefe Técnico y Revisor de Contenidos especializado en blogs de ingeniería de nivel internacional como Stripe, Netflix o Vercel.
+
+[CONTEXTO]
+Se te entregará un borrador inicial de un artículo escrito por un desarrollador técnico junior. El artículo describe "La transición de una arquitectura de monolito a microservicios". Aunque es preciso, el tono es algo informal, divaga en algunos puntos y no tiene ganchos de lectura eficaces.
+
+[TAREA]
+Realiza una auditoría editorial y reescribe las secciones clave para elevar el texto a un estándar de nivel senior de ingeniería.
+
+[PLAN DE ACCIÓN PASO A PASO]
+1. **Auditoría de Errores Comunes**: Lista los 3 problemas de estilo o redundancias más notorios identificados en un borrador de este estilo.
+2. **Reescritura de la Introducción**: Crea un gancho poderoso (The Hook) basado en los puntos de dolor comunes de la industria (pérdida de disponibilidad, cuellos de botella de red) en lugar de una definición genérica de microservicios.
+3. **Optimización de Legibilidad**: Aplica principios de estructuración (Markdown, listas de viñetas claras y explicaciones en bloques lógicos) para facilitar la lectura escaneable (scannability).
+4. **Glosario y Terminología**: Sustituye explicaciones vagas por terminología precisa de sistemas distribuidos (por ejemplo, cambiar "las partes se hablan rápido" por "comunicación asíncrona de baja latencia mediante colas de mensajería persistentes").
+
+[RESTRICCIONES]
+- El tono final debe sonar con autoridad técnica, altamente profesional pero claro y directo, evitando adornos literarios inexplicables.` 
+            },
+            {
+                id: 4,
+                title: 'Creador de Copywriting de Conversión (PAS/AIDA)',
+                cat: 'Marketing',
+                premium: false,
+                excerpt: 'Genera copys de alta conversión utilizando metodologías persuasivas clásicas adaptadas a audiencias de startups tecnológicas...',
+                full: `[ROL]
+Actúa como un Copywriter de Respuesta Directa y Especialista en CRO con más de 10 años de experiencia redactando páginas de venta para unicornios SaaS y startups tecnológicas B2B.
+
+[CONTEXTO]
+Necesitamos redactar la sección principal de ventas para nuestra nueva funcionalidad: "Reportes automatizados de cumplimiento de normativas de seguridad (HIPAA/GDPR)". El público objetivo está cansado de procesos de auditoría manuales que duran semanas.
+
+[TAREA]
+Escribe dos variantes de copy persuasivo utilizando los siguientes frameworks clásicos:
+1. Variante A: Framework PAS (Problema, Agitación, Solución).
+2. Variante B: Framework AIDA (Atención, Interés, Deseo, Acción).
+
+[INSTRUCCIONES DE DISEÑO]
+- Enfócate en el beneficio de "ahorro de tiempo" y "paz mental al evitar multas de cumplimiento".
+- Utiliza un lenguaje directo, dinámico, que evite clichés corporativos aburridos.
+- Incluye llamadas a la acción (CTA) claras al final de cada variante.
+
+[RESTRICCIONES]
+- No uses adjetivos vacíos como "revolucionario" o "único".
+- Demuestra el valor con datos simulados plausibles (ej. "Auditorías listas en 4 minutos, no en 4 semanas").`
+            },
+            {
+                id: 5,
+                title: 'Analista de Consultas SQL y Rendimiento',
+                cat: 'Desarrollo',
+                excerpt: 'Optimiza estructuras de bases de datos relacionales, analiza planes de ejecución y previene cuellos de botella en producción...',
+                full: `[ROL]
+Actúa como un Administrador de Bases de Datos (DBA) Principal y Arquitecto de Datos especializado en PostgreSQL de alto rendimiento.
+
+[CONTEXTO]
+Tenemos una base de datos de producción donde una consulta de reportería mensual que une 4 tablas grandes (más de 15 millones de filas en total) está tardando más de 45 segundos en ejecutarse, bloqueando otras conexiones y provocando timeouts de la API.
+
+[TAREA]
+Analiza el problema común de rendimiento SQL provocado por "N+1 queries" o un mal indexado en cláusulas JOIN complicadas y proporciona una guía paso a paso de optimización.
+
+[PASO A PASO]
+1. Describe cómo utilizar la herramienta EXPLAIN ANALYZE para identificar si se está realizando un Sequential Scan en lugar de un Index Scan.
+2. Proporciona una propuesta de indexación inteligente (como índices compuestos o índices parciales).
+3. Reescribe una consulta de ejemplo optimizada utilizando subconsultas eficientes o expresiones de tabla común (CTE).
+4. Explica brevemente la diferencia en rendimiento entre utilizar un INNER JOIN clásico contra un LEFT JOIN cuando se manejan volúmenes masivos de datos nulos.
+
+[RESTRICCIONES]
+- Todo el SQL debe seguir el estándar ANSI SQL.
+- Explica las decisiones de indexado con precisión técnica de nivel de almacenamiento de base de datos.`
+            },
+            {
+                id: 6,
+                title: 'Generador de Sistemas de Diseño Escalables',
+                cat: 'Diseño',
+                premium: true,
+                excerpt: 'Diseña tokens semánticos, componentes accesibles y guías de estilo fluidas integrando estándares de Figma y Tailwind...',
+                full: `[ROL]
+Actúa como un Lead UI/UX Engineer especializado en sistemas de diseño complejos para entornos corporativos y aplicaciones multiproducto.
+
+[CONTEXTO]
+Buscamos unificar la experiencia visual de 4 productos independientes bajo un solo núcleo semántico de diseño en Figma y Tailwind.`
+            },
+            {
+                id: 7,
+                title: 'Consultor de Pitch Deck de Inversión',
+                cat: 'Negocios',
+                premium: false,
+                excerpt: 'Estructura el discurso perfecto para captar capital semilla o serie A, optimizando las diapositivas de problema, mercado y tracción...',
+                full: `[ROL]
+Actúa como un Venture Capitalist y Asesor Financiero experto en estructuración de Pitch Decks ganadores para startups de software.`
+            },
+            {
+                id: 8,
+                title: 'Optimizador de Flujo de Trabajo (GTD)',
+                cat: 'Productividad',
+                premium: false,
+                excerpt: 'Alinea tus bandejas de entrada, automatiza revisiones semanales y estructura metas mediante metodologías ágiles avanzadas...',
+                full: `[ROL]
+Actúa como un Consultor de Productividad Organizacional y experto en sistemas personales basados en el framework Getting Things Done.`
+            },
+            {
+                id: 9,
+                title: 'Analista de Inversiones y Portafolio',
+                cat: 'Finanzas',
+                premium: true,
+                excerpt: 'Modela riesgos de activos, proyecta retornos históricos y optimiza la diversificación usando la teoría moderna de portafolios...',
+                full: `[ROL]
+Actúa como un Analista Financiero Cuantitativo (Quant) especializado en la gestión y optimización de portafolios de renta variable.`
+            },
+            {
+                id: 10,
+                title: 'Auditor de Contratos y Acuerdos de Confidencialidad',
+                cat: 'Legal',
+                premium: true,
+                excerpt: 'Identifica cláusulas de riesgo, previene vacíos legales y audita acuerdos de no divulgación bajo legislaciones internacionales...',
+                full: `[ROL]
+Actúa como un Consultor Legal y Abogado Corporativo especialista en contratos de software y protección de propiedad intelectual.`
+            },
+            {
+                id: 11,
+                title: 'Científico de Datos para Análisis Predictivo',
+                cat: 'Ciencia',
+                premium: true,
+                excerpt: 'Diseña pipelines de Machine Learning estructurados, analiza correlaciones complejas y modela predicciones multivariantes...',
+                full: `[ROL]
+Actúa como un Principal Data Scientist especializado en modelos estadísticos avanzados y arquitecturas analíticas predictivas.`
+            }
+        ];
+
+        let userState = {
+            isLoggedIn: false,
+            email: '',
+            isSubscribed: false,
+            savedPrompts: []
+        };
+
+        let activeCategory = 'all';
+        let searchQuery = '';
+
+        const grid = document.getElementById('prompts-grid');
+        const searchInput = document.getElementById('search-input');
+
+        function updateCategoryFilters() {
+            const categories = ['all', 'Marketing', 'Desarrollo', 'Escritura', 'Diseño', 'Negocios', 'Productividad', 'Finanzas', 'Legal', 'Ciencia'];
+            const filterContainer = document.getElementById('category-filters');
+            filterContainer.innerHTML = '';
+
+            categories.forEach(cat => {
+                const count = cat === 'all' ? prompts.length : prompts.filter(p => p.cat === cat).length;
+                const btn = document.createElement('button');
+                const catLabel = cat === 'all' ? 'Todo' : cat;
+                
+                const isActive = activeCategory === cat;
+                const activeClass = isActive 
+                    ? 'bg-gray-900 text-white border-gray-900 font-bold' 
+                    : 'border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400 bg-white';
+                
+                btn.className = `px-4 py-2 text-xs uppercase border tracking-wider transition-all duration-300 flex items-center gap-2 flex-shrink-0 cursor-pointer ${activeClass}`;
+                btn.innerHTML = `
+                    <span>${catLabel}</span>
+                    <span class="text-[9px] ${isActive ? 'text-gray-300 border-gray-700 bg-gray-800' : 'text-gray-400 border-gray-100 bg-gray-50'} font-mono font-bold px-1.5 py-0.5 rounded border transition-colors">
+                        ${count.toString().padStart(2, '0')}
+                    </span>
+                `;
+                
+                btn.onclick = () => {
+                    activeCategory = cat;
+                    updateCategoryFilters();
+                    renderCards();
+                    updateHeroText();
+                };
+                
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function updateHeroText() {
+            const count = prompts.filter(p => activeCategory === 'all' || p.cat === activeCategory).length;
+            let titleText = '';
+            let subtitleText = '';
+
+            const categoryName = activeCategory === 'all' ? 'TODO INTERNET' : activeCategory.toUpperCase();
+
+            if (activeCategory === 'all') {
+                titleText = `LA BIBLIOTECA DE PROMPTS #1 DE TODO INTERNET.`;
+                subtitleText = `Prompts gratuitos y seleccionados para IA compatibles con ChatGPT, Claude, Gemini, Midjourney y los principales modelos del mercado.`;
+            } else {
+                titleText = `${count} ${count === 1 ? 'PROMPT SELECCIONADO' : 'PROMPTS SELECCIONADOS'} PARA ${categoryName}.`;
+                
+                if (activeCategory === 'Marketing') {
+                    subtitleText = `Optimiza tus campañas, automatiza tu copywriting y eleva tu estrategia SEO con prompts validados por expertos en marketing digital.`;
+                } else if (activeCategory === 'Desarrollo') {
+                    subtitleText = `Acelera tu flujo de trabajo, refactoriza código complejo y diseña sistemas robustos con IA siguiendo buenas prácticas.`;
+                } else if (activeCategory === 'Escritura') {
+                    subtitleText = `Mejora tu redacción, corrige textos técnicos y crea ganchos irresistibles con ingeniería de prompts avanzada.`;
+                } else if (activeCategory === 'Diseño') {
+                    subtitleText = `Domina la creación de interfaces, tokens semánticos y estructuración de componentes interactivos avanzados con IA.`;
+                } else if (activeCategory === 'Negocios') {
+                    subtitleText = `Refina tu modelo de negocio, estructura presentaciones ante inversores y valida tus KPIs financieros con prompts corporativos.`;
+                } else if (activeCategory === 'Productividad') {
+                    subtitleText = `Diseña rutinas de alto rendimiento, automatiza procesos mundanos y optimiza tu gestión del tiempo con precisión técnica.`;
+                } else if (activeCategory === 'Finanzas') {
+                    subtitleText = `Modela activos, calcula perfiles de riesgo y formula simulaciones financieras detalladas con ingeniería de prompts.`;
+                } else if (activeCategory === 'Legal') {
+                    subtitleText = `Audita cláusulas de contratos de software, optimiza acuerdos NDA y asegura compliance normativo en tus operaciones.`;
+                } else if (activeCategory === 'Ciencia') {
+                    subtitleText = `Acelera la exploración de conjuntos de datos, modelado predictivo y visualización estadística avanzada con asistencia de IA.`;
+                }
+            }
+
+            const titleEl = document.getElementById('hero-title');
+            const subtitleEl = document.getElementById('hero-subtitle');
+
+            gsap.killTweensOf([titleEl, subtitleEl]);
+            
+            gsap.timeline()
+                .to([titleEl, subtitleEl], { opacity: 0, y: -8, duration: 0.2, ease: 'power2.inOut' })
+                .call(() => {
+                    titleEl.textContent = titleText;
+                    subtitleEl.textContent = subtitleText;
+                })
+                .to([titleEl, subtitleEl], { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+        }
+
+        function renderCards() {
+            grid.innerHTML = '';
+            
+            const filtered = prompts.filter(p => {
+                const matchesCat = activeCategory === 'all' || p.cat === activeCategory;
+                const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            const resultsCountEl = document.getElementById('results-count');
+            resultsCountEl.textContent = `${filtered.length.toString().padStart(2, '0')} PROMPTS COINCIDENTES`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-xs text-gray-400 uppercase tracking-widest font-mono">
+                        No se han encontrado prompts para esta búsqueda.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "prompt-card border border-gray-200 p-6 hover:border-gray-900 bg-white transition-all cursor-pointer group opacity-0";
+                
+                const accessBadge = p.premium 
+                    ? `<span class="inline-block px-2 py-0.5 text-[8px] font-bold bg-gray-900 text-white uppercase tracking-wider flex items-center gap-1">✦ PREMIUM</span>`
+                    : `<span class="inline-block px-2 py-0.5 text-[8px] font-bold bg-gray-100 text-gray-500 uppercase tracking-wider">GRATIS</span>`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block px-2 py-0.5 text-[8px] font-bold bg-gray-100 uppercase tracking-wider">${p.cat}</span>
+                            ${accessBadge}
+                        </div>
+                        <span class="text-[9px] text-gray-400 font-mono">ID: ${p.id.toString().padStart(2, '0')}</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 group-hover:text-gray-600 transition-colors">${p.title}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">${p.excerpt}</p>
+                `;
+                card.onclick = () => showDetail(p.id);
+                grid.appendChild(card);
+            });
+
+            gsap.to(".prompt-card", {
+                opacity: 1,
+                y: 0,
+                duration: 0.4,
+                stagger: 0.04,
+                ease: "power2.out",
+                startAt: { y: 15 }
+            });
+        }
+
+        function showDetail(id) {
+            const p = prompts.find(x => x.id === id);
+            const detailContainer = document.getElementById('detail-content');
+            
+            const isLocked = p.premium && !userState.isSubscribed;
+
+            let mainCodeArea = '';
+            let copyActionHtml = '';
+            let saveActionHtml = '';
+            let pdfActionHtml = '';
+
+            if (isLocked) {
+                mainCodeArea = `
+                    <div class="relative min-h-[220px] flex items-center justify-center">
+                        <div class="blur-code w-full p-6 select-none font-mono text-sm leading-relaxed text-gray-400">
+                            [ROL]
+                            Actúa como un experto consultor líder de alto rendimiento...
+                            
+                            [CONTEXTO Y LIMITANTES DE DESARROLLO]
+                            Para este entorno privado, requerimos el análisis estructurado de componentes modulares
+                            optimizando cada bloque con microservicios asíncronos y arquitecturas seguras...
+                        </div>
+
+                        <!-- Paywall Box Minimalista -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-white/60 backdrop-blur-[2px]">
+                            <div class="border border-gray-900 bg-white p-6 text-center max-w-sm shadow-md">
+                                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-2">✦ ACCESO EXCLUSIVO</span>
+                                <h4 class="font-bold text-sm uppercase tracking-tight mb-2">Este Prompt es Premium</h4>
+                                <p class="text-[11px] text-gray-500 leading-normal mb-4">
+                                    Obtén acceso ilimitado a nuestros prompts más potentes de nivel senior por solo $4 USD al mes.
+                                </p>
+                                <button onclick="goToPricing()" class="w-full bg-gray-900 text-white hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-900 py-2.5 text-[10px] font-bold uppercase tracking-wider transition-all">
+                                    Desbloquear Todo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                copyActionHtml = `
+                    <div class="text-xs uppercase tracking-widest font-bold text-gray-300 flex items-center gap-1.5 cursor-not-allowed select-none">
+                        <span class="faq-icon font-mono">🔒</span>
+                        <span>Cerrado</span>
+                    </div>
+                `;
+                
+                saveActionHtml = `
+                    <div class="text-xs uppercase tracking-widest font-bold text-gray-300 flex items-center gap-1.5 cursor-not-allowed select-none">
+                        <span>Guardar</span>
+                    </div>
+                `;
+
+                pdfActionHtml = `
+                    <div class="text-xs uppercase tracking-widest font-bold text-gray-300 flex items-center gap-1.5 cursor-not-allowed select-none">
+                        <span>PDF</span>
+                    </div>
+                `;
+            } else {
+                mainCodeArea = `
+                    <div class="p-6 overflow-x-auto">
+                        <pre id="prompt-text" class="text-gray-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words font-mono"></pre>
+                    </div>
+                `;
+
+                const isSaved = userState.savedPrompts.includes(p.id);
+
+                saveActionHtml = `
+                    <button onclick="toggleSavePrompt(${p.id}, this)" class="text-xs uppercase tracking-widest font-bold ${isSaved ? 'text-black' : 'text-gray-400 hover:text-gray-900'} transition-colors flex items-center gap-1.5 focus:outline-none">
+                        <svg class="w-3.5 h-3.5" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        <span class="save-label">${isSaved ? 'Guardado' : 'Guardar'}</span>
+                    </button>
+                `;
+
+                pdfActionHtml = `
+                    <button onclick="downloadPromptPDF(${p.id}, this)" class="text-xs uppercase tracking-widest font-bold text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1.5 focus:outline-none">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span>PDF</span>
+                    </button>
+                `;
+
+                copyActionHtml = `
+                    <button onclick="copyToClipboardById(${p.id}, this)" class="text-xs uppercase tracking-widest font-bold hover:text-gray-500 transition-colors flex items-center gap-1.5 focus:outline-none">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        <span class="copy-text">Copiar</span>
+                    </button>
+                `;
+            }
+
+            const badgeText = p.premium ? '✦ PREMIUM' : 'GRATIS';
+            const badgeClass = p.premium ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500';
+
+            detailContainer.innerHTML = `
+                <div class="mb-6 flex flex-col items-start gap-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-block px-3 py-1 text-xs font-bold bg-gray-100 uppercase tracking-wider">${p.cat}</span>
+                        <span class="inline-block px-3 py-1 text-xs font-bold ${badgeClass} uppercase tracking-wider">${badgeText}</span>
+                    </div>
+                    <h1 class="text-[28px] md:text-[35px] font-bold leading-tight">${p.title}</h1>
+                </div>
+                
+                <!-- Caja de Código -->
+                <div class="border border-gray-200 mb-8 overflow-hidden bg-gray-50">
+                    <div class="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-white">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">PROMPT_SYSTEM</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            ${saveActionHtml}
+                            ${pdfActionHtml}
+                            ${copyActionHtml}
+                        </div>
+                    </div>
+                    ${mainCodeArea}
+                </div>
+            `;
+            
+            if (!isLocked) {
+                document.getElementById('prompt-text').textContent = p.full;
+            }
+            
+            document.body.classList.remove('tech-grid');
+
+            gsap.to(['#catalog-view', '#login-view', '#pricing-view'], { opacity: 0, display: 'none', duration: 0.2 });
+            gsap.fromTo('#detail-view', { opacity: 0, display: 'block' }, { opacity: 1, duration: 0.3, delay: 0.2 });
+        }
+
+        function toggleSavePrompt(id, buttonElement) {
+            const index = userState.savedPrompts.indexOf(id);
+            const label = buttonElement.querySelector('.save-label');
+            const svg = buttonElement.querySelector('svg');
+
+            if (index > -1) {
+                userState.savedPrompts.splice(index, 1);
+                label.textContent = 'Guardar';
+                buttonElement.classList.remove('text-black');
+                buttonElement.classList.add('text-gray-400');
+                svg.setAttribute('fill', 'none');
+                showToast("Prompt eliminado de tus guardados");
+            } else {
+                userState.savedPrompts.push(id);
+                label.textContent = 'Guardado';
+                buttonElement.classList.remove('text-gray-400');
+                buttonElement.classList.add('text-black');
+                svg.setAttribute('fill', 'currentColor');
+                showToast("Prompt guardado en tu colección");
+            }
+        }
+
+        function downloadPromptPDF(id, buttonElement) {
+            const p = prompts.find(x => x.id === id);
+            if (!p) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, 210, 297, 'F');
+
+            doc.setFont("courier", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text("ALPACKA.AI // SYSTEM REPORT", 20, 20);
+
+            doc.setDrawColor(230, 230, 230);
+            doc.setLineWidth(0.5);
+            doc.line(20, 24, 190, 24);
+
+            doc.setFont("courier", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(120, 120, 120);
+            doc.text(`CATEGORIA: ${p.cat.toUpperCase()}`, 20, 35);
+
+            doc.setFont("courier", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            const splitTitle = doc.splitTextToSize(p.title.toUpperCase(), 170);
+            doc.text(splitTitle, 20, 44);
+
+            const titleHeight = splitTitle.length * 6;
+            const lineY = 44 + titleHeight;
+            doc.line(20, lineY, 190, lineY);
+
+            doc.setFont("courier", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            const splitExcerpt = doc.splitTextToSize(p.excerpt, 170);
+            doc.text(splitExcerpt, 20, lineY + 8);
+
+            const promptBoxY = lineY + 8 + (splitExcerpt.length * 5) + 6;
+            doc.setFillColor(250, 250, 250);
+            doc.rect(20, promptBoxY, 170, 8, 'F');
+            doc.setFont("courier", "bold");
+            doc.setFontSize(8);
+            doc.setTextColor(140, 140, 140);
+            doc.text("PROMPT_SYSTEM CODE BLOCK", 25, promptBoxY + 5.5);
+
+            doc.setFont("courier", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(30, 30, 30);
+            const splitPrompt = doc.splitTextToSize(p.full, 160);
+            
+            const blockHeight = (splitPrompt.length * 5.5) + 16;
+            doc.setDrawColor(220, 220, 220);
+            doc.rect(20, promptBoxY, 170, blockHeight);
+
+            doc.text(splitPrompt, 25, promptBoxY + 15);
+
+            doc.setFont("courier", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(180, 180, 180);
+            doc.text("DOCUMENTO EXPORTADO DE MANERA SEGURA VIA ALPACKA.AI", 20, 280);
+
+            const filename = `alpacka-prompt-${p.title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+            doc.save(filename);
+            showToast("PDF descargado correctamente");
+        }
+
+        function hideDetail() {
+            gsap.to('#detail-view', { opacity: 0, display: 'none', duration: 0.2 });
+            gsap.fromTo('#catalog-view', { opacity: 0, display: 'flex' }, { opacity: 1, duration: 0.3, delay: 0.2 });
+        }
+
+        function showLogin() {
+            document.body.classList.add('tech-grid');
+
+            gsap.to(['#catalog-view', '#detail-view', '#pricing-view'], { opacity: 0, display: 'none', duration: 0.2 });
+            gsap.fromTo('#login-view', { opacity: 0, display: 'block' }, { opacity: 1, duration: 0.3, delay: 0.2 });
+        }
+
+        function goToCatalog() {
+            document.body.classList.remove('tech-grid');
+
+            gsap.to(['#detail-view', '#login-view', '#pricing-view'], { opacity: 0, display: 'none', duration: 0.2 });
+            gsap.fromTo('#catalog-view', { opacity: 0, display: 'flex' }, { opacity: 1, duration: 0.3, delay: 0.2 });
+        }
+
+        function goToPricing() {
+            document.body.classList.add('tech-grid');
+
+            gsap.to(['#catalog-view', '#detail-view', '#login-view'], { opacity: 0, display: 'none', duration: 0.2 });
+            gsap.fromTo('#pricing-view', { opacity: 0, display: 'block' }, { opacity: 1, duration: 0.3, delay: 0.2 });
+        }
+
+        function executeGoogleLogin() {
+            const btnGoogle = document.getElementById('google-login-btn-view');
+            const btnSpan = btnGoogle.querySelector('span');
+            const loaderBar = document.getElementById('login-loader-bar');
+            
+            btnGoogle.disabled = true;
+            btnSpan.textContent = "Conectando...";
+
+            gsap.killTweensOf(loaderBar);
+            gsap.fromTo(loaderBar, { width: "0%" }, { width: "100%", duration: 2.0, ease: "power1.inOut" });
+
+            setTimeout(() => {
+                btnSpan.textContent = "Verificando...";
+                
+                setTimeout(() => {
+                    userState.isLoggedIn = true;
+                    userState.email = "ALEX@ALPACKA.AI";
+                    
+                    updateAuthUI();
+                    showToast("Sesión iniciada correctamente");
+                    goToCatalog();
+                    
+                    btnGoogle.disabled = false;
+                    btnSpan.textContent = "Continuar con Google";
+                    gsap.to(loaderBar, { opacity: 0, duration: 0.3, onComplete: () => {
+                        loaderBar.style.width = "0%";
+                        loaderBar.style.opacity = "1";
+                    }});
+                }, 1000);
+            }, 1000);
+        }
+
+        function handleLogout() {
+            userState.isLoggedIn = false;
+            userState.email = "";
+            userState.isSubscribed = false;
+            
+            updateAuthUI();
+            updateSubscriptionUI();
+            showToast("Sesión cerrada correctamente");
+            goToCatalog();
+        }
+
+        function updateAuthUI() {
+            const navLogin = document.getElementById('nav-login-btn');
+            const navUserInfo = document.getElementById('nav-user-info');
+            const navUserEmail = document.getElementById('nav-user-email');
+
+            const mobileLogin = document.getElementById('mobile-login-btn');
+            const mobileUserInfo = document.getElementById('mobile-user-info');
+            const mobileUserEmail = document.getElementById('mobile-user-email');
+
+            if (userState.isLoggedIn) {
+                navLogin.classList.add('hidden');
+                navUserInfo.classList.remove('hidden');
+                navUserEmail.textContent = userState.email;
+
+                mobileLogin.classList.add('hidden');
+                mobileUserInfo.classList.remove('hidden');
+                mobileUserInfo.classList.add('flex');
+                mobileUserEmail.textContent = userState.email;
+            } else {
+                navLogin.classList.remove('hidden');
+                navUserInfo.classList.add('hidden');
+
+                mobileLogin.classList.remove('hidden');
+                mobileUserInfo.classList.add('hidden');
+                mobileUserInfo.classList.remove('flex');
+            }
+        }
+
+        function copyToClipboardById(id, buttonElement) {
+            const p = prompts.find(x => x.id === id);
+            copyToClipboard(p.full, buttonElement);
+        }
+
+        function copyToClipboard(text, buttonElement) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            if (buttonElement) {
+                const label = buttonElement.querySelector('.copy-text');
+                const originalText = label.textContent;
+                label.textContent = '¡Copiado!';
+                buttonElement.classList.add('text-green-600');
+                
+                setTimeout(() => {
+                    label.textContent = originalText;
+                    buttonElement.classList.remove('text-green-600');
+                }, 2000);
+            }
+
+            showToast("Prompt copiado al portapapeles");
+        }
+
+        function handleSubscribe() {
+            const btnCheckout = document.getElementById('pricing-subscribe-btn');
+            
+            if (userState.isSubscribed) {
+                showToast("Ya eres miembro Premium");
+                return;
+            }
+
+            btnCheckout.disabled = true;
+            btnCheckout.textContent = 'Procesando...';
+            
+            showToast("Conectando con Paddle...");
+
+            setTimeout(() => {
+                btnCheckout.disabled = false;
+                userState.isSubscribed = true;
+                
+                updateSubscriptionUI();
+                renderCards();
+                showToast("Suscripción exitosa • Acceso Premium Activado.");
+                goToCatalog();
+            }, 2000);
+        }
+
+        function updateSubscriptionUI() {
+            const btnCheckout = document.getElementById('pricing-subscribe-btn');
+            const navPremium = document.getElementById('nav-premium');
+
+            if (userState.isSubscribed) {
+                if (btnCheckout) {
+                    btnCheckout.textContent = 'Membresía Activa ✓';
+                    btnCheckout.className = "w-full border border-green-600 text-green-600 bg-white py-4 text-xs uppercase tracking-widest font-bold cursor-default focus:outline-none";
+                }
+                
+                if (navPremium) {
+                    navPremium.textContent = "ACCESO PREMIUM ✓";
+                    navPremium.classList.remove('text-gray-400');
+                    navPremium.classList.add('text-green-600');
+                }
+            } else {
+                if (btnCheckout) {
+                    btnCheckout.textContent = 'Unirse al banco';
+                    btnCheckout.className = "w-full border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white py-4 text-xs uppercase tracking-widest font-bold transition-all duration-300 focus:outline-none";
+                }
+                
+                if (navPremium) {
+                    navPremium.textContent = "PREMIUM";
+                    navPremium.classList.remove('text-green-600');
+                    navPremium.classList.add('text-gray-400');
+                }
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.textContent = message;
+            toast.classList.remove('hidden');
+            gsap.killTweensOf(toast);
+            
+            gsap.timeline()
+                .to(toast, { opacity: 1, y: -10, duration: 0.3, ease: 'power2.out' })
+                .to(toast, { opacity: 0, y: 0, duration: 0.3, delay: 2.5, ease: 'power2.in', onComplete: () => toast.classList.add('hidden') });
+        }
+
+        function toggleFaq(buttonElement) {
+            const faqItem = buttonElement.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const icon = faqItem.querySelector('.faq-icon');
+            
+            // Cerrar otros acordeones abiertos
+            const allAnswers = document.querySelectorAll('.faq-answer');
+            const allIcons = document.querySelectorAll('.faq-icon');
+            allAnswers.forEach((ans) => {
+                if (ans !== answer) {
+                    ans.style.maxHeight = null;
+                }
+            });
+            allIcons.forEach((ic) => {
+                if (ic !== icon) {
+                    ic.textContent = '+';
+                    ic.classList.remove('rotate-45');
+                }
+            });
+
+            // Toggle actual
+            if (answer.style.maxHeight) {
+                answer.style.maxHeight = null;
+                icon.textContent = '+';
+                icon.classList.remove('rotate-45');
+            } else {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+                icon.textContent = '×';
+                icon.classList.add('rotate-45');
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderCards();
+        });
+
+        // Carga Inicial
+        updateCategoryFilters();
+        renderCards();
+        updateHeroText();
+        updateAuthUI();
+        updateSubscriptionUI();
+
+        // Lógica de colapso móvil
+        const btnMenu = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        let isOpen = false;
+        const tl = gsap.timeline({ paused: true });
+        tl.to(menu, { height: 'auto', opacity: 1, duration: 0.4, ease: 'power2.out' });
+        
+        function toggleMenu() {
+            if (!isOpen) { 
+                tl.play(); 
+                btnMenu.textContent = 'Cerrar'; 
+            } else { 
+                tl.reverse(); 
+                btnMenu.textContent = 'Menu'; 
+            }
+            isOpen = !isOpen;
+        }
+
+        btnMenu.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>

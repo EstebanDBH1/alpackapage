@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Zap, ShieldCheck, Clock } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Faq from '../components/Faq';
 import { supabase } from '../lib/supabase';
+
+const FEATURES = [
+    'Acceso ilimitado a más de 500 prompts',
+    'Actualizaciones constantes con los últimos modelos',
+    'Búsqueda técnica avanzada por categoría',
+    'Guarda tus prompts favoritos',
+    'Soporte prioritario',
+    'Cancela cuando quieras, sin ataduras',
+];
+
+const FAQ_DATA = [
+    { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $4 USD al mes, desbloqueas el acceso total a nuestra librería. No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
+    { question: '¿Realmente funcionan estos prompts?', answer: 'Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento.' },
+    { question: '¿Con qué modelos de IA puedo usarlos?', answer: 'Están diseñados para brillar en los modelos más potentes como GPT-5, Claude y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E.' },
+    { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado.' },
+    { question: '¿Actualizan el banco de prompts?', answer: '¡Cada semana! Nuestro equipo de expertos añade nuevos prompts basados en las tendencias del mercado y las peticiones de nuestra comunidad para que nunca te quedes atrás.' },
+    { question: '¿Puedo sugerir un prompt que no esté?', answer: '¡Nos encantaría! Aunque nuestra curaduría es interna para mantener la calidad premium, escuchamos a nuestros suscriptores. Si necesitas un prompt específico, escríbenos y nuestro equipo lo diseñará para la próxima actualización.' },
+];
 
 const Pricing: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [scriptLoaded, setScriptLoaded] = useState(false);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     useEffect(() => {
         const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
@@ -60,102 +78,132 @@ const Pricing: React.FC = () => {
     };
 
     return (
-        <div className="bg-brand-bg min-h-screen font-sans">
-            {/* HERO */}
-            <div className="pt-24 pb-16 md:pt-32 md:pb-20 max-w-4xl mx-auto px-5 sm:px-6">
-                <p className="font-mono text-[10px] text-brand-muted/50 tracking-[0.2em] uppercase mb-5">— precios</p>
-                <h1 className="mb-6">
-                    <span className="block font-display italic font-light text-4xl sm:text-6xl md:text-7xl text-brand-text leading-[0.9] tracking-tight">
-                        un plan.
+        <div className="bg-white text-gray-900 font-space">
+            <main className="max-w-3xl mx-auto px-6 py-16">
+
+                {/* ── Hero ─────────────────────────────────────────────── */}
+                <div className="text-center mb-16">
+                    <span className="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">
+                        Membresía Premium
                     </span>
-                    <span className="block font-sans font-black text-4xl sm:text-5xl md:text-6xl text-brand-text leading-[0.92] tracking-tighter">
-                        acceso total.
-                    </span>
-                </h1>
-                <p className="text-base md:text-lg text-brand-muted max-w-sm leading-relaxed">
-                    Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
-                </p>
-            </div>
+                    <h1 className="font-bold leading-tight mb-6 text-[28px] md:text-[35px] uppercase tracking-tight">
+                        Un plan. Acceso total.
+                    </h1>
+                    <p className="text-gray-600 max-w-xl mx-auto leading-relaxed text-[14px] md:text-[15px]">
+                        Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
+                    </p>
+                </div>
 
-            {/* PRICING CARD */}
-            <section className="pb-16 md:pb-24 px-5 sm:px-6">
-                <div className="max-w-[400px] mx-auto relative">
-                    <div className="absolute -inset-6 bg-brand-border/20 rounded-[44px] blur-3xl -z-10" />
-                    <div className="bg-white border border-brand-border rounded-3xl p-10 shadow-xl shadow-[#1A1410]/8">
+                {/* ── Pricing card ─────────────────────────────────────── */}
+                <div className="max-w-md mx-auto border border-gray-200 p-8 md:p-12 mb-16">
 
-                        <div className="flex justify-between items-start mb-9">
-                            <div>
-                                <h3 className="font-bold text-brand-text text-xl mb-1">Membresía Pro</h3>
-                                <p className="text-brand-muted text-xs font-mono tracking-[0.15em] uppercase">Full Access</p>
-                            </div>
-                            <span className="bg-brand-accent text-white text-[10px] font-bold px-3 py-1.5 rounded-full tracking-wider">
-                                Popular
-                            </span>
+                    <div className="flex justify-between items-start mb-8">
+                        <div>
+                            <h3 className="font-bold text-lg uppercase tracking-tight">Membresía Pro</h3>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">Full Access</p>
                         </div>
+                        <span className="border border-gray-900 bg-gray-900 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider">
+                            Popular
+                        </span>
+                    </div>
 
-                        <div className="mb-9 pb-9 border-b border-brand-border">
-                            <div className="flex items-start gap-1">
-                                <span className="font-medium text-brand-muted text-lg mt-3.5">$</span>
-                                <span className="font-black text-[5.5rem] text-brand-text leading-none tracking-tighter">4</span>
-                                <span className="font-medium text-brand-muted text-sm mt-auto mb-2">/mes</span>
-                            </div>
-                            <p className="text-brand-muted text-xs mt-1">facturación mensual · cancela cuando quieras sin dramas.</p>
+                    {/* Price */}
+                    <div className="mb-8 pb-8 border-b border-gray-200">
+                        <div className="flex items-end gap-1">
+                            <span className="font-bold text-gray-400 text-2xl mb-2">$</span>
+                            <span className="font-bold text-[5rem] leading-none tracking-tighter">4</span>
+                            <span className="font-bold text-gray-400 text-sm mb-3">USD/mes</span>
                         </div>
-
-                        <ul className="space-y-4 mb-9">
-                            {['Acceso ilimitado a 100+', 'Actualizaciones diarias', 'Búsqueda técnica avanzada', 'Soporte prioritario'].map((feature, i) => (
-                                <li key={i} className="flex items-center gap-3.5 text-sm">
-                                    <div className="w-5 h-5 rounded-full bg-brand-accent-light flex items-center justify-center shrink-0">
-                                        <Check size={11} className="text-brand-accent" strokeWidth={2.5} />
-                                    </div>
-                                    <span className="font-medium text-brand-text/80">{feature}</span>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <button
-                            onClick={handleJoinClick}
-                            disabled={isSubscribed}
-                            className={`w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2.5 ${
-                                isSubscribed
-                                    ? 'bg-emerald-50 text-emerald-600 cursor-default border border-emerald-200'
-                                    : 'bg-brand-accent text-white hover:bg-brand-accent-hover active:scale-[0.98] shadow-lg shadow-brand-accent/20'
-                            }`}
-                        >
-                            {isSubscribed ? (
-                                <><Check size={15} strokeWidth={2.5} /> Plan Actual</>
-                            ) : (
-                                <><Zap size={14} fill="currentColor" /> {user ? 'Suscribirse ahora' : 'Unirse al banco'}</>
-                            )}
-                        </button>
-
-                        <p className="text-center text-[10px] font-mono text-brand-muted/40 mt-4 tracking-widest">
-                            pago seguro vía paddle · ssl 256-bit
+                        <p className="text-gray-500 text-xs mt-2">
+                            Facturación mensual · cancela cuando quieras, sin dramas.
                         </p>
                     </div>
-                </div>
-            </section>
 
-            {/* TRUST PROPS */}
-            <section className="py-16 md:py-20 border-t border-brand-border bg-white">
-                <div className="max-w-4xl mx-auto px-5 sm:px-6 grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-14">
+                    {/* Features */}
+                    <ul className="space-y-3 mb-8">
+                        {FEATURES.map(feature => (
+                            <li key={feature} className="flex items-center gap-3 text-sm">
+                                <Check size={14} strokeWidth={3} className="text-gray-900 flex-shrink-0" />
+                                <span className="text-gray-700">{feature}</span>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* CTA */}
+                    <button
+                        onClick={handleJoinClick}
+                        disabled={isSubscribed}
+                        className={`w-full px-8 py-3.5 text-xs uppercase tracking-wider font-bold transition-all duration-300 border ${
+                            isSubscribed
+                                ? 'border-gray-200 text-gray-400 cursor-default'
+                                : 'border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900'
+                        }`}
+                    >
+                        {isSubscribed
+                            ? 'Plan Actual'
+                            : (user ? 'Suscribirse ahora' : 'Unirse al banco')}
+                    </button>
+
+                    {/* Secure note */}
+                    <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-6 flex justify-center items-center gap-1.5">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Pago Seguro vía Paddle • SSL 256-bit
+                    </div>
+                </div>
+
+                {/* ── Trust props ──────────────────────────────────────── */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16 pt-16 border-t border-gray-100">
                     {[
-                        { icon: ShieldCheck, title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.' },
-                        { icon: Clock, title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.' },
-                        { icon: Zap, title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.' },
-                    ].map(({ icon: Icon, title, desc }) => (
-                        <div key={title} className="text-center md:text-left">
-                            <div className="w-10 h-10 bg-brand-surface rounded-xl flex items-center justify-center mb-5 mx-auto md:mx-0 border border-brand-border">
-                                <Icon size={17} className="text-brand-muted" />
-                            </div>
-                            <h4 className="font-semibold text-brand-text text-sm mb-2">{title}</h4>
-                            <p className="text-sm text-brand-muted leading-relaxed">{desc}</p>
+                        { title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.' },
+                        { title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.' },
+                        { title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.' },
+                    ].map(({ title, desc }) => (
+                        <div key={title} className="text-center sm:text-left">
+                            <h4 className="font-bold text-sm uppercase tracking-tight mb-2">{title}</h4>
+                            <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
                         </div>
                     ))}
                 </div>
-            </section>
 
-            <Faq />
+                {/* ── FAQ ──────────────────────────────────────────────── */}
+                <div className="pt-16 border-t border-gray-100">
+                    <span className="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">
+                        Preguntas
+                    </span>
+                    <h2 className="font-bold text-xl md:text-2xl uppercase tracking-tight leading-tight mb-10">
+                        Preguntas frecuentes. Respuestas directas.
+                    </h2>
+
+                    <div className="border-t border-gray-200">
+                        {FAQ_DATA.map((item, index) => {
+                            const open = openIndex === index;
+                            return (
+                                <div key={index} className="border-b border-gray-200">
+                                    <button
+                                        className="w-full py-5 flex justify-between items-start text-left focus:outline-none gap-6"
+                                        onClick={() => setOpenIndex(open ? null : index)}
+                                    >
+                                        <span className={`text-sm font-bold leading-snug transition-colors ${open ? 'text-gray-900' : 'text-gray-700'}`}>
+                                            {item.question}
+                                        </span>
+                                        <span className={`flex-shrink-0 text-lg leading-none transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>
+                                            +
+                                        </span>
+                                    </button>
+                                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${open ? 'max-h-96 opacity-100 pb-5' : 'max-h-0 opacity-0'}`}>
+                                        <p className="text-sm leading-relaxed text-gray-500">
+                                            {item.answer}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+            </main>
         </div>
     );
 };

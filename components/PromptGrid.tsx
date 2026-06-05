@@ -27,31 +27,27 @@ const PromptGrid: React.FC = () => {
   if (prompts.length === 0) return null;
 
   return (
-    <section className="py-24 overflow-hidden border-y" style={{ backgroundColor: '#f7f6f3', borderColor: '#e4e4e1' }}>
+    <section className="py-24 overflow-hidden bg-white border-y border-gray-200">
       <div className="w-full">
 
         {/* Header */}
         <div className="max-w-7xl mx-auto px-6 sm:px-8 mb-12 flex justify-between items-end">
           <div>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: '#ffffff', border: '1px solid #e4e4e1',
-              borderRadius: 100, padding: '4px 12px', marginBottom: 14,
-              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-            }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#787774', letterSpacing: '0.1em', textTransform: 'uppercase' }}>biblioteca de prompts</span>
-            </div>
-            <h2 className="font-display font-bold text-2xl md:text-3xl leading-tight" style={{ color: '#1a1a1a', letterSpacing: '-0.02em' }}>
+            <span className="inline-flex items-center gap-2 border border-gray-200 px-3 py-1.5 mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-900" />
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">biblioteca de prompts</span>
+            </span>
+            <h2
+              className="font-space font-bold uppercase text-gray-900"
+              style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)', letterSpacing: '-0.01em', lineHeight: 1.15 }}
+            >
               Prompts reales.<br />
-              <span>Listos para usar.</span>
+              Listos para usar.
             </h2>
           </div>
           <Link
             to="/prompts"
-            className="hidden md:flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-all hover:-translate-y-0.5"
-            style={{ color: '#787774' }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#6366f1')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#787774')}
+            className="hidden md:flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase text-gray-400 hover:text-gray-900 transition-colors"
           >
             ver todos <ArrowRight size={13} />
           </Link>
@@ -62,11 +58,11 @@ const PromptGrid: React.FC = () => {
           {/* Edge fades */}
           <div
             className="absolute top-0 left-0 w-28 h-full z-20 pointer-events-none"
-            style={{ background: 'linear-gradient(to right, #f7f6f3, transparent)' }}
+            style={{ background: 'linear-gradient(to right, #ffffff, transparent)' }}
           />
           <div
             className="absolute top-0 right-0 w-28 h-full z-20 pointer-events-none"
-            style={{ background: 'linear-gradient(to left, #f7f6f3, transparent)' }}
+            style={{ background: 'linear-gradient(to left, #ffffff, transparent)' }}
           />
 
           <div
@@ -79,18 +75,13 @@ const PromptGrid: React.FC = () => {
                 key={`${prompt.id}-${index}`}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                className="w-[280px] md:w-[300px] flex-shrink-0 flex flex-col rounded-2xl transition-all duration-200 hover:-translate-y-1"
-                style={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e4e4e1',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
-                }}
+                className="w-[280px] md:w-[300px] flex-shrink-0 flex flex-col bg-white border border-gray-200 hover:border-gray-900 transition-colors duration-200"
                 onFocus={() => setIsPaused(true)}
                 onBlur={() => setIsPaused(false)}
               >
                 {/* Image preview */}
                 {prompt.image_url && (
-                  <div className="w-full overflow-hidden rounded-t-2xl flex-shrink-0">
+                  <div className="w-full overflow-hidden flex-shrink-0">
                     <img
                       src={prompt.image_url}
                       alt={prompt.title}
@@ -101,44 +92,41 @@ const PromptGrid: React.FC = () => {
 
                 {/* Premium bar */}
                 {prompt.is_premium && (
-                  <div
-                    className={`h-0.5 ${prompt.image_url ? '' : 'rounded-t-2xl'}`}
-                    style={{ background: 'linear-gradient(90deg, #667eea, #a78bfa)' }}
-                  />
+                  <div className="h-0.5 bg-gray-900" />
                 )}
 
                 <div className="p-6 flex flex-col flex-1">
                   {/* Top: category + tier */}
                   <div className="flex items-center justify-between mb-5">
-                    <span
-                      className="font-mono text-[9px] uppercase tracking-widest px-2 py-1 rounded-md"
-                      style={{ backgroundColor: '#f7f6f3', color: '#787774', border: '1px solid #e4e4e1' }}
-                    >
+                    <span className="font-mono text-[9px] uppercase tracking-widest px-2 py-1 bg-gray-100 text-gray-500 border border-gray-200">
                       {CATEGORY_EMOJIS[prompt.category?.toLowerCase()] ?? '•'} {prompt.category || 'general'}
                     </span>
-                    {prompt.is_premium && (
-                      <span
-                        className="font-mono text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1"
-                        style={{ backgroundColor: '#f0f0ff', color: '#6366f1', border: '1px solid #c7d2fe' }}
-                      >
-                        <Lock size={8} /> premium
-                      </span>
-                    )}
+                    {prompt.is_premium
+                      ? (
+                        <span className="font-mono text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-gray-900 text-white flex items-center gap-1">
+                          <Lock size={8} /> pro
+                        </span>
+                      )
+                      : (
+                        <span className="font-mono text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-gray-100 text-gray-400">
+                          free
+                        </span>
+                      )}
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-display text-lg leading-snug mb-3 line-clamp-2 flex-1" style={{ color: '#1a1a1a' }}>
+                  <h3 className="font-bold text-lg leading-snug mb-3 line-clamp-2 flex-1 text-gray-900">
                     {prompt.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm leading-relaxed line-clamp-2" style={{ color: '#787774' }}>
+                  <p className="text-sm leading-relaxed line-clamp-2 text-gray-600">
                     {prompt.description}
                   </p>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-end mt-5 pt-4" style={{ borderTop: '1px solid #f0efec' }}>
-                    <span className="font-mono text-[10px] font-bold" style={{ color: '#6366f1' }}>
+                  <div className="flex items-center justify-end mt-5 pt-4 border-t border-gray-100">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-gray-900">
                       ver →
                     </span>
                   </div>
@@ -152,8 +140,7 @@ const PromptGrid: React.FC = () => {
         <div className="mt-8 md:hidden flex justify-center px-6">
           <Link
             to="/prompts"
-            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest"
-            style={{ color: '#787774' }}
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-gray-900"
           >
             ver todos los prompts <ArrowRight size={13} />
           </Link>
