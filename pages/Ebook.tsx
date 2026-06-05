@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Shield, ChevronDown, ChevronUp, Zap, Target, Star, ArrowRight, Gift, Clock, TrendingUp, BookOpen, Sparkles, Database, Layers, Quote } from 'lucide-react';
+import { Check, Shield, ChevronDown, ChevronUp, Zap, Target, Star, ArrowRight, Gift, Clock, TrendingUp, BookOpen, Sparkles, Database, Layers } from 'lucide-react';
 import AlpacaIcon from '../components/AlpacaIcon';
 
 /* ─── Palette (Notion-inspired) ─── */
@@ -176,7 +176,7 @@ const Ebook: React.FC = () => {
     },
     {
       q: '¿Cómo funciona la garantía?',
-      a: 'Tienes 7 días. Si lo abres, lo usas y sientes que no valió la pena, me escribes y te reembolso el 100%. Sin formularios raros ni emails de retención. Solo dime que no funcionó para ti.',
+      a: 'Tienes 30 días. Si lo abres, lo usas y sientes que no valió la pena, me escribes y te reembolso el 100%. Sin formularios raros ni emails de retención. Solo dime que no funcionó para ti.',
     },
     {
       q: '¿Necesito saber mucho de IAs para aprovecharlo?',
@@ -265,6 +265,7 @@ const Ebook: React.FC = () => {
             HERO
         ══════════════════════════════════════════ */}
         <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: BG }}>
+          {/* Gradient blobs */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
             <Blob color="radial-gradient(circle, #fbc7d4, #9796f0)" size={420} top="-80px" left="-60px" opacity={0.35} />
             <Blob color="radial-gradient(circle, #a8edea, #fed6e3)" size={340} top="60px" left="65%" opacity={0.30} />
@@ -292,30 +293,30 @@ const Ebook: React.FC = () => {
             <h1 style={{
               fontFamily: '"Bricolage Grotesque", sans-serif',
               fontWeight: 800,
-              fontSize: 'clamp(2.2rem, 5.5vw, 4rem)',
-              lineHeight: 1.1,
+              fontSize: 'clamp(2.6rem, 6vw, 4.4rem)',
+              lineHeight: 1.05,
               color: TEXT,
               marginBottom: 22,
               letterSpacing: '-0.02em',
             }}>
-              Tus respuestas con ChatGPT son mediocres<br />
+              Tu IA trabaja con lo que le das.<br />
               <span style={{
                 background: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                porque tus prompts también lo son.
+                Dale algo que funcione.
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p style={{ color: TEXT_MED, fontSize: 'clamp(15px, 1.6vw, 18px)', lineHeight: 1.75, maxWidth: 600, margin: '0 auto 36px' }}>
-              La Biblioteca de Prompts incluye más de 200 prompts listos para copiar y pegar que te ayudan a escribir mejor, aprender más rápido, crear contenido, resolver problemas y obtener respuestas mucho más útiles de ChatGPT en segundos.
+            <p style={{ color: TEXT_MED, fontSize: 'clamp(15px, 1.6vw, 19px)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 36px' }}>
+              Más de 200 prompts en Notion, organizados para que los encuentres en segundos y los pegues directo en la IA que ya usas. Sin cursos. Sin suscripción. Un pago, tuyo para siempre.
             </p>
 
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
               <a
                 href={buyUrl}
                 target="_blank"
@@ -332,21 +333,19 @@ const Ebook: React.FC = () => {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
               >
-                Quiero acceso inmediato — $10
+                Acceder ahora — $10
                 <ArrowRight size={16} />
               </a>
+
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 12, color: TEXT_DIM }}>Precio normal: <span style={{ textDecoration: 'line-through' }}>$37</span></div>
+                <div style={{ fontSize: 11, color: TEXT_DIM, letterSpacing: '0.05em' }}>pago único · garantía 30 días</div>
+              </div>
             </div>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-12">
-              {[
-                '✅ Acceso inmediato',
-                '✅ Actualizaciones futuras incluidas',
-                '✅ Garantía de 7 días',
-              ].map((item, i) => (
-                <span key={i} style={{ fontSize: 13, color: TEXT_MED }}>{item}</span>
-              ))}
-            </div>
+            <p style={{ fontSize: 12, color: TEXT_DIM, marginBottom: 56 }}>
+              El precio sube cuando lleguemos a 1.000 compras.
+            </p>
 
             {/* Product mockup */}
             <div style={{
@@ -357,6 +356,7 @@ const Ebook: React.FC = () => {
               overflow: 'hidden',
               boxShadow: '0 -4px 0 #e4e4e1, 0 20px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)',
             }}>
+              {/* Notion-style workspace mockup */}
               <div style={{ backgroundColor: '#ffffff', padding: '0' }}>
                 {/* Window bar */}
                 <div style={{
@@ -387,12 +387,12 @@ const Ebook: React.FC = () => {
                   <div style={{ width: 200, backgroundColor: '#f7f6f3', borderRight: `1px solid ${BORDER}`, padding: '16px 12px', flexShrink: 0 }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: TEXT_DIM, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Biblioteca</div>
                     {[
-                      { emoji: '✍️', label: 'Creación contenido', count: 45 },
-                      { emoji: '⚡', label: 'Productividad', count: 38 },
-                      { emoji: '📚', label: 'Aprendizaje', count: 32 },
-                      { emoji: '💼', label: 'Negocios', count: 35 },
-                      { emoji: '📧', label: 'Escritura', count: 28 },
+                      { emoji: '⚡', label: 'Productividad', count: 42 },
+                      { emoji: '✍️', label: 'Copywriting', count: 38 },
+                      { emoji: '📈', label: 'Marketing', count: 35 },
+                      { emoji: '💼', label: 'Negocios', count: 29 },
                       { emoji: '🎨', label: 'Creatividad', count: 27 },
+                      { emoji: '📧', label: 'Email', count: 22 },
                       { emoji: '🤖', label: 'Técnicos', count: 18 },
                       { emoji: '🌐', label: 'SEO & Contenido', count: 16 },
                     ].map((item, i) => (
@@ -420,9 +420,9 @@ const Ebook: React.FC = () => {
                   {/* Main content */}
                   <div style={{ flex: 1, padding: '20px 24px', overflow: 'hidden' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                      <span style={{ fontSize: 18 }}>✍️</span>
-                      <span style={{ fontWeight: 700, fontSize: 18, color: TEXT }}>Creación de Contenido</span>
-                      <span style={{ fontSize: 11, color: TEXT_DIM, backgroundColor: '#f0f0ee', borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>en crecimiento</span>
+                      <span style={{ fontSize: 18 }}>⚡</span>
+                      <span style={{ fontWeight: 700, fontSize: 18, color: TEXT }}>Productividad</span>
+                      <span style={{ fontSize: 11, color: TEXT_DIM, backgroundColor: '#f0f0ee', borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>42 prompts</span>
                     </div>
 
                     {/* Table header */}
@@ -442,11 +442,11 @@ const Ebook: React.FC = () => {
 
                     {/* Rows */}
                     {[
-                      { title: 'Estrategia de contenido 30 días con calendario y KPIs', ai: 'Universal', color: '#10a37f' },
-                      { title: 'Guion para reel de 60 segundos que engancha desde el primer segundo', ai: 'ChatGPT', color: '#10a37f' },
-                      { title: 'Post carrusel con historia, datos y CTA integrado', ai: 'Claude', color: '#D4A853' },
-                      { title: 'Ideas de contenido para 30 días en un nicho específico', ai: 'Gemini', color: '#4285F4' },
-                      { title: 'Análisis de competencia y oportunidades poco explotadas', ai: 'Universal', color: '#10a37f' },
+                      { title: 'Planificador semanal Deep Work con bloques de 90 min', ai: 'Universal', color: '#10a37f' },
+                      { title: 'Resumen ejecutivo con decisiones y próximos pasos', ai: 'ChatGPT', color: '#10a37f' },
+                      { title: 'Email de seguimiento post-demo que cierra sin presionar', ai: 'Claude', color: '#D4A853' },
+                      { title: 'Estrategia de contenido 30 días con calendario y KPIs', ai: 'Gemini', color: '#4285F4' },
+                      { title: 'Análisis FODA completo con plan de acción por cuadrante', ai: 'Universal', color: '#10a37f' },
                     ].map((row, i) => (
                       <div
                         key={i}
@@ -502,7 +502,7 @@ const Ebook: React.FC = () => {
         </section>
 
         {/* ══════════════════════════════════════════
-            DOLOR
+            PROBLEMA
         ══════════════════════════════════════════ */}
         <section style={{ backgroundColor: BG }}>
           <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
@@ -527,52 +527,23 @@ const Ebook: React.FC = () => {
                   marginBottom: 18,
                   letterSpacing: '-0.02em',
                 }}>
-                  Si ChatGPT te está decepcionando, probablemente no es culpa de la IA.
+                  Llevas meses usando ChatGPT y los resultados siguen siendo mediocres.
                 </h2>
 
                 <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.8, marginBottom: 14 }}>
-                  La mayoría de las personas le hacen preguntas vagas y reciben respuestas mediocres. Por eso sienten que ChatGPT:
+                  No es la IA. Eres tú dándole instrucciones vagas y esperando magia. "Escribe un email de ventas" no es un prompt. Es una garantía de decepción.
                 </p>
 
-                <div className="space-y-3 mb-6">
-                  {[
-                    'Da respuestas genéricas',
-                    'No entiende exactamente lo que necesitan',
-                    'Produce contenido aburrido',
-                    'Pierde detalles importantes',
-                    'Obliga a repetir instrucciones una y otra vez',
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{
-                        width: 20, height: 20, borderRadius: '50%',
-                        backgroundColor: '#fee2e2', border: '1px solid #fca5a5',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                      }}>
-                        <span style={{ fontSize: 9, color: '#ef4444', fontWeight: 900 }}>✕</span>
-                      </div>
-                      <span style={{ fontSize: 15, color: TEXT_MED }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{
-                  backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14,
-                  padding: '16px 18px', display: 'flex', alignItems: 'flex-start', gap: 10,
-                }}>
-                  <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#dcfce7', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                    <Check size={10} style={{ color: '#22c55e' }} strokeWidth={3} />
-                  </div>
-                  <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.6 }}>
-                    <strong>La diferencia no está en la herramienta.</strong> Está en cómo le hablas.
-                  </p>
-                </div>
+                <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.8 }}>
+                  La diferencia entre lo que obtienes hoy y un resultado que realmente usas es <strong style={{ color: TEXT }}>la estructura del prompt.</strong> Solo eso.
+                </p>
               </div>
 
               <div className="space-y-3">
                 {[
-                  { prompt: '"escribe un email de ventas"', result: 'Texto genérico y corporativo que nadie va a leer.' },
-                  { prompt: '"dame una estrategia de marketing"', result: 'Una lista de 5 puntos obvios que ya conocías.' },
-                  { prompt: '"ayúdame con mis redes sociales"', result: '3 reescrituras después, sigues sin el contenido.' },
+                  { prompt: '"escribe un email de ventas"', result: 'Texto genérico y corporativo que nadie va a leer.', bad: true },
+                  { prompt: '"dame una estrategia de marketing"', result: 'Una lista de 5 puntos obvios que ya conocías.', bad: true },
+                  { prompt: '"ayúdame con mis redes sociales"', result: '3 reescrituras después, sigues sin el contenido.', bad: true },
                 ].map((item, i) => (
                   <div key={i} style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                     <div style={{ padding: '12px 16px', backgroundColor: BG_WARM, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
@@ -587,187 +558,26 @@ const Ebook: React.FC = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
 
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            DEMOSTRACIÓN — antes vs después
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="text-center mb-14">
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe',
-                borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              }}>
-                <Sparkles size={11} style={{ color: '#6366f1' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>La demostración</span>
-              </div>
-
-              <h2 style={{
-                fontFamily: '"Bricolage Grotesque", sans-serif',
-                fontWeight: 800,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 14,
-              }}>
-                El mismo ChatGPT. Resultados completamente diferentes.
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              {/* Prompt común */}
-              <div style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.05)' }}>
                 <div style={{
-                  padding: '14px 20px',
-                  backgroundColor: '#fff3f3',
-                  borderBottom: '1px solid #fecaca',
-                  display: 'flex', alignItems: 'center', gap: 8,
+                  backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14,
+                  padding: '16px 18px', display: 'flex', alignItems: 'flex-start', gap: 10,
                 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#ef4444', flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#ef4444', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Prompt común</span>
-                </div>
-                <div style={{ padding: '20px 22px' }}>
-                  <div style={{
-                    backgroundColor: BG_WARM,
-                    border: `1px solid ${BORDER}`,
-                    borderRadius: 10,
-                    padding: '12px 16px',
-                    marginBottom: 16,
-                  }}>
-                    <p style={{ fontFamily: 'monospace', fontSize: 13, color: TEXT, lineHeight: 1.5 }}>
-                      "Hazme una estrategia para Instagram."
-                    </p>
+                  <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#dcfce7', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Check size={10} style={{ color: '#22c55e' }} strokeWidth={3} />
                   </div>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: TEXT_DIM, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Resultado:</p>
-                  <p style={{ fontSize: 14, color: TEXT_MED, lineHeight: 1.7 }}>
-                    Una respuesta genérica que podría servir para cualquiera. Publicar consistentemente. Usar hashtags. Interactuar con tu audiencia.
-                  </p>
-                </div>
-              </div>
-
-              {/* Prompt optimizado */}
-              <div style={{ backgroundColor: BG_CARD, border: '1px solid #bbf7d0', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 16px rgba(34,197,94,0.08)' }}>
-                <div style={{
-                  padding: '14px 20px',
-                  backgroundColor: '#f0fdf4',
-                  borderBottom: '1px solid #bbf7d0',
-                  display: 'flex', alignItems: 'center', gap: 8,
-                }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#22c55e', flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Prompt optimizado</span>
-                </div>
-                <div style={{ padding: '20px 22px' }}>
-                  <div style={{
-                    backgroundColor: '#f0fdf4',
-                    border: '1px solid #bbf7d0',
-                    borderRadius: 10,
-                    padding: '12px 16px',
-                    marginBottom: 16,
-                  }}>
-                    <p style={{ fontFamily: 'monospace', fontSize: 12, color: '#166534', lineHeight: 1.6 }}>
-                      "Actúa como estratega de crecimiento en Instagram. Analiza mi nicho [nicho], identifica oportunidades poco explotadas y crea un plan de contenido para 30 días enfocado en aumentar seguidores y ventas."
-                    </p>
-                  </div>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: TEXT_DIM, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Resultado:</p>
-                  <p style={{ fontSize: 14, color: TEXT_MED, lineHeight: 1.7 }}>
-                    Una respuesta específica, con calendario, formatos de contenido diferenciados y métricas para cada semana. Algo que puedes usar hoy.
+                  <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
+                    <strong>Con el prompt correcto:</strong> resultado que puedes usar en la primera respuesta. Sin "no te entendí bien, ¿puedes ser más específico?"
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Caption */}
-            <div className="text-center">
-              <p style={{
-                fontFamily: '"Bricolage Grotesque", sans-serif',
-                fontWeight: 700,
-                fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)',
-                color: TEXT,
-                letterSpacing: '-0.01em',
-              }}>
-                La diferencia no es ChatGPT.{' '}
-                <span style={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                  La diferencia es el prompt.
-                </span>
-              </p>
-            </div>
-
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            BENEFICIOS
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG }}>
-          <div className="max-w-4xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="text-center mb-14">
-              <h2 style={{
-                fontFamily: '"Bricolage Grotesque", sans-serif',
-                fontWeight: 800,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 12,
-              }}>
-                Lo que puedes hacer con esta biblioteca
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { text: 'Crear contenido más rápido', desc: 'Posts, guiones y carruseles en minutos, no horas.' },
-                { text: 'Escribir mejores textos', desc: 'Emails, artículos y propuestas que realmente se leen.' },
-                { text: 'Aprender temas complejos fácilmente', desc: 'Explicaciones simples, resúmenes y tutorías personalizadas.' },
-                { text: 'Organizar proyectos y tareas', desc: 'Planificación, priorización y seguimiento sin fricción.' },
-                { text: 'Generar ideas cuando te quedas en blanco', desc: 'Brainstorming estructurado para cualquier situación.' },
-                { text: 'Obtener respuestas más precisas', desc: 'Sin vaguedad, sin reescrituras, sin perder el tiempo.' },
-                { text: 'Ahorrar horas de prueba y error', desc: 'Los prompts ya están probados. Solo copias y usas.' },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 14,
-                    backgroundColor: BG_WARM,
-                    border: `1px solid ${BORDER}`,
-                    borderRadius: 14,
-                    padding: '18px 20px',
-                  }}
-                >
-                  <div style={{
-                    width: 24, height: 24, borderRadius: '50%',
-                    backgroundColor: '#dcfce7', border: '1px solid #86efac',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1,
-                  }}>
-                    <Check size={11} style={{ color: '#22c55e' }} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <p style={{ color: TEXT, fontWeight: 700, fontSize: 15, marginBottom: 3 }}>{item.text}</p>
-                    <p style={{ color: TEXT_MED, fontSize: 13, lineHeight: 1.6 }}>{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            QUÉ RECIBES — 6 categorías
+            QUÉ INCLUYE — Notion-style feature cards
         ══════════════════════════════════════════ */}
         <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
           <div className="max-w-6xl mx-auto px-6 sm:px-10 py-20 md:py-28">
@@ -779,7 +589,7 @@ const Ebook: React.FC = () => {
                 borderRadius: 100, padding: '4px 12px', marginBottom: 20,
               }}>
                 <Database size={11} style={{ color: '#6366f1' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>el contenido</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>El contenido</span>
               </div>
 
               <h2 style={{
@@ -790,61 +600,77 @@ const Ebook: React.FC = () => {
                 letterSpacing: '-0.02em',
                 marginBottom: 14,
               }}>
-                Dentro encontrarás más de 200 prompts listos para usar
+                No es un PDF de 200 páginas que no vas a leer.
               </h2>
               <p style={{ color: TEXT_MED, fontSize: 16, maxWidth: 500, margin: '0 auto' }}>
-                Una base de datos en Notion organizada por categoría. Llegas, buscas lo que necesitas, copias en un clic y ya está.
+                Es una base de datos en Notion. Llegas, buscas lo que necesitas, copias en un clic y lo pegas en tu IA. Así de rápido.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <FeatureCard
-                bg="#fff7ed"
-                icon={<Target size={22} style={{ color: '#f97316' }} />}
-                tag="el más usado"
-                tagColor="#f97316"
-                title="Creación de Contenido"
-                desc="Ideas, guiones, publicaciones, carruseles y estrategias. Para cuando necesitas contenido y no sabes por dónde empezar."
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <FeatureCard
                 bg="#fdf4ff"
                 icon={<Zap size={22} style={{ color: '#a855f7' }} />}
-                tag="el más pedido"
+                tag="42 prompts"
                 tagColor="#a855f7"
                 title="Productividad"
-                desc="Organización, planificación y gestión de tareas. Los lunes que tardabas 2 horas organizándote, ahora son 15 minutos."
+                desc="Planificación semanal, priorización, bloques de foco. Los lunes que tardabas 2 horas organizándote, ahora son 15 minutos."
               />
               <FeatureCard
-                bg="#eff6ff"
-                icon={<BookOpen size={22} style={{ color: '#3b82f6' }} />}
-                tag="imprescindible"
-                tagColor="#3b82f6"
-                title="Aprendizaje"
-                desc="Explicaciones simples, resúmenes y tutorías personalizadas. Para dominar cualquier tema más rápido."
+                bg="#fff7ed"
+                icon={<Target size={22} style={{ color: '#f97316' }} />}
+                tag="38 prompts"
+                tagColor="#f97316"
+                title="Copywriting"
+                desc="Posts, artículos, guiones, hilos. Sin el inicio genérico de 'Claro, con gusto te ayudo'. Directo al grano."
               />
               <FeatureCard
                 bg="#f0fdf4"
                 icon={<TrendingUp size={22} style={{ color: '#22c55e' }} />}
-                tag="actualizado"
+                tag="35 prompts"
                 tagColor="#22c55e"
-                title="Negocios"
-                desc="Marketing, ventas, investigación y estrategia. Para cuando necesitas resultados esta semana, no el mes que viene."
+                title="Marketing y Ventas"
+                desc="Estrategias de lanzamiento, copy de ads, análisis de competencia. Para cuando necesitas resultados esta semana."
+              />
+              <FeatureCard
+                bg="#eff6ff"
+                icon={<BookOpen size={22} style={{ color: '#3b82f6' }} />}
+                tag="29 prompts"
+                tagColor="#3b82f6"
+                title="Comunicación"
+                desc="Emails difíciles, negociaciones, propuestas, feedbacks incómodos. Para cuando importa cómo suenas."
+              />
+              <FeatureCard
+                bg="#fff1f2"
+                icon={<Layers size={22} style={{ color: '#f43f5e' }} />}
+                tag="27 prompts"
+                tagColor="#f43f5e"
+                title="Creatividad e Ideas"
+                desc="Brainstorming, conceptos, nombres, ideas de producto. Cuando llevas 20 minutos mirando la pantalla en blanco."
               />
               <FeatureCard
                 bg="#fefce8"
                 icon={<Star size={22} style={{ color: '#eab308' }} />}
-                tag="el que convierte"
+                tag="22 prompts"
                 tagColor="#eab308"
-                title="Escritura"
-                desc="Correos, artículos, textos persuasivos y más. Sin el inicio genérico. Directo al grano, desde la primera respuesta."
+                title="Email Profesional"
+                desc="Seguimientos, emails en frío, re-activaciones. Los que sí consiguen respuesta."
+              />
+              <FeatureCard
+                bg="#f0fdfa"
+                icon={<Gift size={22} style={{ color: '#14b8a6' }} />}
+                tag="18 prompts"
+                tagColor="#14b8a6"
+                title="Plantillas Listas"
+                desc="Los más usados, ya armados. Sin tener que adaptar nada. Copia, pega los corchetes y ya."
               />
               <FeatureCard
                 bg="#faf5ff"
                 icon={<Sparkles size={22} style={{ color: '#8b5cf6' }} />}
-                tag="favorito"
+                tag="incluido"
                 tagColor="#8b5cf6"
-                title="Creatividad"
-                desc="Lluvia de ideas, storytelling y generación de conceptos. Para cuando llevas 20 minutos mirando la pantalla en blanco."
+                title="Prompt Engineering"
+                desc="Los principios detrás de cada prompt. Para que puedas crear los tuyos cuando ninguno encaje exactamente."
               />
             </div>
 
@@ -992,7 +818,7 @@ const Ebook: React.FC = () => {
                   bg: '#f0f0ff',
                   border: '#c7d2fe',
                   accent: '#6366f1',
-                  title: 'Tu biblioteca de prompts en Notion',
+                  title: 'Biblioteca de +200 Prompts en Notion',
                   desc: 'Acceso completo al espacio. Filtros por categoría, búsqueda por caso de uso, y cada prompt listo para copiar en un clic.',
                   value: 'El acceso principal',
                 },
@@ -1044,78 +870,9 @@ const Ebook: React.FC = () => {
         </section>
 
         {/* ══════════════════════════════════════════
-            TESTIMONIOS
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG }}>
-          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="text-center mb-14">
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: '#fefce8', border: '1px solid #fde68a',
-                borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              }}>
-                <Star size={11} style={{ color: '#f59e0b' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Lo que dicen</span>
-              </div>
-
-              <h2 style={{
-                fontFamily: '"Bricolage Grotesque", sans-serif',
-                fontWeight: 800,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-              }}>
-                Lo que dicen quienes ya la usan
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {[
-                {
-                  quote: 'Ahorro horas cada semana porque ya no tengo que pensar cómo escribir los prompts.',
-                  bg: '#f0f0ff',
-                  border: '#c7d2fe',
-                  accent: '#6366f1',
-                },
-                {
-                  quote: 'Las respuestas de ChatGPT mejoraron muchísimo desde el primer día.',
-                  bg: '#f0fdf4',
-                  border: '#bbf7d0',
-                  accent: '#22c55e',
-                },
-                {
-                  quote: 'Por $10 recuperé la inversión en menos de una semana.',
-                  bg: '#fff7ed',
-                  border: '#fed7aa',
-                  accent: '#f97316',
-                },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: item.bg,
-                    border: `1px solid ${item.border}`,
-                    borderRadius: 20,
-                    padding: '28px 24px',
-                    position: 'relative',
-                  }}
-                >
-                  <Quote size={24} style={{ color: item.accent, opacity: 0.4, marginBottom: 16 }} />
-                  <p style={{ color: TEXT, fontSize: 15, lineHeight: 1.7, fontWeight: 500 }}>
-                    "{item.quote}"
-                  </p>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
             GARANTÍA
         ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
+        <section style={{ backgroundColor: BG }}>
           <div className="max-w-3xl mx-auto px-6 sm:px-10 py-20 md:py-28 text-center">
 
             <div style={{
@@ -1145,14 +902,14 @@ const Ebook: React.FC = () => {
               letterSpacing: '-0.02em',
               marginBottom: 20,
             }}>
-              Pruébala durante 7 días sin riesgo.
+              Si no es lo que esperabas, te devuelvo el dinero.
             </h2>
 
             <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.85, maxWidth: 500, margin: '0 auto 16px' }}>
-              Si no encuentras valor en la biblioteca o simplemente no era lo que esperabas, envíanos un mensaje y te devolvemos el <strong style={{ color: TEXT }}>100%</strong> del dinero.
+              Tienes 30 días. Si lo abres, lo usas y sientes que no valió la pena, me escribes y te reembolso el <strong style={{ color: TEXT }}>100%</strong>. Sin formularios raros ni emails de retención.
             </p>
             <p style={{ color: TEXT_DIM, fontSize: 14, lineHeight: 1.7, maxWidth: 440, margin: '0 auto' }}>
-              Sin preguntas. Sin complicaciones.
+              No tengo interés en quedarme con la plata de alguien que no quedó satisfecho. Si no funciona para ti, lo entiendo.
             </p>
 
           </div>
@@ -1161,7 +918,7 @@ const Ebook: React.FC = () => {
         {/* ══════════════════════════════════════════
             FAQ
         ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}>
+        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
           <div className="max-w-3xl mx-auto px-6 sm:px-10 py-20 md:py-28">
 
             <div className="text-center mb-12">
@@ -1191,6 +948,7 @@ const Ebook: React.FC = () => {
             CTA FINAL
         ══════════════════════════════════════════ */}
         <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
+          {/* Subtle gradient blobs */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
             <Blob color="radial-gradient(circle, #667eea, #764ba2)" size={500} top="-100px" left="-100px" opacity={0.18} />
             <Blob color="radial-gradient(circle, #f093fb, #f5576c)" size={400} top="50%" left="70%" opacity={0.14} />
@@ -1216,19 +974,19 @@ const Ebook: React.FC = () => {
               letterSpacing: '-0.02em',
               marginBottom: 20,
             }}>
-              Puedes seguir improvisando prompts…<br />
+              O sigues improvisando prompts,<br />
               <span style={{
                 background: 'linear-gradient(135deg, #a78bfa, #f0abfc)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                o empezar a usar los que ya funcionan.
+                o tienes 200 ya hechos.
               </span>
             </h2>
 
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: '0 auto 52px' }}>
-              Más de 200 prompts probados y listos para copiar, pegar y adaptar a tu situación. Por $10. Sin suscripción. Acceso en 2 minutos.
+              Por $10. Sin suscripción. Acceso en 2 minutos. Y si no te convence, te devuelvo el dinero.
             </p>
 
             {/* Pricing card */}
@@ -1242,7 +1000,7 @@ const Ebook: React.FC = () => {
               backdropFilter: 'blur(20px)',
             }}>
               <p style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-                acceso inmediato
+                precio de lanzamiento
               </p>
 
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
@@ -1255,12 +1013,12 @@ const Ebook: React.FC = () => {
 
               <div className="space-y-3.5 mb-10 text-left">
                 {[
-                  'Más de 200 prompts listos para usar hoy',
+                  '+200 prompts en Notion, listos para usar hoy',
                   'ChatGPT, Gemini, Claude y cualquier IA que uses',
-                  'Prompts adicionales para nichos específicos',
+                  '50 prompts adicionales por nicho específico',
                   'Guía de prompt engineering incluida',
                   'Nuevos prompts cada semana, sin costo extra',
-                  'Garantía de 7 días, sin complicaciones',
+                  'Garantía de 30 días, sin formularios',
                 ].map((item, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{
@@ -1299,19 +1057,19 @@ const Ebook: React.FC = () => {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(102,126,234,0.5)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(102,126,234,0.35)'; }}
               >
-                Quiero acceso ahora — $10
+                Quiero la biblioteca — $10
                 <ArrowRight size={17} />
               </a>
 
               <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 14, letterSpacing: '0.05em' }}>
-                Acceso en 2 minutos · Pago único · Garantía 7 días
+                Acceso en 2 minutos · Pago único · Garantía 30 días
               </p>
             </div>
 
             {/* Trust row */}
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
               {[
-                { icon: <Shield size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Garantía 7 días' },
+                { icon: <Shield size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Garantía 30 días' },
                 { icon: <Clock size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Acceso en 2 min' },
                 { icon: <Star size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Pago único' },
                 { icon: <TrendingUp size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Sin suscripción' },
