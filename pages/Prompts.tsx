@@ -14,6 +14,9 @@ const CATEGORY_SUBTITLES: Record<string, string> = {
 
 const DEFAULT_SUBTITLE = 'Prompts gratuitos y seleccionados para IA compatibles con ChatGPT, Claude, Gemini, Midjourney y los principales modelos del mercado.';
 
+// Capitaliza la primera letra para mostrar categorías (almacenadas en minúscula)
+const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const Prompts: React.FC = () => {
     const navigate = useNavigate();
     const { category: categoryParam } = useParams<{ category?: string }>();
@@ -129,51 +132,49 @@ const Prompts: React.FC = () => {
 
     return (
         <div className="bg-white text-gray-900 font-space">
-            <main className="flex flex-col items-center justify-center px-6 py-16">
-                <div className="w-full flex flex-col items-center">
 
-                    {/* ── Hero ─────────────────────────────────────────────── */}
-                    <div className="max-w-3xl w-full text-center mb-16">
-                        <h1 className="font-bold leading-tight mb-6 md:mb-8 text-[28px] md:text-[35px] uppercase transition-all">
-                            {heroTitle}
-                        </h1>
-                        <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-[14px] md:text-[15px] mb-10">
-                            {heroSubtitle}
-                        </p>
+            {/* ── Hero ─────────────────────────────────────────────────────── */}
+            <div className="px-6 pt-16 pb-10 text-center">
+                <div className="max-w-3xl mx-auto">
+                    <h1 className="font-bold leading-tight mb-6 md:mb-8 text-[28px] md:text-[35px] uppercase transition-all">
+                        {heroTitle}
+                    </h1>
+                    <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-[14px] md:text-[15px]">
+                        {heroSubtitle}
+                    </p>
+                </div>
+            </div>
 
-                        {/* Búsqueda */}
-                        <div className="max-w-xl mx-auto mb-8">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                                placeholder="Buscar un prompt..."
-                                className="w-full px-6 py-4 border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors text-sm"
-                            />
-                        </div>
+            {/* ── Barra de filtros (debajo del hero, sticky bajo el navbar) ──── */}
+            <div className="sticky top-[64px] z-40 bg-white/95 backdrop-blur-md border-y border-gray-100">
+                <div className="max-w-3xl mx-auto px-6 py-4 flex flex-col items-center gap-4">
 
-                        {/* Filtros de categoría */}
-                        <div className="flex flex-wrap justify-center gap-3">
-                            {categories.map(cat => {
-                                const active = selectedCategory === cat;
-                                return (
-                                    <button
-                                        key={cat}
-                                        onClick={() => handleCategorySelect(cat)}
-                                        className={`px-4 py-1 text-xs uppercase border border-gray-200 transition-all ${
-                                            active
-                                                ? 'bg-gray-900 text-white'
-                                                : 'hover:bg-gray-900 hover:text-white'
-                                        }`}
-                                    >
-                                        {cat === 'todas' ? 'Todo' : cat}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                    {/* Búsqueda */}
+                    <div className="relative w-full max-w-xl">
+                        <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                        </svg>
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Buscar un prompt..."
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors text-sm"
+                        />
+                    </div>
 
-                        {/* Filtro de acceso: todos / gratis / premium */}
-                        <div className="flex justify-center items-center gap-6 mt-8">
+                    {/* Categoría (select) + acceso (botones) */}
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+
+                        {/* Selector de categoría (dropdown personalizado) */}
+                        <CategorySelect
+                            categories={categories}
+                            selected={selectedCategory}
+                            onSelect={handleCategorySelect}
+                        />
+
+                        {/* Filtro de acceso: todos / gratis / premium (botones) */}
+                        <div className="flex justify-center items-center gap-5">
                             {(['todos', 'gratis', 'premium'] as const).map(tier => {
                                 const active = selectedTier === tier;
                                 return (
@@ -182,7 +183,7 @@ const Prompts: React.FC = () => {
                                         onClick={() => setSelectedTier(tier)}
                                         className={`text-[11px] uppercase tracking-widest font-bold pb-1 border-b transition-colors ${
                                             active
-                                                ? 'text-gray-900 border-gray-900'
+                                                ? 'text-brand-red border-brand-red'
                                                 : 'text-gray-400 border-transparent hover:text-gray-900'
                                         }`}
                                     >
@@ -192,6 +193,11 @@ const Prompts: React.FC = () => {
                             })}
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <main className="flex flex-col items-center px-6 pt-12 pb-16">
+                <div className="w-full flex flex-col items-center">
 
                     {/* ── Grid de prompts ──────────────────────────────────── */}
                     <div
@@ -286,6 +292,84 @@ const Prompts: React.FC = () => {
     );
 };
 
+// ── Dropdown de categoría personalizado ──────────────────────────────────────
+const CategorySelect: React.FC<{
+    categories: string[];
+    selected: string;
+    onSelect: (cat: string) => void;
+}> = ({ categories, selected, onSelect }) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const onClick = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+        document.addEventListener('mousedown', onClick);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('mousedown', onClick);
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [open]);
+
+    const label = selected === 'todas' ? 'Todas' : titleCase(selected);
+
+    return (
+        <div ref={ref} className="relative w-full sm:w-60">
+            <button
+                type="button"
+                onClick={() => setOpen(o => !o)}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                className={`w-full flex items-center justify-between bg-white border px-4 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors focus:outline-none ${
+                    open ? 'border-gray-900' : 'border-gray-200 hover:border-gray-900'
+                }`}
+            >
+                <span className="text-[9px] tracking-widest text-gray-400">Categoría</span>
+                <span className="flex items-center gap-2 text-gray-900">
+                    {label}
+                    <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                        fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </span>
+            </button>
+
+            {open && (
+                <ul
+                    role="listbox"
+                    className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.08)] max-h-72 overflow-auto py-1"
+                >
+                    {categories.map(cat => {
+                        const active = cat === selected;
+                        return (
+                            <li key={cat} role="option" aria-selected={active}>
+                                <button
+                                    type="button"
+                                    onClick={() => { onSelect(cat); setOpen(false); }}
+                                    className={`w-full flex items-center justify-between text-left px-4 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors ${
+                                        active
+                                            ? 'text-brand-red bg-gray-50'
+                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                    }`}
+                                >
+                                    {cat === 'todas' ? 'Todas' : titleCase(cat)}
+                                    {active && <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
+    );
+};
+
 // ── Card de prompt ──────────────────────────────────────────────────────────
 const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => (
     <Link
@@ -297,7 +381,7 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => (
                 {prompt.category || 'General'}
             </span>
             {prompt.is_premium && (
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-red">
                     Premium
                 </span>
             )}
