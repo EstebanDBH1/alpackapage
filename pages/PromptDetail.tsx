@@ -261,10 +261,11 @@ const PromptDetail: React.FC = () => {
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className={`transition-colors ${isSaved ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'}`}
+                        className={`flex items-center gap-2 text-xs uppercase tracking-wider font-bold transition-colors disabled:opacity-50 ${isSaved ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'}`}
                         title={isSaved ? 'Quitar de guardados' : 'Guardar prompt'}
                     >
-                        {isSaved ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
+                        {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+                        <span className="hidden sm:inline">{isSaved ? 'Guardado' : 'Guardar'}</span>
                     </button>
                 </div>
 
@@ -274,7 +275,7 @@ const PromptDetail: React.FC = () => {
                         {prompt.category || 'general'}
                     </span>
                     {prompt.is_premium && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider border border-gray-200 text-gray-500">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider border border-brand-red/30 text-brand-red">
                             <Lock size={10} /> Premium
                         </span>
                     )}
@@ -332,45 +333,54 @@ const PromptDetail: React.FC = () => {
 
                     {/* Content area */}
                     {isLocked ? (
-                        <div className="relative">
-                            {/* Blurred preview */}
-                            <div className="p-6 select-none pointer-events-none" style={{ filter: 'blur(5px)', opacity: 0.4 }}>
-                                <p className="text-gray-800 text-sm md:text-base leading-relaxed font-mono">
-                                    Actúa como un experto en [área] con más de 10 años de experiencia.
-                                    Tu objetivo es [objetivo principal] teniendo en cuenta [contexto
-                                    relevante]. Debes [instrucción 1], [instrucción 2] y asegurarte
-                                    de que el resultado cumpla con [criterio de calidad]. Responde
-                                    siempre en español y estructura tu respuesta con [formato]...
-                                </p>
+                        <div className="relative min-h-[460px]">
+                            {/* Vista previa difuminada (señuelo realista) */}
+                            <div className="absolute inset-0 p-6 select-none pointer-events-none blur-[6px] opacity-50" aria-hidden="true">
+                                <pre className="text-gray-800 text-sm leading-relaxed font-mono whitespace-pre-wrap break-words">
+{`Actúa como un experto en [área] con más de 10 años de experiencia
+demostrable. Tu objetivo principal es [objetivo], considerando en todo
+momento [contexto relevante] y las restricciones de [límites].
+
+# Rol
+Eres un especialista senior reconocido por [logro]. Hablas con
+autoridad pero sin tecnicismos innecesarios.
+
+# Tarea
+1. Analiza [entrada] e identifica [criterios clave].
+2. Desarrolla [instrucción 1] aplicando [marco / metodología].
+3. Optimiza el resultado para [métrica de éxito].
+
+# Formato de salida
+Responde siempre en español, estructurado con [formato], usando
+ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
+                                </pre>
                             </div>
 
-                            {/* Lock overlay */}
-                            <div
-                                className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
-                                style={{ background: 'linear-gradient(to bottom, rgba(249,250,251,0) 0%, rgba(249,250,251,0.9) 35%, rgba(249,250,251,1) 65%)' }}
-                            >
-                                <div className="w-14 h-14 flex items-center justify-center mb-5 border border-gray-200 bg-white">
-                                    <Lock size={22} className="text-gray-900" />
-                                </div>
-                                <h4 className="font-bold text-lg uppercase tracking-tight mb-2">
-                                    Contenido Premium
-                                </h4>
-                                <p className="text-gray-500 text-xs md:text-sm mb-7 max-w-xs leading-relaxed">
-                                    Suscríbete para acceder a este prompt y a más de 500 del archivo.
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-3">
+                            {/* Capa de vidrio esmerilado + tarjeta de bloqueo */}
+                            <div className="absolute inset-0 flex items-center justify-center p-5 bg-gradient-to-b from-white/20 via-white/75 to-white backdrop-blur-[2px]">
+                                <div className="flex flex-col items-center text-center">
+
+                                    {/* Icono */}
+                                    <div className="w-11 h-11 flex items-center justify-center mb-5 rounded-full bg-brand-red/10 text-brand-red">
+                                        <Lock size={18} />
+                                    </div>
+
+                                    <h4 className="font-bold text-lg uppercase tracking-tight mb-6">
+                                        Contenido Premium
+                                    </h4>
+
                                     <Link
                                         to="/pricing"
-                                        className="inline-flex items-center justify-center gap-2 border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 px-7 py-3 text-xs uppercase tracking-wider font-bold transition-all duration-300"
+                                        className="inline-flex items-center justify-center gap-2 border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 px-8 py-3.5 text-xs uppercase tracking-wider font-bold transition-all duration-300"
                                     >
-                                        Ver planes
+                                        Desbloquear acceso
                                         <ArrowRight size={14} />
                                     </Link>
                                     <Link
-                                        to="/login?redirect=/prompts"
-                                        className="inline-flex items-center justify-center border border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900 px-6 py-3 text-xs uppercase tracking-wider font-bold transition-all"
+                                        to={`/login?redirect=/prompts/${id}`}
+                                        className="mt-4 text-[11px] uppercase tracking-wider font-bold text-gray-400 hover:text-gray-900 transition-colors"
                                     >
-                                        Ya tengo cuenta →
+                                        Ya tengo cuenta
                                     </Link>
                                 </div>
                             </div>

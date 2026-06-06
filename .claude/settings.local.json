@@ -24,7 +24,8 @@
       "Bash(npm install *)",
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('gsap', p.dependencies.gsap\\); console.log\\('@gsap/react', p.dependencies['@gsap/react']\\);\")",
       "Bash(npm run *)",
-      "PowerShell(npm run *)"
+      "PowerShell(npm run *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\(JSON.stringify\\({...p.dependencies,...p.devDependencies},null,2\\)\\)\")"
     ]
   }
 }

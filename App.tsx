@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 import React from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -26,6 +28,30 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Transición sutil entre páginas (solo opacidad, para no romper los elementos sticky)
+const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { pathname } = useLocation();
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // Las rutas de listado/categoría de prompts comparten la misma vista:
+  // no disparamos la transición al cambiar de categoría (eso ya se anima dentro).
+  const transitionKey = React.useMemo(() => {
+    if (pathname === '/prompts' || pathname.startsWith('/prompts/categoria')) return '/prompts';
+    return pathname;
+  }, [pathname]);
+
+  useGSAP(() => {
+    const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      gsap.set(ref.current, { opacity: 1 });
+      return;
+    }
+    gsap.fromTo(ref.current, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+  }, { dependencies: [transitionKey] });
+
+  return <div ref={ref}>{children}</div>;
+};
+
 const STANDALONE_ROUTES = ['/ebook'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -39,7 +65,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen bg-brand-bg text-brand-text font-sans antialiased selection:bg-zinc-900 selection:text-white">
       <Navbar />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer />
     </div>
   );
