@@ -1,30 +1,89 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT para Tesis - Guía de Prompts Académicos</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="La guía definitiva de ChatGPT para tesis. Colección avanzada de prompts copy-paste estructurados para redactar, fundamentar y aprobar tu TFG, TFM o Tesis Doctoral sin plagio.">
+    <meta name="keywords" content="chatgpt para tesis, prompts para tesis, redactar tesis con ia, inteligencia artificial tesis, prompts academicos, turnitin bypass, redactar tfg chatgpt, prompts tfm">
+    <meta name="author" content="Alpacka.ai">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://alpackaai.xyz/chatgpt-tesis/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alpackaai.xyz/chatgpt-tesis/">
+    <meta property="og:title" content="ChatGPT para Tesis - Guía de Prompts Académicos">
+    <meta property="og:description" content="La colección definitiva de comandos avanzados y secuencias de instrucciones copy-paste para estructurar, redactar y fundamentar tu TFG, TFM o Tesis Doctoral sin plagio.">
+    <meta property="og:image" content="https://alpackaai.xyz/page-ebook-image/ebook.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://alpackaai.xyz/chatgpt-tesis/">
+    <meta property="twitter:title" content="ChatGPT para Tesis - Guía de Prompts Académicos">
+    <meta property="twitter:description" content="La colección definitiva de comandos avanzados y secuencias de instrucciones copy-paste para estructurar, redactar y fundamentar tu TFG, TFM o Tesis Doctoral sin plagio.">
+    <meta property="twitter:image" content="https://alpackaai.xyz/page-ebook-image/ebook.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="/icon/alpacka-icon.jpg">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "ChatGPT para Tesis - Guía de Prompts Académicos",
+      "image": "https://alpackaai.xyz/page-ebook-image/ebook.png",
+      "description": "La colección definitiva de comandos avanzados y secuencias de instrucciones copy-paste para estructurar, redactar y fundamentar tu TFG, TFM o Tesis Doctoral sin plagio.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Alpacka.ai"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://alpackaai.xyz/chatgpt-tesis/",
+        "priceCurrency": "EUR",
+        "price": "10.00",
+        "priceValidUntil": "2027-12-31",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "12400"
+      }
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
     <style>
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
         /* Fondo cuadriculado sutil para el Hero */
         .bg-grid-pattern {
             background-size: 24px 24px;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
         }
+
         /* Efecto de resaltado/subrayado estilo marcador */
         .highlight-underline {
             position: relative;
             z-index: 1;
         }
+
         .highlight-underline::after {
             content: "";
             position: absolute;
@@ -36,15 +95,18 @@
             z-index: -1;
             border-radius: 2px;
         }
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
     </style>
 </head>
+
 <body class="bg-white text-slate-900 antialiased tracking-tight">
 
     <header class="border-b border-slate-200 sticky top-0 bg-white/95 backdrop-blur z-50">
@@ -58,75 +120,102 @@
                     <a href="#faq" class="hover:text-slate-900 transition-colors">FAQ</a>
                 </nav>
             </div>
-            
+
             <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
-                <a href="#precio" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-xs uppercase tracking-wider">Descargar guía</a>
+                <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer"
+                    class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-xs uppercase tracking-wider">Descargar
+                    guía</a>
             </div>
 
             <div class="flex items-center md:hidden space-x-2 w-full justify-between">
                 <div class="flex items-center space-x-2">
                 </div>
                 <div class="flex items-center space-x-2">
-                    <a href="#precio" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-semibold transition-all shadow-sm text-[11px] uppercase tracking-wider">Descargar guía</a>
-                    <button id="menu-btn" class="text-slate-700 hover:text-slate-900 focus:outline-none p-1" aria-label="Abrir menú">
+                    <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer"
+                        class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-semibold transition-all shadow-sm text-[11px] uppercase tracking-wider">Descargar
+                        guía</a>
+                    <button id="menu-btn" class="text-slate-700 hover:text-slate-900 focus:outline-none p-1"
+                        aria-label="Abrir menú">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-3 shadow-inner">
+        <div id="mobile-menu"
+            class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-3 shadow-inner">
             <nav class="flex flex-col space-y-3 text-sm font-medium text-slate-600">
-                <a href="#metodo" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">El Método</a>
-                <a href="#garantia" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">Garantía Anti-Plagio</a>
-                <a href="#ejemplos" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">Ejemplos de Prompts</a>
-                <a href="#comparativa" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">Comparativa</a>
+                <a href="#metodo" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">El
+                    Método</a>
+                <a href="#garantia" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">Garantía
+                    Anti-Plagio</a>
+                <a href="#ejemplos" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">Ejemplos
+                    de Prompts</a>
+                <a href="#comparativa" onclick="toggleMenu()"
+                    class="hover:text-slate-900 transition-colors py-1">Comparativa</a>
                 <a href="#faq" onclick="toggleMenu()" class="hover:text-slate-900 transition-colors py-1">FAQ</a>
             </nav>
             <div class="pt-2 border-t border-slate-100">
-                <a href="#precio" onclick="toggleMenu()" class="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center py-2.5 rounded-lg font-semibold transition-all shadow-sm text-xs uppercase tracking-wider">Descargar guía</a>
+                <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()"
+                    class="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center py-2.5 rounded-lg font-semibold transition-all shadow-sm text-xs uppercase tracking-wider">Descargar
+                    guía</a>
             </div>
         </div>
     </header>
 
-    <section class="bg-grid-pattern bg-slate-50/40 border-b border-slate-100">
+    <main>
+        <section class="bg-grid-pattern bg-slate-50/40 border-b border-slate-100">
         <div class="max-w-4xl mx-auto text-center pt-14 pb-14 md:pt-20 md:pb-16 px-4">
-            <p class="text-[10px] md:text-xs uppercase tracking-widest font-bold text-amber-600 mb-3 md:mb-4">Guía Académica con IA - 2026</p>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-slate-950 tracking-tight mb-6 md:mb-8 leading-tight">
+            <p class="text-[10px] md:text-xs uppercase tracking-widest font-bold text-amber-600 mb-3 md:mb-4">Guía
+                Académica con IA - 2026</p>
+            <h1
+                class="text-4xl sm:text-5xl md:text-6xl font-black text-slate-950 tracking-tight mb-6 md:mb-8 leading-tight">
                 <span class="highlight-underline">ChatGPT</span> para tesis
             </h1>
-            <p class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed font-normal px-2">
-                La colección definitiva de comandos avanzados y secuencias de instrucciones copy-paste para estructurar, redactar y fundamentar tu TFG, TFM o Tesis Doctoral. Diseñada para estudiantes que quieren obligar a ChatGPT a razonar a nivel de postgrado sin cometer errores críticos.
+            <p
+                class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed font-normal px-2">
+                La colección definitiva de comandos avanzados y secuencias de instrucciones copy-paste para estructurar,
+                redactar y fundamentar tu TFG, TFM o Tesis Doctoral. Diseñada para estudiantes que quieren obligar a
+                ChatGPT a razonar a nivel de postgrado sin cometer errores críticos.
             </p>
             <div class="max-w-xs mx-auto mb-8 px-4 sm:px-0">
-                <a href="#precio" class="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center px-6 py-3.5 rounded-xl font-semibold transition shadow-md text-sm">Descargar guía</a>
+                <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer"
+                    class="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center px-6 py-3.5 rounded-xl font-semibold transition shadow-md text-sm">Descargar
+                    guía</a>
             </div>
-            <div class="text-[11px] md:text-xs text-slate-500 flex flex-wrap justify-center items-center gap-1 font-normal">
+            <div
+                class="text-[11px] md:text-xs text-slate-500 flex flex-wrap justify-center items-center gap-1 font-normal">
                 <span class="text-amber-400 text-sm md:text-lg">★★★★★</span>
                 <span><strong>4.9 / 5</strong> · más de <strong>12.400+ tesis aprobadas</strong></span>
             </div>
         </div>
     </section>
 
-    <section id="metodo" class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 my-12 md:my-16 scroll-mt-20">
+    <section id="metodo"
+        class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 my-12 md:my-16 scroll-mt-20">
         <div class="bg-slate-50 border border-slate-100 p-5 md:p-6 rounded-2xl">
             <h3 class="font-semibold text-slate-900 mb-2 text-base md:text-lg">Ingeniería de Estructuras</h3>
-            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Prompts en cadena para hilvanar capítulos, marcos metodológicos e hipótesis sólidas sin baches lógicos.</p>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Prompts en cadena para hilvanar
+                capítulos, marcos metodológicos e hipótesis sólidas sin baches lógicos.</p>
         </div>
         <div class="bg-slate-50 border border-slate-100 p-5 md:p-6 rounded-2xl">
             <h3 class="font-semibold text-slate-900 mb-2 text-base md:text-lg">Rastreo Bibliográfico Real</h3>
-            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Comandos exactos que fuerzan a la IA a buscar fuentes indexadas con DOI real y evitar alucinaciones.</p>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Comandos exactos que fuerzan a la
+                IA a buscar fuentes indexadas con DOI real y evitar alucinaciones.</p>
         </div>
         <div class="bg-slate-50 border border-slate-100 p-5 md:p-6 rounded-2xl">
             <h3 class="font-semibold text-slate-900 mb-2 text-base md:text-lg">Estilo Humano & Anti-IA</h3>
-            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Fórmulas de redacción académica que eliminan el tono robótico automático y evitan las alarmas de Turnitin.</p>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">Fórmulas de redacción académica que
+                eliminan el tono robótico automático y evitan las alarmas de Turnitin.</p>
         </div>
     </section>
 
     <div class="bg-slate-50 border-y border-slate-200 py-3 mb-12 md:mb-16 overflow-x-auto no-scrollbar">
-        <div class="max-w-5xl mx-auto px-4 flex space-x-6 text-[11px] md:text-xs font-normal text-slate-500 whitespace-nowrap">
+        <div
+            class="max-w-5xl mx-auto px-4 flex space-x-6 text-[11px] md:text-xs font-normal text-slate-500 whitespace-nowrap">
             <span class="font-bold text-slate-700 sticky left-0 bg-slate-50 pr-2">En este manual:</span>
             <a href="#sentido" class="hover:text-slate-900 transition-colors">Cuándo ayuda</a>
             <a href="#fases" class="hover:text-slate-900 transition-colors">Fases del Pack</a>
@@ -139,94 +228,126 @@
     </div>
 
     <section id="sentido" class="max-w-4xl mx-auto px-4 mb-16 md:mb-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Cuándo tiene sentido invertir en prompts profesionales para tesis</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Cuándo tiene sentido invertir en
+            prompts profesionales para tesis</h2>
         <p class="text-sm md:text-base text-slate-600 mb-6 md:mb-8 leading-relaxed font-normal">
-            Cuando un estudiante busca prompts de ChatGPT para su investigación, no quiere una lista de preguntas simples de colegio. Se enfrenta a un ecosistema complejo: necesita exprimir modelos de IA avanzados para estructurar su marco teórico, depurar metodologías o resumir papers científicos sin perder el control académico ni caer en el plagio automatizado.
+            Cuando un estudiante busca prompts de ChatGPT para su investigación, no quiere una lista de preguntas
+            simples de colegio. Se enfrenta a un ecosistema complejo: necesita exprimir modelos de IA avanzados para
+            estructurar su marco teórico, depurar metodologías o resumir papers científicos sin perder el control
+            académico ni caer en el plagio automatizado.
         </p>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-slate-200 rounded-2xl overflow-hidden mb-6">
             <div class="p-5 md:p-6 border-b md:border-b-0 md:border-r border-slate-200 bg-white">
-                <span class="text-[10px] uppercase tracking-wider font-medium text-slate-400 block mb-1.5">La situación habitual</span>
-                <p class="text-xs md:text-sm text-slate-600 font-normal">Frustración al usar prompts básicos que devuelven respuestas genéricas o inventadas.</p>
+                <span class="text-[10px] uppercase tracking-wider font-medium text-slate-400 block mb-1.5">La situación
+                    habitual</span>
+                <p class="text-xs md:text-sm text-slate-600 font-normal">Frustración al usar prompts básicos que
+                    devuelven respuestas genéricas o inventadas.</p>
             </div>
             <div class="p-5 md:p-6 border-b md:border-b-0 md:border-r border-slate-200 bg-amber-50/40">
-                <span class="text-[10px] uppercase tracking-wider font-medium text-amber-600 block mb-1.5">La solución inteligente</span>
-                <p class="text-xs md:text-sm text-slate-700 font-normal">Utilizar prompts maestros en secuencia, diseñados para inyectar rigor académico y bibliográfico estructurado.</p>
+                <span class="text-[10px] uppercase tracking-wider font-medium text-amber-600 block mb-1.5">La solución
+                    inteligente</span>
+                <p class="text-xs md:text-sm text-slate-700 font-normal">Utilizar prompts maestros en secuencia,
+                    diseñados para inyectar rigor académico y bibliográfico estructurado.</p>
             </div>
             <div class="p-5 md:p-6 bg-white">
-                <span class="text-[10px] uppercase tracking-wider font-medium text-slate-400 block mb-1.5">El resultado definitivo</span>
-                <p class="text-xs md:text-sm text-slate-600 font-normal">Desbloquear un borrador impecable, rico en fuentes reales y redactado con tu propia voz crítica.</p>
+                <span class="text-[10px] uppercase tracking-wider font-medium text-slate-400 block mb-1.5">El resultado
+                    definitivo</span>
+                <p class="text-xs md:text-sm text-slate-600 font-normal">Desbloquear un borrador impecable, rico en
+                    fuentes reales y redactado con tu propia voz crítica.</p>
             </div>
         </div>
     </section>
 
     <section id="fases" class="max-w-4xl mx-auto px-4 mb-16 md:mb-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Lo que debes saber antes de usar prompts en tu tesis</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Lo que debes saber antes de usar
+            prompts en tu tesis</h2>
         <p class="text-sm md:text-base text-slate-600 mb-6 md:mb-8 leading-relaxed font-normal">
-            Escribir con inteligencia artificial requiere estrategia. Antes de copiar cualquier orden, debes dominar tres fases clave de tu investigación para que las directrices se acoplen perfectamente al estándar que exige tu tribunal.
+            Escribir con inteligencia artificial requiere estrategia. Antes de copiar cualquier orden, debes dominar
+            tres fases clave de tu investigación para que las directrices se acoplen perfectamente al estándar que exige
+            tu tribunal.
         </p>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Fase de Concepción</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Comandos para delimitar variables de estudio, formular hipótesis y proponer índices capitulares viables.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Comandos para delimitar variables de
+                    estudio, formular hipótesis y proponer índices capitulares viables.</p>
             </div>
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Fase de Tratamiento</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Fórmulas avanzadas para cruzar referencias de autores, sintetizar literatura y armar marcos teóricos densos.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Fórmulas avanzadas para cruzar referencias
+                    de autores, sintetizar literatura y armar marcos teóricos densos.</p>
             </div>
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Fase de Blindaje</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Prompts de pulido estilístico y reescritura para neutralizar la huella digital sintética en detectores institucionales.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Prompts de pulido estilístico y
+                    reescritura para neutralizar la huella digital sintética en detectores institucionales.</p>
             </div>
         </div>
     </section>
 
     <section id="ejemplos" class="max-w-4xl mx-auto px-4 mb-16 md:mb-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Por qué este manual de prompts resuelve tu problemas</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Por qué este manual de prompts
+            resuelve tu problemas</h2>
         <p class="text-sm md:text-base text-slate-600 mb-6 md:mb-8 leading-relaxed font-normal">
-            Esta guía te ahorra meses de pruebas y errores intentando descifrar cómo hacer que ChatGPT no invente datos. Te da acceso directo a un flujo sistemático donde configuras el rol de la IA, fijas los límites metodológicos y ejecutas revisiones modulares.
+            Esta guía te ahorra meses de pruebas y errores intentando descifrar cómo hacer que ChatGPT no invente datos.
+            Te da acceso directo a un flujo sistemático donde configuras el rol de la IA, fijas los límites
+            metodológicos y ejecutas revisiones modulares.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
-                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">1.</span> Plantillas Inyectables</h4>
-                <p class="text-xs text-slate-600 font-normal">Solo rellenas los corchetes [Tema], [Metodología], [Normativa] y copias el macro-prompt en tu chat.</p>
+                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">1.</span>
+                    Plantillas Inyectables</h4>
+                <p class="text-xs text-slate-600 font-normal">Solo rellenas los corchetes [Tema], [Metodología],
+                    [Normativa] y copias el macro-prompt en tu chat.</p>
             </div>
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
-                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">2.</span> Encadenamiento Lógico</h4>
-                <p class="text-xs text-slate-600 font-normal">Aprende a usar los resultados del Prompt A para alimentar el Prompt B sin perder memoria contextual.</p>
+                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">2.</span>
+                    Encadenamiento Lógico</h4>
+                <p class="text-xs text-slate-600 font-normal">Aprende a usar los resultados del Prompt A para alimentar
+                    el Prompt B sin perder memoria contextual.</p>
             </div>
             <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
-                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">3.</span> Criterio Bajo Control</h4>
-                <p class="text-xs text-slate-600 font-normal">Los prompts están diseñados para interrogarte a ti primero, garantizando tu enfoque original.</p>
+                <h4 class="font-bold text-slate-900 mb-1.5 text-sm"><span class="text-slate-400 font-normal">3.</span>
+                    Criterio Bajo Control</h4>
+                <p class="text-xs text-slate-600 font-normal">Los prompts están diseñados para interrogarte a ti
+                    primero, garantizando tu enfoque original.</p>
             </div>
         </div>
 
         <div class="border-l-4 border-emerald-500 bg-emerald-50/50 p-4 rounded-r-2xl mb-8">
             <p class="text-xs md:text-sm text-emerald-900 font-normal">
-                <strong>Premisa Clave:</strong> Un prompt profesional no automatiza el pensamiento; fuerza a la IA a convertirse en el asistente de investigación más brillante y obediente que hayas tenido.
+                <strong>Premisa Clave:</strong> Un prompt profesional no automatiza el pensamiento; fuerza a la IA a
+                convertirse en el asistente de investigación más brillante y obediente que hayas tenido.
             </p>
         </div>
 
-        <div class="bg-slate-900 rounded-2xl p-4 shadow-xl border border-slate-800 text-white font-mono text-[10px] md:text-xs">
+        <div
+            class="bg-slate-900 rounded-2xl p-4 shadow-xl border border-slate-800 text-white font-mono text-[10px] md:text-xs">
             <div class="flex items-center space-x-2 border-b border-slate-800 pb-3 mb-3">
                 <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
                 <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
                 <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                <span class="text-slate-400 font-sans ml-2 text-[9px] md:text-xs truncate font-normal">Ingeniería de Prompts — Execution Modular</span>
+                <span class="text-slate-400 font-sans ml-2 text-[9px] md:text-xs truncate font-normal">Ingeniería de
+                    Prompts — Execution Modular</span>
             </div>
             <div class="flex flex-col md:grid md:grid-cols-4 gap-4">
-                <div class="border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-2 text-slate-500 space-y-1 font-sans text-[9px] md:text-xs">
+                <div
+                    class="border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-2 text-slate-500 space-y-1 font-sans text-[9px] md:text-xs">
                     <div class="text-amber-400 font-semibold">✓ Prompt #04: Marco</div>
                     <div>✓ Prompt #09: Redacción</div>
                     <div>✓ Prompt #14: Blindaje</div>
                     <div class="text-white font-normal pt-2">Modo Académico</div>
                 </div>
                 <div class="md:col-span-3 text-slate-300 font-sans p-2 bg-slate-800/40 rounded-lg">
-                    <p class="font-normal text-[11px] md:text-xs text-amber-400 mb-1">[Usuario]: "Actúa como un metodólogo experto..."</p>
-                    <p class="text-[10px] md:text-xs text-slate-400 mb-3">[ChatGPT]: "Entendido. Estableciendo matriz analítica según criterios APA 7..."</p>
-                    <div class="border border-slate-700 bg-slate-900 p-2 rounded text-[9px] leading-relaxed font-normal">
+                    <p class="font-normal text-[11px] md:text-xs text-amber-400 mb-1">[Usuario]: "Actúa como un
+                        metodólogo experto..."</p>
+                    <p class="text-[10px] md:text-xs text-slate-400 mb-3">[ChatGPT]: "Entendido. Estableciendo matriz
+                        analítica según criterios APA 7..."</p>
+                    <div
+                        class="border border-slate-700 bg-slate-900 p-2 rounded text-[9px] leading-relaxed font-normal">
                         <span class="text-emerald-400">[Citas verificadas indexadas en Scopus / WoS exitosamente]</span>
                     </div>
                 </div>
@@ -235,9 +356,11 @@
     </section>
 
     <section id="comparativa" class="max-w-4xl mx-auto px-4 mb-16 md:mb-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Comparativa técnica: ¿Por qué fallan las órdenes comunes?</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Comparativa técnica: ¿Por qué
+            fallan las órdenes comunes?</h2>
         <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed font-normal">
-            La diferencia entre un trabajo rechazado y uno aprobado con honores radica en cómo instruyes a la máquina. Escribir "redacta el capítulo 1" garantiza un texto genérico de inmediato. 
+            La diferencia entre un trabajo rechazado y uno aprobado con honores radica en cómo instruyes a la máquina.
+            Escribir "redacta el capítulo 1" garantiza un texto genérico de inmediato.
         </p>
 
         <div class="overflow-x-auto border border-slate-200 rounded-2xl no-scrollbar">
@@ -271,19 +394,23 @@
     </section>
 
     <section id="garantia" class="max-w-4xl mx-auto px-4 mb-16 md:mb-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Las tres reglas de oro de un prompt académico efectivo</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Las tres reglas de oro de un
+            prompt académico efectivo</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Restricción Negativa</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Prompts que prohíben explícitamente a ChatGPT usar muletillas de IA, palabras vacías o conclusiones redundantes.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Prompts que prohíben explícitamente a
+                    ChatGPT usar muletillas de IA, palabras vacías o conclusiones redundantes.</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Anclaje de Rol Cruzado</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Instrucciones para que el bot simule ser un revisor ciego de revista científica indexada, autocriticando el texto generado.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Instrucciones para que el bot simule ser
+                    un revisor ciego de revista científica indexada, autocriticando el texto generado.</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                 <h4 class="font-bold text-slate-900 mb-1.5 text-base">Inyección Bibliográfica</h4>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal">Comandos lógicos que impiden la redacción libre si antes no se han procesado textos o abstracts reales proveídos por ti.</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-normal">Comandos lógicos que impiden la redacción
+                    libre si antes no se han procesado textos o abstracts reales proveídos por ti.</p>
             </div>
         </div>
     </section>
@@ -293,36 +420,58 @@
             Descarga los Prompts que transformarán<br class="hidden md:inline"> tu manera de investigar para siempre.
         </h2>
         <div class="max-w-xs mx-auto">
-            <a href="#precio" class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-xl transition text-xs md:text-sm">Descargar guía</a>
+            <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer"
+                class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-xl transition text-xs md:text-sm">Descargar
+                guía</a>
         </div>
     </section>
 
     <section id="precio" class="bg-slate-50 border-y border-slate-200 py-12 md:py-16 px-4 scroll-mt-20">
         <div class="max-w-3xl mx-auto text-center">
-            <p class="text-[10px] md:text-xs uppercase tracking-widest font-bold text-amber-600 mb-2">Oferta de Lanzamiento Especial</p>
-            <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-6 tracking-tight">Consigue el Pack de Prompts Académicos</h2>
-            
+            <p class="text-[10px] md:text-xs uppercase tracking-widest font-bold text-amber-600 mb-2">Oferta de
+                Lanzamiento Especial</p>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-6 tracking-tight">Consigue el Pack de Prompts
+                Académicos</h2>
+
             <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-lg max-w-sm mx-auto text-left">
-                <span class="bg-amber-100 text-amber-800 text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Acceso Inmediato</span>
+                <span
+                    class="bg-amber-100 text-amber-800 text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Acceso
+                    Inmediato</span>
                 <div class="my-4 flex items-baseline">
                     <span class="text-4xl font-black text-slate-900">10 €</span>
                     <span class="text-slate-400 line-through text-xs md:text-sm ml-2 font-normal">29 €</span>
                 </div>
-                <p class="text-xs text-slate-500 mb-6 font-normal">Única inversión. Descarga digital instantánea en formato estructurado.</p>
-                
+                <p class="text-xs text-slate-500 mb-6 font-normal">Única inversión. Descarga digital instantánea en
+                    formato estructurado.</p>
+
                 <ul class="space-y-3 text-xs text-slate-700 mb-6 font-normal">
-                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 100+ Prompts de Ingeniería Inversa</li>
-                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Secuencias de bypass anti-plagio</li>
-                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Plantillas de citación APA 7 / Vancouver</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg> 100+ Prompts de Ingeniería Inversa</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg> Secuencias de bypass anti-plagio</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-emerald-500 mr-2" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg> Plantillas de citación APA 7 / Vancouver</li>
                 </ul>
 
-                <a href="#" class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-center py-3.5 rounded-xl transition shadow-md text-xs md:text-sm">Descargar guía</a>
+                <a href="https://pay.hotmart.com/A106208003B" target="_blank" rel="noopener noreferrer"
+                    class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-center py-3.5 rounded-xl transition shadow-md text-xs md:text-sm">Descargar
+                    guía</a>
             </div>
         </div>
     </section>
 
     <section id="mapa" class="max-w-4xl mx-auto px-4 py-16 md:py-20 scroll-mt-20">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2 tracking-tight">El orden correcto para aplicar las secuencias de comandos</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2 tracking-tight">El orden correcto para aplicar
+            las secuencias de comandos</h2>
         <div class="overflow-x-auto border border-slate-200 rounded-2xl no-scrollbar">
             <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
                 <thead>
@@ -361,59 +510,76 @@
     <section id="faq" class="max-w-4xl mx-auto px-4 mb-16 md:mb-24 scroll-mt-20">
         <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">Preguntas frecuentes</h2>
         <div class="space-y-2 text-xs md:text-sm border-t border-slate-200">
-            
+
             <div class="border-b border-slate-200 py-4">
-                <button onclick="toggleFAQ('faq1')" class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
+                <button onclick="toggleFAQ('faq1')"
+                    class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
                     <span>¿Son estos prompts compatibles con la versión gratuita de ChatGPT?</span>
                     <span id="icon-faq1" class="text-slate-400 text-base ml-2">+</span>
                 </button>
                 <div id="faq1" class="hidden mt-2 text-slate-600 leading-relaxed font-normal">
-                    Sí, son perfectamente compatibles tanto con la versión gratuita como con ChatGPT Plus o Team. Están optimizados usando variables lógicas que se adaptan a la memoria contextual de cualquier modelo lingüístico moderno.
+                    Sí, son perfectamente compatibles tanto con la versión gratuita como con ChatGPT Plus o Team. Están
+                    optimizados usando variables lógicas que se adaptan a la memoria contextual de cualquier modelo
+                    lingüístico moderno.
                 </div>
             </div>
 
             <div class="border-b border-slate-200 py-4">
-                <button onclick="toggleFAQ('faq2')" class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
+                <button onclick="toggleFAQ('faq2')"
+                    class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
                     <span>¿Cómo garantiza este manual que la IA no invente referencias?</span>
                     <span id="icon-faq2" class="text-slate-400 text-base ml-2">+</span>
                 </button>
                 <div id="faq2" class="hidden mt-2 text-slate-600 leading-relaxed font-normal">
-                    El manual incluye comandos con "restricciones negativas estrictas". Estos prompts bloquean por completo la capacidad de invención de la IA, obligándola a estructurar y citar únicamente los PDFs, abstracts o textos reales que tú mismo le suministres.
+                    El manual incluye comandos con "restricciones negativas estrictas". Estos prompts bloquean por
+                    completo la capacidad de invención de la IA, obligándola a estructurar y citar únicamente los PDFs,
+                    abstracts o textos reales que tú mismo le suministres.
                 </div>
             </div>
 
             <div class="border-b border-slate-200 py-4">
-                <button onclick="toggleFAQ('faq3')" class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
+                <button onclick="toggleFAQ('faq3')"
+                    class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
                     <span>¿Qué métodos de pago aceptan y cómo recibo el eBook?</span>
                     <span id="icon-faq3" class="text-slate-400 text-base ml-2">+</span>
                 </button>
                 <div id="faq3" class="hidden mt-2 text-slate-600 leading-relaxed font-normal">
-                    Aceptamos todas las tarjetas de crédito principales, PayPal y métodos de pago locales procesados de forma 100% segura. Inmediatamente después de completar el pago de 10 €, recibirás un enlace de descarga en tu correo electrónico con acceso instantáneo a los archivos.
+                    Aceptamos todas las tarjetas de crédito principales, PayPal y métodos de pago locales procesados de
+                    forma 100% segura. Inmediatamente después de completar el pago de 10 €, recibirás un enlace de
+                    descarga en tu correo electrónico con acceso instantáneo a los archivos.
                 </div>
             </div>
 
             <div class="border-b border-slate-200 py-4">
-                <button onclick="toggleFAQ('faq4')" class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
+                <button onclick="toggleFAQ('faq4')"
+                    class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
                     <span>¿Los prompts se actualizan si salen nuevos modelos de IA este año?</span>
                     <span id="icon-faq4" class="text-slate-400 text-base ml-2">+</span>
                 </button>
                 <div id="faq4" class="hidden mt-2 text-slate-600 leading-relaxed font-normal">
-                    Totalmente. Tu compra incluye actualizaciones de por vida para todas las revisiones y mejoras que hagamos al manual de prompts durante este año, asegurando que sigan siendo letales en las arquitecturas más recientes.
+                    Totalmente. Tu compra incluye actualizaciones de por vida para todas las revisiones y mejoras que
+                    hagamos al manual de prompts durante este año, asegurando que sigan siendo letales en las
+                    arquitecturas más recientes.
                 </div>
             </div>
 
             <div class="border-b border-slate-200 py-4">
-                <button onclick="toggleFAQ('faq5')" class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
+                <button onclick="toggleFAQ('faq5')"
+                    class="w-full flex justify-between items-center font-semibold text-slate-900 text-left outline-none">
                     <span>¿Hay garantía de reembolso si no me convence?</span>
                     <span id="icon-faq5" class="text-slate-400 text-base ml-2">+</span>
                 </button>
                 <div id="faq5" class="hidden mt-2 text-slate-600 leading-relaxed font-normal">
-                    Al ser un producto digital de descarga inmediata y copy-paste, no ofrecemos devoluciones genéricas. Sin embargo, si aplicas los comandos paso a paso siguiendo el manual de soporte y la IA no se ciñe a las reglas metodológicas, escríbenos y te ayudamos personalmente a calibrarlo.
+                    Al ser un producto digital de descarga inmediata y copy-paste, no ofrecemos devoluciones genéricas.
+                    Sin embargo, si aplicas los comandos paso a paso siguiendo el manual de soporte y la IA no se ciñe a
+                    las reglas metodológicas, escríbenos y te ayudamos personalmente a calibrarlo.
                 </div>
             </div>
 
         </div>
     </section>
+
+    </main>
 
     <footer class="py-8 text-center text-[11px] text-slate-400 border-t border-slate-100 font-normal">
         <p>© 2026 Todos los derechos reservados.</p>
@@ -453,4 +619,5 @@
         }
     </script>
 </body>
+
 </html>
