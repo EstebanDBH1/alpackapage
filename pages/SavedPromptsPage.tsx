@@ -18,13 +18,13 @@ const SavedPromptsPage: React.FC = () => {
     }, [navigate]);
 
     if (loading) return (
-        <div className="min-h-screen" style={{ backgroundColor: '#FAF9F5' }}>
+        <div className="min-h-screen bg-background bg-radial-glow font-space">
             <div className="max-w-3xl mx-auto px-6 pt-16 space-y-4">
-                <div className="h-4 w-20 rounded-full animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
-                <div className="h-9 w-56 rounded-xl animate-pulse" style={{ backgroundColor: '#E3DCD3' }} />
-                <div className="grid grid-cols-2 gap-3 mt-8">
+                <div className="h-4 w-20 animate-pulse rounded-full bg-card" />
+                <div className="h-9 w-56 animate-pulse rounded-xl bg-card" />
+                <div className="mt-8 grid grid-cols-2 gap-3">
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-28 rounded-xl animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
+                        <div key={i} className="h-28 animate-pulse rounded-xl bg-card" />
                     ))}
                 </div>
             </div>
@@ -32,19 +32,16 @@ const SavedPromptsPage: React.FC = () => {
     );
 
     return (
-        <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5' }}>
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow pb-24 font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+
+            <div className="relative">
             {/* Sub-nav */}
-            <div
-                className="sticky top-16 z-40 border-b backdrop-blur-md"
-                style={{ backgroundColor: 'rgba(250,249,245,0.92)', borderColor: '#E3DCD3' }}
-            >
-                <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+            <div className="sticky top-[70px] z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+                <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-6">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-colors"
-                        style={{ color: '#8B7E74' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                        className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
                     >
                         <ChevronLeft size={14} />
                         volver
@@ -52,10 +49,7 @@ const SavedPromptsPage: React.FC = () => {
 
                     <Link
                         to="/dashboard"
-                        className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-widest uppercase transition-colors"
-                        style={{ color: '#8B7E74' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                        className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
                     >
                         <LayoutDashboard size={13} />
                         dashboard
@@ -65,14 +59,14 @@ const SavedPromptsPage: React.FC = () => {
 
             {/* Header */}
             <div className="max-w-3xl mx-auto px-6 pt-12 pb-8">
-                <p className="font-mono text-[11px] tracking-[0.18em] uppercase mb-4 flex items-center gap-2" style={{ color: '#8B7E74' }}>
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <p className="mb-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
                     tu colección
                 </p>
-                <h1 className="font-display font-bold leading-tight" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: '#1D1B18' }}>
+                <h1 className="text-4xl font-medium leading-tight tracking-tight text-foreground sm:text-5xl">
                     Prompts guardados
                 </h1>
-                <p className="text-base mt-3" style={{ color: '#8B7E74' }}>
+                <p className="mt-3 text-base text-muted-foreground">
                     Todos los prompts que marcaste como favoritos.
                 </p>
             </div>
@@ -80,6 +74,7 @@ const SavedPromptsPage: React.FC = () => {
             {/* Content */}
             <div className="max-w-3xl mx-auto px-6">
                 <SavedPrompts userId={user.id} />
+            </div>
             </div>
         </div>
     );

@@ -74,51 +74,55 @@ const PaymentSuccess: React.FC = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4 py-20">
-            <div className="max-w-lg w-full">
+        <div className="relative flex min-h-screen items-center justify-center overflow-x-clip bg-background bg-radial-glow px-4 py-20 font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+
+            <div className="relative w-full max-w-lg">
+                <div className="absolute -inset-10 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
+
                 {/* Card principal */}
-                <div className="bg-white border border-zinc-200 rounded-[32px] p-10 shadow-sm text-center">
+                <div className="rounded-3xl border border-primary/30 bg-card p-10 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)]">
 
                     {/* Icono animado */}
-                    <div className="flex justify-center mb-8">
+                    <div className="mb-8 flex justify-center">
                         <div className="relative">
-                            <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center">
-                                <CheckCircle size={36} className="text-white" strokeWidth={2} />
+                            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)]">
+                                <CheckCircle size={36} className="text-primary-foreground" strokeWidth={2} />
                             </div>
-                            <span className="absolute inset-0 rounded-full bg-zinc-900 animate-ping opacity-10" />
+                            <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-10" />
                         </div>
                     </div>
 
                     {/* Título */}
-                    <h1 className="text-3xl font-black tracking-tight text-zinc-900 mb-3 lowercase">
-                        ¡ya eres premium!
+                    <h1 className="mb-3 text-3xl font-medium tracking-tight text-foreground">
+                        ¡Ya eres premium!
                     </h1>
-                    <p className="text-zinc-500 text-sm leading-relaxed mb-8 lowercase">
-                        tu suscripción está activa. bienvenido al banco de prompts más completo en español.
+                    <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
+                        Tu suscripción está activa. Bienvenido al banco de prompts más completo en español.
                     </p>
 
                     {/* Estado de verificación */}
                     {isVerifying && (
-                        <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 mb-6 font-mono">
+                        <div className="mb-6 flex items-center justify-center gap-2 font-mono text-xs text-muted-foreground">
                             <Loader2 size={12} className="animate-spin" />
                             verificando suscripción...
                         </div>
                     )}
                     {!isVerifying && isConfirmed && (
-                        <div className="flex items-center justify-center gap-2 text-xs text-emerald-600 mb-6 font-mono bg-emerald-50 rounded-xl py-2 px-4">
+                        <div className="mx-auto mb-6 flex w-fit items-center justify-center gap-2 rounded-full border border-accent/40 bg-secondary px-4 py-2 font-mono text-xs text-accent">
                             <CheckCircle size={12} />
                             suscripción confirmada
                         </div>
                     )}
 
                     {/* Perks */}
-                    <ul className="space-y-3 mb-10 text-left">
+                    <ul className="mb-10 space-y-3 text-left">
                         {perks.map(({ icon: Icon, text }, i) => (
-                            <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
-                                <div className="w-8 h-8 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-center shrink-0">
-                                    <Icon size={14} className="text-zinc-900" />
+                            <li key={i} className="flex items-center gap-3 text-sm text-foreground/90">
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-secondary">
+                                    <Icon size={14} className="text-accent" />
                                 </div>
-                                <span className="font-medium lowercase">{text}</span>
+                                <span className="font-medium">{text}</span>
                             </li>
                         ))}
                     </ul>
@@ -126,20 +130,20 @@ const PaymentSuccess: React.FC = () => {
                     {/* Botón CTA */}
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="w-full bg-zinc-900 text-white py-4 rounded-2xl font-bold text-sm hover:bg-zinc-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                        className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 active:scale-[0.98]"
                     >
                         Ir al Dashboard <ArrowRight size={16} />
                     </button>
 
                     {/* Countdown */}
-                    <p className="text-xs text-zinc-400 mt-5 font-mono">
-                        redirigiendo en <span className="font-bold text-zinc-600">{countdown}s</span>...
+                    <p className="mt-5 font-mono text-xs text-muted-foreground">
+                        redirigiendo en <span className="font-bold text-foreground">{countdown}s</span>...
                     </p>
                 </div>
 
-                <p className="text-center text-xs text-zinc-400 mt-6 font-mono lowercase">
-                    ¿algún problema? escríbenos a{' '}
-                    <a href="mailto:soporte@alpackaai.xyz" className="underline hover:text-zinc-600 transition-colors">
+                <p className="mt-6 text-center font-mono text-xs text-muted-foreground">
+                    ¿Algún problema? Escríbenos a{' '}
+                    <a href="mailto:soporte@alpackaai.xyz" className="underline transition-colors hover:text-foreground">
                         soporte@alpackaai.xyz
                     </a>
                 </p>

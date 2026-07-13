@@ -114,22 +114,22 @@ const Dashboard: React.FC = () => {
 
     // ── Loading skeleton ─────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="min-h-screen pb-24" style={{ backgroundColor: '#FAF9F5' }}>
-            <div className="border-b" style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}>
+        <div className="min-h-screen bg-background bg-radial-glow pb-24 font-space">
+            <div className="border-b border-border/60">
                 <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
-                    <div className="h-8 w-40 rounded-xl animate-pulse mb-2" style={{ backgroundColor: '#F0EAE1' }} />
-                    <div className="h-4 w-28 rounded-lg animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
+                    <div className="mb-2 h-8 w-40 animate-pulse rounded-xl bg-card" />
+                    <div className="h-4 w-28 animate-pulse rounded-lg bg-card" />
                 </div>
             </div>
             <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     <div className="space-y-4">
-                        <div className="h-52 rounded-2xl animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
-                        <div className="h-40 rounded-2xl animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
+                        <div className="h-52 animate-pulse rounded-2xl bg-card" />
+                        <div className="h-40 animate-pulse rounded-2xl bg-card" />
                     </div>
                     <div className="lg:col-span-2 space-y-4">
-                        <div className="h-72 rounded-2xl animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
-                        <div className="h-52 rounded-2xl animate-pulse" style={{ backgroundColor: '#F0EAE1' }} />
+                        <div className="h-72 animate-pulse rounded-2xl bg-card" />
+                        <div className="h-52 animate-pulse rounded-2xl bg-card" />
                     </div>
                 </div>
             </div>
@@ -137,26 +137,25 @@ const Dashboard: React.FC = () => {
     );
 
     return (
-        <div className="min-h-screen pb-20" style={{ backgroundColor: '#FAF9F5' }}>
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow pb-20 font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
 
+            <div className="relative">
             {/* ── Page header ─────────────────────────────────────────────────── */}
-            <div className="border-b" style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}>
+            <div className="border-b border-border/60">
                 <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8 md:py-10">
                     <div className="flex items-center justify-between gap-4">
 
                         <div className="flex items-center gap-4">
                             {/* Avatar */}
-                            <div
-                                className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-bold text-base flex-shrink-0"
-                                style={{ backgroundColor: '#1A1410', color: 'rgba(255,255,255,0.7)' }}
-                            >
+                            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-secondary text-base font-medium text-foreground">
                                 {initials}
                             </div>
                             <div>
-                                <h1 className="font-display font-semibold text-xl md:text-2xl leading-tight" style={{ color: '#1D1B18' }}>
+                                <h1 className="text-xl font-medium leading-tight tracking-tight text-foreground md:text-2xl">
                                     Hola, {firstName}
                                 </h1>
-                                <p className="text-sm mt-0.5" style={{ color: '#8B7E74' }}>
+                                <p className="mt-0.5 text-sm text-muted-foreground">
                                     Gestiona tu acceso y suscripción
                                 </p>
                             </div>
@@ -164,16 +163,13 @@ const Dashboard: React.FC = () => {
 
                         {/* Status badge */}
                         <span
-                            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-full font-mono text-[11px] font-bold tracking-wider flex-shrink-0"
-                            style={isActive
-                                ? { backgroundColor: 'rgba(34,197,94,0.08)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.2)' }
-                                : { backgroundColor: '#F0EAE1', color: '#8B7E74', border: '1px solid #E3DCD3' }
-                            }
+                            className={`hidden flex-shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[11px] uppercase tracking-[0.2em] sm:inline-flex ${
+                                isActive
+                                    ? 'border-accent/40 bg-secondary text-accent'
+                                    : 'border-border/60 bg-card text-muted-foreground'
+                            }`}
                         >
-                            <span
-                                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: isActive ? '#22c55e' : '#C8BEB5' }}
-                            />
+                            <span className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${isActive ? 'bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]' : 'bg-muted-foreground/50'}`} />
                             {isActive ? 'premium activo' : 'sin suscripción'}
                         </span>
                     </div>
@@ -188,36 +184,33 @@ const Dashboard: React.FC = () => {
                     <div className="space-y-4">
 
                         {/* Membership card */}
-                        <div
-                            className="rounded-2xl p-7 relative overflow-hidden"
-                            style={{ backgroundColor: '#1A1410' }}
-                        >
+                        <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-card p-7 shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
                             <div
-                                className="absolute inset-0 pointer-events-none opacity-[0.04]"
-                                style={{ backgroundImage: 'radial-gradient(circle, #C96A3C 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+                                className="pointer-events-none absolute inset-0 opacity-[0.05]"
+                                style={{ backgroundImage: 'radial-gradient(circle, oklch(0.72 0.16 40) 1px, transparent 1px)', backgroundSize: '20px 20px' }}
                             />
                             <div className="relative z-10">
-                                <div className="flex justify-between items-start mb-8">
-                                    <span className="font-display font-semibold text-base" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                                <div className="mb-8 flex items-start justify-between">
+                                    <span className="text-base font-medium text-muted-foreground/60">
                                         alpacka.ai
                                     </span>
                                     <span
-                                        className="font-mono text-[9px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase"
-                                        style={isActive
-                                            ? { backgroundColor: 'rgba(201,106,60,0.15)', color: '#C96A3C', border: '1px solid rgba(201,106,60,0.2)' }
-                                            : { backgroundColor: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.06)' }
-                                        }
+                                        className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.2em] ${
+                                            isActive
+                                                ? 'border-accent/40 bg-secondary text-accent'
+                                                : 'border-border/60 bg-secondary text-muted-foreground'
+                                        }`}
                                     >
                                         {isActive ? '★ premium' : 'free'}
                                     </span>
                                 </div>
 
-                                <p className="font-mono text-[10px] tracking-widest uppercase mb-1" style={{ color: '#3D352E' }}>miembro</p>
-                                <p className="font-semibold text-sm mb-6 truncate" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">miembro</p>
+                                <p className="mb-6 truncate text-sm font-medium text-foreground/90">
                                     {user?.user_metadata?.full_name || user?.email}
                                 </p>
 
-                                <div className="flex justify-between font-mono text-[10px]" style={{ color: '#3D352E' }}>
+                                <div className="flex justify-between font-mono text-[10px] text-muted-foreground/60">
                                     <span>#{user?.id.slice(0, 8)}</span>
                                     <span>{new Date(user?.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' })}</span>
                                 </div>
@@ -225,40 +218,25 @@ const Dashboard: React.FC = () => {
                         </div>
 
                         {/* Profile card */}
-                        <div
-                            className="rounded-2xl p-6 border"
-                            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
-                        >
-                            <h3
-                                className="font-mono text-[10px] font-bold uppercase tracking-widest mb-5 flex items-center gap-2"
-                                style={{ color: '#8B7E74' }}
-                            >
+                        <div className="rounded-2xl border border-border/70 bg-card p-6">
+                            <h3 className="mb-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                                 <User size={12} /> perfil
                             </h3>
 
-                            <div className="space-y-4 mb-6">
+                            <div className="mb-6 space-y-4">
                                 <div>
-                                    <p className="font-mono text-[10px] tracking-widest uppercase mb-1" style={{ color: '#C8BEB5' }}>email</p>
-                                    <p className="text-sm font-medium break-all" style={{ color: '#1D1B18' }}>{user?.email}</p>
+                                    <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">email</p>
+                                    <p className="break-all text-sm font-medium text-foreground">{user?.email}</p>
                                 </div>
                                 <div>
-                                    <p className="font-mono text-[10px] tracking-widest uppercase mb-1" style={{ color: '#C8BEB5' }}>proveedor</p>
-                                    <p className="text-sm" style={{ color: '#8B7E74' }}>Google OAuth</p>
+                                    <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">proveedor</p>
+                                    <p className="text-sm text-muted-foreground">Google OAuth</p>
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleLogout}
-                                className="w-full py-2.5 text-sm font-medium rounded-xl border transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5"
-                                style={{ borderColor: '#E3DCD3', color: '#8B7E74', backgroundColor: 'transparent' }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
-                                    (e.currentTarget as HTMLElement).style.color = '#C96A3C';
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
-                                    (e.currentTarget as HTMLElement).style.color = '#8B7E74';
-                                }}
+                                className="flex w-full items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium text-muted-foreground transition hover:border-accent/50 hover:text-accent"
                             >
                                 <LogOut size={13} /> Cerrar sesión
                             </button>
@@ -269,73 +247,61 @@ const Dashboard: React.FC = () => {
                     <div className="lg:col-span-2 space-y-5">
 
                         {/* Subscription card */}
-                        <div
-                            className="rounded-2xl p-7 md:p-8 border"
-                            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
-                        >
+                        <div className="rounded-2xl border border-border/70 bg-card p-7 md:p-8">
                             {/* Header row */}
-                            <div
-                                className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-7 pb-7 gap-4"
-                                style={{ borderBottom: '1px solid #F0EAE1' }}
-                            >
+                            <div className="mb-7 flex flex-col items-start justify-between gap-4 border-b border-border/60 pb-7 sm:flex-row sm:items-center">
                                 <div>
-                                    <h2 className="font-display font-semibold text-lg mb-1" style={{ color: '#1D1B18' }}>
+                                    <h2 className="mb-1 text-lg font-medium tracking-tight text-foreground">
                                         Tu suscripción
                                     </h2>
-                                    <p className="text-sm" style={{ color: '#8B7E74' }}>
+                                    <p className="text-sm text-muted-foreground">
                                         {isActive ? 'Gestiona tu facturación y estado.' : 'No tienes una suscripción activa.'}
                                     </p>
                                 </div>
                                 {isActive && (
-                                    <div
-                                        className="flex items-baseline gap-1 px-4 py-2 rounded-xl flex-shrink-0"
-                                        style={{ backgroundColor: '#FAF9F5', border: '1px solid #E3DCD3' }}
-                                    >
-                                        <span className="font-display font-bold text-2xl leading-none" style={{ color: '#1D1B18' }}>$4</span>
-                                        <span className="font-mono text-[10px]" style={{ color: '#8B7E74' }}>/mes</span>
+                                    <div className="flex flex-shrink-0 items-baseline gap-1 rounded-xl border border-border/60 bg-secondary px-4 py-2">
+                                        <span className="text-2xl font-medium leading-none text-foreground">$4</span>
+                                        <span className="font-mono text-[10px] text-muted-foreground">/mes</span>
                                     </div>
                                 )}
                             </div>
 
                             {/* Info grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-7">
+                            <div className="mb-7 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
-                                    <p className="font-mono text-[10px] tracking-widest uppercase mb-2" style={{ color: '#C8BEB5' }}>
+                                    <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
                                         próxima factura
                                     </p>
-                                    <div className="flex items-center gap-2 font-semibold text-sm" style={{ color: '#1D1B18' }}>
-                                        <Clock size={13} style={{ color: '#8B7E74' }} />
+                                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                        <Clock size={13} className="text-muted-foreground" />
                                         {isActive && subscription?.current_period_end
                                             ? new Date(subscription.current_period_end).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
                                             : '—'}
                                     </div>
                                     {isActive && !subscription?.cancel_at_period_end && (
-                                        <p className="text-xs mt-1.5" style={{ color: '#8B7E74' }}>Renovación automática.</p>
+                                        <p className="mt-1.5 text-xs text-muted-foreground">Renovación automática.</p>
                                     )}
                                 </div>
                                 <div>
-                                    <p className="font-mono text-[10px] tracking-widest uppercase mb-2" style={{ color: '#C8BEB5' }}>
+                                    <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
                                         método de pago
                                     </p>
-                                    <div className="flex items-center gap-2 font-semibold text-sm" style={{ color: '#1D1B18' }}>
-                                        <CreditCard size={13} style={{ color: '#8B7E74' }} />
+                                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                        <CreditCard size={13} className="text-muted-foreground" />
                                         {isActive ? 'Paddle' : '—'}
                                     </div>
-                                    <p className="text-xs mt-1.5" style={{ color: '#8B7E74' }}>Checkout seguro encriptado</p>
+                                    <p className="mt-1.5 text-xs text-muted-foreground">Checkout seguro encriptado</p>
                                 </div>
                             </div>
 
                             {/* Actions */}
-                            <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="flex flex-col gap-3 sm:flex-row">
                                 {isActive ? (
                                     <>
                                         <button
                                             onClick={handleManageSubscription}
                                             disabled={updating}
-                                            className="flex-1 py-3 font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 hover:-translate-y-0.5"
-                                            style={{ backgroundColor: '#1A1410', color: 'white' }}
-                                            onMouseEnter={e => !updating && ((e.currentTarget as HTMLElement).style.backgroundColor = '#2D2520')}
-                                            onMouseLeave={e => !updating && ((e.currentTarget as HTMLElement).style.backgroundColor = '#1A1410')}
+                                            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
                                         >
                                             <Settings size={13} />
                                             {updating ? 'procesando...' : 'gestionar suscripción'}
@@ -343,10 +309,7 @@ const Dashboard: React.FC = () => {
                                         <button
                                             onClick={handleCancelSubscription}
                                             disabled={updating}
-                                            className="flex-1 py-3 font-semibold text-sm rounded-xl border transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                                            style={{ backgroundColor: 'white', borderColor: '#FCA5A5', color: '#ef4444' }}
-                                            onMouseEnter={e => !updating && ((e.currentTarget as HTMLElement).style.backgroundColor = '#fef2f2')}
-                                            onMouseLeave={e => !updating && ((e.currentTarget as HTMLElement).style.backgroundColor = 'white')}
+                                            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-accent/40 py-3 text-sm font-medium text-accent transition hover:bg-accent/10 disabled:opacity-50"
                                         >
                                             <AlertTriangle size={13} />
                                             {updating ? 'procesando...' : 'cancelar'}
@@ -355,10 +318,7 @@ const Dashboard: React.FC = () => {
                                 ) : (
                                     <button
                                         onClick={() => navigate('/pricing')}
-                                        className="flex-1 py-3 font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5"
-                                        style={{ backgroundColor: '#C96A3C', color: 'white' }}
-                                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#AF5A30')}
-                                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
+                                        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
                                     >
                                         <Zap size={13} fill="currentColor" />
                                         Suscribirse ahora
@@ -369,54 +329,45 @@ const Dashboard: React.FC = () => {
 
                             {/* Cancellation warning */}
                             {subscription?.cancel_at_period_end && (
-                                <div
-                                    className="mt-5 p-4 rounded-xl text-sm flex items-start gap-3"
-                                    style={{ backgroundColor: '#fffbeb', border: '1px solid #fde68a', color: '#b45309' }}
-                                >
-                                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
+                                <div className="mt-5 flex items-start gap-3 rounded-xl border border-accent/40 bg-secondary p-4 text-sm text-foreground/90">
+                                    <AlertTriangle size={14} className="mt-0.5 flex-shrink-0 text-accent" />
                                     <p>
                                         Cancelación programada. Mantendrás el acceso hasta{' '}
-                                        <strong>{new Date(subscription.current_period_end!).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</strong>.
+                                        <strong className="font-medium text-foreground">{new Date(subscription.current_period_end!).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</strong>.
                                     </p>
                                 </div>
                             )}
                         </div>
 
                         {/* ── Saved prompts preview ──────────────────────────── */}
-                        <div
-                            className="rounded-2xl p-7 md:p-8 border"
-                            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
-                        >
+                        <div className="rounded-2xl border border-border/70 bg-card p-7 md:p-8">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-display font-semibold text-lg" style={{ color: '#1D1B18' }}>
+                                <h3 className="text-lg font-medium tracking-tight text-foreground">
                                     Prompts guardados
                                 </h3>
                                 <Link
                                     to="/guardados"
-                                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest transition-all hover:-translate-y-0.5"
-                                    style={{ color: '#C96A3C' }}
+                                    className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-accent transition hover:opacity-80"
                                 >
                                     ver todos <ArrowRight size={12} />
                                 </Link>
                             </div>
-                            <p className="text-sm mt-2" style={{ color: '#8B7E74' }}>
+                            <p className="mt-2 text-sm text-muted-foreground">
                                 Accede a tu colección completa de prompts favoritos.
                             </p>
                         </div>
 
                         {/* Billing history — coming soon */}
-                        <div
-                            className="rounded-2xl p-6 border"
-                            style={{ backgroundColor: 'white', borderColor: '#E3DCD3', opacity: 0.4, pointerEvents: 'none' }}
-                        >
-                            <h3 className="font-mono text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: '#8B7E74' }}>
+                        <div className="pointer-events-none rounded-2xl border border-border/70 bg-card p-6 opacity-40">
+                            <h3 className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
                                 <FileText size={12} /> historial de facturas
-                                <span className="font-normal ml-1" style={{ color: '#C8BEB5' }}>— próximamente</span>
+                                <span className="ml-1 font-normal text-muted-foreground/60">— próximamente</span>
                             </h3>
                         </div>
 
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     );

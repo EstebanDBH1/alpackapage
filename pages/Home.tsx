@@ -59,6 +59,19 @@ const FaqItem: React.FC<{ question: string; answer: string }> = ({ question, ans
   </details>
 );
 
+const AI_TOOLS = [
+  'ChatGPT',
+  'Claude',
+  'Gemini',
+  'Grok',
+  'Copilot',
+  'Perplexity',
+  'Mistral',
+  'DeepSeek',
+  'Llama',
+  'Qwen',
+];
+
 const CATEGORIES = [
   { icon: <Megaphone size={20} />, title: 'Marketing y ventas', desc: 'Anuncios, emails y ofertas que convierten visitas en clientes.' },
   { icon: <Share2 size={20} />, title: 'Redes sociales', desc: 'Hooks, guiones y calendarios de contenido que retienen la atención.' },
@@ -121,22 +134,26 @@ const Home: React.FC = () => {
             </p>
           </section>
 
-          {/* ============ BARRA DE VALOR ============ */}
-          <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-8 md:pb-24">
-            <div className="grid grid-cols-2 divide-border/60 rounded-2xl border border-border/60 bg-card/60 backdrop-blur md:grid-cols-4 md:divide-x">
-              {[
-                { value: '+1.000', label: 'prompts probados' },
-                { value: '+10', label: 'categorías' },
-                { value: '4 USD', label: 'al mes', highlight: true },
-                { value: '∞', label: 'actualizaciones incluidas' },
-              ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-1 px-4 py-6 text-center">
-                  <span className={`text-2xl font-medium sm:text-3xl ${stat.highlight ? 'text-accent' : 'text-foreground'}`}>
-                    {stat.value}
-                  </span>
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{stat.label}</span>
-                </div>
-              ))}
+          {/* ============ MARQUEE DE COMPATIBILIDAD ============ */}
+          <section className="pb-20 md:pb-24">
+            <p className="mb-8 text-center text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+              Compatible con las principales IA
+            </p>
+            <div className="marquee-mask overflow-hidden">
+              <div className="animate-marquee flex w-max">
+                {[0, 1].map((copy) => (
+                  <div key={copy} className="flex items-center" aria-hidden={copy === 1}>
+                    {AI_TOOLS.map((tool) => (
+                      <span key={tool} className="flex items-center">
+                        <span className="whitespace-nowrap px-8 text-xl font-medium text-foreground/80 sm:px-10 sm:text-2xl">
+                          {tool}
+                        </span>
+                        <span className="text-sm text-accent">✦</span>
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 

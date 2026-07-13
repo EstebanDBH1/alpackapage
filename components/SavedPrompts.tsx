@@ -31,22 +31,16 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
     }, [userId]);
 
     return (
-        <div
-            className="rounded-2xl p-7 md:p-8 border"
-            style={{ backgroundColor: 'white', borderColor: '#E3DCD3' }}
-        >
+        <div className="rounded-2xl border border-border/70 bg-card p-7 md:p-8">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Bookmark size={14} style={{ color: '#8B7E74' }} />
-                    <h3 className="font-display font-semibold text-lg" style={{ color: '#1D1B18' }}>
+                    <Bookmark size={14} className="text-muted-foreground" />
+                    <h3 className="text-lg font-medium tracking-tight text-foreground">
                         Prompts guardados
                     </h3>
                     {!loading && savedPrompts.length > 0 && (
-                        <span
-                            className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: '#F0EAE1', color: '#8B7E74' }}
-                        >
+                        <span className="rounded-full bg-secondary px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
                             {savedPrompts.length}
                         </span>
                     )}
@@ -54,10 +48,7 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
                 {!loading && savedPrompts.length > 0 && (
                     <Link
                         to="/prompts"
-                        className="font-mono text-[10px] font-bold uppercase tracking-widest transition-colors"
-                        style={{ color: '#8B7E74' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#C96A3C')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8B7E74')}
+                        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-accent"
                     >
                         explorar más →
                     </Link>
@@ -66,20 +57,16 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
 
             {/* Loading skeleton */}
             {loading && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {[1, 2, 3, 4].map(i => (
-                        <div
-                            key={i}
-                            className="h-24 rounded-xl animate-pulse"
-                            style={{ backgroundColor: '#F0EAE1' }}
-                        />
+                        <div key={i} className="h-24 animate-pulse rounded-xl bg-secondary" />
                     ))}
                 </div>
             )}
 
             {/* Cards */}
             {!loading && savedPrompts.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {savedPrompts.map(item => {
                         const cat = item.prompts?.category?.toLowerCase() ?? '';
                         const emoji = CATEGORY_EMOJIS[cat] ?? '•';
@@ -87,49 +74,28 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
                             <Link
                                 key={item.id}
                                 to={`/prompts/${item.prompts.id}`}
-                                className="group flex flex-col rounded-xl p-4 border transition-all duration-150 hover:-translate-y-0.5"
-                                style={{ borderColor: '#E3DCD3', backgroundColor: '#FAF9F5' }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLElement).style.borderColor = '#C96A3C';
-                                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(201,106,60,0.08)';
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLElement).style.borderColor = '#E3DCD3';
-                                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                                }}
+                                className="group flex flex-col rounded-xl border border-border/60 bg-secondary/40 p-4 transition hover:border-primary/40"
                             >
                                 {/* Top row */}
-                                <div className="flex items-center justify-between mb-3">
-                                    <span
-                                        className="font-mono text-[9px] uppercase tracking-widest px-2 py-1 rounded-md"
-                                        style={{ backgroundColor: 'white', color: '#8B7E74', border: '1px solid #E3DCD3' }}
-                                    >
+                                <div className="mb-3 flex items-center justify-between">
+                                    <span className="rounded-md border border-border/50 bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
                                         {emoji} {item.prompts.category || 'general'}
                                     </span>
                                     {item.prompts.is_premium && (
-                                        <span
-                                            className="font-mono text-[9px] font-bold flex items-center gap-1"
-                                            style={{ color: '#C96A3C' }}
-                                        >
+                                        <span className="flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent">
                                             <Lock size={8} /> premium
                                         </span>
                                     )}
                                 </div>
 
                                 {/* Title */}
-                                <h4
-                                    className="font-display font-semibold text-sm leading-snug line-clamp-2 flex-1 mb-3"
-                                    style={{ color: '#1D1B18' }}
-                                >
+                                <h4 className="mb-3 flex-1 text-sm font-medium leading-snug text-foreground line-clamp-2">
                                     {item.prompts.title}
                                 </h4>
 
                                 {/* Footer */}
                                 <div className="flex justify-end">
-                                    <span
-                                        className="font-mono text-[10px] font-bold group-hover:translate-x-1 transition-transform"
-                                        style={{ color: '#C96A3C' }}
-                                    >
+                                    <span className="font-mono text-[10px] text-accent transition-transform group-hover:translate-x-1">
                                         abrir →
                                     </span>
                                 </div>
@@ -141,28 +107,19 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
 
             {/* Empty state */}
             {!loading && savedPrompts.length === 0 && (
-                <div
-                    className="text-center py-14 rounded-xl border border-dashed"
-                    style={{ borderColor: '#E3DCD3', backgroundColor: '#FAF9F5' }}
-                >
-                    <div
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                        style={{ backgroundColor: '#F0EAE1', border: '1px solid #E3DCD3' }}
-                    >
-                        <Sparkles size={18} style={{ color: '#C8BEB5' }} />
+                <div className="rounded-xl border border-dashed border-border/70 bg-secondary/30 py-14 text-center">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-border/60 bg-secondary">
+                        <Sparkles size={18} className="text-accent" />
                     </div>
-                    <p className="font-semibold text-sm mb-1" style={{ color: '#1D1B18' }}>
+                    <p className="mb-1 text-sm font-medium text-foreground">
                         Aún no guardaste ningún prompt
                     </p>
-                    <p className="text-xs mb-5" style={{ color: '#8B7E74' }}>
+                    <p className="mb-5 text-xs text-muted-foreground">
                         Marca prompts como favoritos desde la biblioteca.
                     </p>
                     <Link
                         to="/prompts"
-                        className="inline-flex items-center gap-1.5 font-semibold text-xs px-4 py-2.5 rounded-xl transition-all hover:-translate-y-0.5"
-                        style={{ backgroundColor: '#C96A3C', color: 'white' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#AF5A30')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = '#C96A3C')}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-xs font-medium text-primary-foreground transition hover:opacity-90"
                     >
                         Explorar biblioteca <ArrowRight size={12} />
                     </Link>
