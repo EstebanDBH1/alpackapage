@@ -52,7 +52,8 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <div ref={ref}>{children}</div>;
 };
 
-const STANDALONE_ROUTES = ['/ebook'];
+// La home es una landing autocontenida: trae su propio header y footer.
+const STANDALONE_ROUTES = ['/', '/ebook'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
@@ -63,7 +64,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-bg text-brand-text font-sans antialiased selection:bg-zinc-900 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground font-space antialiased selection:bg-primary selection:text-primary-foreground">
       <Navbar />
       <main className="flex-grow">
         <PageTransition>{children}</PageTransition>

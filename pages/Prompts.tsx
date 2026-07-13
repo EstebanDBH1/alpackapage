@@ -4,10 +4,11 @@ import { useGSAP } from '@gsap/react';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Shield, Search, ChevronDown } from 'lucide-react';
 
 const PAGE_SIZE = 12;
 
-// Subtítulos por categoría — espejo del comportamiento dinámico de la muestra
+// Subtítulos por categoría
 const CATEGORY_SUBTITLES: Record<string, string> = {
     marketing: 'Optimiza tus campañas, automatiza tu copywriting y eleva tu estrategia SEO con prompts validados por expertos en marketing digital.',
     desarrollo: 'Acelera tu flujo de trabajo, refactoriza código complejo y diseña sistemas robustos con IA siguiendo buenas prácticas.',
@@ -16,13 +17,12 @@ const CATEGORY_SUBTITLES: Record<string, string> = {
 
 const DEFAULT_SUBTITLE = 'Prompts gratuitos y seleccionados para IA compatibles con ChatGPT, Claude, Gemini, Midjourney y los principales modelos del mercado.';
 
-// Capitaliza la primera letra para mostrar categorías (almacenadas en minúscula)
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const prefersReducedMotion = () =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ── Reveal de texto por palabras (máscara que sube, estilo Anthropic) ─────────
+// ── Reveal de texto por palabras ─────────────────────────────────────────────
 const AnimatedText: React.FC<{ text: string; className?: string; delay?: number; stagger?: number }> = ({
     text, className = '', delay = 0, stagger = 0.05,
 }) => {
@@ -56,7 +56,7 @@ const AnimatedText: React.FC<{ text: string; className?: string; delay?: number;
     );
 };
 
-// ── Aparición suave (fade + ligero ascenso) ───────────────────────────────────
+// ── Aparición suave ───────────────────────────────────────────────────────────
 const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: number; replayKey?: unknown }> = ({
     children, className = '', delay = 0, replayKey,
 }) => {
@@ -160,7 +160,7 @@ const Prompts: React.FC = () => {
     const totalPages = Math.ceil(filteredPrompts.length / PAGE_SIZE);
     const paginatedPrompts = filteredPrompts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    // ── Animación de entrada del grid (reveal escalonado al cargar/cambiar) ──────
+    // ── Animación del grid ──────────────────────────────────────────────────────
     const cardsKey = useMemo(() => paginatedPrompts.map(p => p.id).join(','), [paginatedPrompts]);
 
     useGSAP(() => {
@@ -188,7 +188,7 @@ const Prompts: React.FC = () => {
         if (!scriptLoaded || !window.Paddle) return;
         setCheckoutLoading(true);
         window.Paddle.Checkout.open({
-            settings: { displayMode: 'overlay', theme: 'light', locale: 'es', successUrl: `${window.location.origin}/payment-success` },
+            settings: { displayMode: 'overlay', theme: 'dark', locale: 'es', successUrl: `${window.location.origin}/payment-success` },
             items: [{ priceId: import.meta.env.VITE_PADDLE_PRICE_ID?.trim(), quantity: 1 }],
             customer: { email: user.email },
             customData: { supabase_user_id: String(user.id) },
@@ -198,10 +198,10 @@ const Prompts: React.FC = () => {
 
     // ── Título y subtítulo dinámicos ────────────────────────────────────────────
     const heroTitle = useMemo(() => {
-        if (selectedCategory === 'todas') return 'LA BIBLIOTECA DE PROMPTS #1 DE TODO INTERNET.';
+        if (selectedCategory === 'todas') return 'La biblioteca de prompts #1 de todo internet.';
         const count = filteredPrompts.length;
-        const noun = count === 1 ? 'PROMPT SELECCIONADO' : 'PROMPTS SELECCIONADOS';
-        return `${count} ${noun} PARA ${selectedCategory.toUpperCase()}.`;
+        const noun = count === 1 ? 'prompt seleccionado' : 'prompts seleccionados';
+        return `${count} ${noun} para ${titleCase(selectedCategory)}.`;
     }, [selectedCategory, filteredPrompts.length]);
 
     const heroSubtitle = selectedCategory === 'todas'
@@ -209,167 +209,178 @@ const Prompts: React.FC = () => {
         : (CATEGORY_SUBTITLES[selectedCategory] ?? DEFAULT_SUBTITLE);
 
     return (
-        <div className="bg-white text-gray-900 font-space">
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
 
-            {/* ── Hero ─────────────────────────────────────────────────────── */}
-            <div className="px-6 pt-16 pb-10 text-center">
-                <div className="max-w-3xl mx-auto">
-                    <h1 className="font-bold leading-tight mb-6 md:mb-8 text-[28px] md:text-[35px] uppercase">
-                        <AnimatedText text={heroTitle} />
-                    </h1>
-                    <FadeIn
-                        replayKey={heroSubtitle}
-                        delay={0.25}
-                        className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-[14px] md:text-[15px]"
-                    >
-                        {heroSubtitle}
-                    </FadeIn>
-                </div>
-            </div>
+            <div className="relative">
+                {/* ── Hero ──────────────────────────────────────────────────────── */}
+                <div className="px-4 pt-14 pb-10 text-center sm:px-8">
+                    <div className="mx-auto max-w-3xl">
 
-            {/* ── Barra de filtros (debajo del hero, sticky bajo el navbar) ──── */}
-            <div className="sticky top-[64px] z-40 bg-white/95 backdrop-blur-md border-y border-gray-100">
-                <div className="max-w-3xl mx-auto px-6 py-4 flex flex-col items-center gap-4">
-
-                    {/* Búsqueda */}
-                    <div className="relative w-full max-w-xl">
-                        <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-                        </svg>
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Buscar un prompt..."
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors text-sm"
-                        />
-                    </div>
-
-                    {/* Categoría (select) + acceso (botones) */}
-                    <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-
-                        {/* Selector de categoría (dropdown personalizado) */}
-                        <CategorySelect
-                            categories={categories}
-                            selected={selectedCategory}
-                            onSelect={handleCategorySelect}
-                        />
-
-                        {/* Filtro de acceso: todos / gratis / premium (botones) */}
-                        <div className="flex justify-center items-center gap-5">
-                            {(['todos', 'gratis', 'premium'] as const).map(tier => {
-                                const active = selectedTier === tier;
-                                return (
-                                    <button
-                                        key={tier}
-                                        onClick={() => setSelectedTier(tier)}
-                                        className={`text-[11px] uppercase tracking-widest font-bold pb-1 border-b transition-colors ${
-                                            active
-                                                ? 'text-brand-red border-brand-red'
-                                                : 'text-gray-400 border-transparent hover:text-gray-900'
-                                        }`}
-                                    >
-                                        {tier}
-                                    </button>
-                                );
-                            })}
+                        {/* Badge */}
+                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                            <span>Librería de Prompts</span>
                         </div>
+
+                        <h1 className="mt-6 mb-5 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                            <AnimatedText text={heroTitle} />
+                        </h1>
+                        <FadeIn
+                            replayKey={heroSubtitle}
+                            delay={0.25}
+                            className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground"
+                        >
+                            {heroSubtitle}
+                        </FadeIn>
                     </div>
                 </div>
-            </div>
 
-            <main className="flex flex-col items-center px-6 pt-12 pb-16">
-                <div className="w-full flex flex-col items-center">
+                {/* ── Barra de filtros (sticky) ──────────────────────────────────── */}
+                <div className="sticky top-[70px] z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+                    <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 py-4 sm:px-6">
 
-                    {/* ── Grid de prompts ──────────────────────────────────── */}
-                    <div
-                        ref={gridRef}
-                        className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24"
-                    >
-                        {loading && Array.from({ length: 6 }).map((_, i) => (
-                            <div key={i} className="border border-gray-200 p-6 h-44 animate-pulse bg-gray-50" />
-                        ))}
-
-                        {!loading && paginatedPrompts.map(prompt => (
-                            <PromptCard key={prompt.id} prompt={prompt} />
-                        ))}
-                    </div>
-
-                    {/* Estado vacío */}
-                    {!loading && filteredPrompts.length === 0 && (
-                        <div className="max-w-3xl w-full text-center mb-24 -mt-16">
-                            <p className="text-sm text-gray-500 mb-6">
-                                Ningún prompt coincide con tu búsqueda.
-                            </p>
-                            <button
-                                onClick={() => { handleCategorySelect('todas'); setSelectedTier('todos'); setSearchQuery(''); }}
-                                className="border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-6 py-3 text-xs uppercase tracking-wider font-bold transition-all"
-                            >
-                                Ver todos los prompts
-                            </button>
+                        {/* Búsqueda */}
+                        <div className="relative w-full max-w-xl">
+                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                placeholder="Buscar un prompt..."
+                                className="w-full rounded-full border border-border/60 bg-card/60 py-2.5 pl-11 pr-5 text-sm text-foreground placeholder-muted-foreground/60 backdrop-blur transition focus:border-primary/40 focus:outline-none"
+                            />
                         </div>
-                    )}
 
-                    {/* Paginación */}
-                    {!loading && totalPages > 1 && (
-                        <div className="flex items-center justify-center gap-3 -mt-16 mb-24">
-                            <button
-                                onClick={() => goToPage(currentPage - 1)}
-                                disabled={currentPage === 1}
-                                className="text-xs uppercase tracking-wider font-bold px-3 py-2 hover:underline disabled:opacity-30 disabled:cursor-not-allowed disabled:no-underline"
-                            >
-                                ← Anterior
-                            </button>
-                            <span className="text-xs uppercase tracking-wider text-gray-400">
-                                {currentPage} / {totalPages}
-                            </span>
-                            <button
-                                onClick={() => goToPage(currentPage + 1)}
-                                disabled={currentPage === totalPages}
-                                className="text-xs uppercase tracking-wider font-bold px-3 py-2 hover:underline disabled:opacity-30 disabled:cursor-not-allowed disabled:no-underline"
-                            >
-                                Siguiente →
-                            </button>
-                        </div>
-                    )}
+                        {/* Categoría + acceso */}
+                        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
 
-                    {/* Divisor minimalista */}
-                    <div className="w-full max-w-3xl h-px bg-gray-100 mb-16" />
+                            {/* Selector de categoría */}
+                            <CategorySelect
+                                categories={categories}
+                                selected={selectedCategory}
+                                onSelect={handleCategorySelect}
+                            />
 
-                    {/* ── CTA Premium ──────────────────────────────────────── */}
-                    {!isSubscribed && (
-                        <div className="max-w-xl w-full text-center py-6 relative">
-                            <span className="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">
-                                Membresía Premium
-                            </span>
-
-                            <h2 className="font-bold text-xl md:text-2xl leading-tight mb-3 uppercase tracking-tight">
-                                Acceso Total por $4 USD/mes
-                            </h2>
-
-                            <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-8 max-w-md mx-auto">
-                                Desbloquea más de 500 prompts avanzados de nivel senior y
-                                actualizaciones constantes con los últimos modelos.
-                            </p>
-
-                            <button
-                                onClick={handleSubscribe}
-                                disabled={checkoutLoading}
-                                className="border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-8 py-3.5 text-xs uppercase tracking-wider font-bold transition-all duration-300 w-full sm:w-auto disabled:opacity-50"
-                            >
-                                {checkoutLoading ? 'Procesando...' : 'Suscribirse'}
-                            </button>
-
-                            <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-6 flex justify-center items-center gap-1.5">
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                Pago Seguro • Cancela cuando quieras
+                            {/* Filtro de acceso */}
+                            <div className="flex items-center justify-center gap-5">
+                                {(['todos', 'gratis', 'premium'] as const).map(tier => {
+                                    const active = selectedTier === tier;
+                                    return (
+                                        <button
+                                            key={tier}
+                                            onClick={() => setSelectedTier(tier)}
+                                            className={`border-b pb-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                                                active
+                                                    ? 'border-accent text-accent'
+                                                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                                            }`}
+                                        >
+                                            {tier}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
-            </main>
+
+                <main className="flex flex-col items-center px-4 pt-12 pb-16 sm:px-8">
+                    <div className="flex w-full flex-col items-center">
+
+                        {/* ── Grid de prompts ──────────────────────────────────── */}
+                        <div
+                            ref={gridRef}
+                            className="mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+                        >
+                            {loading && Array.from({ length: 6 }).map((_, i) => (
+                                <div key={i} className="h-44 animate-pulse rounded-2xl border border-border/70 bg-card p-6" />
+                            ))}
+
+                            {!loading && paginatedPrompts.map(prompt => (
+                                <PromptCard key={prompt.id} prompt={prompt} />
+                            ))}
+                        </div>
+
+                        {/* Estado vacío */}
+                        {!loading && filteredPrompts.length === 0 && (
+                            <div className="-mt-16 mb-24 w-full max-w-3xl text-center">
+                                <p className="mb-6 text-sm text-muted-foreground">
+                                    Ningún prompt coincide con tu búsqueda.
+                                </p>
+                                <button
+                                    onClick={() => { handleCategorySelect('todas'); setSelectedTier('todos'); setSearchQuery(''); }}
+                                    className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-primary/40 hover:bg-secondary"
+                                >
+                                    Ver todos los prompts
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Paginación */}
+                        {!loading && totalPages > 1 && (
+                            <div className="-mt-16 mb-24 flex items-center justify-center gap-6">
+                                <button
+                                    onClick={() => goToPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    ← Anterior
+                                </button>
+                                <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                                    {currentPage} / {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => goToPage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="px-3 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    Siguiente →
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Divisor */}
+                        <div className="mb-16 h-px w-full max-w-3xl bg-border/60" />
+
+                        {/* ── CTA Premium ──────────────────────────────────────── */}
+                        {!isSubscribed && (
+                            <div className="relative w-full max-w-xl">
+                                <div className="absolute -inset-10 -z-10 rounded-full bg-accent/5 blur-3xl"></div>
+
+                                <div className="rounded-3xl border border-primary/30 bg-card px-8 py-10 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)]">
+                                    <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-accent/40 bg-secondary px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-accent">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                                        <span>Membresía Premium</span>
+                                    </div>
+
+                                    <h2 className="mt-6 mb-4 text-balance text-2xl font-medium leading-tight tracking-tight text-foreground sm:text-3xl">
+                                        Acceso total por <em className="not-italic text-primary/90">4 USD/mes</em>
+                                    </h2>
+
+                                    <p className="mx-auto mb-8 max-w-md text-sm leading-relaxed text-muted-foreground">
+                                        Desbloquea más de 500 prompts avanzados de nivel senior y
+                                        actualizaciones constantes con los últimos modelos.
+                                    </p>
+
+                                    <button
+                                        onClick={handleSubscribe}
+                                        disabled={checkoutLoading}
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 disabled:opacity-50 sm:w-auto"
+                                    >
+                                        {checkoutLoading ? 'Procesando...' : 'Suscribirse ahora'}
+                                    </button>
+
+                                    <div className="mt-5 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                                        <Shield size={13} />
+                                        Pago seguro · Cancela cuando quieras
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </main>
+            </div>
         </div>
     );
 };
@@ -406,26 +417,25 @@ const CategorySelect: React.FC<{
                 onClick={() => setOpen(o => !o)}
                 aria-haspopup="listbox"
                 aria-expanded={open}
-                className={`w-full flex items-center justify-between bg-white border px-4 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors focus:outline-none ${
-                    open ? 'border-gray-900' : 'border-gray-200 hover:border-gray-900'
+                className={`flex w-full items-center justify-between rounded-full border bg-card/60 px-5 py-2.5 text-xs backdrop-blur transition-colors focus:outline-none ${
+                    open ? 'border-primary/40' : 'border-border/60 hover:border-border'
                 }`}
             >
-                <span className="text-[9px] tracking-widest text-gray-400">Categoría</span>
-                <span className="flex items-center gap-2 text-gray-900">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Categoría</span>
+                <span className="flex items-center gap-2 font-medium text-foreground">
                     {label}
-                    <svg
-                        className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-                        fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
+                    <ChevronDown
+                        size={14}
+                        className={`text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                        strokeWidth={2.5}
+                    />
                 </span>
             </button>
 
             {open && (
                 <ul
                     role="listbox"
-                    className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.08)] max-h-72 overflow-auto py-1"
+                    className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-72 overflow-auto rounded-2xl border border-border/70 bg-card py-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
                 >
                     {categories.map(cat => {
                         const active = cat === selected;
@@ -434,14 +444,14 @@ const CategorySelect: React.FC<{
                                 <button
                                     type="button"
                                     onClick={() => { onSelect(cat); setOpen(false); }}
-                                    className={`w-full flex items-center justify-between text-left px-4 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors ${
+                                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-xs font-medium transition-colors ${
                                         active
-                                            ? 'text-brand-red bg-gray-50'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            ? 'bg-secondary text-accent'
+                                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                                     }`}
                                 >
                                     {cat === 'todas' ? 'Todas' : titleCase(cat)}
-                                    {active && <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />}
+                                    {active && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
                                 </button>
                             </li>
                         );
@@ -456,20 +466,20 @@ const CategorySelect: React.FC<{
 const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => (
     <Link
         to={`/prompts/${prompt.id}`}
-        className="prompt-card border border-gray-200 p-6 hover:border-gray-900 transition-colors cursor-pointer group flex flex-col"
+        className="prompt-card group flex cursor-pointer flex-col rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40"
     >
-        <div className="flex items-center justify-between mb-4">
-            <span className="inline-block px-2 py-1 text-[10px] font-bold bg-gray-100 uppercase tracking-wider">
+        <div className="mb-4 flex items-center justify-between">
+            <span className="inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                 {prompt.category || 'General'}
             </span>
             {prompt.is_premium && (
-                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-red">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-accent">
                     Premium
                 </span>
             )}
         </div>
-        <h3 className="font-bold text-lg mb-2 leading-snug">{prompt.title}</h3>
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{prompt.description}</p>
+        <h3 className="mb-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-primary">{prompt.title}</h3>
+        <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">{prompt.description}</p>
     </Link>
 );
 

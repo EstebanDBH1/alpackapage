@@ -15,41 +15,40 @@ const Faq: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-20 md:py-28" style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e4e4e1' }}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-[#0a0a0a] border-t border-[#222222]">
+      <div className="max-w-3xl mx-auto px-6 text-center">
 
         {/* Header */}
-        <div className="mb-12 md:mb-14">
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            backgroundColor: '#f7f6f3', border: '1px solid #e4e4e1',
-            borderRadius: 100, padding: '4px 12px', marginBottom: 16,
-          }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#787774', letterSpacing: '0.1em', textTransform: 'uppercase' }}>preguntas</span>
+        <div className="mb-14">
+          {/* Red Badge */}
+          <div className="inline-block px-3 py-1 mb-6 border border-[#ff3333]/20 bg-[#ff3333]/10 rounded-full">
+            <span className="text-[#ff3333] text-[10px] font-bold uppercase tracking-widest font-space">
+              FAQ
+            </span>
           </div>
-          <h2 className="font-display font-bold text-2xl md:text-3xl leading-tight" style={{ color: '#1a1a1a', letterSpacing: '-0.02em' }}>
-            Preguntas frecuentes.<br />
-            <span>Respuestas directas.</span>
+
+          <h2 className="font-space font-bold text-3xl md:text-4xl text-white mb-6 uppercase tracking-tight">
+            Frequently Asked Questions
           </h2>
         </div>
 
-        <div style={{ borderTop: '1px solid #e4e4e1' }}>
+        <div className="text-left border-t border-[#222222]">
           {faqData.map((item, index) => (
-            <div key={index} style={{ borderBottom: '1px solid #e4e4e1' }}>
+            <div key={index} className="border-b border-[#222222]">
               <button
                 className="w-full py-6 flex justify-between items-start text-left focus:outline-none gap-6"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
                 <span
-                  className="text-[15px] font-semibold leading-snug transition-colors"
-                  style={{ color: openIndex === index ? '#6366f1' : '#1a1a1a' }}
+                  className="text-[15px] font-bold font-space uppercase tracking-wide transition-colors"
+                  style={{ color: openIndex === index ? '#ff3333' : '#ffffff' }}
                 >
                   {item.question}
                 </span>
                 <ChevronDown
                   size={16}
                   className={`flex-shrink-0 mt-0.5 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
-                  style={{ color: openIndex === index ? '#6366f1' : '#a8a5a1' }}
+                  style={{ color: openIndex === index ? '#ff3333' : '#666666' }}
                 />
               </button>
               <div
@@ -57,7 +56,7 @@ const Faq: React.FC = () => {
                   openIndex === index ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'
                 }`}
               >
-                <p className="text-sm leading-relaxed" style={{ color: '#787774' }}>
+                <p className="text-sm leading-relaxed text-gray-400 font-space">
                   {item.answer}
                 </p>
               </div>

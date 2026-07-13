@@ -220,24 +220,24 @@ const PromptDetail: React.FC = () => {
         } catch (e) { console.error(e); } finally { setSaving(false); }
     };
 
-    // ── Loading ──────────────────────────────────────────────────────────────────
+    // ── Loading ──────────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="bg-white font-space">
-            <div className="max-w-3xl mx-auto px-6 py-16 space-y-6">
-                <div className="h-4 w-24 animate-pulse bg-gray-100" />
-                <div className="h-10 w-2/3 animate-pulse bg-gray-100" />
-                <div className="h-5 w-full animate-pulse bg-gray-50" />
-                <div className="h-64 w-full animate-pulse mt-8 bg-gray-50" />
+        <div className="min-h-screen bg-background bg-radial-glow font-space">
+            <div className="mx-auto max-w-3xl space-y-6 px-4 py-16 sm:px-6">
+                <div className="h-4 w-24 animate-pulse rounded-full bg-card" />
+                <div className="h-10 w-2/3 animate-pulse rounded-xl bg-card" />
+                <div className="h-5 w-full animate-pulse rounded-lg bg-card" />
+                <div className="mt-8 h-64 w-full animate-pulse rounded-2xl bg-card" />
             </div>
         </div>
     );
 
-    // ── Not found ────────────────────────────────────────────────────────────────
+    // ── Not found ────────────────────────────────────────────────────────────
     if (!prompt) return (
-        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 bg-white font-space text-gray-900">
-            <AlertCircle size={36} className="text-gray-300" />
-            <h2 className="font-bold text-2xl uppercase tracking-tight">Prompt no encontrado</h2>
-            <Link to="/prompts" className="text-xs uppercase tracking-wider underline hover:text-gray-500">
+        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 bg-background bg-radial-glow font-space text-foreground">
+            <AlertCircle size={36} className="text-muted-foreground" />
+            <h2 className="text-2xl font-medium tracking-tight">Prompt no encontrado</h2>
+            <Link to="/prompts" className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground underline transition hover:text-foreground">
                 Volver al catálogo
             </Link>
         </div>
@@ -246,97 +246,97 @@ const PromptDetail: React.FC = () => {
     const isLocked = prompt.is_premium && !isSubscribed;
 
     return (
-        <div className="bg-white text-gray-900 font-space">
-            <main className="max-w-3xl mx-auto px-6 py-16">
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
 
-                {/* Back + Save */}
-                <div className="flex items-center justify-between mb-8">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="text-xs uppercase tracking-wider hover:underline flex items-center gap-2"
-                    >
-                        <span>←</span> Volver al catálogo
-                    </button>
+            <main className="relative mx-auto max-w-6xl px-4 py-12 sm:px-8 md:py-16">
 
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className={`flex items-center gap-2 text-xs uppercase tracking-wider font-bold transition-colors disabled:opacity-50 ${isSaved ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'}`}
-                        title={isSaved ? 'Quitar de guardados' : 'Guardar prompt'}
-                    >
-                        {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
-                        <span className="hidden sm:inline">{isSaved ? 'Guardado' : 'Guardar'}</span>
-                    </button>
-                </div>
+                {/* Back nav */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="mb-12 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                    <span>←</span> Volver al catálogo
+                </button>
 
-                {/* Category + premium tag */}
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <span className="inline-block px-3 py-1 text-xs font-bold bg-gray-100 uppercase tracking-wider">
-                        {prompt.category || 'general'}
-                    </span>
-                    {prompt.is_premium && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider border border-brand-red/30 text-brand-red">
-                            <Lock size={10} /> Premium
-                        </span>
-                    )}
-                </div>
+                <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_280px]">
 
-                {/* Title */}
-                <h1 className="text-[28px] md:text-[35px] font-bold leading-tight mb-5">
-                    {prompt.title}
-                </h1>
+                    {/* ── LEFT: Main content ──────────────────────────────────── */}
+                    <div className="min-w-0">
 
-                {/* Image */}
-                {prompt.image_url && (
-                    <div className="w-full overflow-hidden border border-gray-200 mb-8">
-                        <img src={prompt.image_url} alt={prompt.title} className="w-full h-auto block" />
-                    </div>
-                )}
-
-                {/* Description */}
-                {prompt.description && (
-                    <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-10">
-                        {prompt.description}
-                    </p>
-                )}
-
-                {/* ── Caja de Código Minimalista ─────────────────────────────── */}
-                <div className="border border-gray-200 mb-8 overflow-hidden bg-gray-50">
-                    {/* Header */}
-                    <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-white">
-                        <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-                            <span className="text-xs text-gray-500 uppercase tracking-widest font-bold">
-                                PROMPT_SYSTEM
+                        {/* Category + Premium badge */}
+                        <div className="mb-5 flex flex-wrap items-center gap-2">
+                            <span className="inline-block rounded-md border border-border/50 bg-secondary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                                {prompt.category || 'general'}
                             </span>
+                            {prompt.is_premium && (
+                                <span className="inline-flex items-center gap-1.5 rounded-md border border-accent/40 bg-secondary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-accent">
+                                    <Lock size={9} /> Premium
+                                </span>
+                            )}
                         </div>
-                        {!isLocked && (
-                            <div className="flex items-center gap-4">
-                                <button
-                                    onClick={handleDownloadPdf}
-                                    className="text-xs uppercase tracking-widest font-bold hover:text-gray-500 transition-colors flex items-center gap-1.5 focus:outline-none"
-                                    title="Descargar como PDF"
-                                >
-                                    <Download size={14} />
-                                    <span>PDF</span>
-                                </button>
-                                <button
-                                    onClick={handleCopy}
-                                    className={`text-xs uppercase tracking-widest font-bold transition-colors flex items-center gap-1.5 focus:outline-none ${copied ? 'text-green-600' : 'hover:text-gray-500'}`}
-                                >
-                                    {copied ? <Check size={14} /> : <Copy size={14} />}
-                                    <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
-                                </button>
+
+                        {/* Title */}
+                        <h1 className="mb-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground md:text-4xl">
+                            {prompt.title}
+                        </h1>
+
+                        {/* Image */}
+                        {prompt.image_url && (
+                            <div className="mb-8 w-full overflow-hidden rounded-2xl border border-border/70">
+                                <img src={prompt.image_url} alt={prompt.title} className="block h-auto w-full" />
                             </div>
                         )}
-                    </div>
 
-                    {/* Content area */}
-                    {isLocked ? (
-                        <div className="relative min-h-[460px]">
-                            {/* Vista previa difuminada (señuelo realista) */}
-                            <div className="absolute inset-0 p-6 select-none pointer-events-none blur-[6px] opacity-50" aria-hidden="true">
-                                <pre className="text-gray-800 text-sm leading-relaxed font-mono whitespace-pre-wrap break-words">
+                        {/* Description */}
+                        {prompt.description && (
+                            <p className="mb-10 border-l-2 border-accent/40 pl-5 text-base leading-relaxed text-muted-foreground">
+                                {prompt.description}
+                            </p>
+                        )}
+
+                        {/* ── Prompt Box ──────────────────────────────────────── */}
+                        <div className="mb-8 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
+
+                            {/* Box Header */}
+                            <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+                                <div className="flex items-center gap-3">
+                                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
+                                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                                        PROMPT_SYSTEM.txt
+                                    </span>
+                                </div>
+                                {!isLocked && (
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={handleDownloadPdf}
+                                            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground transition hover:border-primary/40 focus:outline-none"
+                                            title="Descargar como PDF"
+                                        >
+                                            <Download size={13} />
+                                            <span>PDF</span>
+                                        </button>
+                                        <button
+                                            onClick={handleCopy}
+                                            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus:outline-none ${
+                                                copied
+                                                    ? 'border-accent/50 bg-secondary text-accent'
+                                                    : 'border-border bg-secondary text-foreground hover:border-primary/40'
+                                            }`}
+                                        >
+                                            {copied ? <Check size={13} /> : <Copy size={13} />}
+                                            <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Content or Lock */}
+                            {isLocked ? (
+                                <div className="relative min-h-[500px]">
+                                    {/* Blurred preview */}
+                                    <div className="pointer-events-none absolute inset-0 select-none p-8 opacity-20 blur-sm" aria-hidden="true">
+                                        <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-foreground/80">
 {`Actúa como un experto en [área] con más de 10 años de experiencia
 demostrable. Tu objetivo principal es [objetivo], considerando en todo
 momento [contexto relevante] y las restricciones de [límites].
@@ -353,62 +353,131 @@ autoridad pero sin tecnicismos innecesarios.
 # Formato de salida
 Responde siempre en español, estructurado con [formato], usando
 ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
-                                </pre>
-                            </div>
-
-                            {/* Capa de vidrio esmerilado + tarjeta de bloqueo */}
-                            <div className="absolute inset-0 flex items-center justify-center p-5 bg-gradient-to-b from-white/20 via-white/75 to-white backdrop-blur-[2px]">
-                                <div className="flex flex-col items-center text-center">
-
-                                    {/* Icono */}
-                                    <div className="w-11 h-11 flex items-center justify-center mb-5 rounded-full bg-brand-red/10 text-brand-red">
-                                        <Lock size={18} />
+                                        </pre>
                                     </div>
 
-                                    <h4 className="font-bold text-lg uppercase tracking-tight mb-6">
-                                        Contenido Premium
-                                    </h4>
+                                    {/* Lock overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-card/70 to-card p-6">
+                                        <div className="flex max-w-xs flex-col items-center text-center">
 
-                                    <Link
-                                        to="/pricing"
-                                        className="inline-flex items-center justify-center gap-2 border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 px-8 py-3.5 text-xs uppercase tracking-wider font-bold transition-all duration-300"
-                                    >
-                                        Desbloquear acceso
-                                        <ArrowRight size={14} />
-                                    </Link>
-                                    <Link
-                                        to={`/login?redirect=/prompts/${id}`}
-                                        className="mt-4 text-[11px] uppercase tracking-wider font-bold text-gray-400 hover:text-gray-900 transition-colors"
-                                    >
-                                        Ya tengo cuenta
-                                    </Link>
+                                            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent">
+                                                <Lock size={22} />
+                                            </div>
+
+                                            <h4 className="mb-2 text-xl font-medium tracking-tight text-foreground">
+                                                Contenido Premium
+                                            </h4>
+                                            <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
+                                                Suscríbete para desbloquear este prompt y los 150+ de la librería.
+                                            </p>
+
+                                            <Link
+                                                to="/pricing"
+                                                className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
+                                            >
+                                                Desbloquear por 4 USD/mes
+                                                <ArrowRight size={14} />
+                                            </Link>
+                                            <Link
+                                                to={`/login?redirect=/prompts/${id}`}
+                                                className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                                            >
+                                                Ya tengo cuenta
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto p-6 md:p-8">
+                                    <pre className="select-all whitespace-pre-wrap break-words font-mono text-sm leading-[1.8] text-foreground/90 md:text-base">
+                                        {prompt.content}
+                                    </pre>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Tip */}
+                        {!isLocked && (
+                            <div className="flex items-start gap-4 rounded-2xl border border-border/70 bg-card p-5">
+                                <AlertCircle size={15} className="mt-0.5 flex-shrink-0 text-accent" />
+                                <p className="text-sm leading-relaxed text-muted-foreground">
+                                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Cómo usarlo: </span>
+                                    Reemplaza los parámetros entre{' '}
+                                    <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-xs text-primary">
+                                        [corchetes]
+                                    </code>{' '}
+                                    con tus datos específicos para obtener el mejor resultado del modelo en la primera respuesta.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* ── RIGHT: Metadata Sidebar ─────────────────────────────── */}
+                    <div className="flex flex-col gap-4 lg:sticky lg:top-24">
+
+                        {/* Save button */}
+                        <button
+                            onClick={handleSave}
+                            disabled={saving}
+                            className={`flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm font-medium transition-colors duration-200 disabled:opacity-50 ${
+                                isSaved
+                                    ? 'border-accent/50 bg-accent/10 text-accent hover:bg-accent/20'
+                                    : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                            }`}
+                        >
+                            {isSaved ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
+                            {isSaved ? 'Guardado' : 'Guardar prompt'}
+                        </button>
+
+                        {/* Metadata card */}
+                        <div className="rounded-2xl border border-border/70 bg-card p-5">
+                            <h3 className="mb-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                                Detalles del prompt
+                            </h3>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Categoría</span>
+                                    <span className="text-xs font-medium uppercase text-foreground">{prompt.category || 'General'}</span>
+                                </div>
+                                <div className="h-px bg-border/60" />
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Acceso</span>
+                                    <span className={`text-xs font-medium uppercase ${prompt.is_premium ? 'text-accent' : 'text-foreground'}`}>
+                                        {prompt.is_premium ? 'Premium' : 'Gratuito'}
+                                    </span>
+                                </div>
+                                <div className="h-px bg-border/60" />
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Modelo</span>
+                                    <span className="text-xs font-medium uppercase text-foreground">GPT · Claude · Gemini</span>
                                 </div>
                             </div>
                         </div>
-                    ) : (
-                        <div className="p-6 overflow-x-auto">
-                            <pre className="text-gray-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words font-mono select-all">
-                                {prompt.content}
-                            </pre>
-                        </div>
-                    )}
-                </div>
 
-                {/* ── Tip ─────────────────────────────────────────────────────── */}
-                {!isLocked && (
-                    <div className="flex items-start gap-3 p-5 border border-gray-200 bg-gray-50">
-                        <AlertCircle size={16} className="flex-shrink-0 mt-0.5 text-gray-900" />
-                        <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
-                            <span className="font-bold text-gray-900 uppercase tracking-wider">Tip:</span>{' '}
-                            los parámetros entre{' '}
-                            <code className="font-mono text-xs px-1.5 py-0.5 bg-gray-200 text-gray-900">
-                                [corchetes]
-                            </code>{' '}
-                            son variables. Reemplázalos con tus datos específicos para obtener el mejor output del modelo.
-                        </p>
+                        {/* CTA if not subscribed and not locked (encourage upgrade) */}
+                        {!isSubscribed && !isLocked && (
+                            <div className="rounded-2xl border border-accent/40 bg-card p-5 text-center">
+                                <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
+                                    Desbloquea <strong className="font-medium text-foreground">150+ prompts premium</strong> para resultados profesionales.
+                                </p>
+                                <Link to="/pricing" className="block w-full">
+                                    <button className="w-full rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+                                        Ver planes — 4 USD/mes
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+
+                        {/* Back link */}
+                        <Link
+                            to="/prompts"
+                            className="flex items-center justify-center gap-2 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            ← Todos los prompts
+                        </Link>
                     </div>
-                )}
 
+                </div>
             </main>
         </div>
     );

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Banco de Prompts · +1.000 prompts por 4 USD · Alpacka</title>
+  <meta name="description" content="+1.000 prompts probados para marketing, redes sociales, vibe coding, idiomas y productividad. Copia, pega y obtén resultados de experto. Pago único de 4 USD." />
+  <meta name="author" content="Adrián Sáenz" />
+  <meta property="og:title" content="Banco de Prompts · +1.000 prompts por 4 USD" />
+  <meta property="og:description" content="Copia, pega y obtén resultados de experto con cualquier IA. Pago único de 4 USD." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Paleta del proyecto (oklch, tema oscuro cálido). El placeholder <alpha-value>
+    // permite que los modificadores de opacidad (p.ej. border-border/60) funcionen.
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            background: 'oklch(0.15 0.005 60 / <alpha-value>)',
+            foreground: 'oklch(0.93 0.02 85 / <alpha-value>)',
+            card: 'oklch(0.18 0.006 60 / <alpha-value>)',
+            primary: 'oklch(0.86 0.09 90 / <alpha-value>)',
+            'primary-foreground': 'oklch(0.15 0.005 60 / <alpha-value>)',
+            secondary: 'oklch(0.22 0.008 60 / <alpha-value>)',
+            muted: 'oklch(0.22 0.008 60 / <alpha-value>)',
+            'muted-foreground': 'oklch(0.62 0.02 80 / <alpha-value>)',
+            accent: 'oklch(0.72 0.16 40 / <alpha-value>)',
+            border: 'oklch(0.28 0.008 60 / <alpha-value>)',
+            input: 'oklch(0.28 0.008 60 / <alpha-value>)',
+            ring: 'oklch(0.86 0.09 90 / <alpha-value>)',
+          },
+          borderRadius: {
+            md: '0.5rem',
+            lg: '0.625rem',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer base {
+      html { scroll-behavior: smooth; }
+      * { border-color: theme('colors.border'); }
+      body {
+        background-color: theme('colors.background');
+        color: theme('colors.foreground');
+        font-family: theme('fontFamily.sans');
+        font-feature-settings: "ss01", "ss02";
+        -webkit-font-smoothing: antialiased;
+      }
+      details > summary { list-style: none; cursor: pointer; }
+      details > summary::-webkit-details-marker { display: none; }
+      details[open] .faq-chevron { transform: rotate(180deg); }
+    }
+    @layer utilities {
+      .font-display { font-family: theme('fontFamily.display'); }
+      .bg-radial-glow {
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.28 0.02 60 / 0.5), transparent 60%),
+          radial-gradient(circle at 20% 80%, oklch(0.72 0.16 40 / 0.05), transparent 40%);
+      }
+      .bg-star-field {
+        background-image:
+          radial-gradient(1px 1px at 20% 30%, oklch(0.93 0.02 85 / 0.3), transparent),
+          radial-gradient(1px 1px at 80% 60%, oklch(0.93 0.02 85 / 0.25), transparent),
+          radial-gradient(1px 1px at 40% 80%, oklch(0.93 0.02 85 / 0.2), transparent),
+          radial-gradient(1px 1px at 90% 20%, oklch(0.93 0.02 85 / 0.3), transparent),
+          radial-gradient(1px 1px at 10% 70%, oklch(0.93 0.02 85 / 0.2), transparent);
+        background-size: 400px 400px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="relative min-h-screen overflow-hidden bg-background bg-radial-glow">
+    <div class="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+
+    <div class="relative">
+      <!-- ============ HEADER ============ -->
+      <header class="relative z-20 flex items-center justify-between px-4 py-5 sm:px-8 sm:py-6">
+        <a href="https://www.instagram.com/alpacka.ai/" target="_blank" rel="noreferrer"
+           class="group flex items-center gap-3 rounded-full border border-border/60 bg-card/60 py-1.5 pl-1.5 pr-3 backdrop-blur transition hover:border-border sm:pr-4">
+          <span class="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-medium text-foreground">A</span>
+          <span class="hidden flex-col leading-tight sm:flex">
+            <span class="text-sm font-medium text-foreground">Alpacka.ai</span>
+            <span class="text-xs text-muted-foreground">@alpacka.ai</span>
+          </span>
+          <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#ff0033] text-white">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+              <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/>
+              <path d="m10 15 5-3-5-3z" fill="#ff0033"/>
+            </svg>
+          </span>
+        </a>
+
+        <div class="hidden items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-muted-foreground sm:flex">
+          <span class="text-accent">✦</span>
+          <span>Banco de Prompts</span>
+        </div>
+      </header>
+
+      <main>
+        <!-- ============ HERO (sin cambios) ============ -->
+        <section class="relative px-4 pb-20 pt-10 text-center sm:px-8 sm:pt-16 md:pb-28">
+          <div class="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+            <span class="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+            <span><span class="text-foreground">3 formas</span> · 4 prompts · <span class="text-foreground">1 skill</span></span>
+          </div>
+
+          <h1 class="font-display mx-auto mt-8 max-w-5xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+            Convierte La IA en tu mejor
+            <span class="inline-flex items-center align-baseline text-accent">herramienta</span>
+          </h1>
+
+          <p class="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
+            Explora una colección de prompts, guías y recursos para trabajar más rápido y obtener mejores resultados.
+          </p>
+        </section>
+
+        <!-- ============ BARRA DE VALOR ============ -->
+        <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-8 md:pb-24">
+          <div class="grid grid-cols-2 divide-border/60 rounded-2xl border border-border/60 bg-card/60 backdrop-blur md:grid-cols-4 md:divide-x">
+            <div class="flex flex-col items-center gap-1 px-4 py-6 text-center">
+              <span class="font-display text-2xl font-medium text-foreground sm:text-3xl">+1.000</span>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">prompts probados</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 px-4 py-6 text-center">
+              <span class="font-display text-2xl font-medium text-foreground sm:text-3xl">+10</span>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">categorías</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 px-4 py-6 text-center">
+              <span class="font-display text-2xl font-medium text-accent sm:text-3xl">4 USD</span>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">pago único</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 px-4 py-6 text-center">
+              <span class="font-display text-2xl font-medium text-foreground sm:text-3xl">∞</span>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">acceso de por vida</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ EL PROBLEMA ============ -->
+        <section class="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
+          <article class="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+            <div>
+              <div class="mb-6 flex flex-wrap items-center gap-3">
+                <span class="inline-flex items-center gap-2 rounded-md border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground">
+                  <span class="text-muted-foreground">
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  </span>
+                  01
+                </span>
+                <span class="rounded-md border border-border/50 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">El problema</span>
+              </div>
+
+              <h2 class="font-display text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                Los resultados mediocres no son culpa de la IA. Son culpa del <em class="font-display not-italic text-primary/90">prompt</em>.
+              </h2>
+
+              <p class="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">
+                La misma IA que hoy te da respuestas genéricas puede escribir tu marketing, enseñarte un idioma o construir tu web. Solo necesita las instrucciones correctas. Y eso es exactamente lo que te llevas: los prompts que ya funcionan, listos para copiar y pegar.
+              </p>
+
+              <ul class="mt-6 space-y-2.5">
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Prompts probados, no experimentos</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Resultados de experto desde el primer mensaje</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Sin cursos ni teoría: copiar, pegar y listo</span></li>
+              </ul>
+
+              <a href="#comprar" class="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90">
+                Quiero el banco de prompts
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+
+            <div>
+              <div class="relative">
+                <div class="absolute -inset-8 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
+                <div class="mx-auto w-full max-w-xl space-y-4">
+                  <!-- Prompt malo -->
+                  <div class="rounded-2xl border border-border/70 bg-card p-5 opacity-70">
+                    <div class="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                      <span class="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground">✕</span>
+                      Lo que escribe todo el mundo
+                    </div>
+                    <p class="text-sm text-muted-foreground">“Escríbeme un post para Instagram sobre mi negocio”</p>
+                    <p class="mt-3 border-t border-border/60 pt-3 text-xs italic text-muted-foreground/70">→ Resultado: genérico, robótico, inservible.</p>
+                  </div>
+
+                  <!-- Prompt del banco -->
+                  <div class="rounded-2xl border border-accent/40 bg-card p-5 shadow-[0_0_40px_oklch(0.72_0.16_40_/_0.08)]">
+                    <div class="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-accent">
+                      <span class="flex h-5 w-5 items-center justify-center rounded-full border border-accent/50 text-accent">✓</span>
+                      Prompt del banco
+                    </div>
+                    <p class="text-sm leading-relaxed text-foreground/90">“Actúa como estratega de contenido con 10 años creando marcas en Instagram. Escribe un post para <span class="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU NEGOCIO]</span> usando la estructura hook–historia–giro–CTA, dirigido a <span class="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU CLIENTE]</span>…”</p>
+                    <p class="mt-3 border-t border-border/60 pt-3 text-xs italic text-muted-foreground">→ Resultado: un post que suena a ti y vende.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ============ CATEGORÍAS ============ -->
+        <section id="categorias" class="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
+          <div class="mb-12 text-center md:mb-16">
+            <div class="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+              <span class="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+              <span>¿Qué hay dentro?</span>
+            </div>
+            <h2 class="font-display mx-auto mt-6 max-w-3xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+              Un prompt probado para <em class="font-display not-italic text-primary/90">cada área</em> de tu vida.
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
+              No importa qué quieras conseguir: aquí ya hay un prompt que lo hace por ti.
+            </p>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Marketing -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Marketing y ventas</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Anuncios, emails y ofertas que convierten visitas en clientes.</p>
+            </div>
+
+            <!-- Redes sociales -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Redes sociales</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Hooks, guiones y calendarios de contenido que retienen la atención.</p>
+            </div>
+
+            <!-- Vibe coding -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Vibe coding</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Webs, apps y herramientas reales sin escribir una línea de código.</p>
+            </div>
+
+            <!-- Productividad -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Productividad</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Sistemas, planificación y foco para hacer en horas lo de días.</p>
+            </div>
+
+            <!-- Idiomas -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Aprender idiomas</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Convierte la IA en un tutor personal disponible 24/7.</p>
+            </div>
+
+            <!-- Escritura -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Escritura y copy</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Textos que enganchan, persuaden y venden en cualquier formato.</p>
+            </div>
+
+            <!-- Negocios -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Negocios</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Ideas, validación, estrategia y propuestas listas para ejecutar.</p>
+            </div>
+
+            <!-- Estudio -->
+            <div class="group rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+              <span class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.92a1 1 0 0 0-.02-1.84L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.83l8.57 3.91a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">Estudio y aprendizaje</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Domina cualquier tema el doble de rápido con el método correcto.</p>
+            </div>
+
+            <!-- Y muchas más -->
+            <div class="group flex flex-col justify-center rounded-2xl border border-dashed border-border/70 bg-card/40 p-6 text-center transition hover:border-primary/40">
+              <span class="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-accent">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2l1.6 7.2L21 10l-6.4 3.2L16 21l-4-4.8L8 21l1.4-7.8L3 10l7.4-.8L12 2z"/></svg>
+              </span>
+              <h3 class="font-display text-lg font-medium text-foreground">…y muchas más</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Salud, finanzas, viajes, creatividad, imágenes con IA…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ CÓMO FUNCIONA ============ -->
+        <section class="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
+          <article class="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+            <div class="md:order-2">
+              <div class="mb-6 flex flex-wrap items-center gap-3">
+                <span class="inline-flex items-center gap-2 rounded-md border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground">
+                  <span class="text-muted-foreground">
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </span>
+                  02
+                </span>
+                <span class="rounded-md border border-border/50 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Cómo funciona</span>
+              </div>
+
+              <h2 class="font-display text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                Copia. Pega. <em class="font-display not-italic text-primary/90">Resultados.</em>
+              </h2>
+
+              <p class="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">
+                Sin cursos de 6 horas ni teoría de prompt engineering. Abre el banco, busca tu categoría, copia el prompt y pégalo en tu IA favorita. Cada prompt te indica exactamente qué personalizar.
+              </p>
+
+              <ul class="mt-6 space-y-2.5">
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Organizado por categorías: encuentra todo en segundos</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Campos marcados para personalizar en 10 segundos</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Funciona con Claude, ChatGPT y Gemini</span></li>
+              </ul>
+
+              <a href="#comprar" class="mt-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-primary/40 hover:bg-secondary">
+                Empezar por 4 USD
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+
+            <div class="md:order-1">
+              <div class="relative">
+                <div class="absolute -inset-8 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
+                <div class="mx-auto w-full max-w-xl rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
+                  <div class="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Marketing · Anuncio</span>
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
+                      <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                      Copiar
+                    </span>
+                  </div>
+                  <div class="space-y-3 px-5 py-5 text-sm leading-relaxed text-foreground/90">
+                    <p>Actúa como un media buyer senior que ha gestionado más de 2M USD en publicidad. Escribe 3 variantes de anuncio para <span class="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU PRODUCTO]</span>:</p>
+                    <p class="text-muted-foreground">1. Una centrada en el dolor del cliente<br />2. Una centrada en la transformación<br />3. Una con prueba social</p>
+                    <p>Para cada variante incluye: hook de 5 palabras, cuerpo de máximo 50 y un CTA directo. Tono: <span class="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU TONO]</span>.</p>
+                  </div>
+                  <div class="flex items-center gap-2 border-t border-border/60 px-5 py-3.5 text-xs text-muted-foreground">
+                    <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+                    Listo para pegar en Claude, ChatGPT o Gemini
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ============ PRECIO / OFERTA ============ -->
+        <section id="comprar" class="mx-auto max-w-6xl scroll-mt-10 px-4 pb-24 sm:px-8 md:pb-32">
+          <div class="relative mx-auto max-w-2xl">
+            <div class="absolute -inset-10 -z-10 rounded-full bg-accent/5 blur-3xl"></div>
+
+            <div class="rounded-3xl border border-primary/30 bg-card p-8 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)] sm:p-12">
+              <div class="mx-auto inline-flex items-center gap-3 rounded-full border border-accent/40 bg-secondary px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-accent">
+                <span class="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                <span>Precio de lanzamiento</span>
+              </div>
+
+              <h2 class="font-display mt-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl">
+                Todo el banco. <em class="font-display not-italic text-primary/90">Pago único.</em>
+              </h2>
+
+              <div class="mt-6 flex items-baseline justify-center gap-2">
+                <span class="font-display text-6xl font-medium text-foreground sm:text-7xl">4</span>
+                <span class="font-display text-2xl text-muted-foreground">USD</span>
+              </div>
+              <p class="mt-2 text-sm text-muted-foreground">Menos que un café. Te ahorra horas cada semana.</p>
+
+              <ul class="mx-auto mt-8 max-w-md space-y-3 text-left">
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><span class="text-foreground">+1.000 prompts probados</span> organizados en +10 categorías</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Funciona con <span class="text-foreground">Claude, ChatGPT y Gemini</span></span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><span class="text-foreground">Acceso inmediato</span> después del pago</span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Actualizaciones incluidas <span class="text-foreground">sin coste extra</span></span></li>
+                <li class="flex items-center gap-3 text-sm text-foreground/90"><svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>De por vida. <span class="text-foreground">Sin suscripciones.</span></span></li>
+              </ul>
+
+              <!-- TODO: sustituir href="#" por el enlace de pago (Gumroad, Stripe, Hotmart…) -->
+              <a href="#" class="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 sm:w-auto">
+                Conseguir mi banco de prompts
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+
+              <p class="mt-4 text-xs text-muted-foreground">Pago único · Acceso inmediato · Sin suscripción</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ FAQ ============ -->
+        <section class="mx-auto max-w-3xl px-4 pb-24 sm:px-8 md:pb-32">
+          <div class="mb-10 text-center">
+            <div class="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+              <span class="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+              <span>Preguntas frecuentes</span>
+            </div>
+            <h2 class="font-display mt-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl">
+              Todo lo que necesitas saber.
+            </h2>
+          </div>
+
+          <div class="space-y-3">
+            <details class="group rounded-2xl border border-border/70 bg-card px-5">
+              <summary class="flex items-center justify-between gap-4 py-4 text-sm font-medium text-foreground">
+                ¿Cómo recibo el banco de prompts?
+                <svg viewBox="0 0 24 24" class="faq-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted-foreground">Acceso inmediato después del pago. Recibes el enlace al banco completo, organizado por categorías y listo para usar desde cualquier dispositivo.</p>
+            </details>
+
+            <details class="group rounded-2xl border border-border/70 bg-card px-5">
+              <summary class="flex items-center justify-between gap-4 py-4 text-sm font-medium text-foreground">
+                ¿Funciona solo con Claude o también con otras IA?
+                <svg viewBox="0 0 24 24" class="faq-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted-foreground">Los prompts funcionan con Claude, ChatGPT, Gemini y prácticamente cualquier IA de texto. Están escritos para obtener el mejor resultado independientemente de la herramienta que uses.</p>
+            </details>
+
+            <details class="group rounded-2xl border border-border/70 bg-card px-5">
+              <summary class="flex items-center justify-between gap-4 py-4 text-sm font-medium text-foreground">
+                ¿Necesito experiencia con IA para usarlos?
+                <svg viewBox="0 0 24 24" class="faq-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted-foreground">No. Si sabes copiar y pegar, sabes usar el banco. Cada prompt marca claramente los campos que debes personalizar (tu producto, tu cliente, tu tono…) y el resto ya está hecho.</p>
+            </details>
+
+            <details class="group rounded-2xl border border-border/70 bg-card px-5">
+              <summary class="flex items-center justify-between gap-4 py-4 text-sm font-medium text-foreground">
+                ¿Es un pago único o una suscripción?
+                <svg viewBox="0 0 24 24" class="faq-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted-foreground">Pago único de 4 USD. Sin suscripciones, sin cargos recurrentes, sin letra pequeña. Pagas una vez y el banco es tuyo para siempre.</p>
+            </details>
+
+            <details class="group rounded-2xl border border-border/70 bg-card px-5">
+              <summary class="flex items-center justify-between gap-4 py-4 text-sm font-medium text-foreground">
+                ¿Se actualiza con nuevos prompts?
+                <svg viewBox="0 0 24 24" class="faq-chevron h-4 w-4 shrink-0 text-muted-foreground transition-transform" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted-foreground">Sí. El banco crece con nuevos prompts y categorías, y todas las actualizaciones están incluidas en tu compra sin coste adicional.</p>
+            </details>
+          </div>
+        </section>
+
+        <!-- ============ CTA FINAL ============ -->
+        <section class="px-4 pb-24 text-center sm:px-8 md:pb-32">
+          <h2 class="font-display mx-auto max-w-3xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-5xl">
+            Tu IA ya es capaz. Dale las <em class="font-display not-italic text-accent">instrucciones correctas</em>.
+          </h2>
+          <p class="mx-auto mt-5 max-w-xl text-base text-muted-foreground">
+            Por el precio de un café, deja de improvisar prompts y empieza a obtener resultados de experto hoy mismo.
+          </p>
+          <a href="#comprar" class="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90">
+            Quiero mis +1.000 prompts por 4 USD
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <p class="mt-4 text-xs text-muted-foreground">Pago único · Acceso inmediato · Actualizaciones incluidas</p>
+        </section>
+      </main>
+
+      <!-- ============ FOOTER ============ -->
+      <footer class="border-t border-border/60 px-4 py-12 sm:px-8">
+        <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center">
+          <div class="flex items-center gap-2 text-lg font-medium text-foreground">
+            <svg viewBox="0 0 24 24" class="h-5 w-5 text-accent" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l1.6 7.2L21 10l-6.4 3.2L16 21l-4-4.8L8 21l1.4-7.8L3 10l7.4-.8L12 2z" />
+            </svg>
+            <span>Alpacka</span>
+          </div>
+
+          <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <a href="#" class="transition hover:text-foreground">Términos y condiciones</a>
+            <a href="#" class="transition hover:text-foreground">Aviso legal</a>
+            <a href="#" class="transition hover:text-foreground">Política de cookies</a>
+          </nav>
+
+          <p class="text-xs text-muted-foreground">© 2026 Alpacka ·</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

@@ -78,122 +78,122 @@ const Pricing: React.FC = () => {
     };
 
     return (
-        <div className="bg-white text-gray-900 font-space">
-            <main className="max-w-3xl mx-auto px-6 py-16">
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+
+            <main className="relative mx-auto max-w-3xl px-4 py-16 sm:px-8 md:py-20">
 
                 {/* ── Hero ─────────────────────────────────────────────── */}
-                <div className="text-center mb-16">
-                    <span className="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">
-                        Membresía Premium
-                    </span>
-                    <h1 className="font-bold leading-tight mb-6 text-[28px] md:text-[35px] uppercase tracking-tight">
-                        Un plan. Acceso total.
+                <div className="mb-14 text-center">
+                    <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+                        <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                        <span>Membresía Premium</span>
+                    </div>
+                    <h1 className="mx-auto mt-6 max-w-2xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                        Un plan. <em className="not-italic text-primary/90">Acceso total.</em>
                     </h1>
-                    <p className="text-gray-600 max-w-xl mx-auto leading-relaxed text-[14px] md:text-[15px]">
+                    <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
                         Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
                     </p>
                 </div>
 
                 {/* ── Pricing card ─────────────────────────────────────── */}
-                <div className="max-w-md mx-auto border border-gray-200 p-8 md:p-12 mb-16">
+                <div className="relative mx-auto mb-20 max-w-xl">
+                    <div className="absolute -inset-10 -z-10 rounded-full bg-accent/5 blur-3xl"></div>
 
-                    <div className="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 className="font-bold text-lg uppercase tracking-tight">Membresía Pro</h3>
-                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">Full Access</p>
+                    <div className="rounded-3xl border border-primary/30 bg-card p-8 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)] sm:p-12">
+                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-accent/40 bg-secondary px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-accent">
+                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                            <span>Membresía Pro</span>
                         </div>
-                        <span className="border border-gray-900 bg-gray-900 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider">
-                            Popular
-                        </span>
-                    </div>
 
-                    {/* Price */}
-                    <div className="mb-8 pb-8 border-b border-gray-200">
-                        <div className="flex items-end gap-1">
-                            <span className="font-bold text-gray-400 text-2xl mb-2">$</span>
-                            <span className="font-bold text-[5rem] leading-none tracking-tighter">4</span>
-                            <span className="font-bold text-gray-400 text-sm mb-3">USD/mes</span>
+                        <div className="mt-6 flex items-baseline justify-center gap-2">
+                            <span className="text-6xl font-medium text-foreground sm:text-7xl">4</span>
+                            <span className="text-2xl text-muted-foreground">USD/mes</span>
                         </div>
-                        <p className="text-gray-500 text-xs mt-2">
+                        <p className="mt-2 text-sm text-muted-foreground">
                             Facturación mensual · cancela cuando quieras, sin dramas.
                         </p>
-                    </div>
 
-                    {/* Features */}
-                    <ul className="space-y-3 mb-8">
-                        {FEATURES.map(feature => (
-                            <li key={feature} className="flex items-center gap-3 text-sm">
-                                <Check size={14} strokeWidth={3} className="text-gray-900 flex-shrink-0" />
-                                <span className="text-gray-700">{feature}</span>
-                            </li>
-                        ))}
-                    </ul>
+                        {/* Features */}
+                        <ul className="mx-auto mt-8 max-w-md space-y-3 text-left">
+                            {FEATURES.map(feature => (
+                                <li key={feature} className="flex items-center gap-3 text-sm text-foreground/90">
+                                    <Check size={16} strokeWidth={2.5} className="shrink-0 text-accent" />
+                                    <span>{feature}</span>
+                                </li>
+                            ))}
+                        </ul>
 
-                    {/* CTA */}
-                    <button
-                        onClick={handleJoinClick}
-                        disabled={isSubscribed}
-                        className={`w-full px-8 py-3.5 text-xs uppercase tracking-wider font-bold transition-all duration-300 border ${
-                            isSubscribed
-                                ? 'border-gray-200 text-gray-400 cursor-default'
-                                : 'border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900'
-                        }`}
-                    >
-                        {isSubscribed
-                            ? 'Plan Actual'
-                            : (user ? 'Suscribirse ahora' : 'Unirse al banco')}
-                    </button>
+                        {/* CTA */}
+                        <button
+                            onClick={handleJoinClick}
+                            disabled={isSubscribed}
+                            className={`mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-medium transition ${
+                                isSubscribed
+                                    ? 'cursor-default border border-border text-muted-foreground'
+                                    : 'bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] hover:opacity-90'
+                            }`}
+                        >
+                            {isSubscribed
+                                ? 'Plan Actual'
+                                : (user ? 'Suscribirse ahora' : 'Unirse al banco')}
+                        </button>
 
-                    {/* Secure note */}
-                    <div className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-6 flex justify-center items-center gap-1.5">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        Pago Seguro vía Paddle • SSL 256-bit
+                        {/* Secure note */}
+                        <div className="mt-5 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Pago seguro vía Paddle · SSL 256-bit
+                        </div>
                     </div>
                 </div>
 
                 {/* ── Trust props ──────────────────────────────────────── */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16 pt-16 border-t border-gray-100">
+                <div className="mb-20 grid grid-cols-1 gap-4 sm:grid-cols-3">
                     {[
                         { title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.' },
                         { title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.' },
                         { title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.' },
                     ].map(({ title, desc }) => (
-                        <div key={title} className="text-center sm:text-left">
-                            <h4 className="font-bold text-sm uppercase tracking-tight mb-2">{title}</h4>
-                            <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                        <div key={title} className="rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
+                            <h4 className="text-base font-medium text-foreground">{title}</h4>
+                            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* ── FAQ ──────────────────────────────────────────────── */}
-                <div className="pt-16 border-t border-gray-100">
-                    <span className="inline-block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4">
-                        Preguntas
-                    </span>
-                    <h2 className="font-bold text-xl md:text-2xl uppercase tracking-tight leading-tight mb-10">
-                        Preguntas frecuentes. Respuestas directas.
-                    </h2>
+                <div>
+                    <div className="mb-10 text-center">
+                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+                            <span>Preguntas frecuentes</span>
+                        </div>
+                        <h2 className="mt-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl">
+                            Todo lo que necesitas saber.
+                        </h2>
+                    </div>
 
-                    <div className="border-t border-gray-200">
+                    <div className="space-y-3">
                         {FAQ_DATA.map((item, index) => {
                             const open = openIndex === index;
                             return (
-                                <div key={index} className="border-b border-gray-200">
+                                <div key={index} className="rounded-2xl border border-border/70 bg-card px-5">
                                     <button
-                                        className="w-full py-5 flex justify-between items-start text-left focus:outline-none gap-6"
+                                        className="flex w-full items-center justify-between gap-4 py-4 text-left focus:outline-none"
                                         onClick={() => setOpenIndex(open ? null : index)}
                                     >
-                                        <span className={`text-sm font-bold leading-snug transition-colors ${open ? 'text-gray-900' : 'text-gray-700'}`}>
+                                        <span className="text-sm font-medium text-foreground">
                                             {item.question}
                                         </span>
-                                        <span className={`flex-shrink-0 text-lg leading-none transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>
+                                        <span className={`shrink-0 text-lg leading-none text-muted-foreground transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>
                                             +
                                         </span>
                                     </button>
                                     <div className={`overflow-hidden transition-all duration-300 ease-in-out ${open ? 'max-h-96 opacity-100 pb-5' : 'max-h-0 opacity-0'}`}>
-                                        <p className="text-sm leading-relaxed text-gray-500">
+                                        <p className="text-sm leading-relaxed text-muted-foreground">
                                             {item.answer}
                                         </p>
                                     </div>

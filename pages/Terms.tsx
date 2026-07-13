@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 const Section: React.FC<{ number: string; title: string; children: React.ReactNode }> = ({ number, title, children }) => (
   <div className="mb-12">
     <div className="flex items-baseline gap-3 mb-4">
-      <span className="text-[10px] font-mono text-zinc-300 tracking-widest">{number}</span>
-      <h2 className="text-base font-black tracking-tight text-zinc-900">{title}</h2>
+      <span className="font-mono text-[10px] tracking-[0.2em] text-accent">{number}</span>
+      <h2 className="text-base font-medium tracking-tight text-foreground">{title}</h2>
     </div>
-    <div className="text-sm text-zinc-500 font-sans leading-relaxed space-y-3 pl-8 border-l border-zinc-100">
+    <div className="space-y-3 border-l border-border/60 pl-8 text-sm leading-relaxed text-muted-foreground">
       {children}
     </div>
   </div>
@@ -15,15 +15,21 @@ const Section: React.FC<{ number: string; title: string; children: React.ReactNo
 
 const Terms: React.FC = () => {
   return (
-    <div className="bg-white min-h-screen pb-24 font-sans">
+    <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow pb-24 font-space text-foreground">
+      <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+
+      <div className="relative">
       {/* Header */}
-      <div className="border-b border-zinc-100 py-16">
+      <div className="border-b border-border/60 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-[10px] font-mono text-zinc-400 tracking-widest uppercase mb-4">documento legal</p>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-zinc-900 mb-3">
-            términos de servicio
+          <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
+            <span>Documento legal</span>
+          </div>
+          <h1 className="mb-3 text-3xl font-medium leading-tight tracking-tight text-foreground md:text-4xl">
+            Términos de servicio
           </h1>
-          <p className="text-xs font-mono text-zinc-400">
+          <p className="text-xs text-muted-foreground">
             Última actualización: 2 de marzo de 2026 · Versión 1.0
           </p>
         </div>
@@ -32,8 +38,8 @@ const Terms: React.FC = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         {/* Intro */}
-        <div className="mb-12 p-6 bg-zinc-50 rounded-2xl border border-zinc-100 text-sm text-zinc-600 leading-relaxed">
-          Al acceder y utilizar <strong className="text-zinc-900">alpackaai</strong>{' '}
+        <div className="mb-12 rounded-2xl border border-border/70 bg-card p-6 text-sm leading-relaxed text-muted-foreground">
+          Al acceder y utilizar <strong className="font-medium text-foreground">alpackaai</strong>{' '}
           (en adelante, "el Servicio" o "la Plataforma"), aceptas íntegramente los presentes Términos de Servicio. Si no estás de acuerdo con alguna de sus disposiciones, te pedimos que no utilices la Plataforma.
         </div>
 
@@ -45,8 +51,8 @@ const Terms: React.FC = () => {
 
         <Section number="02" title="Cuentas y Autenticación (Google)">
           <p>
-            El acceso al Servicio se realiza mediante <strong className="text-zinc-700">inicio de sesión con Google</strong> (<em>Sign in with Google</em>), gestionado a través de Supabase Auth. Al autenticarte, aceptas también las{' '}
-            <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="font-semibold text-zinc-700 underline decoration-zinc-300 underline-offset-2 hover:text-zinc-900 transition-colors">
+            El acceso al Servicio se realiza mediante <strong className="font-medium text-foreground">inicio de sesión con Google</strong> (<em>Sign in with Google</em>), gestionado a través de Supabase Auth. Al autenticarte, aceptas también las{' '}
+            <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="font-medium text-foreground underline decoration-border underline-offset-2 transition-colors hover:text-primary">
               Condiciones del Servicio de Google
             </a>
             .
@@ -59,28 +65,28 @@ const Terms: React.FC = () => {
         <Section number="03" title="Suscripciones y Pagos (Paddle)">
           <p>
             El proceso de pago es gestionado íntegramente por{' '}
-            <a href="https://www.paddle.com" target="_blank" rel="noreferrer" className="font-semibold text-zinc-700 underline decoration-zinc-300 underline-offset-2 hover:text-zinc-900 transition-colors">
+            <a href="https://www.paddle.com" target="_blank" rel="noreferrer" className="font-medium text-foreground underline decoration-border underline-offset-2 transition-colors hover:text-primary">
               Paddle.com
             </a>
-            , nuestro <strong className="text-zinc-700">Vendedor Autorizado (Merchant of Record)</strong>. Paddle es responsable de la facturación, el cobro de impuestos aplicables, y la gestión de disputas y reembolsos.
+            , nuestro <strong className="font-medium text-foreground">Vendedor Autorizado (Merchant of Record)</strong>. Paddle es responsable de la facturación, el cobro de impuestos aplicables, y la gestión de disputas y reembolsos.
           </p>
           <p>
-            <strong className="text-zinc-700">Precio:</strong> La suscripción tiene un coste de <strong className="text-zinc-700">$4 USD / mes</strong>, con renovación automática al inicio de cada período. Los precios no incluyen impuestos locales que Paddle pueda aplicar según tu ubicación.
+            <strong className="font-medium text-foreground">Precio:</strong> La suscripción tiene un coste de <strong className="font-medium text-foreground">$4 USD / mes</strong>, con renovación automática al inicio de cada período. Los precios no incluyen impuestos locales que Paddle pueda aplicar según tu ubicación.
           </p>
           <p>
-            <strong className="text-zinc-700">Cancelación:</strong> Puedes cancelar en cualquier momento desde el panel de tu cuenta o a través del soporte de Paddle. El acceso al contenido premium se mantiene hasta el final del período de facturación en curso, sin cargos adicionales.
+            <strong className="font-medium text-foreground">Cancelación:</strong> Puedes cancelar en cualquier momento desde el panel de tu cuenta o a través del soporte de Paddle. El acceso al contenido premium se mantiene hasta el final del período de facturación en curso, sin cargos adicionales.
           </p>
           <p>
-            <strong className="text-zinc-700">Reembolsos:</strong> Dado que el acceso al contenido es inmediato al activarse la suscripción, no ofrecemos reembolsos por períodos ya iniciados, salvo que la legislación local vigente lo exija. Para solicitar un reembolso, contacta directamente al soporte de Paddle.
+            <strong className="font-medium text-foreground">Reembolsos:</strong> Dado que el acceso al contenido es inmediato al activarse la suscripción, no ofrecemos reembolsos por períodos ya iniciados, salvo que la legislación local vigente lo exija. Para solicitar un reembolso, contacta directamente al soporte de Paddle.
           </p>
         </Section>
 
         <Section number="04" title="Propiedad Intelectual y Licencia de Uso">
           <p>
-            <strong className="text-zinc-700">Licencia sobre los Prompts:</strong> Al suscribirte, obtienes una licencia personal, no exclusiva e intransferible para utilizar los prompts de la biblioteca con fines personales o comerciales propios.
+            <strong className="font-medium text-foreground">Licencia sobre los Prompts:</strong> Al suscribirte, obtienes una licencia personal, no exclusiva e intransferible para utilizar los prompts de la biblioteca con fines personales o comerciales propios.
           </p>
           <p>
-            <strong className="text-zinc-700">Restricciones:</strong> Queda estrictamente prohibido copiar, redistribuir, revender o publicar los prompts como producto propio, hacer scraping de la plataforma, o comercializar el acceso a la misma bajo cualquier formato.
+            <strong className="font-medium text-foreground">Restricciones:</strong> Queda estrictamente prohibido copiar, redistribuir, revender o publicar los prompts como producto propio, hacer scraping de la plataforma, o comercializar el acceso a la misma bajo cualquier formato.
           </p>
         </Section>
 
@@ -115,26 +121,27 @@ const Terms: React.FC = () => {
           <p>
             <a
               href="mailto:eban112001@gmail.com"
-              className="inline-flex items-center gap-2 font-mono font-bold text-zinc-900 bg-zinc-50 border border-zinc-200 px-4 py-2 rounded-xl hover:bg-zinc-100 transition-all text-xs"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-2 text-xs font-medium text-foreground transition hover:border-primary/40"
             >
               ✉ eban112001@gmail.com
             </a>
           </p>
           <p>
             Para consultas específicas de facturación o disputas de pago, por favor contacta directamente al soporte de{' '}
-            <a href="https://www.paddle.com/help" target="_blank" rel="noreferrer" className="font-semibold text-zinc-700 underline decoration-zinc-300 underline-offset-2 hover:text-zinc-900 transition-colors">
+            <a href="https://www.paddle.com/help" target="_blank" rel="noreferrer" className="font-medium text-foreground underline decoration-border underline-offset-2 transition-colors hover:text-primary">
               Paddle
             </a>.
           </p>
         </Section>
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-400">
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 text-xs text-muted-foreground sm:flex-row">
           <span>© 2026 alpackaai. Todos los derechos reservados.</span>
-          <Link to="/privacy" className="hover:text-zinc-700 transition-colors underline underline-offset-2">
+          <Link to="/privacy" className="underline underline-offset-2 transition-colors hover:text-foreground">
             Política de Privacidad
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );
