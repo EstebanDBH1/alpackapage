@@ -33,7 +33,8 @@
       "mcp__claude_ai_Supabase__get_logs",
       "Bash(npx supabase *)",
       "Bash(git -C /c/Users/ebanb/Desktop/Alpackaai-page check-ignore .env)",
-      "Bash(git -C /c/Users/ebanb/Desktop/Alpackaai-page log --oneline --all -- .env)"
+      "Bash(git -C /c/Users/ebanb/Desktop/Alpackaai-page log --oneline --all -- .env)",
+      "mcp__claude_ai_Supabase__deploy_edge_function"
     ]
   }
 }

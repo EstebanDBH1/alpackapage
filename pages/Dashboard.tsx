@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    User, CreditCard, LogOut, Settings, AlertTriangle,
+    User, CreditCard, LogOut, AlertTriangle,
     Clock, FileText, Zap, ArrowRight
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -57,32 +57,6 @@ const Dashboard: React.FC = () => {
         }
     }, []);
 
-    const handleManageSubscription = async () => {
-        if (!subscription) return;
-        setUpdating(true);
-        try {
-            const { data, error } = await supabase.functions.invoke('create-portal-session', { body: {} });
-            if (error) {
-                if (error.context) {
-                    try {
-                        const errorBody = await error.context.json();
-                        if (errorBody?.debug) { alert('Error debug: ' + JSON.stringify(errorBody.debug, null, 2)); return; }
-                    } catch (e) {}
-                }
-                throw error;
-            }
-            if (data?.urls?.general?.overview) {
-                window.open(data.urls.general.overview, '_blank');
-            } else {
-                throw new Error('No se recibió la URL del portal');
-            }
-        } catch (err: any) {
-            alert('Error: ' + (err.message || 'No se pudo abrir el portal. Por favor contacta soporte@alpackaai.xyz'));
-        } finally {
-            setUpdating(false);
-        }
-    };
-
     const handleCancelSubscription = async () => {
         if (!subscription) return;
         if (!window.confirm('¿Estás seguro de que quieres cancelar?')) return;
@@ -94,8 +68,10 @@ const Dashboard: React.FC = () => {
                 if (subInfo?.cancel_subscription) { window.open(subInfo.cancel_subscription, '_blank'); return; }
             }
             if (!error && data?.urls?.general?.overview) { window.open(data.urls.general.overview, '_blank'); return; }
+            // La función identifica al usuario por su JWT y busca la suscripción
+            // en la DB; no acepta IDs del cliente.
             const { error: cancelError } = await supabase.functions.invoke('cancel-paddle-subscription', {
-                body: { subscriptionID: subscription.subscription_id, userID: user.id }
+                body: {}
             });
             if (cancelError) throw cancelError;
             alert('Tu suscripción ha sido programada para cancelarse al final del periodo actual.');
@@ -297,24 +273,14 @@ const Dashboard: React.FC = () => {
                             {/* Actions */}
                             <div className="flex flex-col gap-3 sm:flex-row">
                                 {isActive ? (
-                                    <>
-                                        <button
-                                            onClick={handleManageSubscription}
-                                            disabled={updating}
-                                            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
-                                        >
-                                            <Settings size={13} />
-                                            {updating ? 'procesando...' : 'gestionar suscripción'}
-                                        </button>
-                                        <button
-                                            onClick={handleCancelSubscription}
-                                            disabled={updating}
-                                            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-accent/40 py-3 text-sm font-medium text-accent transition hover:bg-accent/10 disabled:opacity-50"
-                                        >
-                                            <AlertTriangle size={13} />
-                                            {updating ? 'procesando...' : 'cancelar'}
-                                        </button>
-                                    </>
+                                    <button
+                                        onClick={handleCancelSubscription}
+                                        disabled={updating}
+                                        className="flex flex-1 items-center justify-center gap-2 rounded-full border border-accent/40 py-3 text-sm font-medium text-accent transition hover:bg-accent/10 disabled:opacity-50"
+                                    >
+                                        <AlertTriangle size={13} />
+                                        {updating ? 'procesando...' : 'cancelar suscripción'}
+                                    </button>
                                 ) : (
                                     <button
                                         onClick={() => navigate('/pricing')}
