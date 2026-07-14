@@ -121,7 +121,7 @@ const Home: React.FC = () => {
           {/* ============ HERO ============ */}
           <section className="relative px-4 pb-20 pt-10 text-center sm:px-8 sm:pt-16 md:pb-28">
             <Pill>
-              <span className="text-foreground">3 formas</span> · 4 prompts · <span className="text-foreground">1 skill</span>
+              <span className="text-foreground">#1 en tecnología</span>
             </Pill>
 
             <h1 className="mx-auto mt-8 max-w-5xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-[5.5rem]">

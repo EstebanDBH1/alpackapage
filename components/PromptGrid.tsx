@@ -1,5 +1,6 @@
 import React from 'react';
 import { supabase } from '../lib/supabase';
+import { isNewPrompt } from '../lib/utils';
 import { ArrowRight, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -75,10 +76,15 @@ const PromptGrid: React.FC = () => {
                 key={`${prompt.id}-${index}`}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                className="w-[280px] md:w-[300px] flex-shrink-0 flex flex-col bg-white border border-gray-200 hover:border-gray-900 transition-colors duration-200"
+                className="relative w-[280px] md:w-[300px] flex-shrink-0 flex flex-col bg-white border border-gray-200 hover:border-gray-900 transition-colors duration-200"
                 onFocus={() => setIsPaused(true)}
                 onBlur={() => setIsPaused(false)}
               >
+                {isNewPrompt(prompt.created_at) && (
+                  <span className="absolute -top-2 -right-2 z-10 bg-gray-900 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-widest text-white">
+                    New
+                  </span>
+                )}
                 {/* Image preview */}
                 {prompt.image_url && (
                   <div className="w-full overflow-hidden flex-shrink-0">

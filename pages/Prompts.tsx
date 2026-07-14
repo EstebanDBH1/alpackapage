@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { supabase } from '../lib/supabase';
+import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Shield, Search, ChevronDown } from 'lucide-react';
@@ -466,8 +467,13 @@ const CategorySelect: React.FC<{
 const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => (
     <Link
         to={`/prompts/${prompt.id}`}
-        className="prompt-card group flex cursor-pointer flex-col rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40"
+        className="prompt-card group relative flex cursor-pointer flex-col rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40"
     >
+        {isNewPrompt(prompt.created_at) && (
+            <span className="absolute -top-2 -right-2 rounded-full bg-accent px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-background shadow-[0_0_14px_oklch(0.72_0.16_40_/_0.45)]">
+                New
+            </span>
+        )}
         <div className="mb-4 flex items-center justify-between">
             <span className="inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                 {prompt.category || 'General'}

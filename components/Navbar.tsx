@@ -28,7 +28,10 @@ const Navbar: React.FC = () => {
   // ── Timeline solo para el icono hamburguesa → X (nodos estáticos) ──
   useGSAP(() => {
     const menu = navRef.current!.querySelector('.mobile-menu') as HTMLElement;
-    gsap.set(menu, { height: 0, overflow: 'hidden' });
+    // El panel se anima solo con transform/opacity (compositor, sin reflow):
+    // animar height dentro de un backdrop-blur obliga a repintar el blur en
+    // cada frame y el menú se sentía lento en móvil.
+    gsap.set(menu, { autoAlpha: 0, y: -8, scale: 0.98, transformOrigin: 'top center' });
 
     // Estado base de las 3 barras: centradas vertical/horizontalmente y separadas ±6px.
     // GSAP es el dueño de TODAS las transformaciones para que la X cierre exacta.
@@ -39,10 +42,10 @@ const Navbar: React.FC = () => {
 
     tl.current = gsap.timeline({
       paused: true,
-      defaults: { duration: 0.4, ease: 'power3.inOut' },
+      defaults: { duration: 0.3, ease: 'power2.inOut' },
     })
       .to('.hb-top', { y: 0, rotate: 45 }, 0)
-      .to('.hb-mid', { opacity: 0, scaleX: 0, duration: 0.25, ease: 'power2.out' }, 0)
+      .to('.hb-mid', { opacity: 0, scaleX: 0, duration: 0.2, ease: 'power2.out' }, 0)
       .to('.hb-bot', { y: 0, rotate: -45 }, 0);
   }, { scope: navRef });
 
@@ -55,15 +58,15 @@ const Navbar: React.FC = () => {
 
     if (isOpen) {
       tl.current.play();
-      gsap.to(menu, { height: 'auto', duration: 0.45, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(menu, { autoAlpha: 1, y: 0, scale: 1, duration: 0.25, ease: 'power3.out', overwrite: 'auto' });
       gsap.fromTo(
         '.mobile-link',
-        { autoAlpha: 0, y: -10 },
-        { autoAlpha: 1, y: 0, stagger: 0.06, duration: 0.3, ease: 'power2.out', delay: 0.15, overwrite: 'auto' },
+        { autoAlpha: 0, y: -6 },
+        { autoAlpha: 1, y: 0, stagger: 0.035, duration: 0.2, ease: 'power2.out', delay: 0.05, overwrite: 'auto' },
       );
     } else {
       tl.current.reverse();
-      gsap.to(menu, { height: 0, duration: 0.4, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(menu, { autoAlpha: 0, y: -8, scale: 0.98, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
     }
   }, { dependencies: [isOpen], scope: navRef });
 
@@ -80,7 +83,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav ref={navRef} className="sticky top-0 z-50 w-full px-3 pt-3 font-space text-foreground sm:px-6">
-      <div className="mx-auto max-w-6xl rounded-2xl border border-border/50 bg-card/50 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl">
+      <div className="relative mx-auto max-w-6xl rounded-2xl border border-border/50 bg-card/50 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl">
         <div className="flex h-14 items-center justify-between px-3 sm:px-4">
 
         {/* Logo */}
@@ -149,8 +152,8 @@ const Navbar: React.FC = () => {
         </button>
         </div>
 
-        {/* Menú móvil (siempre en el DOM; animado con GSAP, dentro del panel glass) */}
-        <div className="mobile-menu md:hidden border-t border-border/50">
+        {/* Menú móvil: panel flotante bajo el navbar (siempre en el DOM; GSAP anima solo transform/opacity) */}
+        <div className="mobile-menu invisible md:hidden absolute inset-x-0 top-full mt-2 rounded-2xl border border-border/50 bg-card/90 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl">
           <div className="flex flex-col gap-1 px-3 py-3 text-sm font-medium">
           <Link to="/prompts" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Prompts</Link>
           <Link to="/pricing" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Precios</Link>
