@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase, isAdminUser } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Plus, Pencil, Trash2, ArrowLeft, Check, AlertCircle, Search, Lock } from 'lucide-react';
-
-// El UID no es un secreto: la seguridad real la imponen las políticas RLS en Supabase.
-const ADMIN_USER_ID = 'b8f61d8d-17db-4cfb-aa44-095ba79b4a31';
 
 const EMPTY_FORM = {
     id: '',
@@ -31,9 +28,9 @@ const Admin: React.FC = () => {
     const [savedFlash, setSavedFlash] = useState(false);
 
     useEffect(() => {
-        supabase.auth.getUser().then(({ data: { user } }) => {
-            if (!user) setAuthState('anonymous');
-            else if (user.id !== ADMIN_USER_ID) setAuthState('forbidden');
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (!session) setAuthState('anonymous');
+            else if (!isAdminUser(session.user)) setAuthState('forbidden');
             else setAuthState('admin');
         });
     }, []);

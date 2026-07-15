@@ -10,3 +10,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// El UID no es un secreto: la seguridad real la imponen las políticas RLS
+// (función is_admin() en Postgres). Aquí solo decide UI y redirecciones.
+export const ADMIN_USER_ID = 'b8f61d8d-17db-4cfb-aa44-095ba79b4a31';
+
+export const isAdminUser = (user: { id: string } | null | undefined): boolean =>
+    user?.id === ADMIN_USER_ID;

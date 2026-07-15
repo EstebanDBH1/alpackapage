@@ -4,7 +4,7 @@ import {
     User, CreditCard, LogOut, AlertTriangle,
     Clock, FileText, Zap, ArrowRight
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase, isAdminUser } from '../lib/supabase';
 import { Subscription } from '../types';
 import SavedPrompts from '../components/SavedPrompts';
 
@@ -19,6 +19,8 @@ const Dashboard: React.FC = () => {
         const fetchUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) { navigate('/login'); return; }
+            // El admin no tiene suscripción que gestionar: su panel es /admin.
+            if (isAdminUser(user)) { navigate('/admin', { replace: true }); return; }
             setUser(user);
 
             const { data: sub } = await supabase

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase, isAdminUser } from '../lib/supabase';
 import { ExternalLink } from 'lucide-react';
 
 function detectInAppBrowser(): { inApp: boolean; isAndroid: boolean; isIOS: boolean; appName: string } {
@@ -34,7 +34,10 @@ const Login: React.FC = () => {
 
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate(redirect, { replace: true });
+      if (!session) return;
+      // El admin va a su panel salvo que pidiera otra ruta explícitamente.
+      const target = isAdminUser(session.user) && redirect === '/dashboard' ? '/admin' : redirect;
+      navigate(target, { replace: true });
     });
   }, [navigate, redirect]);
 

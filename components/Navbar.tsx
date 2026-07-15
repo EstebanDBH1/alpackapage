@@ -13,8 +13,10 @@ const Navbar: React.FC = () => {
   const tl = useRef<gsap.core.Timeline | null>(null);
 
   const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
+    // getSession() lee la sesión local al instante; getUser() hace una petición
+    // de red y dejaba el navbar en "Acceder" varios segundos tras recargar.
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user ?? null);
   };
 
   useEffect(() => {
