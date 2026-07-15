@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
-import jsPDF from 'jspdf';
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -57,9 +56,11 @@ const PromptDetail: React.FC = () => {
         }
     };
 
-    const handleDownloadPdf = () => {
+    const handleDownloadPdf = async () => {
         if (!prompt?.content) return;
 
+        // jspdf pesa ~380 KB: se descarga solo cuando el usuario pide el PDF.
+        const { default: jsPDF } = await import('jspdf');
         const doc = new jsPDF({ unit: 'mm', format: 'a4' });
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();

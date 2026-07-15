@@ -4,18 +4,20 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Pricing from './pages/Pricing';
-import Prompts from './pages/Prompts';
-import PromptDetail from './pages/PromptDetail';
-import Dashboard from './pages/Dashboard';
-import Terms from './pages/Terms';
-import Privacy from './pages/Privacy';
-import PaymentSuccess from './pages/PaymentSuccess';
-import SavedPromptsPage from './pages/SavedPromptsPage';
-import Ebook from './pages/Ebook';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+// Code-splitting por ruta: cada página se descarga solo cuando se visita.
+const Login = React.lazy(() => import('./pages/Login'));
+const Pricing = React.lazy(() => import('./pages/Pricing'));
+const Prompts = React.lazy(() => import('./pages/Prompts'));
+const PromptDetail = React.lazy(() => import('./pages/PromptDetail'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Terms = React.lazy(() => import('./pages/Terms'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
+const PaymentSuccess = React.lazy(() => import('./pages/PaymentSuccess'));
+const SavedPromptsPage = React.lazy(() => import('./pages/SavedPromptsPage'));
+const Ebook = React.lazy(() => import('./pages/Ebook'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -79,6 +81,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <ScrollToTop />
       <AppLayout>
+        <React.Suspense fallback={<div className="min-h-screen bg-background" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/prompts" element={<Prompts />} />
@@ -93,6 +96,7 @@ const App: React.FC = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/ebook" element={<Ebook />} />
         </Routes>
+        </React.Suspense>
       </AppLayout>
     </BrowserRouter>
   );

@@ -34,7 +34,11 @@
       "Bash(npx supabase *)",
       "Bash(git -C /c/Users/ebanb/Desktop/Alpackaai-page check-ignore .env)",
       "Bash(git -C /c/Users/ebanb/Desktop/Alpackaai-page log --oneline --all -- .env)",
-      "mcp__claude_ai_Supabase__deploy_edge_function"
+      "mcp__claude_ai_Supabase__deploy_edge_function",
+      "PowerShell(npm install *)",
+      "PowerShell(Select-String -Path dist/index.html -Pattern 'tailwind|esm.sh|index.css' | ForEach-Object { $_.Line.Trim\\(\\) })",
+      "PowerShell(npx tsc --noEmit)",
+      "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri http://localhost:4173/ -UseBasicParsing; \"Status: $\\($r.StatusCode\\)\"; $assets = [regex]::Matches\\($r.Content, '\\(?:src|href\\)=\"\\(/assets/[^\"]+\\)\"'\\) | ForEach-Object { $_.Groups[1].Value }; foreach \\($a in $assets\\) { $ar = Invoke-WebRequest -Uri \"http://localhost:4173$a\" -UseBasicParsing -Method Head; \"$a => $\\($ar.StatusCode\\)\" })"
     ]
   }
 }

@@ -11,6 +11,78 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
+
+  body {
+    background-color: oklch(0.15 0.005 60);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.bg-radial-glow {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.28 0.02 60 / 0.5), transparent 60%),
+    radial-gradient(circle at 20% 80%, oklch(0.72 0.16 40 / 0.05), transparent 40%);
+}
+
+.bg-star-field {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, oklch(0.93 0.02 85 / 0.3), transparent),
+    radial-gradient(1px 1px at 80% 60%, oklch(0.93 0.02 85 / 0.25), transparent),
+    radial-gradient(1px 1px at 40% 80%, oklch(0.93 0.02 85 / 0.2), transparent),
+    radial-gradient(1px 1px at 90% 20%, oklch(0.93 0.02 85 / 0.3), transparent),
+    radial-gradient(1px 1px at 10% 70%, oklch(0.93 0.02 85 / 0.2), transparent);
+  background-size: 400px 400px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C8BEB5;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A09690;
 }
 
 /* Custom Utilities */
