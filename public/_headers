@@ -1,0 +1,9 @@
+# Cabeceras para Cloudflare Pages.
+# El HTML nunca se cachea (siempre revalida); los assets llevan hash en el
+# nombre, así que pueden cachearse indefinidamente.
+
+/*
+  Cache-Control: no-cache, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
