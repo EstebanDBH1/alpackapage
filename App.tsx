@@ -18,6 +18,7 @@ const Privacy = React.lazy(() => import('./pages/Privacy'));
 const PaymentSuccess = React.lazy(() => import('./pages/PaymentSuccess'));
 const SavedPromptsPage = React.lazy(() => import('./pages/SavedPromptsPage'));
 const Ebook = React.lazy(() => import('./pages/Ebook'));
+const Admin = React.lazy(() => import('./pages/Admin'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -95,6 +96,7 @@ const App: React.FC = () => {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/ebook" element={<Ebook />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
         </React.Suspense>
       </AppLayout>
