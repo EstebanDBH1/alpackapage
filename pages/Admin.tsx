@@ -23,6 +23,7 @@ const Admin: React.FC = () => {
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
     const [form, setForm] = useState<FormState | null>(null);
+    const [customCategory, setCustomCategory] = useState(false);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [savedFlash, setSavedFlash] = useState(false);
@@ -65,11 +66,13 @@ const Admin: React.FC = () => {
 
     const openNew = () => {
         setError(null);
+        setCustomCategory(false);
         setForm({ ...EMPTY_FORM });
     };
 
     const openEdit = (p: Prompt) => {
         setError(null);
+        setCustomCategory(false);
         setForm({
             id: p.id,
             title: p.title,
@@ -185,15 +188,32 @@ const Admin: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="mb-2 block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Categoría *</label>
-                                    <input
-                                        list="admin-categories"
-                                        value={form.category}
-                                        onChange={e => setForm({ ...form, category: e.target.value })}
+                                    <select
+                                        value={customCategory ? '__new__' : form.category}
+                                        onChange={e => {
+                                            if (e.target.value === '__new__') {
+                                                setCustomCategory(true);
+                                                setForm({ ...form, category: '' });
+                                            } else {
+                                                setCustomCategory(false);
+                                                setForm({ ...form, category: e.target.value });
+                                            }
+                                        }}
                                         className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground focus:border-accent focus:outline-none"
-                                    />
-                                    <datalist id="admin-categories">
-                                        {categories.map(c => <option key={c} value={c} />)}
-                                    </datalist>
+                                    >
+                                        <option value="" disabled>Selecciona una categoría…</option>
+                                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                                        <option value="__new__">➕ Nueva categoría…</option>
+                                    </select>
+                                    {customCategory && (
+                                        <input
+                                            autoFocus
+                                            value={form.category}
+                                            onChange={e => setForm({ ...form, category: e.target.value })}
+                                            placeholder="Nombre de la nueva categoría"
+                                            className="mt-2 w-full rounded-xl border border-accent/50 bg-card px-4 py-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                                        />
+                                    )}
                                 </div>
                                 <div className="flex items-end pb-1">
                                     <label className="inline-flex cursor-pointer items-center gap-3 text-sm text-foreground">
