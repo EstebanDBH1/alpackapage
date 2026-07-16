@@ -1,7 +1,5 @@
 /// <reference types="vite/client" />
 import React from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
@@ -23,6 +21,7 @@ const Skills = React.lazy(() => import('./pages/Skills'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -35,10 +34,31 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Transición sutil entre páginas (solo opacidad, para no romper los elementos sticky)
+// Canonical por ruta. El dominio canónico es www.alpackaai.xyz: sin esto,
+// cada ruta de la SPA heredaría un mismo canonical estático (y Google
+// trataría todas las páginas como duplicados de la home).
+const CANONICAL_ORIGIN = 'https://www.alpackaai.xyz';
+
+const Canonical = () => {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      document.head.appendChild(link);
+    }
+    // pathname sin query string: /login?redirect=... canonicaliza a /login
+    link.href = `${CANONICAL_ORIGIN}${pathname}`;
+  }, [pathname]);
+
+  return null;
+};
+
+// Transición sutil entre páginas: fade CSS que se re-dispara al cambiar la key
 const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
-  const ref = React.useRef<HTMLDivElement>(null);
 
   // Las rutas de listado/categoría de prompts comparten la misma vista:
   // no disparamos la transición al cambiar de categoría (eso ya se anima dentro).
@@ -47,16 +67,7 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
     return pathname;
   }, [pathname]);
 
-  useGSAP(() => {
-    const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) {
-      gsap.set(ref.current, { opacity: 1 });
-      return;
-    }
-    gsap.fromTo(ref.current, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
-  }, { dependencies: [transitionKey] });
-
-  return <div ref={ref}>{children}</div>;
+  return <div key={transitionKey} className="animate-fade-in">{children}</div>;
 };
 
 // La home es una landing autocontenida: trae su propio header y footer.
@@ -85,6 +96,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <Canonical />
       <AppLayout>
         <React.Suspense fallback={<div className="min-h-screen bg-background" />}>
         <Routes>
@@ -105,6 +117,7 @@ const App: React.FC = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         </React.Suspense>
       </AppLayout>

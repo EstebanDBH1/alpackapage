@@ -1,6 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BlogPost } from '../types';
@@ -8,75 +6,32 @@ import { Search } from 'lucide-react';
 
 type BlogPostPreview = Omit<BlogPost, 'content'>;
 
-const prefersReducedMotion = () =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
-// ── Reveal de texto por palabras (mismo patrón que Prompts) ──────────────────
+// ── Entrada sutil del texto del hero (CSS, respeta prefers-reduced-motion) ───
 const AnimatedText: React.FC<{ text: string; className?: string; delay?: number; stagger?: number }> = ({
-    text, className = '', delay = 0, stagger = 0.05,
-}) => {
-    const ref = useRef<HTMLSpanElement>(null);
-    const words = text.split(' ');
-
-    useGSAP(() => {
-        const targets = ref.current!.querySelectorAll('.word-inner');
-        if (prefersReducedMotion()) {
-            gsap.set(targets, { yPercent: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            targets,
-            { yPercent: 110, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.9, ease: 'power4.out', stagger, delay },
-        );
-    }, { scope: ref, dependencies: [text] });
-
-    return (
-        <span ref={ref} className={className} aria-label={text}>
-            {words.map((word, i) => (
-                <React.Fragment key={`${word}-${i}`}>
-                    <span className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]" aria-hidden="true">
-                        <span className="word-inner inline-block will-change-transform">{word}</span>
-                    </span>
-                    {i < words.length - 1 ? ' ' : ''}
-                </React.Fragment>
-            ))}
-        </span>
-    );
-};
+    text, className = '', delay = 0,
+}) => (
+    <span className={`animate-fade-up inline-block ${className}`} style={{ animationDelay: `${delay}s` }}>
+        {text}
+    </span>
+);
 
 // ── Aparición suave ───────────────────────────────────────────────────────────
 const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({
     children, className = '', delay = 0,
-}) => {
-    const ref = useRef<HTMLParagraphElement>(null);
-
-    useGSAP(() => {
-        if (prefersReducedMotion()) {
-            gsap.set(ref.current, { y: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            ref.current,
-            { y: 14, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay },
-        );
-    }, { scope: ref });
-
-    return <p ref={ref} className={className}>{children}</p>;
-};
+}) => (
+    <p className={`animate-fade-up ${className}`} style={{ animationDelay: `${delay}s` }}>{children}</p>
+);
 
 const Blog: React.FC = () => {
     const [posts, setPosts] = useState<BlogPostPreview[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState('todas');
     const [searchQuery, setSearchQuery] = useState('');
-    const gridRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         document.title = 'Blog · Guías y estrategias de IA | Alpacka';
@@ -106,23 +61,8 @@ const Blog: React.FC = () => {
         return matchesCategory && matchesSearch;
     }), [posts, selectedCategory, searchQuery]);
 
-    // ── Animación del grid ──────────────────────────────────────────────────────
+    // El grid reaparece con un fade al cambiar el filtro (la key fuerza el remontaje)
     const cardsKey = useMemo(() => filteredPosts.map(p => p.id).join(','), [filteredPosts]);
-
-    useGSAP(() => {
-        if (loading) return;
-        const cards = gridRef.current?.querySelectorAll('.blog-card');
-        if (!cards || cards.length === 0) return;
-        if (prefersReducedMotion()) {
-            gsap.set(cards, { opacity: 1, y: 0 });
-            return;
-        }
-        gsap.fromTo(
-            cards,
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.06 },
-        );
-    }, { scope: gridRef, dependencies: [loading, cardsKey] });
 
     return (
         <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
@@ -196,8 +136,8 @@ const Blog: React.FC = () => {
 
                     {/* ── Grid de posts ──────────────────────────────────── */}
                     <div
-                        ref={gridRef}
-                        className="grid w-full max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+                        key={cardsKey}
+                        className="animate-fade-in grid w-full max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
                     >
                         {loading && Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="h-80 animate-pulse rounded-2xl border border-border/70 bg-card" />

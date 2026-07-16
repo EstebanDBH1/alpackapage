@@ -1,6 +1,4 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { supabase } from '../lib/supabase';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
@@ -20,63 +18,23 @@ const DEFAULT_SUBTITLE = 'Prompts gratuitos y seleccionados para IA compatibles 
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const prefersReducedMotion = () =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// ── Reveal de texto por palabras ─────────────────────────────────────────────
+// ── Entrada sutil del texto del hero (CSS, respeta prefers-reduced-motion) ───
 const AnimatedText: React.FC<{ text: string; className?: string; delay?: number; stagger?: number }> = ({
-    text, className = '', delay = 0, stagger = 0.05,
-}) => {
-    const ref = useRef<HTMLSpanElement>(null);
-    const words = text.split(' ');
+    text, className = '', delay = 0,
+}) => (
+    <span key={text} className={`animate-fade-up inline-block ${className}`} style={{ animationDelay: `${delay}s` }}>
+        {text}
+    </span>
+);
 
-    useGSAP(() => {
-        const targets = ref.current!.querySelectorAll('.word-inner');
-        if (prefersReducedMotion()) {
-            gsap.set(targets, { yPercent: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            targets,
-            { yPercent: 110, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.9, ease: 'power4.out', stagger, delay },
-        );
-    }, { scope: ref, dependencies: [text] });
-
-    return (
-        <span ref={ref} className={className} aria-label={text}>
-            {words.map((word, i) => (
-                <React.Fragment key={`${word}-${i}`}>
-                    <span className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]" aria-hidden="true">
-                        <span className="word-inner inline-block will-change-transform">{word}</span>
-                    </span>
-                    {i < words.length - 1 ? ' ' : ''}
-                </React.Fragment>
-            ))}
-        </span>
-    );
-};
-
-// ── Aparición suave ───────────────────────────────────────────────────────────
+// ── Aparición suave (la key re-dispara la animación al cambiar de categoría) ──
 const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: number; replayKey?: unknown }> = ({
     children, className = '', delay = 0, replayKey,
-}) => {
-    const ref = useRef<HTMLParagraphElement>(null);
-
-    useGSAP(() => {
-        if (prefersReducedMotion()) {
-            gsap.set(ref.current, { y: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            ref.current,
-            { y: 14, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay },
-        );
-    }, { scope: ref, dependencies: [replayKey] });
-
-    return <p ref={ref} className={className}>{children}</p>;
-};
+}) => (
+    <p key={String(replayKey ?? '')} className={`animate-fade-up ${className}`} style={{ animationDelay: `${delay}s` }}>
+        {children}
+    </p>
+);
 
 const Prompts: React.FC = () => {
     const navigate = useNavigate();
@@ -161,23 +119,8 @@ const Prompts: React.FC = () => {
     const totalPages = Math.ceil(filteredPrompts.length / PAGE_SIZE);
     const paginatedPrompts = filteredPrompts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    // ── Animación del grid ──────────────────────────────────────────────────────
+    // El grid reaparece con un fade al cambiar filtro/página (la key fuerza el remontaje)
     const cardsKey = useMemo(() => paginatedPrompts.map(p => p.id).join(','), [paginatedPrompts]);
-
-    useGSAP(() => {
-        if (loading) return;
-        const cards = gridRef.current?.querySelectorAll('.prompt-card');
-        if (!cards || cards.length === 0) return;
-        if (prefersReducedMotion()) {
-            gsap.set(cards, { opacity: 1, y: 0 });
-            return;
-        }
-        gsap.fromTo(
-            cards,
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.06 },
-        );
-    }, { scope: gridRef, dependencies: [loading, cardsKey] });
 
     const goToPage = (page: number) => {
         setCurrentPage(page);
@@ -292,7 +235,8 @@ const Prompts: React.FC = () => {
                         {/* ── Grid de prompts ──────────────────────────────────── */}
                         <div
                             ref={gridRef}
-                            className="mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+                            key={cardsKey}
+                            className="animate-fade-in mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                         >
                             {loading && Array.from({ length: 6 }).map((_, i) => (
                                 <div key={i} className="h-44 animate-pulse rounded-2xl border border-border/70 bg-card p-6" />

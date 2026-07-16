@@ -40,7 +40,8 @@
       "PowerShell(npx tsc --noEmit)",
       "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri http://localhost:4173/ -UseBasicParsing; \"Status: $\\($r.StatusCode\\)\"; $assets = [regex]::Matches\\($r.Content, '\\(?:src|href\\)=\"\\(/assets/[^\"]+\\)\"'\\) | ForEach-Object { $_.Groups[1].Value }; foreach \\($a in $assets\\) { $ar = Invoke-WebRequest -Uri \"http://localhost:4173$a\" -UseBasicParsing -Method Head; \"$a => $\\($ar.StatusCode\\)\" })",
       "mcp__claude_ai_Supabase__apply_migration",
-      "PowerShell(curl.exe -sI https://alpackaai.xyz/ ; echo '---ASSET---'; $html = curl.exe -s https://alpackaai.xyz/ ; $m = [regex]::Match\\($html, '/assets/index-[^\"]+\\\\.js'\\); if \\($m.Success\\) { curl.exe -sI \"https://alpackaai.xyz$\\($m.Value\\)\" } else { echo 'no asset ref found'; $html | Select-Object -First 30 })"
+      "PowerShell(curl.exe -sI https://alpackaai.xyz/ ; echo '---ASSET---'; $html = curl.exe -s https://alpackaai.xyz/ ; $m = [regex]::Match\\($html, '/assets/index-[^\"]+\\\\.js'\\); if \\($m.Success\\) { curl.exe -sI \"https://alpackaai.xyz$\\($m.Value\\)\" } else { echo 'no asset ref found'; $html | Select-Object -First 30 })",
+      "PowerShell(npm uninstall *)"
     ]
   }
 }

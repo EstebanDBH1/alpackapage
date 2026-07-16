@@ -1,14 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BlogPost as BlogPostType } from '../types';
 import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import { ArrowLeft, Clock } from 'lucide-react';
-
-const prefersReducedMotion = () =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -22,7 +17,6 @@ const BlogPost: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const [post, setPost] = useState<BlogPostType | null>(null);
     const [status, setStatus] = useState<'loading' | 'ready' | 'notfound'>('loading');
-    const articleRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!slug) return;
@@ -46,16 +40,6 @@ const BlogPost: React.FC = () => {
         if (post) document.title = `${post.title} | Blog de Alpacka`;
         return () => { document.title = 'Banco de Prompts de IA · +1.000 prompts para ChatGPT, Claude y Gemini | Alpacka'; };
     }, [post]);
-
-    useGSAP(() => {
-        if (status !== 'ready' || !articleRef.current) return;
-        if (prefersReducedMotion()) return;
-        gsap.fromTo(
-            articleRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
-        );
-    }, { dependencies: [status] });
 
     if (status === 'loading') {
         return (
@@ -91,7 +75,7 @@ const BlogPost: React.FC = () => {
         <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
             <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
 
-            <div ref={articleRef} className="relative mx-auto w-full max-w-3xl px-6 pt-12 pb-24">
+            <div className="animate-fade-up relative mx-auto w-full max-w-3xl px-6 pt-12 pb-24">
 
                 {/* Volver */}
                 <Link

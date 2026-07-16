@@ -1,6 +1,4 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { Search, Check, Copy, X } from 'lucide-react';
 
 // ── Datos de skills (estático, fácil de ampliar) ─────────────────────────────
@@ -483,63 +481,21 @@ const CATEGORIES = ['todas', ...Array.from(new Set(SKILLS.map(s => s.category)))
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const prefersReducedMotion = () =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// ── Reveal de texto por palabras (mismo patrón que Prompts) ──────────────────
+// ── Entrada sutil del texto del hero (CSS, respeta prefers-reduced-motion) ───
 const AnimatedText: React.FC<{ text: string; className?: string; delay?: number; stagger?: number }> = ({
-    text, className = '', delay = 0, stagger = 0.05,
-}) => {
-    const ref = useRef<HTMLSpanElement>(null);
-    const words = text.split(' ');
-
-    useGSAP(() => {
-        const targets = ref.current!.querySelectorAll('.word-inner');
-        if (prefersReducedMotion()) {
-            gsap.set(targets, { yPercent: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            targets,
-            { yPercent: 110, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.9, ease: 'power4.out', stagger, delay },
-        );
-    }, { scope: ref, dependencies: [text] });
-
-    return (
-        <span ref={ref} className={className} aria-label={text}>
-            {words.map((word, i) => (
-                <React.Fragment key={`${word}-${i}`}>
-                    <span className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]" aria-hidden="true">
-                        <span className="word-inner inline-block will-change-transform">{word}</span>
-                    </span>
-                    {i < words.length - 1 ? ' ' : ''}
-                </React.Fragment>
-            ))}
-        </span>
-    );
-};
+    text, className = '', delay = 0,
+}) => (
+    <span key={text} className={`animate-fade-up inline-block ${className}`} style={{ animationDelay: `${delay}s` }}>
+        {text}
+    </span>
+);
 
 // ── Aparición suave ───────────────────────────────────────────────────────────
 const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({
     children, className = '', delay = 0,
-}) => {
-    const ref = useRef<HTMLParagraphElement>(null);
-
-    useGSAP(() => {
-        if (prefersReducedMotion()) {
-            gsap.set(ref.current, { y: 0, opacity: 1 });
-            return;
-        }
-        gsap.fromTo(
-            ref.current,
-            { y: 14, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay },
-        );
-    }, { scope: ref });
-
-    return <p ref={ref} className={className}>{children}</p>;
-};
+}) => (
+    <p className={`animate-fade-up ${className}`} style={{ animationDelay: `${delay}s` }}>{children}</p>
+);
 
 // ── Botón copiar reutilizable ────────────────────────────────────────────────
 const CopyButton: React.FC<{ text: string; label?: string; className?: string }> = ({
@@ -574,7 +530,6 @@ const Skills: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState('todas');
     const [searchQuery, setSearchQuery] = useState('');
     const [openSkill, setOpenSkill] = useState<ClaudeSkill | null>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
 
     const filteredSkills = useMemo(() => SKILLS.filter(skill => {
         const matchesCategory = selectedCategory === 'todas' || skill.category === selectedCategory;
@@ -583,22 +538,8 @@ const Skills: React.FC = () => {
         return matchesCategory && matchesSearch;
     }), [selectedCategory, searchQuery]);
 
-    // ── Animación del grid ──────────────────────────────────────────────────────
+    // El grid reaparece con un fade al cambiar el filtro (la key fuerza el remontaje)
     const cardsKey = useMemo(() => filteredSkills.map(s => s.id).join(','), [filteredSkills]);
-
-    useGSAP(() => {
-        const cards = gridRef.current?.querySelectorAll('.skill-card');
-        if (!cards || cards.length === 0) return;
-        if (prefersReducedMotion()) {
-            gsap.set(cards, { opacity: 1, y: 0 });
-            return;
-        }
-        gsap.fromTo(
-            cards,
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.06 },
-        );
-    }, { scope: gridRef, dependencies: [cardsKey] });
 
     return (
         <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
@@ -671,8 +612,8 @@ const Skills: React.FC = () => {
 
                         {/* ── Grid de skills ──────────────────────────────────── */}
                         <div
-                            ref={gridRef}
-                            className="mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+                            key={cardsKey}
+                            className="animate-fade-in mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                         >
                             {filteredSkills.map(skill => (
                                 <SkillCard key={skill.id} skill={skill} onOpen={() => setOpenSkill(skill)} />
@@ -769,7 +710,6 @@ const SkillCard: React.FC<{ skill: ClaudeSkill; onOpen: () => void }> = ({ skill
 // ── Modal con el contenido completo ──────────────────────────────────────────
 const SkillModal: React.FC<{ skill: ClaudeSkill; onClose: () => void }> = ({ skill, onClose }) => {
     const backdropRef = useRef<HTMLDivElement>(null);
-    const panelRef = useRef<HTMLDivElement>(null);
 
     // Cerrar con Escape + bloquear scroll del fondo
     useEffect(() => {
@@ -783,28 +723,17 @@ const SkillModal: React.FC<{ skill: ClaudeSkill; onClose: () => void }> = ({ ski
         };
     }, [onClose]);
 
-    useGSAP(() => {
-        if (prefersReducedMotion()) return;
-        gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
-        gsap.fromTo(
-            panelRef.current,
-            { opacity: 0, y: 24, scale: 0.98 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'power3.out' },
-        );
-    }, []);
-
     return (
         <div
             ref={backdropRef}
             onClick={e => { if (e.target === backdropRef.current) onClose(); }}
-            className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+            className="animate-fade-in fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={`Skill: ${skill.name}`}
         >
             <div
-                ref={panelRef}
-                className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border/70 bg-card shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl"
+                className="animate-fade-up flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border/70 bg-card shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl"
             >
                 {/* Cabecera */}
                 <div className="flex items-start justify-between gap-4 border-b border-border/60 px-6 py-5 sm:px-8">
