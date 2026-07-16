@@ -39,10 +39,12 @@ export default {
         ring: 'oklch(0.86 0.09 90 / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-        space: ['"Space Grotesk"', 'sans-serif'],
+        // Toda la app usa Geist Mono; /ebook define su propia tipografía
+        // inline (Space Grotesk) y no pasa por estos alias.
+        sans: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+        display: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+        space: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
     },
   },

@@ -14,22 +14,29 @@ No test runner or linter is configured.
 
 ## Architecture
 
-**Alpacka.ai** is a premium AI prompt marketplace SaaS. React + Vite + TypeScript frontend, Supabase (Postgres + Auth) backend, Paddle for billing.
+**Alpacka.ai** is a premium AI prompt marketplace SaaS. React + Vite + TypeScript frontend, Supabase (Postgres + Auth) backend, Paddle for billing. Production domain: `https://www.alpackaai.xyz`.
 
 ### File Structure
 
-Source files live flat at the repo root — there is no `src/` directory. Pages are in `pages/`, reusable UI in `components/`, and shared TypeScript interfaces in `types.ts`.
+Source files live flat at the repo root — there is no `src/` directory. Pages are in `pages/`, reusable UI in `components/`, and shared TypeScript interfaces in `types.ts`. `public/` also contains standalone static landing pages (`gpt-tesis/`, `chatgpt-tesis/`) with their own HTML/fonts, independent of the React app.
 
 ### Routing (App.tsx)
 
-All routes are defined in `App.tsx`:
+All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 - `/` — Home (marketing landing page)
-- `/prompts` / `/prompts/:id` — Browse and view prompts
+- `/prompts` / `/prompts/categoria/:category` / `/prompts/:id` — Browse and view prompts
 - `/login` — Google OAuth (supports `?redirect=/path`)
-- `/dashboard` — Subscription management + saved prompts
+- `/dashboard` — Subscription management
+- `/guardados` — Saved prompts
 - `/pricing` — Single-plan pricing ($4/month via Paddle)
 - `/payment-success` — Post-checkout confirmation
+- `/ebook` — Standalone sales page for the Notion prompt library ($10 one-time via Hotmart)
+- `/skills` — Skills page
+- `/blog` / `/blog/:slug` — Blog (content from Supabase `blog_posts`)
+- `/admin` / `/admin/blog` — Admin panels (protected by `is_admin` RLS in Supabase)
 - `/terms` / `/privacy` — Static legal pages
+
+`STANDALONE_ROUTES` (`/` and `/ebook`) render without the shared Navbar/Footer layout — they bring their own header/footer.
 
 ### Key Patterns
 
@@ -41,9 +48,15 @@ All routes are defined in `App.tsx`:
 
 **Data fetching:** Supabase client is initialized in `lib/`. Prompts are fetched via `get_public_prompts()` RPC. The `saved_prompts` table joins users to bookmarked prompts.
 
+**Chunk-reload guard:** `index.tsx` listens for Vite's `vite:preloadError` and reloads the page once (sessionStorage flag) when a lazy route chunk fails to load — this recovers visitors whose cached `index.html` references pre-deploy asset hashes.
+
 ### Styling
 
- Tailwind CSS loaded via CDN (configured inline in `index.html`). Brand palette: `#FDFCFC` background, `#F5F3F1` surface, black accent. Font: Space Mono (Google Fonts). Custom Tailwind brand colors are defined in the `<script>` block inside `index.html` — add new colors there, not in a config file.
+Tailwind CSS compiled via PostCSS (`tailwind.config.js` + `index.css` with `@tailwind` directives). It is NOT loaded via CDN. Two palettes coexist in `tailwind.config.js`:
+- `brand.*` colors (light/cream palette) used by older components.
+- Semantic tokens (`background`, `foreground`, `card`, `primary`, `accent`, `border`, …) in oklch — the site's dark theme (`oklch(0.15 0.005 60)` background, orange accent `oklch(0.72 0.16 40)`).
+
+**Typography:** The whole app uses **Geist Mono**. All Tailwind font aliases (`font-sans`, `font-mono`, `font-display`, `font-space`) point to Geist Mono in `tailwind.config.js` — Tailwind's preflight applies `sans` to the body, and pages/components use the alias classes. The ONE exception is `/ebook` (`pages/Ebook.tsx`): a light-themed (white, Notion-style) standalone page that sets `"Space Grotesk"` via inline styles on its own root, overriding the global font. Fonts load from Google Fonts in `index.html` (Geist Mono + Space Grotesk only — don't add font families that aren't used).
 
 ### Path Alias
 
@@ -59,4 +72,8 @@ Supabase service role key and Paddle API key are used only in Edge Functions (no
 
 ### Deployment
 
-Deployed on Vercel. `vercel.json` rewrites all routes to `index.html` for client-side routing. The Supabase Edge Function (`supabase/functions/create-portal-session/`) is deployed separately via Supabase CLI.
+`www.alpackaai.xyz` is served through Cloudflare (Pages). Cache policy lives in `public/_headers`: HTML is `no-cache, must-revalidate`; `/assets/*` (hashed filenames) is `immutable, max-age=1y`. Known platform gotcha: a request for a **missing** `/assets/*` file returns the SPA-fallback `index.html` with 200 + the immutable header, so browsers can cache HTML under an asset URL during a deploy window — the `vite:preloadError` reload guard in `index.tsx` mitigates this.
+
+`vercel.json` (SPA rewrites + the same cache headers) and `middleware.ts` (Vercel Edge Middleware serving OG meta tags to social crawlers) remain from the Vercel setup; `middleware.ts` does not run on Cloudflare Pages.
+
+The Supabase Edge Function (`supabase/functions/create-portal-session/`) is deployed separately via Supabase CLI.
