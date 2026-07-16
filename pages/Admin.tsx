@@ -158,6 +158,19 @@ const Admin: React.FC = () => {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-12">
+            {/* Pestañas del panel */}
+            <div className="mb-10 flex items-center gap-2">
+                <span className="rounded-full border border-accent bg-accent/10 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-accent">
+                    Prompts
+                </span>
+                <Link
+                    to="/admin/blog"
+                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
+                >
+                    Blog
+                </Link>
+            </div>
+
             {form ? (
                 /* ---------- Editor ---------- */
                 <div>

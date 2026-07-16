@@ -104,6 +104,8 @@ const Navbar: React.FC = () => {
         {/* Navegación de escritorio */}
         <div className="hidden md:flex items-center gap-2">
           <Link to="/prompts" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Prompts</Link>
+          <Link to="/skills" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Skills</Link>
+          <Link to="/blog" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Blog</Link>
           <Link to="/pricing" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Precios</Link>
 
           <span className="mx-2 h-4 w-px bg-border" />
@@ -158,6 +160,8 @@ const Navbar: React.FC = () => {
         <div className="mobile-menu invisible md:hidden absolute inset-x-0 top-full mt-2 rounded-2xl border border-border/50 bg-card/90 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl">
           <div className="flex flex-col gap-1 px-3 py-3 text-sm font-medium">
           <Link to="/prompts" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Prompts</Link>
+          <Link to="/skills" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Skills</Link>
+          <Link to="/blog" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Blog</Link>
           <Link to="/pricing" className="mobile-link rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Precios</Link>
 
           <div className="mobile-link h-px bg-border/60 w-full my-2" />

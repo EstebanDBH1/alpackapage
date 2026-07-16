@@ -19,6 +19,10 @@ const PaymentSuccess = React.lazy(() => import('./pages/PaymentSuccess'));
 const SavedPromptsPage = React.lazy(() => import('./pages/SavedPromptsPage'));
 const Ebook = React.lazy(() => import('./pages/Ebook'));
 const Admin = React.lazy(() => import('./pages/Admin'));
+const Skills = React.lazy(() => import('./pages/Skills'));
+const Blog = React.lazy(() => import('./pages/Blog'));
+const BlogPost = React.lazy(() => import('./pages/BlogPost'));
+const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -97,6 +101,10 @@ const App: React.FC = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/ebook" element={<Ebook />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/skills" element={<Skills />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/admin/blog" element={<AdminBlog />} />
         </Routes>
         </React.Suspense>
       </AppLayout>
