@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { Check, Shield, ChevronDown, ChevronUp, Zap, Target, Star, ArrowRight, Gift, Clock, TrendingUp, BookOpen, Sparkles, Database, Layers } from 'lucide-react';
 import AlpacaIcon from '../components/AlpacaIcon';
 
-/* ─── Paleta (tema oscuro de marca — coincide con el sitio principal) ─── */
-const BG       = 'oklch(0.15 0.005 60)';   // fondo
-const BG_WARM  = 'oklch(0.18 0.006 60)';   // superficie / card alt
-const BG_CARD  = 'oklch(0.19 0.006 60)';   // card
-const TEXT     = 'oklch(0.93 0.02 85)';    // texto principal
-const TEXT_MED = 'oklch(0.72 0.02 80)';    // texto medio
-const TEXT_DIM = 'oklch(0.55 0.02 80)';    // texto tenue
-const BORDER   = 'oklch(0.30 0.008 60)';   // bordes
+/* ─── Paleta (Notion-inspired — tema claro) ─── */
+const BG       = '#ffffff';
+const BG_WARM  = '#f7f6f3';
+const BG_CARD  = '#ffffff';
+const TEXT     = '#1a1a1a';
+const TEXT_MED = '#787774';
+const TEXT_DIM = '#a8a5a1';
+const BORDER   = '#e4e4e1';
 
-/* Acentos de marca */
-const ACCENT       = 'oklch(0.72 0.16 40)';        // naranja de marca
-const PRIMARY      = 'oklch(0.86 0.09 90)';        // cream/dorado de los CTAs
-const PRIMARY_TEXT = 'oklch(0.15 0.005 60)';       // texto sobre botón cream
-const CHIP_BG      = 'rgba(255,255,255,0.06)';     // chips/íconos translúcidos
+/* Acentos */
+const ACCENT       = '#f97316';            // naranja
+const PRIMARY      = '#000000';            // CTAs negros
+const PRIMARY_TEXT = '#ffffff';            // texto sobre botón negro
+const CHIP_BG      = 'rgba(0,0,0,0.05)';   // chips/íconos suaves
 
 /* ─── FAQ ─── */
 const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
@@ -48,7 +48,7 @@ const aiTools = [
   { name: 'Gemini', dot: '#4285F4' },
   { name: 'DeepSeek', dot: '#3B82F6' },
   { name: 'Perplexity', dot: '#20B2AA' },
-  { name: 'Grok', dot: '#9a9a9a' },
+  { name: 'Grok', dot: '#555555' },
   { name: 'Mistral', dot: '#FF6B35' },
   { name: 'Copilot', dot: '#0078D4' },
   { name: 'Meta AI', dot: '#0668E1' },
@@ -87,7 +87,7 @@ const AIMarquee: React.FC = () => {
               padding: '7px 16px',
               whiteSpace: 'nowrap',
               flexShrink: 0,
-              boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
             }}
           >
             <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: tool.dot, flexShrink: 0 }} />
@@ -117,28 +117,29 @@ const Blob: React.FC<{ color: string; size: number; top: string; left: string; o
   }} />
 );
 
-/* ─── Feature card (card oscura + ícono/etiqueta de color) ─── */
-const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; desc: string; tag: string; tagColor: string }> = ({
-  icon, title, desc, tag, tagColor
+/* ─── Feature card (card pastel + ícono/etiqueta de color) ─── */
+const FeatureCard: React.FC<{ icon: React.ReactNode; bg: string; title: string; desc: string; tag: string; tagColor: string }> = ({
+  icon, bg, title, desc, tag, tagColor
 }) => (
   <div style={{
-    backgroundColor: BG_CARD,
+    backgroundColor: bg,
     borderRadius: 20,
     padding: '32px 28px',
     position: 'relative',
     overflow: 'hidden',
-    border: `1px solid ${BORDER}`,
+    border: `1px solid rgba(0,0,0,0.05)`,
   }}>
     <div style={{
       width: 48,
       height: 48,
       borderRadius: 14,
-      backgroundColor: CHIP_BG,
+      backgroundColor: 'rgba(255,255,255,0.7)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: 20,
-      border: `1px solid ${BORDER}`,
+      backdropFilter: 'blur(10px)',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
     }}>
       {icon}
     </div>
@@ -146,7 +147,7 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; desc: string
       display: 'inline-flex',
       alignItems: 'center',
       gap: 5,
-      backgroundColor: CHIP_BG,
+      backgroundColor: 'rgba(255,255,255,0.65)',
       borderRadius: 100,
       padding: '3px 10px',
       marginBottom: 12,
@@ -210,11 +211,11 @@ const Ebook: React.FC = () => {
           padding,
           borderRadius: 10,
           textDecoration: 'none',
-          transition: 'transform 0.15s, opacity 0.15s',
+          transition: 'transform 0.15s, background 0.15s',
           whiteSpace: 'nowrap',
         }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.opacity = '0.9'; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
       >
         {children}
       </a>
@@ -227,7 +228,7 @@ const Ebook: React.FC = () => {
       {/* ── Header ── */}
       <header style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        backgroundColor: 'oklch(0.15 0.005 60 / 0.85)',
+        backgroundColor: 'rgba(255,255,255,0.88)',
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
         borderBottom: `1px solid ${BORDER}`,
@@ -252,11 +253,11 @@ const Ebook: React.FC = () => {
               fontWeight: 600, fontSize: 13,
               padding: '8px 18px', borderRadius: 9,
               textDecoration: 'none',
-              transition: 'opacity 0.15s',
+              transition: 'transform 0.15s, background 0.15s',
               whiteSpace: 'nowrap',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.9'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
           >
             Comprar — $10
             <ArrowRight size={12} />
@@ -270,23 +271,25 @@ const Ebook: React.FC = () => {
             HERO
         ══════════════════════════════════════════ */}
         <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: BG }}>
-          {/* Gradient blobs (glow de marca) */}
+          {/* Gradient blobs */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-            <Blob color="radial-gradient(circle, oklch(0.72 0.16 40), transparent)" size={420} top="-80px" left="-60px" opacity={0.20} />
-            <Blob color="radial-gradient(circle, oklch(0.86 0.09 90), transparent)" size={340} top="60px" left="65%" opacity={0.12} />
-            <Blob color="radial-gradient(circle, oklch(0.72 0.16 40), transparent)" size={280} top="40%" left="30%" opacity={0.10} />
+            <Blob color="radial-gradient(circle, #fbc7d4, #9796f0)" size={420} top="-80px" left="-60px" opacity={0.35} />
+            <Blob color="radial-gradient(circle, #a8edea, #fed6e3)" size={340} top="60px" left="65%" opacity={0.30} />
+            <Blob color="radial-gradient(circle, #ffecd2, #fcb69f)" size={280} top="40%" left="30%" opacity={0.22} />
           </div>
 
           <div className="relative max-w-5xl mx-auto px-6 sm:px-10 pt-20 pb-0 md:pt-28 text-center">
 
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2.5 mb-8" style={{
-              backgroundColor: BG_CARD,
+              backgroundColor: 'rgba(255,255,255,0.8)',
               border: `1px solid ${BORDER}`,
               borderRadius: 100,
               padding: '7px 16px',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ACCENT, boxShadow: '0 0 10px oklch(0.72 0.16 40)', flexShrink: 0 }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ACCENT, flexShrink: 0 }} />
               <span style={{ fontSize: 11, fontWeight: 500, color: TEXT_MED, letterSpacing: '0.24em', textTransform: 'uppercase' }}>
                 Biblioteca de Prompts · alpacka.ai
               </span>
@@ -326,11 +329,11 @@ const Ebook: React.FC = () => {
                   fontWeight: 600, fontSize: 16,
                   padding: '16px 38px', borderRadius: 12,
                   textDecoration: 'none',
-                  boxShadow: '0 0 30px oklch(0.86 0.09 90 / 0.25)',
-                  transition: 'transform 0.15s, opacity 0.15s',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+                  transition: 'transform 0.15s, background 0.15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.opacity = '0.9'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
               >
                 Acceder ahora
                 <ArrowRight size={16} />
@@ -350,14 +353,14 @@ const Ebook: React.FC = () => {
               </div>
             </div>
 
-            {/* Product mockup (workspace oscuro estilo Notion) */}
+            {/* Product mockup (workspace estilo Notion) */}
             <div style={{
               position: 'relative',
               maxWidth: 780,
               margin: '0 auto',
               borderRadius: '20px 20px 0 0',
               overflow: 'hidden',
-              boxShadow: `0 -4px 0 ${BORDER}, 0 20px 80px rgba(0,0,0,0.5), 0 0 0 1px ${BORDER}`,
+              boxShadow: `0 -4px 0 ${BORDER}, 0 20px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)`,
             }}>
               <div style={{ backgroundColor: BG_CARD, padding: '0' }}>
                 {/* Window bar */}
@@ -424,7 +427,7 @@ const Ebook: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                       <span style={{ fontSize: 18 }}>⚡</span>
                       <span style={{ fontWeight: 700, fontSize: 18, color: TEXT }}>Productividad</span>
-                      <span style={{ fontSize: 11, color: TEXT_DIM, backgroundColor: CHIP_BG, borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>42 prompts</span>
+                      <span style={{ fontSize: 11, color: TEXT_DIM, backgroundColor: '#f0f0ee', borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>42 prompts</span>
                     </div>
 
                     {/* Table header */}
@@ -459,7 +462,7 @@ const Ebook: React.FC = () => {
                           padding: '9px 10px',
                           borderBottom: `1px solid ${BORDER}`,
                           alignItems: 'center',
-                          backgroundColor: i % 2 === 0 ? BG_CARD : BG_WARM,
+                          backgroundColor: i % 2 === 0 ? BG : '#fafaf8',
                         }}
                       >
                         <span style={{ fontSize: 13, color: TEXT }}>{row.title}</span>
@@ -468,8 +471,8 @@ const Ebook: React.FC = () => {
                           <span style={{ fontSize: 11, color: TEXT_MED }}>{row.ai}</span>
                         </div>
                         <div style={{
-                          fontSize: 11, fontWeight: 600, color: ACCENT,
-                          backgroundColor: 'oklch(0.72 0.16 40 / 0.14)', borderRadius: 5,
+                          fontSize: 11, fontWeight: 600, color: '#667eea',
+                          backgroundColor: '#f0f0ff', borderRadius: 5,
                           padding: '3px 8px', textAlign: 'center', cursor: 'pointer',
                         }}>
                           Copiar ⌘
@@ -513,11 +516,11 @@ const Ebook: React.FC = () => {
               <div>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  backgroundColor: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.28)',
+                  backgroundColor: '#fff3f3', border: '1px solid #fecaca',
                   borderRadius: 100, padding: '4px 12px', marginBottom: 20,
                 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#f87171' }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#f87171', letterSpacing: '0.1em', textTransform: 'uppercase' }}>El problema</span>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ef4444' }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#ef4444', letterSpacing: '0.1em', textTransform: 'uppercase' }}>El problema</span>
                 </div>
 
                 <h2 style={{
@@ -547,14 +550,14 @@ const Ebook: React.FC = () => {
                   { prompt: '"dame una estrategia de marketing"', result: 'Cinco puntos obvios que ya sabías sin la IA.', bad: true },
                   { prompt: '"ayúdame con mis redes sociales"', result: 'Tres reescrituras después, sigues con la página en blanco.', bad: true },
                 ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' }}>
+                  <div key={i} style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                     <div style={{ padding: '12px 16px', backgroundColor: BG_WARM, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                       <span style={{ fontFamily: 'monospace', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: TEXT_DIM, flexShrink: 0, marginTop: 2 }}>Prompt</span>
                       <p style={{ fontFamily: 'monospace', fontSize: 12, color: TEXT, lineHeight: 1.4 }}>{item.prompt}</p>
                     </div>
                     <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: 'rgba(248,113,113,0.15)', border: '1px solid rgba(248,113,113,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                        <span style={{ fontSize: 8, color: '#f87171', fontWeight: 900 }}>✕</span>
+                      <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#fee2e2', border: '1px solid #fca5a5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                        <span style={{ fontSize: 8, color: '#ef4444', fontWeight: 900 }}>✕</span>
                       </div>
                       <p style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.5 }}>{item.result}</p>
                     </div>
@@ -562,14 +565,14 @@ const Ebook: React.FC = () => {
                 ))}
 
                 <div style={{
-                  backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.28)', borderRadius: 14,
+                  backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14,
                   padding: '16px 18px', display: 'flex', alignItems: 'flex-start', gap: 10,
                 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Check size={10} style={{ color: '#4ade80' }} strokeWidth={3} />
+                  <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#dcfce7', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Check size={10} style={{ color: '#22c55e' }} strokeWidth={3} />
                   </div>
-                  <p style={{ fontSize: 13, color: '#86efac', lineHeight: 1.6 }}>
-                    <strong style={{ color: '#bbf7d0' }}>Con el prompt bien hecho:</strong> te sirve la primera respuesta. Sin el "¿me das más contexto?" de siempre, sin cinco intentos.
+                  <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
+                    <strong>Con el prompt bien hecho:</strong> te sirve la primera respuesta. Sin el "¿me das más contexto?" de siempre, sin cinco intentos.
                   </p>
                 </div>
               </div>
@@ -587,7 +590,7 @@ const Ebook: React.FC = () => {
             <div className="text-center mb-14">
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: 'oklch(0.72 0.16 40 / 0.12)', border: '1px solid oklch(0.72 0.16 40 / 0.3)',
+                backgroundColor: '#fff7ed', border: '1px solid #fed7aa',
                 borderRadius: 100, padding: '4px 12px', marginBottom: 20,
               }}>
                 <Zap size={11} style={{ color: ACCENT }} />
@@ -638,17 +641,18 @@ const Ebook: React.FC = () => {
                     borderRadius: 20,
                     padding: '32px 28px',
                     position: 'relative',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
                     <div style={{
                       width: 48, height: 48, borderRadius: 14,
-                      backgroundColor: CHIP_BG, border: `1px solid ${BORDER}`,
+                      backgroundColor: '#fff7ed', border: '1px solid #fed7aa',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       {step.icon}
                     </div>
-                    <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 40, color: 'oklch(0.72 0.16 40 / 0.25)', lineHeight: 1 }}>{step.n}</span>
+                    <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 40, color: 'rgba(249,115,22,0.25)', lineHeight: 1 }}>{step.n}</span>
                   </div>
                   <p style={{ color: TEXT, fontWeight: 700, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{step.title}</p>
                   <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.7 }}>{step.desc}</p>
@@ -668,11 +672,11 @@ const Ebook: React.FC = () => {
             <div className="text-center mb-14">
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: 'oklch(0.72 0.16 40 / 0.12)', border: '1px solid oklch(0.72 0.16 40 / 0.3)',
+                backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe',
                 borderRadius: 100, padding: '4px 12px', marginBottom: 20,
               }}>
-                <Database size={11} style={{ color: ACCENT }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Lo que te llevas</span>
+                <Database size={11} style={{ color: '#6366f1' }} />
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Lo que te llevas</span>
               </div>
 
               <h2 style={{
@@ -692,58 +696,66 @@ const Ebook: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <FeatureCard
-                icon={<Zap size={22} style={{ color: '#c084fc' }} />}
+                bg="#fdf4ff"
+                icon={<Zap size={22} style={{ color: '#a855f7' }} />}
                 tag="42 prompts"
-                tagColor="#c084fc"
+                tagColor="#a855f7"
                 title="Productividad"
                 desc="Planificación semanal, priorización, bloques de foco. Los lunes que tardabas 2 horas organizándote, ahora son 15 minutos."
               />
               <FeatureCard
-                icon={<Target size={22} style={{ color: '#fb923c' }} />}
+                bg="#fff7ed"
+                icon={<Target size={22} style={{ color: '#f97316' }} />}
                 tag="38 prompts"
-                tagColor="#fb923c"
+                tagColor="#f97316"
                 title="Copywriting"
                 desc="Posts, artículos, guiones, hilos. Sin el 'Claro, con gusto te ayudo' de siempre. Directo al texto que publicas."
               />
               <FeatureCard
-                icon={<TrendingUp size={22} style={{ color: '#4ade80' }} />}
+                bg="#f0fdf4"
+                icon={<TrendingUp size={22} style={{ color: '#22c55e' }} />}
                 tag="35 prompts"
-                tagColor="#4ade80"
+                tagColor="#22c55e"
                 title="Marketing y Ventas"
                 desc="Estrategias de lanzamiento, copy de ads, análisis de competencia. Para cuando necesitas resultados esta semana."
               />
               <FeatureCard
-                icon={<BookOpen size={22} style={{ color: '#60a5fa' }} />}
+                bg="#eff6ff"
+                icon={<BookOpen size={22} style={{ color: '#3b82f6' }} />}
                 tag="29 prompts"
-                tagColor="#60a5fa"
+                tagColor="#3b82f6"
                 title="Comunicación"
                 desc="Emails difíciles, negociaciones, propuestas, feedbacks incómodos. Para cuando importa cómo suenas."
               />
               <FeatureCard
-                icon={<Layers size={22} style={{ color: '#fb7185' }} />}
+                bg="#fff1f2"
+                icon={<Layers size={22} style={{ color: '#f43f5e' }} />}
                 tag="27 prompts"
-                tagColor="#fb7185"
+                tagColor="#f43f5e"
                 title="Creatividad e Ideas"
                 desc="Brainstorming, conceptos, nombres, ideas de producto. Cuando llevas 20 minutos mirando la pantalla en blanco."
               />
               <FeatureCard
-                icon={<Star size={22} style={{ color: '#facc15' }} />}
+                bg="#fefce8"
+                icon={<Star size={22} style={{ color: '#eab308' }} />}
                 tag="22 prompts"
-                tagColor="#facc15"
+                tagColor="#eab308"
                 title="Email Profesional"
                 desc="Seguimientos, emails en frío, re-activaciones. Los que sí consiguen respuesta."
               />
               <FeatureCard
-                icon={<Gift size={22} style={{ color: '#2dd4bf' }} />}
+                bg="#f0fdfa"
+                icon={<Gift size={22} style={{ color: '#14b8a6' }} />}
                 tag="18 prompts"
-                tagColor="#2dd4bf"
+                tagColor="#14b8a6"
                 title="Plantillas Listas"
                 desc="Los más usados, ya armados. Sin tener que adaptar nada. Copia, pega los corchetes y ya."
               />
               <FeatureCard
-                icon={<Sparkles size={22} style={{ color: '#a78bfa' }} />}
+                bg="#faf5ff"
+                icon={<Sparkles size={22} style={{ color: '#8b5cf6' }} />}
                 tag="incluido"
-                tagColor="#a78bfa"
+                tagColor="#8b5cf6"
                 title="Prompt Engineering"
                 desc="Los principios detrás de cada prompt. Para que puedas crear los tuyos cuando ninguno encaje exactamente."
               />
@@ -760,14 +772,14 @@ const Ebook: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-16 items-start">
 
-              <div style={{ position: 'sticky', top: 80 }}>
+              <div style={{ position: 'sticky', top: 80, zIndex: 0 }}>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  backgroundColor: 'oklch(0.86 0.09 90 / 0.12)', border: '1px solid oklch(0.86 0.09 90 / 0.3)',
+                  backgroundColor: '#fefce8', border: '1px solid #fde68a',
                   borderRadius: 100, padding: '4px 12px', marginBottom: 20,
                 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: PRIMARY }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: PRIMARY, letterSpacing: '0.1em', textTransform: 'uppercase' }}>La diferencia</span>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#f59e0b' }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase' }}>La diferencia</span>
                 </div>
 
                 <h2 style={{
@@ -790,25 +802,33 @@ const Ebook: React.FC = () => {
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4" style={{ position: 'relative', zIndex: 1, backgroundColor: BG }}>
                 {[
                   {
-                    icon: <Target size={20} style={{ color: '#818cf8' }} />,
+                    icon: <Target size={20} style={{ color: '#6366f1' }} />,
+                    bg: '#f0f0ff',
+                    border: '#c7d2fe',
                     title: 'Funciona en cualquier IA',
                     desc: 'No está optimizado para un solo modelo. Funciona igual en ChatGPT, Gemini, Claude, Copilot o lo que sea que estés usando hoy, y lo que salga mañana.',
                   },
                   {
-                    icon: <Zap size={20} style={{ color: '#fb923c' }} />,
+                    icon: <Zap size={20} style={{ color: '#f97316' }} />,
+                    bg: '#fff7ed',
+                    border: '#fed7aa',
                     title: 'El primero ya funciona',
                     desc: 'No necesitas pasar por tres intentos antes de llegar al que sirve. El prompt ya tiene la estructura completa que la IA necesita para entregarte algo real.',
                   },
                   {
-                    icon: <Database size={20} style={{ color: '#4ade80' }} />,
+                    icon: <Database size={20} style={{ color: '#22c55e' }} />,
+                    bg: '#f0fdf4',
+                    border: '#bbf7d0',
                     title: 'Organizado en Notion, no en un PDF',
                     desc: 'Filtras por categoría en segundos. No es un archivo donde tienes que hacer Ctrl+F. Es una base de datos que puedes duplicar en tu propia cuenta.',
                   },
                   {
-                    icon: <TrendingUp size={20} style={{ color: '#c084fc' }} />,
+                    icon: <TrendingUp size={20} style={{ color: '#8b5cf6' }} />,
+                    bg: '#fdf4ff',
+                    border: '#e9d5ff',
                     title: 'Se actualiza con el tiempo',
                     desc: 'Cuando salga un modelo nuevo o un caso de uso que no estaba, lo añado. Sin cobrar otra vez. Es parte del trato desde el día 1.',
                   },
@@ -816,8 +836,8 @@ const Ebook: React.FC = () => {
                   <div
                     key={i}
                     style={{
-                      backgroundColor: BG_CARD,
-                      border: `1px solid ${BORDER}`,
+                      backgroundColor: item.bg,
+                      border: `1px solid ${item.border}`,
                       borderRadius: 16,
                       padding: '20px 22px',
                       display: 'flex',
@@ -827,9 +847,9 @@ const Ebook: React.FC = () => {
                   >
                     <div style={{
                       width: 40, height: 40, borderRadius: 12,
-                      backgroundColor: CHIP_BG,
+                      backgroundColor: 'rgba(255,255,255,0.7)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0, border: `1px solid ${BORDER}`,
+                      flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                     }}>
                       {item.icon}
                     </div>
@@ -855,11 +875,11 @@ const Ebook: React.FC = () => {
             <div className="text-center mb-14">
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.28)',
+                backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0',
                 borderRadius: 100, padding: '4px 12px', marginBottom: 20,
               }}>
-                <Gift size={11} style={{ color: '#4ade80' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', letterSpacing: '0.1em', textTransform: 'uppercase' }}>incluido sin costo extra</span>
+                <Gift size={11} style={{ color: '#22c55e' }} />
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>incluido sin costo extra</span>
               </div>
 
               <h2 style={{
@@ -882,7 +902,9 @@ const Ebook: React.FC = () => {
                 {
                   num: '01',
                   emoji: '📚',
-                  accent: '#818cf8',
+                  bg: '#f0f0ff',
+                  border: '#c7d2fe',
+                  accent: '#6366f1',
                   title: 'Biblioteca de +200 Prompts en Notion',
                   desc: 'Acceso completo al espacio. Filtros por categoría, búsqueda por caso de uso, y cada prompt listo para copiar en un clic.',
                   value: 'El acceso principal',
@@ -890,7 +912,9 @@ const Ebook: React.FC = () => {
                 {
                   num: '02',
                   emoji: '🎯',
-                  accent: '#fb923c',
+                  bg: '#fff7ed',
+                  border: '#fed7aa',
+                  accent: '#f97316',
                   title: '50 Prompts Extra por Nicho',
                   desc: 'Prompts adicionales para casos más específicos: inmobiliaria, e-commerce, salud, legal, educación. Directo al grano.',
                   value: 'Incluido',
@@ -898,7 +922,9 @@ const Ebook: React.FC = () => {
                 {
                   num: '03',
                   emoji: '♾️',
-                  accent: '#4ade80',
+                  bg: '#f0fdf4',
+                  border: '#bbf7d0',
+                  accent: '#22c55e',
                   title: 'Actualizaciones de por vida',
                   desc: 'Cada vez que añado prompts nuevos, los tienes. No es una suscripción. No hay "versión 2.0" que tengas que comprar de nuevo.',
                   value: 'Para siempre',
@@ -907,8 +933,8 @@ const Ebook: React.FC = () => {
                 <div
                   key={i}
                   style={{
-                    backgroundColor: BG_CARD,
-                    border: `1px solid ${BORDER}`,
+                    backgroundColor: item.bg,
+                    border: `1px solid ${item.border}`,
                     borderRadius: 20,
                     padding: '28px 24px',
                     position: 'relative',
@@ -938,21 +964,21 @@ const Ebook: React.FC = () => {
 
             <div style={{
               width: 72, height: 72, borderRadius: '50%',
-              background: 'linear-gradient(135deg, oklch(0.72 0.16 40), oklch(0.86 0.09 90))',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto 24px',
-              boxShadow: '0 8px 32px oklch(0.72 0.16 40 / 0.3)',
+              boxShadow: '0 8px 32px rgba(102,126,234,0.25)',
             }}>
-              <Shield size={32} style={{ color: PRIMARY_TEXT }} />
+              <Shield size={32} style={{ color: 'white' }} />
             </div>
 
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: 'oklch(0.72 0.16 40 / 0.12)', border: '1px solid oklch(0.72 0.16 40 / 0.3)',
+              backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe',
               borderRadius: 100, padding: '4px 12px', marginBottom: 20,
             }}>
-              <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.1em', textTransform: 'uppercase' }}>sin riesgo</span>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#6366f1' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>sin riesgo</span>
             </div>
 
             <h2 style={{
@@ -996,7 +1022,7 @@ const Ebook: React.FC = () => {
               <p style={{ color: TEXT_MED, fontSize: 15 }}>Lo que me preguntan antes de comprar.</p>
             </div>
 
-            <div style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+            <div style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
               {faqs.map((faq, i) => (
                 <FaqItem key={i} q={faq.q} a={faq.a} />
               ))}
@@ -1008,21 +1034,21 @@ const Ebook: React.FC = () => {
         {/* ══════════════════════════════════════════
             CTA FINAL
         ══════════════════════════════════════════ */}
-        <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: 'oklch(0.12 0.005 60)' }}>
-          {/* Glow de marca */}
+        <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
+          {/* Subtle gradient blobs */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-            <Blob color="radial-gradient(circle, oklch(0.72 0.16 40), transparent)" size={500} top="-100px" left="-100px" opacity={0.16} />
-            <Blob color="radial-gradient(circle, oklch(0.86 0.09 90), transparent)" size={400} top="50%" left="70%" opacity={0.10} />
+            <Blob color="radial-gradient(circle, #667eea, #764ba2)" size={500} top="-100px" left="-100px" opacity={0.18} />
+            <Blob color="radial-gradient(circle, #f093fb, #f5576c)" size={400} top="50%" left="70%" opacity={0.14} />
           </div>
 
           <div className="relative max-w-4xl mx-auto px-6 sm:px-10 py-24 md:py-36 text-center">
 
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+              backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: 100, padding: '4px 14px', marginBottom: 24,
             }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#4ade80', display: 'inline-block' }} className="animate-pulse" />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} className="animate-pulse" />
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>precio de lanzamiento</span>
             </div>
 
@@ -1030,14 +1056,14 @@ const Ebook: React.FC = () => {
               fontFamily: '"Space Grotesk", sans-serif',
               fontWeight: 600,
               fontSize: 'clamp(2rem, 5vw, 3.6rem)',
-              color: TEXT,
+              color: 'white',
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
               marginBottom: 20,
             }}>
               Sigues peleando con la IA,<br />
               <span style={{
-                background: 'linear-gradient(135deg, oklch(0.72 0.16 40), oklch(0.86 0.09 90))',
+                background: 'linear-gradient(135deg, #a78bfa, #f0abfc)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -1046,29 +1072,29 @@ const Ebook: React.FC = () => {
               </span>
             </h2>
 
-            <p style={{ color: TEXT_MED, fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: '0 auto 52px' }}>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: '0 auto 52px' }}>
               Son $10, una sola vez. Lo tienes en tu correo en un par de minutos. Y si no te sirve, te devuelvo el dinero sin preguntar. Lo peor que puede pasar es que no pierdas nada.
             </p>
 
             {/* Pricing card */}
             <div style={{
-              backgroundColor: 'oklch(0.19 0.006 60 / 0.6)',
-              border: `1px solid ${BORDER}`,
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 24,
               padding: '40px 36px',
               maxWidth: 440,
               margin: '0 auto 40px',
               backdropFilter: 'blur(20px)',
             }}>
-              <p style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 20 }}>
+              <p style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
                 precio de lanzamiento
               </p>
 
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 72, color: TEXT, lineHeight: 1 }}>$10</span>
+                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 72, color: 'white', lineHeight: 1 }}>$10</span>
                 <div>
-                  <p style={{ fontFamily: 'monospace', fontSize: 13, color: TEXT_DIM, textDecoration: 'line-through' }}>$37</p>
-                  <p style={{ fontFamily: 'monospace', fontSize: 11, color: TEXT_DIM }}>pago único</p>
+                  <p style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>$37</p>
+                  <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>pago único</p>
                 </div>
               </div>
 
@@ -1084,13 +1110,13 @@ const Ebook: React.FC = () => {
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{
                       width: 18, height: 18, borderRadius: '50%',
-                      backgroundColor: 'oklch(0.72 0.16 40 / 0.15)',
-                      border: '1px solid oklch(0.72 0.16 40 / 0.35)',
+                      backgroundColor: 'rgba(167,139,250,0.15)',
+                      border: '1px solid rgba(167,139,250,0.3)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     }}>
-                      <Check size={9} style={{ color: ACCENT }} strokeWidth={3} />
+                      <Check size={9} style={{ color: '#a78bfa' }} strokeWidth={3} />
                     </div>
-                    <span style={{ color: TEXT_MED, fontSize: 14 }}>{item}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -1101,8 +1127,8 @@ const Ebook: React.FC = () => {
                 rel="noopener noreferrer"
                 style={{
                   width: '100%',
-                  background: 'linear-gradient(135deg, oklch(0.72 0.16 40), oklch(0.86 0.09 90))',
-                  color: PRIMARY_TEXT,
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
                   fontWeight: 700,
                   fontSize: 16,
                   padding: '17px 24px',
@@ -1112,17 +1138,17 @@ const Ebook: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 10,
-                  boxShadow: '0 8px 32px oklch(0.72 0.16 40 / 0.35)',
+                  boxShadow: '0 8px 32px rgba(102,126,234,0.35)',
                   transition: 'transform 0.15s, box-shadow 0.15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px oklch(0.72 0.16 40 / 0.5)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px oklch(0.72 0.16 40 / 0.35)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(102,126,234,0.5)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(102,126,234,0.35)'; }}
               >
                 Quiero la biblioteca — $10
                 <ArrowRight size={17} />
               </a>
 
-              <p style={{ fontFamily: 'monospace', fontSize: 11, color: TEXT_DIM, marginTop: 14, letterSpacing: '0.05em' }}>
+              <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 14, letterSpacing: '0.05em' }}>
                 Acceso en 2 minutos · Pago único · Garantía 30 días
               </p>
             </div>
@@ -1130,14 +1156,14 @@ const Ebook: React.FC = () => {
             {/* Trust row */}
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
               {[
-                { icon: <Shield size={13} style={{ color: TEXT_DIM }} />, label: 'Garantía 30 días' },
-                { icon: <Clock size={13} style={{ color: TEXT_DIM }} />, label: 'Acceso en 2 min' },
-                { icon: <Star size={13} style={{ color: TEXT_DIM }} />, label: 'Pago único' },
-                { icon: <TrendingUp size={13} style={{ color: TEXT_DIM }} />, label: 'Sin suscripción' },
+                { icon: <Shield size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Garantía 30 días' },
+                { icon: <Clock size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Acceso en 2 min' },
+                { icon: <Star size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Pago único' },
+                { icon: <TrendingUp size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Sin suscripción' },
               ].map((t, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   {t.icon}
-                  <span style={{ fontFamily: 'monospace', fontSize: 11, color: TEXT_DIM, letterSpacing: '0.08em' }}>{t.label}</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.08em' }}>{t.label}</span>
                 </div>
               ))}
             </div>
