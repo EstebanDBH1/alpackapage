@@ -2,8 +2,9 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
 import { BlogPost } from '../types';
-import BlogContent from '../components/BlogContent';
-import { Plus, Pencil, Trash2, ArrowLeft, Check, AlertCircle, Search, Lock, Upload, ImagePlus, Loader2 } from 'lucide-react';
+import BlogContent, { blogHtmlToText } from '../components/BlogContent';
+import RichTextEditor from '../components/RichTextEditor';
+import { Plus, Pencil, Trash2, ArrowLeft, Check, AlertCircle, Search, Lock, Upload, Loader2 } from 'lucide-react';
 
 const EMPTY_FORM = {
     id: '',
@@ -49,12 +50,9 @@ const AdminBlog: React.FC = () => {
     const [slugTouched, setSlugTouched] = useState(false);
     const [saving, setSaving] = useState(false);
     const [uploadingCover, setUploadingCover] = useState(false);
-    const [uploadingInline, setUploadingInline] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [savedFlash, setSavedFlash] = useState(false);
-    const contentRef = useRef<HTMLTextAreaElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
-    const inlineInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -128,28 +126,9 @@ const AdminBlog: React.FC = () => {
         }
     };
 
-    // Sube una imagen y la inserta como markdown en la posición del cursor
-    const handleInlineUpload = async (file: File | undefined) => {
-        if (!file || !form) return;
-        setUploadingInline(true);
-        setError(null);
-        try {
-            const url = await uploadImage(file);
-            const snippet = `\n\n![Descripción de la imagen](${url})\n\n`;
-            const textarea = contentRef.current;
-            const pos = textarea ? textarea.selectionStart : form.content.length;
-            setForm(f => f ? { ...f, content: f.content.slice(0, pos) + snippet + f.content.slice(pos) } : f);
-        } catch (e: any) {
-            setError(`Error al subir la imagen: ${e.message ?? e}`);
-        } finally {
-            setUploadingInline(false);
-            if (inlineInputRef.current) inlineInputRef.current.value = '';
-        }
-    };
-
     const handleSave = async () => {
         if (!form) return;
-        if (!form.title.trim() || !form.slug.trim() || !form.content.trim()) {
+        if (!form.title.trim() || !form.slug.trim() || !blogHtmlToText(form.content)) {
             setError('Título, slug y contenido son obligatorios.');
             return;
         }
@@ -161,7 +140,7 @@ const AdminBlog: React.FC = () => {
             slug: slugify(form.slug),
             excerpt: form.excerpt.trim() || null,
             category: form.category.trim().toLowerCase() || null,
-            content: form.content.replace(/\r\n/g, '\n').trim(),
+            content: form.content,
             cover_image_url: form.cover_image_url.trim() || null,
             published: form.published,
         };
@@ -331,39 +310,18 @@ const AdminBlog: React.FC = () => {
                             </div>
 
                             <div>
-                                <div className="mb-2 flex items-center justify-between">
-                                    <label className="block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Contenido *</label>
-                                    <div>
-                                        <input
-                                            ref={inlineInputRef}
-                                            type="file"
-                                            accept="image/*"
-                                            className="hidden"
-                                            onChange={e => handleInlineUpload(e.target.files?.[0])}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => inlineInputRef.current?.click()}
-                                            disabled={uploadingInline}
-                                            title="Sube una imagen y la inserta donde esté el cursor"
-                                            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:text-accent disabled:opacity-50"
-                                        >
-                                            {uploadingInline ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
-                                            {uploadingInline ? 'Subiendo…' : 'Insertar imagen'}
-                                        </button>
-                                    </div>
-                                </div>
-                                <textarea
-                                    ref={contentRef}
-                                    value={form.content}
-                                    onChange={e => setForm({ ...form, content: e.target.value })}
-                                    rows={18}
-                                    spellCheck={false}
-                                    placeholder={'## Un encabezado\n\nUn párrafo normal con **negrita** y [un enlace](https://...).\n\n- Un punto de lista\n- Otro punto'}
-                                    className="w-full resize-y rounded-xl border border-border bg-card px-4 py-3 font-mono text-sm leading-relaxed text-foreground focus:border-accent focus:outline-none"
+                                <label className="mb-2 block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Contenido *</label>
+                                {/* key: fuerza a remontar el editor al cambiar de post (el div es no-controlado) */}
+                                <RichTextEditor
+                                    key={form.id || 'new'}
+                                    initialHtml={form.content}
+                                    onChange={html => setForm(f => f ? { ...f, content: html } : f)}
+                                    uploadImage={uploadImage}
+                                    onError={setError}
                                 />
                                 <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
-                                    Formato: <span className="font-mono">## encabezado</span> · <span className="font-mono">**negrita**</span> · <span className="font-mono">- lista</span> · <span className="font-mono">&gt; cita</span> · <span className="font-mono">[texto](url)</span>. Separa párrafos con una línea en blanco.
+                                    Escribe como en Word: selecciona el texto y usa los botones para dar formato.
+                                    El botón de imagen sube la foto y la coloca donde esté el cursor.
                                 </p>
                             </div>
 
@@ -414,7 +372,7 @@ const AdminBlog: React.FC = () => {
                                     <h2 className="mb-6 text-2xl font-medium leading-tight tracking-tight text-foreground">
                                         {form.title || 'Título del post…'}
                                     </h2>
-                                    {form.content
+                                    {blogHtmlToText(form.content)
                                         ? <BlogContent content={form.content} />
                                         : <p className="text-sm text-muted-foreground">Escribe el contenido para ver la vista previa…</p>}
                                 </div>

@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BlogPost as BlogPostType } from '../types';
-import BlogContent from '../components/BlogContent';
+import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import { ArrowLeft, Clock } from 'lucide-react';
 
 const prefersReducedMotion = () =>
@@ -16,7 +16,7 @@ const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const readingTime = (content: string) =>
-    Math.max(1, Math.round(content.split(/\s+/).length / 200));
+    Math.max(1, Math.round(blogHtmlToText(content).split(/\s+/).length / 200));
 
 const BlogPost: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();

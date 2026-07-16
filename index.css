@@ -48,6 +48,54 @@ details[open] .faq-chevron {
   background-size: 400px 400px;
 }
 
+/* ── Contenido del blog ─────────────────────────────────────────────
+   Lo usan el artículo publicado (BlogContent) y el editor visual del
+   admin (RichTextEditor), para que escribir y publicar se vean igual. */
+.blog-prose {
+  @apply text-base leading-[1.85] text-foreground/85;
+}
+
+.blog-prose p {
+  @apply mb-5;
+}
+
+.blog-prose h2 {
+  @apply mb-4 mt-9 text-xl font-medium tracking-tight text-foreground sm:text-2xl;
+}
+
+.blog-prose h3 {
+  @apply mb-3 mt-7 text-lg font-medium tracking-tight text-foreground;
+}
+
+.blog-prose ul {
+  @apply mb-5 ml-5 list-disc space-y-1.5;
+}
+
+.blog-prose ol {
+  @apply mb-5 ml-5 list-decimal space-y-1.5;
+}
+
+.blog-prose li::marker {
+  @apply text-accent;
+}
+
+.blog-prose blockquote {
+  @apply my-6 border-l-2 border-accent/60 pl-5 italic text-foreground/75;
+}
+
+.blog-prose img {
+  @apply my-7 w-full rounded-2xl border border-border/60;
+}
+
+.blog-prose a {
+  @apply text-accent underline underline-offset-4;
+}
+
+.blog-prose strong,
+.blog-prose b {
+  @apply font-semibold text-foreground;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
