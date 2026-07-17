@@ -44,7 +44,9 @@
       "PowerShell(npm uninstall *)",
       "WebSearch",
       "WebFetch(domain:developer.paddle.com)",
-      "WebFetch(domain:www.paddle.com)"
+      "WebFetch(domain:www.paddle.com)",
+      "Skill(run)",
+      "Bash(npx playwright *)"
     ]
   }
 }

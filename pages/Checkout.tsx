@@ -23,9 +23,9 @@ const SummaryRow: React.FC<{ label: string; value?: number; currency?: string; s
     label, value, currency, strong = false,
 }) => (
     <div className="flex items-center justify-between text-sm">
-        <span className={strong ? 'font-medium' : 'text-muted-foreground'}>{label}</span>
+        <span className={strong ? 'font-medium text-foreground' : 'text-muted-foreground'}>{label}</span>
         {value !== undefined
-            ? <span className={strong ? 'font-medium' : ''}>{formatMoney(value, currency)}</span>
+            ? <span className={strong ? 'font-medium text-foreground' : 'text-foreground/80'}>{formatMoney(value, currency)}</span>
             : <LineSkeleton />}
     </div>
 );
@@ -86,7 +86,7 @@ const Checkout: React.FC = () => {
                         frameTarget: 'paddle-checkout-frame',
                         frameInitialHeight: 450,
                         frameStyle: 'width: 100%; min-width: 286px; background-color: transparent; border: none;',
-                        theme: 'light',
+                        theme: 'dark',
                         locale: 'es',
                         allowLogout: false,
                         successUrl: `${window.location.origin}/payment-success`,
@@ -107,20 +107,23 @@ const Checkout: React.FC = () => {
 
     if (status === 'subscribed') {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center font-space text-foreground">
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
-                    <Check size={26} strokeWidth={2.5} />
+            <div className="relative flex min-h-screen flex-col items-center justify-center overflow-x-clip bg-background bg-radial-glow px-6 text-center font-space text-foreground">
+                <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+                <div className="animate-fade-up relative flex flex-col items-center">
+                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                        <Check size={26} strokeWidth={2.5} />
+                    </div>
+                    <h1 className="mb-3 text-2xl font-medium tracking-tight">Ya eres premium</h1>
+                    <p className="mb-8 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                        Tu suscripción está activa: tienes acceso completo al banco de prompts.
+                    </p>
+                    <Link
+                        to="/prompts"
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                    >
+                        Ir a los prompts
+                    </Link>
                 </div>
-                <h1 className="mb-3 text-2xl font-medium tracking-tight">Ya eres premium</h1>
-                <p className="mb-8 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                    Tu suscripción está activa: tienes acceso completo al banco de prompts.
-                </p>
-                <Link
-                    to="/prompts"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-                >
-                    Ir a los prompts
-                </Link>
             </div>
         );
     }
@@ -132,13 +135,11 @@ const Checkout: React.FC = () => {
 
     const lineItems = (
         <div className="space-y-4">
-            <div className="flex items-start justify-between gap-4">
-                <div>
-                    <p className="text-sm font-medium">{priceName}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        Banco completo de prompts para ChatGPT, Claude y Gemini.
-                    </p>
-                </div>
+            <div>
+                <p className="text-sm font-medium text-foreground">{priceName}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    Banco completo de prompts para ChatGPT, Claude y Gemini.
+                </p>
             </div>
             <ul className="space-y-2.5">
                 {FEATURES.map(f => (
@@ -159,25 +160,27 @@ const Checkout: React.FC = () => {
     );
 
     return (
-        <div className="grid min-h-screen grid-cols-1 font-space md:grid-cols-2">
+        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
+            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
 
-            {/* ══ Panel izquierdo: marca + resumen en vivo (estilo Stripe) ══ */}
-            <div className="flex flex-col bg-background px-6 py-8 text-foreground sm:px-10 md:min-h-screen md:py-12">
-                <div className="mx-auto flex w-full max-w-sm flex-1 flex-col md:ml-auto md:mr-16">
+            <div className="relative mx-auto w-full max-w-5xl px-4 py-8 sm:px-8 md:py-12">
 
-                    {/* Volver + logo */}
-                    <Link
-                        to="/pricing"
-                        className="group mb-10 inline-flex items-center gap-3 text-foreground transition-opacity hover:opacity-80"
-                    >
-                        <ArrowLeft size={16} className="text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
-                        <span className="flex items-center gap-2">
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-xs font-medium">A</span>
-                            <span className="text-sm font-medium">Alpacka.ai</span>
-                        </span>
-                    </Link>
+                {/* Volver + logo */}
+                <Link
+                    to="/pricing"
+                    className="group mb-10 inline-flex items-center gap-3 text-foreground transition-opacity hover:opacity-80"
+                >
+                    <ArrowLeft size={16} className="text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
+                    <span className="flex items-center gap-2">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-xs font-medium">A</span>
+                        <span className="text-sm font-medium">Alpacka.ai</span>
+                    </span>
+                </Link>
 
-                    <div className="animate-fade-up">
+                <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.15fr] md:gap-12">
+
+                    {/* ══ Resumen del pedido (en vivo) ══ */}
+                    <div className="animate-fade-up md:sticky md:top-12">
                         <p className="mb-2 text-sm text-muted-foreground">Suscríbete a {priceName}</p>
 
                         {/* Total en vivo (con impuestos del país del cliente) */}
@@ -197,7 +200,7 @@ const Checkout: React.FC = () => {
                             <LineSkeleton className="mb-8 h-3 w-56" />
                         )}
 
-                        {/* Detalle: visible en desktop, plegable en móvil (patrón del starter kit) */}
+                        {/* Detalle: visible en desktop, plegable en móvil */}
                         <div className="hidden border-t border-border/60 pt-6 md:block">
                             {lineItems}
                         </div>
@@ -208,65 +211,61 @@ const Checkout: React.FC = () => {
                             </summary>
                             <div className="pt-4">{lineItems}</div>
                         </details>
-                    </div>
 
-                    {/* Footer del panel (abajo del todo, como Stripe) */}
-                    <div className="mt-auto hidden pt-10 md:block">
-                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground/70">
+                        {/* Footer legal (desktop) */}
+                        <div className="mt-10 hidden items-center gap-3 text-[11px] text-muted-foreground/70 md:flex">
                             <span>Pagos procesados por Paddle</span>
                             <span className="h-3 w-px bg-border" />
                             <Link to="/terms" className="transition-colors hover:text-muted-foreground">Términos</Link>
                             <Link to="/privacy" className="transition-colors hover:text-muted-foreground">Privacidad</Link>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* ══ Panel derecho: formulario de pago (blanco, estilo Stripe) ══ */}
-            <div className="bg-white px-6 py-10 sm:px-10 md:min-h-screen md:py-12">
-                <div className="mx-auto w-full max-w-sm md:ml-16 md:mr-auto">
+                    {/* ══ Formulario de pago (tarjeta al estilo del sitio) ══ */}
+                    <div className="animate-fade-up rounded-2xl border border-border/70 bg-card p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:p-7">
+                        <p className="mb-6 text-sm font-medium text-foreground">Datos de pago</p>
 
-                    <p className="mb-6 text-sm font-semibold text-gray-800">Datos de pago</p>
-
-                    {status === 'error' ? (
-                        <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 text-center">
-                            <p className="text-sm text-gray-500">
-                                No pudimos cargar el formulario de pago. Revisa tu conexión (o desactiva el bloqueador de anuncios) e inténtalo de nuevo.
-                            </p>
-                            <button
-                                onClick={() => window.location.reload()}
-                                className="rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
-                            >
-                                Reintentar
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            {status === 'loading' && (
-                                <div className="space-y-4">
-                                    <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
-                                    <div className="h-11 w-full animate-pulse rounded-lg bg-gray-100" />
-                                    <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-                                    <div className="h-11 w-full animate-pulse rounded-lg bg-gray-100" />
-                                    <div className="h-24 w-full animate-pulse rounded-lg bg-gray-100" />
-                                    <div className="h-11 w-full animate-pulse rounded-lg bg-gray-200" />
-                                </div>
-                            )}
-                            {/* Paddle monta aquí su frame (frameTarget) */}
-                            <div className="paddle-checkout-frame" />
-                        </>
-                    )}
-
-                    {/* Footer móvil (en desktop va en el panel izquierdo) */}
-                    <div className="mt-10 flex items-center justify-center gap-3 text-[11px] text-gray-400 md:hidden">
-                        <span>Pagos procesados por Paddle</span>
-                        <span className="h-3 w-px bg-gray-200" />
-                        <Link to="/terms" className="hover:text-gray-500">Términos</Link>
-                        <Link to="/privacy" className="hover:text-gray-500">Privacidad</Link>
+                        {status === 'error' ? (
+                            <div className="flex min-h-[300px] flex-col items-center justify-center gap-4 text-center">
+                                <p className="text-sm text-muted-foreground">
+                                    No pudimos cargar el formulario de pago. Revisa tu conexión (o desactiva el bloqueador de anuncios) e inténtalo de nuevo.
+                                </p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="rounded-full border border-border bg-secondary px-6 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/40"
+                                >
+                                    Reintentar
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                {status === 'loading' && (
+                                    <div className="space-y-4">
+                                        <div className="h-4 w-32 animate-pulse rounded bg-secondary" />
+                                        <div className="h-11 w-full animate-pulse rounded-lg bg-secondary/60" />
+                                        <div className="h-4 w-24 animate-pulse rounded bg-secondary" />
+                                        <div className="h-11 w-full animate-pulse rounded-lg bg-secondary/60" />
+                                        <div className="h-24 w-full animate-pulse rounded-lg bg-secondary/60" />
+                                        <div className="h-11 w-full animate-pulse rounded-lg bg-secondary" />
+                                    </div>
+                                )}
+                                {/* Paddle monta aquí su frame (frameTarget) */}
+                                <div className="paddle-checkout-frame" />
+                            </>
+                        )}
                     </div>
-                </div>
-            </div>
 
+                </div>
+
+                {/* Footer legal (móvil) */}
+                <div className="mt-10 flex items-center justify-center gap-3 text-[11px] text-muted-foreground/70 md:hidden">
+                    <span>Pagos procesados por Paddle</span>
+                    <span className="h-3 w-px bg-border" />
+                    <Link to="/terms" className="transition-colors hover:text-muted-foreground">Términos</Link>
+                    <Link to="/privacy" className="transition-colors hover:text-muted-foreground">Privacidad</Link>
+                </div>
+
+            </div>
         </div>
     );
 };
