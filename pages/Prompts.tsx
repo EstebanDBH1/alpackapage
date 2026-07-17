@@ -46,27 +46,8 @@ const Prompts: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
-    const [scriptLoaded, setScriptLoaded] = useState(false);
-    const [checkoutLoading, setCheckoutLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const gridRef = useRef<HTMLDivElement>(null);
-
-    // ── Paddle ───────────────────────────────────────────────────────────────
-    useEffect(() => {
-        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
-        const initPaddle = () => {
-            if (!window.Paddle || !clientToken) return;
-            if (clientToken.startsWith('test_')) window.Paddle.Environment.set('sandbox');
-            window.Paddle.Initialize({ token: clientToken });
-            setScriptLoaded(true);
-        };
-        if (window.Paddle) { initPaddle(); return; }
-        const script = document.createElement('script');
-        script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
-        script.async = true;
-        script.onload = initPaddle;
-        document.body.appendChild(script);
-    }, []);
 
     // ── Sesión + suscripción ───────────────────────────────────────────────────
     useEffect(() => {
@@ -127,17 +108,10 @@ const Prompts: React.FC = () => {
         gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
+    // El pago vive en /checkout (Paddle embebido dentro de la app)
     const handleSubscribe = () => {
-        if (!user) return navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
-        if (!scriptLoaded || !window.Paddle) return;
-        setCheckoutLoading(true);
-        window.Paddle.Checkout.open({
-            settings: { displayMode: 'overlay', theme: 'dark', locale: 'es', successUrl: `${window.location.origin}/payment-success` },
-            items: [{ priceId: import.meta.env.VITE_PADDLE_PRICE_ID?.trim(), quantity: 1 }],
-            customer: { email: user.email },
-            customData: { supabase_user_id: String(user.id) },
-            eventCallback: () => setCheckoutLoading(false),
-        });
+        if (!user) return navigate('/login?redirect=/checkout');
+        navigate('/checkout');
     };
 
     // ── Título y subtítulo dinámicos ────────────────────────────────────────────
@@ -310,10 +284,9 @@ const Prompts: React.FC = () => {
 
                                     <button
                                         onClick={handleSubscribe}
-                                        disabled={checkoutLoading}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 disabled:opacity-50 sm:w-auto"
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 sm:w-auto"
                                     >
-                                        {checkoutLoading ? 'Procesando...' : 'Suscribirse ahora'}
+                                        Suscribirse ahora
                                     </button>
 
                                     <div className="mt-5 flex items-center justify-center gap-2 text-xs text-muted-foreground">

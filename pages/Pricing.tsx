@@ -25,26 +25,7 @@ const Pricing: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
-    const [scriptLoaded, setScriptLoaded] = useState(false);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-    useEffect(() => {
-        const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
-        const initPaddle = () => {
-            if (!window.Paddle || !clientToken) return;
-            const isSandbox = clientToken.startsWith('test_');
-            if (isSandbox) window.Paddle.Environment.set('sandbox');
-            window.Paddle.Initialize({ token: clientToken });
-            setScriptLoaded(true);
-        };
-        if (window.Paddle) { initPaddle(); return; }
-        const script = document.createElement('script');
-        script.id = 'paddle-js-sdk';
-        script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
-        script.async = true;
-        script.onload = initPaddle;
-        document.body.appendChild(script);
-    }, []);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -64,17 +45,11 @@ const Pricing: React.FC = () => {
         checkUser();
     }, []);
 
+    // El pago vive en /checkout (Paddle embebido dentro de la app)
     const handleJoinClick = () => {
         if (isSubscribed) return;
-        if (!user) return navigate('/login?redirect=/pricing');
-        if (!scriptLoaded || !window.Paddle) return;
-        const priceId = import.meta.env.VITE_PADDLE_PRICE_ID?.trim();
-        window.Paddle.Checkout.open({
-            settings: { displayMode: "overlay", theme: "light", locale: "es", successUrl: `${window.location.origin}/payment-success` },
-            items: [{ priceId: priceId, quantity: 1 }],
-            customer: { email: user.email },
-            customData: { supabase_user_id: String(user.id) }
-        });
+        if (!user) return navigate('/login?redirect=/checkout');
+        navigate('/checkout');
     };
 
     return (
