@@ -71,8 +71,9 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <div key={transitionKey} className="animate-fade-in">{children}</div>;
 };
 
-// La home es una landing autocontenida: trae su propio header y footer.
-const STANDALONE_ROUTES = ['/', '/ebook'];
+// Rutas autocontenidas (sin Navbar/Footer): la home y el ebook traen su propio
+// header/footer; el checkout es una página de pago enfocada, estilo Stripe.
+const STANDALONE_ROUTES = ['/', '/ebook', '/checkout'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
