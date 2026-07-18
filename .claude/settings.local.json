@@ -46,7 +46,11 @@
       "WebFetch(domain:developer.paddle.com)",
       "WebFetch(domain:www.paddle.com)",
       "Skill(run)",
-      "Bash(npx playwright *)"
+      "Bash(npx playwright *)",
+      "WebFetch(domain:www.promptparatesis.com)",
+      "Bash(grep -oE \"\\(#[0-9a-fA-F]{6}|rgb\\\\\\([0-9, ]+\\\\\\)\\)\")",
+      "Bash(grep -oE '\\(\"price\"[^,]{0,80}|USD ?[0-9.,]+|\\\\$ ?[0-9.,]+\\)')",
+      "Bash(grep -oiE '\\(price|valor|USD|R\\\\$|\\\\$[0-9]\\)[^<\"]{0,60}' __TRACKED_VAR__/hotmart.html)"
     ]
   }
 }
