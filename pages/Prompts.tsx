@@ -14,7 +14,7 @@ const CATEGORY_SUBTITLES: Record<string, string> = {
     escritura: 'Mejora tu redacción, corrige textos técnicos y crea ganchos irresistibles con ingeniería de prompts avanzada.',
 };
 
-const DEFAULT_SUBTITLE = 'Prompts gratuitos y seleccionados para IA compatibles con ChatGPT, Claude, Gemini, Midjourney y los principales modelos del mercado.';
+const DEFAULT_SUBTITLE = 'Busca prompts prácticos según su caso de uso, modelo, etiqueta o categoría. Todos los prompts están escritos para que puedas adaptarlos fácilmente a tu propio flujo de trabajo.';
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -116,7 +116,7 @@ const Prompts: React.FC = () => {
 
     // ── Título y subtítulo dinámicos ────────────────────────────────────────────
     const heroTitle = useMemo(() => {
-        if (selectedCategory === 'todas') return 'La biblioteca de prompts #1 de todo internet.';
+        if (selectedCategory === 'todas') return 'Encuentra un prompt. Cópialo. Hazlo tuyo.';
         const count = filteredPrompts.length;
         const noun = count === 1 ? 'prompt seleccionado' : 'prompts seleccionados';
         return `${count} ${noun} para ${titleCase(selectedCategory)}.`;
@@ -188,11 +188,10 @@ const Prompts: React.FC = () => {
                                         <button
                                             key={tier}
                                             onClick={() => setSelectedTier(tier)}
-                                            className={`border-b pb-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                                                active
-                                                    ? 'border-accent text-accent'
-                                                    : 'border-transparent text-muted-foreground hover:text-foreground'
-                                            }`}
+                                            className={`border-b pb-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${active
+                                                ? 'border-accent text-accent'
+                                                : 'border-transparent text-muted-foreground hover:text-foreground'
+                                                }`}
                                         >
                                             {tier}
                                         </button>
@@ -335,9 +334,8 @@ const CategorySelect: React.FC<{
                 onClick={() => setOpen(o => !o)}
                 aria-haspopup="listbox"
                 aria-expanded={open}
-                className={`flex w-full items-center justify-between rounded-full border bg-card/60 px-5 py-2.5 text-xs backdrop-blur transition-colors focus:outline-none ${
-                    open ? 'border-primary/40' : 'border-border/60 hover:border-border'
-                }`}
+                className={`flex w-full items-center justify-between rounded-full border bg-card/60 px-5 py-2.5 text-xs backdrop-blur transition-colors focus:outline-none ${open ? 'border-primary/40' : 'border-border/60 hover:border-border'
+                    }`}
             >
                 <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Categoría</span>
                 <span className="flex items-center gap-2 font-medium text-foreground">
@@ -362,11 +360,10 @@ const CategorySelect: React.FC<{
                                 <button
                                     type="button"
                                     onClick={() => { onSelect(cat); setOpen(false); }}
-                                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-xs font-medium transition-colors ${
-                                        active
-                                            ? 'bg-secondary text-accent'
-                                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                                    }`}
+                                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-xs font-medium transition-colors ${active
+                                        ? 'bg-secondary text-accent'
+                                        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                        }`}
                                 >
                                     {cat === 'todas' ? 'Todas' : titleCase(cat)}
                                     {active && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
