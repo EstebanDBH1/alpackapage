@@ -14,7 +14,7 @@ const CATEGORY_SUBTITLES: Record<string, string> = {
     escritura: 'Mejora tu redacción, corrige textos técnicos y crea ganchos irresistibles con ingeniería de prompts avanzada.',
 };
 
-const DEFAULT_SUBTITLE = 'Busca prompts prácticos según su caso de uso, modelo, etiqueta o categoría. Todos los prompts están escritos para que puedas adaptarlos fácilmente a tu propio flujo de trabajo.';
+const DEFAULT_SUBTITLE = 'Todos los prompts están escritos para que puedas adaptarlos fácilmente a tu propio flujo de trabajo.';
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
