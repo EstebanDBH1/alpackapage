@@ -17,7 +17,9 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            // getSession lee del almacenamiento local (sin round-trip al servidor de auth)
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user ?? null;
             if (!user) { navigate('/login'); return; }
             // El admin no tiene suscripción que gestionar: su panel es /admin.
             if (isAdminUser(user)) { navigate('/admin', { replace: true }); return; }
@@ -36,28 +38,6 @@ const Dashboard: React.FC = () => {
         await supabase.auth.signOut();
         navigate('/login');
     };
-
-    useEffect(() => {
-        if (!window.Paddle) {
-            const scriptId = 'paddle-js-sdk-dash';
-            if (!document.getElementById(scriptId)) {
-                const script = document.createElement('script');
-                script.id = scriptId;
-                script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
-                script.async = true;
-                script.onload = () => {
-                    const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN?.trim();
-                    const envFromToken = clientToken?.startsWith('test_') ? 'sandbox' : 'production';
-                    const env = import.meta.env.VITE_PADDLE_ENVIRONMENT || import.meta.env.VITE_PADDLE_ENV || envFromToken;
-                    if (window.Paddle && clientToken) {
-                        window.Paddle.Environment.set(env);
-                        window.Paddle.Initialize({ token: clientToken });
-                    }
-                };
-                document.body.appendChild(script);
-            }
-        }
-    }, []);
 
     const handleCancelSubscription = async () => {
         if (!subscription) return;

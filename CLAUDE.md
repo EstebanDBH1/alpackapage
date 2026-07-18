@@ -46,7 +46,7 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 
 **Paddle integration:** Checkout SDK is loaded dynamically. Opens as an overlay with user email pre-filled and Supabase user ID in custom data. Success redirects to `/payment-success`. The `supabase/functions/create-portal-session` Edge Function (Deno) handles sensitive Paddle API calls server-side.
 
-**Data fetching:** Supabase client is initialized in `lib/`. Prompts are fetched via `get_public_prompts()` RPC. The `saved_prompts` table joins users to bookmarked prompts.
+**Data fetching:** Supabase client is initialized in `lib/`. Public reads follow a shared pattern — lightweight payloads + memory/sessionStorage cache with stale-while-revalidate: `lib/promptsList.ts` (prompt catalog via `get_prompts_list()` RPC, no `content` column; shared by `/prompts` and the Home marquee) and `lib/blogList.ts` (blog list without `content` + per-slug post cache). Full prompt content is only fetched per-prompt via `get_prompt_detail()` (subscription-gated). Admin pages intentionally do NOT cache (fresh data while editing). Auth checks use `getSession()` (local read), not `getUser()` (network round-trip). The older `get_public_prompts()` RPC still exists in the DB but the frontend no longer calls it. The `saved_prompts` table joins users to bookmarked prompts.
 
 **Chunk-reload guard:** `index.tsx` listens for Vite's `vite:preloadError` and reloads the page once (sessionStorage flag) when a lazy route chunk fails to load — this recovers visitors whose cached `index.html` references pre-deploy asset hashes.
 

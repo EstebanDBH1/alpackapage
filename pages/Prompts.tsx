@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -42,8 +43,9 @@ const Prompts: React.FC = () => {
     const selectedCategory = categoryParam ?? 'todas';
     const [selectedTier, setSelectedTier] = useState<'todos' | 'gratis' | 'premium'>('todos');
     const [searchQuery, setSearchQuery] = useState('');
-    const [prompts, setPrompts] = useState<Prompt[]>([]);
-    const [loading, setLoading] = useState(true);
+    // Arranca con la caché si existe: el grid se pinta en el primer render
+    const [prompts, setPrompts] = useState<Prompt[]>(() => getCachedPromptsList() ?? []);
+    const [loading, setLoading] = useState(() => !getCachedPromptsList());
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +54,9 @@ const Prompts: React.FC = () => {
     // ── Sesión + suscripción ───────────────────────────────────────────────────
     useEffect(() => {
         const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            // getSession lee del almacenamiento local (sin round-trip al servidor de auth)
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user ?? null;
             setUser(user);
             if (user) {
                 const { data: sub } = await supabase
@@ -67,11 +71,16 @@ const Prompts: React.FC = () => {
     }, []);
 
     // ── Prompts ────────────────────────────────────────────────────────────────
+    // Stale-while-revalidate: si hubo caché ya se pintó; aquí refrescamos en
+    // segundo plano con el listado ligero (sin `content`, ~10x menos payload).
     useEffect(() => {
-        supabase.rpc('get_public_prompts').then(({ data, error }) => {
-            if (!error && data) setPrompts(data as Prompt[]);
+        let cancelled = false;
+        fetchPromptsList().then(fresh => {
+            if (cancelled) return;
+            if (fresh) setPrompts(fresh);
             setLoading(false);
         });
+        return () => { cancelled = true; };
     }, []);
 
     const categories = useMemo(() => {

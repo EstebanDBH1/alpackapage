@@ -29,7 +29,9 @@ const Pricing: React.FC = () => {
 
     useEffect(() => {
         const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            // getSession lee del almacenamiento local (sin round-trip al servidor de auth)
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user ?? null;
             setUser(user);
             if (user) {
                 const { data: sub } = await supabase

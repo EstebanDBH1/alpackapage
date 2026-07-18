@@ -1,5 +1,5 @@
 import React from 'react';
-import { supabase } from '../lib/supabase';
+import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 import { isNewPrompt } from '../lib/utils';
 import { ArrowRight, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -12,15 +12,17 @@ const CATEGORY_EMOJIS: Record<string, string> = {
 };
 
 const PromptGrid: React.FC = () => {
-  const [prompts, setPrompts] = React.useState<any[]>([]);
+  // Comparte lista y caché con /prompts: visitar la home deja el catálogo
+  // completo precargado, así que navegar a /prompts es instantáneo.
+  const [prompts, setPrompts] = React.useState<any[]>(() => (getCachedPromptsList() ?? []).slice(0, 10));
   const [isPaused, setIsPaused] = React.useState(false);
 
   React.useEffect(() => {
-    const fetchPrompts = async () => {
-      const { data } = await supabase.rpc('get_public_prompts').limit(10);
-      if (data) setPrompts(data);
-    };
-    fetchPrompts();
+    let cancelled = false;
+    fetchPromptsList().then(list => {
+      if (!cancelled && list) setPrompts(list.slice(0, 10));
+    });
+    return () => { cancelled = true; };
   }, []);
 
   const marqueePrompts = [...prompts, ...prompts, ...prompts];

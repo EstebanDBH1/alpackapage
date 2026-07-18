@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { getCachedBlogPost, fetchBlogPost } from '../lib/blogList';
 import { BlogPost as BlogPostType } from '../types';
 import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import { ArrowLeft, Clock } from 'lucide-react';
@@ -15,25 +15,33 @@ const readingTime = (content: string) =>
 
 const BlogPost: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
-    const [post, setPost] = useState<BlogPostType | null>(null);
-    const [status, setStatus] = useState<'loading' | 'ready' | 'notfound'>('loading');
+    // Si el artículo está en caché se pinta en el primer render, sin skeleton
+    const [post, setPost] = useState<BlogPostType | null>(() => (slug ? getCachedBlogPost(slug) : null));
+    const [status, setStatus] = useState<'loading' | 'ready' | 'notfound'>(() =>
+        slug && getCachedBlogPost(slug) ? 'ready' : 'loading'
+    );
 
     useEffect(() => {
         if (!slug) return;
-        setStatus('loading');
-        supabase
-            .from('blog_posts')
-            .select('*')
-            .eq('slug', slug)
-            .maybeSingle()
-            .then(({ data, error }) => {
-                if (error || !data) {
-                    setStatus('notfound');
-                    return;
-                }
-                setPost(data as BlogPostType);
+        const cached = getCachedBlogPost(slug);
+        if (cached) {
+            setPost(cached);
+            setStatus('ready');
+        } else {
+            setStatus('loading');
+        }
+        // Revalida en segundo plano (recoge ediciones del admin)
+        let cancelled = false;
+        fetchBlogPost(slug).then(fresh => {
+            if (cancelled) return;
+            if (fresh) {
+                setPost(fresh);
                 setStatus('ready');
-            });
+            } else if (!cached) {
+                setStatus('notfound');
+            }
+        });
+        return () => { cancelled = true; };
     }, [slug]);
 
     useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Check, Copy, X } from 'lucide-react';
 
 // ── Datos de skills (estático, fácil de ampliar) ─────────────────────────────
@@ -723,17 +724,20 @@ const SkillModal: React.FC<{ skill: ClaudeSkill; onClose: () => void }> = ({ ski
         };
     }, [onClose]);
 
-    return (
+    // Portal a <body>: inmune a cualquier transform/animación de ancestros
+    // (p. ej. PageTransition), que rompería el posicionamiento fixed.
+    // Sin animación de apertura: el modal aparece al instante.
+    return createPortal(
         <div
             ref={backdropRef}
             onClick={e => { if (e.target === backdropRef.current) onClose(); }}
-            className="animate-fade-in fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+            className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={`Skill: ${skill.name}`}
         >
             <div
-                className="animate-fade-up flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border/70 bg-card shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl"
+                className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border/70 bg-card shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl"
             >
                 {/* Cabecera */}
                 <div className="flex items-start justify-between gap-4 border-b border-border/60 px-6 py-5 sm:px-8">
@@ -769,7 +773,8 @@ const SkillModal: React.FC<{ skill: ClaudeSkill; onClose: () => void }> = ({ ski
                     <CopyButton text={skill.content} className="w-full sm:w-auto" />
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

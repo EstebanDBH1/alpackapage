@@ -10,7 +10,9 @@ const SavedPromptsPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        supabase.auth.getUser().then(({ data: { user } }) => {
+        // getSession lee del almacenamiento local: la página aparece al instante
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            const user = session?.user;
             if (!user) { navigate('/login?redirect=/guardados'); return; }
             setUser(user);
             setLoading(false);

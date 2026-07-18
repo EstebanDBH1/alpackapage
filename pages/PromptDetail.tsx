@@ -17,32 +17,27 @@ const PromptDetail: React.FC = () => {
     useEffect(() => {
         const fetchPromptAndUser = async () => {
             setLoading(true);
-            const { data: promptData, error } = await supabase
-                .rpc('get_prompt_detail', { prompt_id: id })
-                .single();
+            // getSession es local (sin red); con el usuario ya en mano lanzamos
+            // prompt, suscripción y guardado en paralelo: un solo round-trip.
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user ?? null;
 
-            const { data: { user } } = await supabase.auth.getUser();
-            let subscribed = false;
+            const [{ data: promptData, error }, subRes, savedRes] = await Promise.all([
+                supabase.rpc('get_prompt_detail', { prompt_id: id }).single(),
+                user
+                    ? supabase.from('subscriptions').select('subscription_status').eq('customer_id', user.id).maybeSingle()
+                    : Promise.resolve({ data: null }),
+                user
+                    ? supabase.from('saved_prompts').select('id').eq('user_id', user.id).eq('prompt_id', id).maybeSingle()
+                    : Promise.resolve({ data: null }),
+            ]);
 
-            if (user) {
-                const { data: sub } = await supabase
-                    .from('subscriptions')
-                    .select('subscription_status')
-                    .eq('customer_id', user.id)
-                    .maybeSingle();
-                subscribed = sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing');
-
-                const { data: saved } = await supabase
-                    .from('saved_prompts')
-                    .select('id')
-                    .eq('user_id', user.id)
-                    .eq('prompt_id', id)
-                    .maybeSingle();
-                setIsSaved(!!saved);
-            }
+            const sub = subRes.data;
+            const subscribed = !!(sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing'));
+            setIsSaved(!!savedRes.data);
 
             if (!error) setPrompt(promptData as Prompt);
-            setIsSubscribed(!!subscribed);
+            setIsSubscribed(subscribed);
             setLoading(false);
         };
         fetchPromptAndUser();
@@ -206,7 +201,8 @@ const PromptDetail: React.FC = () => {
     };
 
     const handleSave = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { session } } = await supabase.auth.getSession();
+        const user = session?.user;
         if (!user) return navigate('/login');
         if (!isSubscribed) return navigate('/pricing');
         setSaving(true);

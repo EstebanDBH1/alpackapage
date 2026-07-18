@@ -2,7 +2,8 @@ export interface Prompt {
   id: string;
   title: string;
   description: string;
-  content: string;
+  // Solo llega en el detalle (get_prompt_detail); el listado ligero no lo incluye
+  content?: string;
   category: string;
   is_premium: boolean;
   image_url?: string;
@@ -57,10 +58,4 @@ export interface StatItem {
 export interface FaqItem {
   question: string;
   answer: string;
-}
-
-declare global {
-  interface Window {
-    Paddle: any;
-  }
 }

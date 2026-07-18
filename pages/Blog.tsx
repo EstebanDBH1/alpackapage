@@ -1,10 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { BlogPost } from '../types';
+import { getCachedBlogList, fetchBlogList, type BlogPostPreview } from '../lib/blogList';
 import { Search } from 'lucide-react';
-
-type BlogPostPreview = Omit<BlogPost, 'content'>;
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -28,8 +25,9 @@ const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: 
 );
 
 const Blog: React.FC = () => {
-    const [posts, setPosts] = useState<BlogPostPreview[]>([]);
-    const [loading, setLoading] = useState(true);
+    // Arranca con la caché si existe: el grid se pinta en el primer render
+    const [posts, setPosts] = useState<BlogPostPreview[]>(() => getCachedBlogList() ?? []);
+    const [loading, setLoading] = useState(() => !getCachedBlogList());
     const [selectedCategory, setSelectedCategory] = useState('todas');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -37,16 +35,15 @@ const Blog: React.FC = () => {
         document.title = 'Blog · Guías y estrategias de IA | Alpacka';
     }, []);
 
+    // Stale-while-revalidate: si hubo caché ya se pintó; refrescamos en segundo plano
     useEffect(() => {
-        supabase
-            .from('blog_posts')
-            .select('id, title, slug, excerpt, cover_image_url, category, published, created_at, updated_at')
-            .eq('published', true)
-            .order('created_at', { ascending: false })
-            .then(({ data, error }) => {
-                if (!error && data) setPosts(data as BlogPostPreview[]);
-                setLoading(false);
-            });
+        let cancelled = false;
+        fetchBlogList().then(fresh => {
+            if (cancelled) return;
+            if (fresh) setPosts(fresh);
+            setLoading(false);
+        });
+        return () => { cancelled = true; };
     }, []);
 
     const categories = useMemo(() => {

@@ -144,15 +144,15 @@ details[open] .faq-chevron {
 }
 
 /* Animations */
+/* Solo opacity: un transform aquí (con fill-mode) convertiría al contenedor
+   de página en containing block de los modales position:fixed */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(4px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
