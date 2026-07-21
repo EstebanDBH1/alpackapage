@@ -1,3 +1,5 @@
+export type AiTool = 'cualquier-modelo' | 'chatgpt' | 'claude' | 'gemini';
+
 export interface Prompt {
   id: string;
   title: string;
@@ -8,6 +10,7 @@ export interface Prompt {
   is_premium: boolean;
   image_url?: string;
   created_at: string;
+  ai_tool: AiTool;
 }
 
 export interface BlogPost {

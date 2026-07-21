@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { getAiToolMeta } from '../lib/aiTools';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
 
@@ -263,11 +264,14 @@ const PromptDetail: React.FC = () => {
 
                         {/* Category + Premium badge */}
                         <div className="mb-5 flex flex-wrap items-center gap-2">
-                            <span className="inline-block rounded-md border border-border/50 bg-secondary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                            <span className="inline-block rounded-md border border-border/50 bg-secondary px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
                                 {prompt.category || 'general'}
                             </span>
+                            <span className={`inline-block rounded-md border px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] ${getAiToolMeta(prompt.ai_tool).badgeClass}`}>
+                                {getAiToolMeta(prompt.ai_tool).label}
+                            </span>
                             {prompt.is_premium && (
-                                <span className="inline-flex items-center gap-1.5 rounded-md border border-accent/40 bg-secondary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-accent">
+                                <span className="inline-flex items-center gap-1.5 rounded-md border border-accent/40 bg-secondary px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-accent">
                                     <Lock size={9} /> Premium
                                 </span>
                             )}
@@ -446,7 +450,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                 <div className="h-px bg-border/60" />
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Modelo</span>
-                                    <span className="text-xs font-medium uppercase text-foreground">GPT · Claude · Gemini</span>
+                                    <span className="text-xs font-medium uppercase text-foreground">{getAiToolMeta(prompt.ai_tool).label}</span>
                                 </div>
                             </div>
                         </div>

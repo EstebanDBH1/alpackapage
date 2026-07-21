@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
-import { Prompt } from '../types';
+import { Prompt, AiTool } from '../types';
+import { AI_TOOLS, getAiToolMeta } from '../lib/aiTools';
 import { Plus, Pencil, Trash2, ArrowLeft, Check, AlertCircle, Search, Lock } from 'lucide-react';
 
 const EMPTY_FORM = {
@@ -12,6 +13,7 @@ const EMPTY_FORM = {
     content: '',
     is_premium: true,
     image_url: '',
+    ai_tool: 'cualquier-modelo' as AiTool,
 };
 
 type FormState = typeof EMPTY_FORM;
@@ -22,6 +24,7 @@ const Admin: React.FC = () => {
     const [loadingPrompts, setLoadingPrompts] = useState(true);
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
+    const [aiToolFilter, setAiToolFilter] = useState('');
     const [form, setForm] = useState<FormState | null>(null);
     const [customCategory, setCustomCategory] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -60,9 +63,10 @@ const Admin: React.FC = () => {
         const q = search.trim().toLowerCase();
         return prompts.filter(p =>
             (!categoryFilter || p.category === categoryFilter) &&
+            (!aiToolFilter || p.ai_tool === aiToolFilter) &&
             (!q || p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q))
         );
-    }, [prompts, search, categoryFilter]);
+    }, [prompts, search, categoryFilter, aiToolFilter]);
 
     const openNew = () => {
         setError(null);
@@ -81,6 +85,7 @@ const Admin: React.FC = () => {
             content: p.content ?? '',
             is_premium: p.is_premium,
             image_url: p.image_url ?? '',
+            ai_tool: p.ai_tool ?? 'cualquier-modelo',
         });
     };
 
@@ -100,6 +105,7 @@ const Admin: React.FC = () => {
             content: form.content.replace(/\r\n/g, '\n').trim(),
             is_premium: form.is_premium,
             image_url: form.image_url.trim() || null,
+            ai_tool: form.ai_tool,
         };
 
         const { error: err } = form.id
@@ -228,17 +234,28 @@ const Admin: React.FC = () => {
                                         />
                                     )}
                                 </div>
-                                <div className="flex items-end pb-1">
-                                    <label className="inline-flex cursor-pointer items-center gap-3 text-sm text-foreground">
-                                        <input
-                                            type="checkbox"
-                                            checked={form.is_premium}
-                                            onChange={e => setForm({ ...form, is_premium: e.target.checked })}
-                                            className="h-4 w-4 accent-[#C96A3C]"
-                                        />
-                                        Premium
-                                    </label>
+                                <div>
+                                    <label className="mb-2 block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Herramienta IA *</label>
+                                    <select
+                                        value={form.ai_tool}
+                                        onChange={e => setForm({ ...form, ai_tool: e.target.value as AiTool })}
+                                        className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                                    >
+                                        {AI_TOOLS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                    </select>
                                 </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <label className="inline-flex cursor-pointer items-center gap-3 text-sm text-foreground">
+                                    <input
+                                        type="checkbox"
+                                        checked={form.is_premium}
+                                        onChange={e => setForm({ ...form, is_premium: e.target.checked })}
+                                        className="h-4 w-4 accent-[#C96A3C]"
+                                    />
+                                    Premium
+                                </label>
                             </div>
 
                             <div>
@@ -362,6 +379,14 @@ const Admin: React.FC = () => {
                             <option value="">Todas las categorías</option>
                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
+                        <select
+                            value={aiToolFilter}
+                            onChange={e => setAiToolFilter(e.target.value)}
+                            className="rounded-full border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-accent focus:outline-none"
+                        >
+                            <option value="">Todas las herramientas</option>
+                            {AI_TOOLS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                        </select>
                     </div>
 
                     {error && !form && (
@@ -379,11 +404,14 @@ const Admin: React.FC = () => {
                                 <div key={p.id} className="flex items-center gap-4 px-5 py-4">
                                     <div className="min-w-0 flex-grow">
                                         <p className="truncate text-sm font-medium text-foreground">{p.title}</p>
-                                        <p className="mt-0.5 text-xs text-muted-foreground">
-                                            {p.category}
-                                            {p.is_premium && <span className="ml-2 text-accent">Premium</span>}
+                                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
+                                            <span>{p.category}</span>
+                                            <span className={`rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.15em] ${getAiToolMeta(p.ai_tool).badgeClass}`}>
+                                                {getAiToolMeta(p.ai_tool).label}
+                                            </span>
+                                            {p.is_premium && <span className="text-accent">Premium</span>}
                                             {p.content && !p.content.includes('\n') && (
-                                                <span className="ml-2 text-brand-red">⚠ sin saltos de línea</span>
+                                                <span className="text-brand-red">⚠ sin saltos de línea</span>
                                             )}
                                         </p>
                                     </div>

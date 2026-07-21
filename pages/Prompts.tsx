@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
+import { getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -43,6 +44,13 @@ const Prompts: React.FC = () => {
     const selectedCategory = categoryParam ?? 'todas';
     const [selectedTier, setSelectedTier] = useState<'todos' | 'gratis' | 'premium'>('todos');
     const [searchQuery, setSearchQuery] = useState('');
+    // Debounce: filtramos 200ms después de que el usuario deja de teclear,
+    // en vez de recalcular el filtro en cada pulsación.
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedSearch(searchQuery.trim().toLowerCase()), 200);
+        return () => clearTimeout(t);
+    }, [searchQuery]);
     // Arranca con la caché si existe: el grid se pinta en el primer render
     const [prompts, setPrompts] = useState<Prompt[]>(() => getCachedPromptsList() ?? []);
     const [loading, setLoading] = useState(() => !getCachedPromptsList());
@@ -90,13 +98,15 @@ const Prompts: React.FC = () => {
 
     const filteredPrompts = useMemo(() => prompts.filter(prompt => {
         const matchesCategory = selectedCategory === 'todas' || prompt.category?.toLowerCase() === selectedCategory;
-        const matchesSearch = (prompt.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (prompt.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = !debouncedSearch ||
+            (prompt.title || '').toLowerCase().includes(debouncedSearch) ||
+            (prompt.description || '').toLowerCase().includes(debouncedSearch) ||
+            (prompt.category || '').toLowerCase().includes(debouncedSearch);
         let matchesTier = true;
         if (selectedTier === 'gratis') matchesTier = !prompt.is_premium;
         if (selectedTier === 'premium') matchesTier = !!prompt.is_premium;
         return matchesCategory && matchesSearch && matchesTier;
-    }), [prompts, selectedCategory, selectedTier, searchQuery]);
+    }), [prompts, selectedCategory, selectedTier, debouncedSearch]);
 
     const handleCategorySelect = (cat: string) => {
         setCurrentPage(1);
@@ -104,7 +114,7 @@ const Prompts: React.FC = () => {
         else navigate(`/prompts/categoria/${encodeURIComponent(cat)}`);
     };
 
-    useEffect(() => { setCurrentPage(1); }, [selectedCategory, selectedTier, searchQuery]);
+    useEffect(() => { setCurrentPage(1); }, [selectedCategory, selectedTier, debouncedSearch]);
 
     const totalPages = Math.ceil(filteredPrompts.length / PAGE_SIZE);
     const paginatedPrompts = filteredPrompts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -183,8 +193,9 @@ const Prompts: React.FC = () => {
                         <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
 
                             {/* Selector de categoría */}
-                            <CategorySelect
-                                categories={categories}
+                            <FilterSelect
+                                label="Categoría"
+                                options={categories.map(c => ({ value: c, label: c === 'todas' ? 'Todas' : titleCase(c) }))}
                                 selected={selectedCategory}
                                 onSelect={handleCategorySelect}
                             />
@@ -197,7 +208,7 @@ const Prompts: React.FC = () => {
                                         <button
                                             key={tier}
                                             onClick={() => setSelectedTier(tier)}
-                                            className={`border-b pb-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${active
+                                            className={`border-b pb-1 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors ${active
                                                 ? 'border-accent text-accent'
                                                 : 'border-transparent text-muted-foreground hover:text-foreground'
                                                 }`}
@@ -311,12 +322,13 @@ const Prompts: React.FC = () => {
     );
 };
 
-// ── Dropdown de categoría personalizado ──────────────────────────────────────
-const CategorySelect: React.FC<{
-    categories: string[];
+// ── Dropdown de filtro genérico (categoría, herramienta IA, …) ───────────────
+const FilterSelect: React.FC<{
+    label: string;
+    options: { value: string; label: string }[];
     selected: string;
-    onSelect: (cat: string) => void;
-}> = ({ categories, selected, onSelect }) => {
+    onSelect: (value: string) => void;
+}> = ({ label, options, selected, onSelect }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -334,7 +346,7 @@ const CategorySelect: React.FC<{
         };
     }, [open]);
 
-    const label = selected === 'todas' ? 'Todas' : titleCase(selected);
+    const currentLabel = options.find(o => o.value === selected)?.label ?? '';
 
     return (
         <div ref={ref} className="relative w-full sm:w-60">
@@ -346,9 +358,9 @@ const CategorySelect: React.FC<{
                 className={`flex w-full items-center justify-between rounded-full border bg-card/60 px-5 py-2.5 text-xs backdrop-blur transition-colors focus:outline-none ${open ? 'border-primary/40' : 'border-border/60 hover:border-border'
                     }`}
             >
-                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Categoría</span>
+                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
                 <span className="flex items-center gap-2 font-medium text-foreground">
-                    {label}
+                    {currentLabel}
                     <ChevronDown
                         size={14}
                         className={`text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -362,19 +374,19 @@ const CategorySelect: React.FC<{
                     role="listbox"
                     className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-72 overflow-auto rounded-2xl border border-border/70 bg-card py-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
                 >
-                    {categories.map(cat => {
-                        const active = cat === selected;
+                    {options.map(opt => {
+                        const active = opt.value === selected;
                         return (
-                            <li key={cat} role="option" aria-selected={active}>
+                            <li key={opt.value} role="option" aria-selected={active}>
                                 <button
                                     type="button"
-                                    onClick={() => { onSelect(cat); setOpen(false); }}
+                                    onClick={() => { onSelect(opt.value); setOpen(false); }}
                                     className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-xs font-medium transition-colors ${active
                                         ? 'bg-secondary text-accent'
                                         : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                                         }`}
                                 >
-                                    {cat === 'todas' ? 'Todas' : titleCase(cat)}
+                                    {opt.label}
                                     {active && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
                                 </button>
                             </li>
@@ -397,12 +409,17 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => (
                 New
             </span>
         )}
-        <div className="mb-4 flex items-center justify-between">
-            <span className="inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {prompt.category || 'General'}
-            </span>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                    {prompt.category || 'General'}
+                </span>
+                <span className={`inline-block rounded-md border px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.2em] ${getAiToolMeta(prompt.ai_tool).badgeClass}`}>
+                    {getAiToolMeta(prompt.ai_tool).label}
+                </span>
+            </div>
             {prompt.is_premium && (
-                <span className="text-[10px] uppercase tracking-[0.2em] text-accent">
+                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-accent">
                     Premium
                 </span>
             )}
