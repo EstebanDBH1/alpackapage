@@ -1,167 +1,352 @@
-import React, { useState } from 'react';
-import { Check, Shield, ChevronDown, ChevronUp, Zap, Target, Star, ArrowRight, Gift, Clock, TrendingUp, BookOpen, Sparkles, Database, Layers } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Check, ChevronDown, ChevronUp, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { gsap } from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import AlpacaIcon from '../components/AlpacaIcon';
 
-/* ─── Paleta (Notion-inspired — tema claro) ─── */
-const BG       = '#ffffff';
-const BG_WARM  = '#f7f6f3';
-const BG_CARD  = '#ffffff';
-const TEXT     = '#1a1a1a';
-const TEXT_MED = '#787774';
-const TEXT_DIM = '#a8a5a1';
-const BORDER   = '#e4e4e1';
+gsap.registerPlugin(useGSAP, SplitText, ScrollTrigger);
 
-/* Acentos */
-const ACCENT       = '#f97316';            // naranja
-const PRIMARY      = '#000000';            // CTAs negros
-const PRIMARY_TEXT = '#ffffff';            // texto sobre botón negro
-const CHIP_BG      = 'rgba(0,0,0,0.05)';   // chips/íconos suaves
+/* ─── Paleta (Relume-inspired — tema claro) ─── */
+const BG = '#ffffff';
+const BG_ALT = '#f6f6f4';
+const TEXT = '#14151a';
+const MUTED = '#5f6067';
+const DIM = '#9a9ba1';
+const BORDER = '#e6e6e9';
+
+const NAVY = '#14151a';   // botones primarios / footer
+const BLUE = '#3b4af7';   // acento (links, detalles)
+const BANNER_BG = '#c9f2e3';
+const BANNER_TEXT = '#0d5c43';
+
+const buyUrl = 'https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034';
+
+/* ─── Cursor "multiplayer" (firma visual Relume) ─── */
+const Cursor: React.FC<{ label: string; color: string; top: string; left?: string; right?: string; flip?: boolean; rotate?: number }> = ({
+  label, color, top, left, right, flip, rotate = 0
+}) => (
+  <div style={{
+    position: 'absolute', top, left, right, zIndex: 10,
+    display: 'flex', flexDirection: 'column',
+    alignItems: flip ? 'flex-end' : 'flex-start',
+    transform: `rotate(${rotate}deg)`,
+    pointerEvents: 'none',
+    filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.18))',
+  }}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ transform: flip ? 'scaleX(-1)' : 'none' }}>
+      <path d="M4 3L20 11L12.5 13L9.5 20L4 3Z" fill={color} stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+    <span style={{
+      backgroundColor: color, color: '#fff',
+      fontSize: 11, fontWeight: 600, letterSpacing: '0.01em',
+      padding: '3px 9px', borderRadius: 100,
+      marginTop: 2, whiteSpace: 'nowrap',
+    }}>
+      {label}
+    </span>
+  </div>
+);
+
+/* ─── Botones ─── */
+const BtnPrimary: React.FC<{ children: React.ReactNode; href?: string; size?: 'sm' | 'lg' }> = ({ children, href = buyUrl, size = 'sm' }) => (
+  <a
+    href={href}
+    target={href.startsWith('http') ? '_blank' : undefined}
+    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+    style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+      backgroundColor: NAVY, color: '#fff',
+      fontWeight: 600,
+      fontSize: size === 'lg' ? 16 : 14,
+      padding: size === 'lg' ? '15px 30px' : '10px 20px',
+      borderRadius: 8,
+      textDecoration: 'none',
+      whiteSpace: 'nowrap',
+      transition: 'background 0.15s, transform 0.15s',
+    }}
+    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#2a2b33'; }}
+    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = NAVY; }}
+  >
+    {children}
+  </a>
+);
+
+const BtnSecondary: React.FC<{ children: React.ReactNode; href: string; size?: 'sm' | 'lg' }> = ({ children, href, size = 'sm' }) => (
+  <a
+    href={href}
+    style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+      backgroundColor: 'transparent', color: TEXT,
+      fontWeight: 600,
+      fontSize: size === 'lg' ? 16 : 14,
+      padding: size === 'lg' ? '14px 30px' : '9px 20px',
+      borderRadius: 8,
+      border: `1px solid ${TEXT}`,
+      textDecoration: 'none',
+      whiteSpace: 'nowrap',
+      transition: 'background 0.15s',
+    }}
+    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(20,21,26,0.05)'; }}
+    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; }}
+  >
+    {children}
+  </a>
+);
+
+/* ─── Link con flecha (estilo "Give it a try") ─── */
+const ArrowLink: React.FC<{ children: React.ReactNode; href?: string }> = ({ children, href = buyUrl }) => (
+  <a
+    href={href}
+    target={href.startsWith('http') ? '_blank' : undefined}
+    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+    style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      color: TEXT, fontWeight: 600, fontSize: 14,
+      textDecoration: 'none', borderBottom: `1.5px solid ${TEXT}`,
+      paddingBottom: 1,
+    }}
+  >
+    {children}
+    <ArrowUpRight size={15} />
+  </a>
+);
 
 /* ─── FAQ ─── */
 const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div
-      style={{ borderBottom: `1px solid ${BORDER}`, cursor: 'pointer' }}
-      onClick={() => setOpen(!open)}
-    >
-      <div className="flex items-center justify-between py-5 px-6" style={{ userSelect: 'none' }}>
-        <span style={{ color: TEXT, fontSize: 15, fontWeight: 500, lineHeight: 1.5, paddingRight: 24 }}>{q}</span>
+    <div style={{ borderBottom: `1px solid ${BORDER}`, cursor: 'pointer' }} onClick={() => setOpen(!open)}>
+      <div className="flex items-center justify-between py-6" style={{ userSelect: 'none' }}>
+        <span style={{ color: TEXT, fontSize: 16, fontWeight: 600, lineHeight: 1.4, paddingRight: 24 }}>{q}</span>
         {open
-          ? <ChevronUp size={16} style={{ color: TEXT_MED, flexShrink: 0 }} />
-          : <ChevronDown size={16} style={{ color: TEXT_DIM, flexShrink: 0 }} />
+          ? <ChevronUp size={18} style={{ color: TEXT, flexShrink: 0 }} />
+          : <ChevronDown size={18} style={{ color: DIM, flexShrink: 0 }} />
         }
       </div>
       {open && (
-        <div className="px-6 pb-5">
-          <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.8 }}>{a}</p>
+        <div className="pb-6">
+          <p style={{ color: MUTED, fontSize: 15, lineHeight: 1.8, maxWidth: 640 }}>{a}</p>
         </div>
       )}
     </div>
   );
 };
 
-/* ─── AI logos marquee ─── */
-const aiTools = [
-  { name: 'ChatGPT', dot: '#10a37f' },
-  { name: 'Claude', dot: '#D4A853' },
-  { name: 'Gemini', dot: '#4285F4' },
-  { name: 'DeepSeek', dot: '#3B82F6' },
-  { name: 'Perplexity', dot: '#20B2AA' },
-  { name: 'Grok', dot: '#555555' },
-  { name: 'Mistral', dot: '#FF6B35' },
-  { name: 'Copilot', dot: '#0078D4' },
-  { name: 'Meta AI', dot: '#0668E1' },
-  { name: 'LLaMA 3', dot: '#9B59B6' },
-];
+/* ─── Etiqueta de sección (eyebrow) ─── */
+const Eyebrow: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 14 }}>{children}</p>
+);
 
-const AIMarquee: React.FC = () => {
-  const doubled = [...aiTools, ...aiTools];
-  return (
-    <div style={{ overflow: 'hidden', position: 'relative' }}>
-      <style>{`
-        @keyframes marqueeScroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .eb-marquee {
-          animation: marqueeScroll 34s linear infinite;
-          display: flex;
-          width: max-content;
-          gap: 10px;
-          align-items: center;
-        }
-        .eb-marquee:hover { animation-play-state: paused; }
-      `}</style>
-      <div className="eb-marquee" style={{ padding: '4px 0' }}>
-        {doubled.map((tool, i) => (
-          <div
-            key={i}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 7,
-              backgroundColor: BG_CARD,
-              border: `1px solid ${BORDER}`,
-              borderRadius: 100,
-              padding: '7px 16px',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-            }}
-          >
-            <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: tool.dot, flexShrink: 0 }} />
-            <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: 12, color: TEXT_MED, fontWeight: 500 }}>
-              {tool.name}
-            </span>
+/* ─── Mockup: workspace Notion ─── */
+const NotionMockup: React.FC = () => (
+  <div style={{
+    borderRadius: 12,
+    overflow: 'hidden',
+    border: `1px solid ${BORDER}`,
+    boxShadow: '0 24px 60px rgba(20,21,26,0.10)',
+    backgroundColor: BG,
+  }}>
+    {/* Window bar */}
+    <div style={{
+      backgroundColor: BG_ALT, borderBottom: `1px solid ${BORDER}`,
+      padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8,
+    }}>
+      <div style={{ display: 'flex', gap: 6 }}>
+        {['#d9d9dc', '#d9d9dc', '#d9d9dc'].map((c, i) => (
+          <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: c }} />
+        ))}
+      </div>
+      <div style={{
+        flex: 1, backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 6,
+        height: 24, maxWidth: 340, margin: '0 auto',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span style={{ fontSize: 11, color: DIM }}>alpacka.ai · Biblioteca de Prompts</span>
+      </div>
+    </div>
+
+    {/* Sidebar + content */}
+    <div style={{ display: 'flex', height: 380 }}>
+      <div className="hidden sm:block" style={{ width: 210, backgroundColor: BG_ALT, borderRight: `1px solid ${BORDER}`, padding: '18px 12px', flexShrink: 0 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: DIM, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Biblioteca</div>
+        {[
+          { emoji: '⚡', label: 'Productividad', count: 42 },
+          { emoji: '✍️', label: 'Copywriting', count: 38 },
+          { emoji: '📱', label: 'Redes Sociales', count: 36 },
+          { emoji: '📈', label: 'Marketing', count: 35 },
+          { emoji: '💼', label: 'Negocios', count: 29 },
+          { emoji: '🎨', label: 'Creatividad', count: 27 },
+          { emoji: '🧠', label: 'Psicología', count: 26 },
+          { emoji: '📧', label: 'Email', count: 22 },
+          { emoji: '💻', label: 'Vibe Coding', count: 21 },
+          { emoji: '🤖', label: 'Técnicos', count: 18 },
+          { emoji: '🌐', label: 'SEO & Contenido', count: 16 },
+        ].map((item, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '5px 8px', borderRadius: 6, marginBottom: 2,
+            backgroundColor: i === 0 ? 'rgba(20,21,26,0.06)' : 'transparent',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 12 }}>{item.emoji}</span>
+              <span style={{ fontSize: 12, color: i === 0 ? TEXT : MUTED }}>{item.label}</span>
+            </div>
+            <span style={{ fontSize: 10, color: DIM, backgroundColor: 'rgba(20,21,26,0.05)', borderRadius: 4, padding: '1px 5px' }}>{item.count}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ flex: 1, padding: '20px 24px', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+          <span style={{ fontSize: 18 }}>⚡</span>
+          <span style={{ fontWeight: 700, fontSize: 18, color: TEXT }}>Productividad</span>
+          <span style={{ fontSize: 11, color: DIM, backgroundColor: BG_ALT, border: `1px solid ${BORDER}`, borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>42 prompts</span>
+        </div>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 96px 76px', gap: 8,
+          padding: '6px 10px', backgroundColor: BG_ALT,
+          borderRadius: '8px 8px 0 0', borderBottom: `1px solid ${BORDER}`,
+        }}>
+          {['Prompt', 'IA', 'Copiar'].map((h, i) => (
+            <span key={i} style={{ fontSize: 11, fontWeight: 600, color: DIM, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+          ))}
+        </div>
+
+        {[
+          { title: 'Planificador semanal Deep Work con bloques de 90 min', ai: 'Universal', color: '#10a37f' },
+          { title: 'Resumen ejecutivo con decisiones y próximos pasos', ai: 'ChatGPT', color: '#10a37f' },
+          { title: 'Email de seguimiento post-demo que cierra sin presionar', ai: 'Claude', color: '#D4A853' },
+          { title: 'Estrategia de contenido 30 días con calendario y KPIs', ai: 'Gemini', color: '#4285F4' },
+          { title: 'Análisis FODA completo con plan de acción por cuadrante', ai: 'Universal', color: '#10a37f' },
+          { title: 'Propuesta comercial lista para enviar en una página', ai: 'Universal', color: '#10a37f' },
+        ].map((row, i) => (
+          <div key={i} style={{
+            display: 'grid', gridTemplateColumns: '1fr 96px 76px', gap: 8,
+            padding: '10px 10px', borderBottom: `1px solid ${BORDER}`, alignItems: 'center',
+          }}>
+            <span style={{ fontSize: 13, color: TEXT, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.title}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: row.color }} />
+              <span style={{ fontSize: 11, color: MUTED }}>{row.ai}</span>
+            </div>
+            <div style={{
+              fontSize: 11, fontWeight: 600, color: BLUE,
+              backgroundColor: 'rgba(59,74,247,0.07)', border: '1px solid rgba(59,74,247,0.2)',
+              borderRadius: 5, padding: '3px 8px', textAlign: 'center',
+            }}>
+              Copiar
+            </div>
           </div>
         ))}
       </div>
     </div>
-  );
-};
-
-/* ─── Floating gradient blob ─── */
-const Blob: React.FC<{ color: string; size: number; top: string; left: string; opacity?: number }> = ({ color, size, top, left, opacity = 0.55 }) => (
-  <div style={{
-    position: 'absolute',
-    top,
-    left,
-    width: size,
-    height: size,
-    borderRadius: '50%',
-    background: color,
-    filter: `blur(${size * 0.55}px)`,
-    opacity,
-    pointerEvents: 'none',
-  }} />
+  </div>
 );
 
-/* ─── Feature card (card pastel + ícono/etiqueta de color) ─── */
-const FeatureCard: React.FC<{ icon: React.ReactNode; bg: string; title: string; desc: string; tag: string; tagColor: string }> = ({
-  icon, bg, title, desc, tag, tagColor
-}) => (
-  <div style={{
-    backgroundColor: bg,
-    borderRadius: 20,
-    padding: '32px 28px',
-    position: 'relative',
-    overflow: 'hidden',
-    border: `1px solid rgba(0,0,0,0.05)`,
-  }}>
-    <div style={{
-      width: 48,
-      height: 48,
-      borderRadius: 14,
-      backgroundColor: 'rgba(255,255,255,0.7)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 20,
-      backdropFilter: 'blur(10px)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-    }}>
-      {icon}
-    </div>
-    <div style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 5,
-      backgroundColor: 'rgba(255,255,255,0.65)',
-      borderRadius: 100,
-      padding: '3px 10px',
-      marginBottom: 12,
-    }}>
-      <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: tagColor }} />
-      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: tagColor }}>{tag}</span>
-    </div>
-    <p style={{ color: TEXT, fontWeight: 700, fontSize: 16, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
-    <p style={{ color: TEXT_MED, fontSize: 13, lineHeight: 1.7 }}>{desc}</p>
+/* ─── Mini-mockups para las 3 cards de producto ─── */
+const MiniLibrary: React.FC = () => (
+  <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 14, boxShadow: '0 12px 32px rgba(20,21,26,0.08)' }}>
+    {[
+      { emoji: '⚡', t: 'Productividad', n: 42 },
+      { emoji: '📱', t: 'Redes Sociales', n: 36 },
+      { emoji: '🧠', t: 'Psicología', n: 26 },
+      { emoji: '💻', t: 'Vibe Coding', n: 21 },
+    ].map((r, i) => (
+      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 6px', borderBottom: i < 3 ? `1px solid ${BORDER}` : 'none' }}>
+        <span style={{ fontSize: 13, color: TEXT }}>{r.emoji}&nbsp;&nbsp;{r.t}</span>
+        <span style={{ fontSize: 11, color: DIM, backgroundColor: BG_ALT, borderRadius: 4, padding: '1px 7px' }}>{r.n}</span>
+      </div>
+    ))}
+  </div>
+);
+
+const MiniNichos: React.FC = () => (
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+    {['🏠 Inmobiliaria', '🛒 E-commerce', '⚕️ Salud', '⚖️ Legal', '🎓 Educación', '💪 Fitness', '🍽️ Restaurantes', '📱 Creadores', 'Psicologia', 'Finanzas', 'Abogados'].map((n, i) => (
+      <span key={i} style={{
+        backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 100,
+        padding: '7px 14px', fontSize: 12.5, color: TEXT, fontWeight: 500,
+        boxShadow: '0 4px 12px rgba(20,21,26,0.05)',
+      }}>{n}</span>
+    ))}
+  </div>
+);
+
+const MiniGuide: React.FC = () => (
+  <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 16, boxShadow: '0 12px 32px rgba(20,21,26,0.08)' }}>
+    <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: DIM, marginBottom: 10 }}>Anatomía de un prompt</p>
+    {[
+      { tag: 'ROL', text: 'Actúa como estratega de marketing senior…', color: BLUE },
+      { tag: 'CONTEXTO', text: 'Mi negocio es [INSERTAR] y mi cliente…', color: '#10a37f' },
+      { tag: 'FORMATO', text: 'Entrega una tabla con 3 columnas…', color: '#e8590c' },
+    ].map((r, i) => (
+      <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: i < 2 ? 10 : 0 }}>
+        <span style={{ fontSize: 9, fontWeight: 700, color: r.color, backgroundColor: `${r.color}14`, border: `1px solid ${r.color}33`, borderRadius: 4, padding: '2px 6px', flexShrink: 0, letterSpacing: '0.06em' }}>{r.tag}</span>
+        <span style={{ fontSize: 12, color: MUTED, lineHeight: 1.5 }}>{r.text}</span>
+      </div>
+    ))}
   </div>
 );
 
 /* ─── Main ─── */
 const Ebook: React.FC = () => {
+  const heroRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    // Título: split por líneas con mask (overflow: clip) — el texto sube desde detrás de la máscara
+    SplitText.create('.eb-hero-title', {
+      type: 'lines',
+      mask: 'lines',
+      autoSplit: true,
+      onSplit(self) {
+        return gsap.from(self.lines, {
+          yPercent: 110,
+          duration: 1.1,
+          ease: 'power4.out',
+          stagger: 0.12,
+          onComplete: () => self.revert(),
+        });
+      },
+    });
+
+    // El resto del hero entra detrás del título, en cascada suave
+    gsap.from('.eb-hero-fade', {
+      autoAlpha: 0,
+      y: 22,
+      duration: 0.9,
+      ease: 'power3.out',
+      stagger: 0.1,
+      delay: 0.35,
+    });
+  }, { scope: heroRef });
+
+  // Stacking cards (solo mobile): las cards quedan sticky y la anterior se encoge cuando la siguiente se monta encima
+  const stackRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(max-width: 767px)', () => {
+      const cards = gsap.utils.toArray<HTMLElement>('.eb-stack-card');
+      cards.forEach((card, i) => {
+        if (i === cards.length - 1) return;
+        gsap.to(card, {
+          scale: 0.94,
+          transformOrigin: 'center top',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: cards[i + 1],
+            start: 'top bottom',
+            end: 'top 104px',
+            scrub: true,
+          },
+        });
+      });
+    });
+  }, { scope: stackRef });
 
   const faqs = [
     {
@@ -190,988 +375,674 @@ const Ebook: React.FC = () => {
     },
   ];
 
-  const buyUrl = 'https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034';
-
-  const BtnPrimary: React.FC<{ children: React.ReactNode; size?: 'sm' | 'md' | 'lg' }> = ({ children, size = 'md' }) => {
-    const padding = size === 'lg' ? '16px 32px' : size === 'sm' ? '10px 20px' : '13px 26px';
-    const fontSize = size === 'lg' ? 16 : size === 'sm' ? 13 : 14;
-    return (
-      <a
-        href={buyUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          backgroundColor: PRIMARY,
-          color: PRIMARY_TEXT,
-          fontWeight: 600,
-          fontSize,
-          padding,
-          borderRadius: 10,
-          textDecoration: 'none',
-          transition: 'transform 0.15s, background 0.15s',
-          whiteSpace: 'nowrap',
-        }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
-      >
-        {children}
-      </a>
-    );
-  };
-
   return (
     <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: '"Space Grotesk", sans-serif', color: TEXT }}>
+      <style>{`
+        .eb-section { scroll-margin-top: 110px; }
+        @media (max-width: 640px) { .eb-hide-cursor { display: none; } }
+        @media (max-width: 767px) {
+          .eb-stack-card { position: sticky; will-change: transform; }
+          .eb-stack-card:nth-child(1) { top: 80px; }
+          .eb-stack-card:nth-child(2) { top: 92px; }
+          .eb-stack-card:nth-child(3) { top: 104px; }
+        }
+        .eb-logo-marquee-wrap {
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+          mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+        }
+        .eb-logo-marquee {
+          display: flex;
+          align-items: center;
+          width: max-content;
+          animation: ebLogoScroll 28s linear infinite;
+        }
+        .eb-logo-marquee:hover { animation-play-state: paused; }
+        @keyframes ebLogoScroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .eb-logo-marquee { animation: none; }
+        }
+      `}</style>
 
-      {/* ── Header ── */}
+      {/* ── Announcement banner ── */}
+      <div style={{ backgroundColor: BANNER_BG, padding: '9px 16px', textAlign: 'center' }}>
+        <p style={{ fontSize: 13, color: BANNER_TEXT, fontWeight: 500 }}>
+          <strong style={{ fontWeight: 700 }}>Nuevos prompts cada semana</strong> — las actualizaciones están incluidas de por vida.{' '}
+          <a href={buyUrl} target="_blank" rel="noopener noreferrer" style={{ color: BANNER_TEXT, fontWeight: 700, textDecoration: 'underline' }}>
+            Acceder
+          </a>
+        </p>
+      </div>
+
+      {/* ── Navbar ── */}
       <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        backgroundColor: 'rgba(255,255,255,0.88)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
+        position: 'sticky', top: 0, zIndex: 50,
+        backgroundColor: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${BORDER}`,
-        height: 56,
+        height: 64,
         display: 'flex', alignItems: 'center',
       }}>
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 w-full flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <AlpacaIcon className="w-4 h-4" />
-            <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontStyle: 'italic', fontWeight: 300, fontSize: 17, color: TEXT }}>
-              alpacka<span style={{ fontStyle: 'normal', fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: 12, color: TEXT_DIM }}>.ai</span>
-            </span>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full flex items-center justify-between">
+          <div className="flex items-center">
+            <AlpacaIcon className="w-6 h-6" />
           </div>
 
-          <a
-            href={buyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: PRIMARY, color: PRIMARY_TEXT,
-              fontWeight: 600, fontSize: 13,
-              padding: '8px 18px', borderRadius: 9,
-              textDecoration: 'none',
-              transition: 'transform 0.15s, background 0.15s',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
-          >
-            Comprar — $10
-            <ArrowRight size={12} />
-          </a>
+          <div className="flex items-center gap-3">
+            <a href="#incluye" className="hidden sm:inline" style={{ color: MUTED, fontSize: 14, fontWeight: 500, textDecoration: 'none', marginRight: 6 }}>
+              Qué incluye
+            </a>
+            <a href="#precio" className="hidden sm:inline" style={{ color: MUTED, fontSize: 14, fontWeight: 500, textDecoration: 'none', marginRight: 10 }}>
+              Precio
+            </a>
+            <BtnPrimary>Acceder — $10</BtnPrimary>
+          </div>
         </div>
       </header>
 
-      <div style={{ paddingTop: 56 }}>
+      {/* ══════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════ */}
+      <section ref={heroRef} style={{ backgroundColor: BG, position: 'relative', overflow: 'hidden' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 md:pt-24 pb-0 text-center">
 
-        {/* ══════════════════════════════════════════
-            HERO
-        ══════════════════════════════════════════ */}
-        <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: BG }}>
-          {/* Gradient blobs */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-            <Blob color="radial-gradient(circle, #fbc7d4, #9796f0)" size={420} top="-80px" left="-60px" opacity={0.35} />
-            <Blob color="radial-gradient(circle, #a8edea, #fed6e3)" size={340} top="60px" left="65%" opacity={0.30} />
-            <Blob color="radial-gradient(circle, #ffecd2, #fcb69f)" size={280} top="40%" left="30%" opacity={0.22} />
-          </div>
-
-          <div className="relative max-w-5xl mx-auto px-6 sm:px-10 pt-20 pb-0 md:pt-28 text-center">
-
-            {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2.5 mb-8" style={{
-              backgroundColor: 'rgba(255,255,255,0.8)',
-              border: `1px solid ${BORDER}`,
-              borderRadius: 100,
-              padding: '7px 16px',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ACCENT, flexShrink: 0 }} />
-              <span style={{ fontSize: 11, fontWeight: 500, color: TEXT_MED, letterSpacing: '0.24em', textTransform: 'uppercase' }}>
-                Biblioteca de Prompts · alpacka.ai
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h1 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
-              fontWeight: 500,
-              fontSize: 'clamp(2.7rem, 6vw, 4.6rem)',
-              lineHeight: 1.06,
-              color: TEXT,
-              marginBottom: 24,
-              letterSpacing: '-0.025em',
-              maxWidth: 880,
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}>
-              Convierte la IA en tu{' '}
-              <span style={{ color: ACCENT }}>ventaja definitiva</span>.
-            </h1>
-
-            {/* Subheadline */}
-            <p style={{ color: TEXT_MED, fontSize: 'clamp(15px, 1.6vw, 19px)', lineHeight: 1.75, maxWidth: 600, margin: '0 auto 40px' }}>
-              Junté cientos de prompts que de verdad funcionan y los ordené en Notion. Los copias, los pegas en ChatGPT, Claude o Gemini, y listo. Aprender a hablarle bien a la IA ya lo hice yo por ti.
-            </p>
-
-            {/* CTA */}
-            <div className="flex flex-col items-center gap-6 mb-16">
-              <a
-                href={buyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 10,
-                  backgroundColor: PRIMARY, color: PRIMARY_TEXT,
-                  fontWeight: 600, fontSize: 16,
-                  padding: '16px 38px', borderRadius: 12,
-                  textDecoration: 'none',
-                  boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
-                  transition: 'transform 0.15s, background 0.15s',
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
-              >
-                Acceder ahora
-                <ArrowRight size={16} />
-              </a>
-
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '10px 22px' }}>
-                {[
-                  'Pago único de $10',
-                  'Acceso en 2 minutos',
-                  'Garantía de 30 días',
-                ].map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                    <Check size={13} style={{ color: ACCENT }} strokeWidth={2.5} />
-                    <span style={{ fontSize: 13, color: TEXT_DIM }}>{t}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Product mockup (workspace estilo Notion) */}
-            <div style={{
-              position: 'relative',
-              maxWidth: 780,
-              margin: '0 auto',
-              borderRadius: '20px 20px 0 0',
-              overflow: 'hidden',
-              boxShadow: `0 -4px 0 ${BORDER}, 0 20px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)`,
-            }}>
-              <div style={{ backgroundColor: BG_CARD, padding: '0' }}>
-                {/* Window bar */}
-                <div style={{
-                  backgroundColor: BG_WARM,
-                  borderBottom: `1px solid ${BORDER}`,
-                  padding: '10px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                }}>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ff6b6b' }} />
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ffd93d' }} />
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#6bcb77' }} />
-                  </div>
-                  <div style={{
-                    flex: 1, backgroundColor: CHIP_BG, borderRadius: 6,
-                    height: 22, maxWidth: 320, margin: '0 auto',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <span style={{ fontSize: 10, color: TEXT_DIM }}>alpacka.ai · Biblioteca de Prompts</span>
-                  </div>
-                </div>
-
-                {/* Notion sidebar + content */}
-                <div style={{ display: 'flex', height: 360 }}>
-                  {/* Sidebar */}
-                  <div style={{ width: 200, backgroundColor: BG_WARM, borderRight: `1px solid ${BORDER}`, padding: '16px 12px', flexShrink: 0 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: TEXT_DIM, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Biblioteca</div>
-                    {[
-                      { emoji: '⚡', label: 'Productividad', count: 42 },
-                      { emoji: '✍️', label: 'Copywriting', count: 38 },
-                      { emoji: '📈', label: 'Marketing', count: 35 },
-                      { emoji: '💼', label: 'Negocios', count: 29 },
-                      { emoji: '🎨', label: 'Creatividad', count: 27 },
-                      { emoji: '📧', label: 'Email', count: 22 },
-                      { emoji: '🤖', label: 'Técnicos', count: 18 },
-                      { emoji: '🌐', label: 'SEO & Contenido', count: 16 },
-                    ].map((item, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '5px 8px',
-                          borderRadius: 6,
-                          marginBottom: 2,
-                          backgroundColor: i === 0 ? CHIP_BG : 'transparent',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 12 }}>{item.emoji}</span>
-                          <span style={{ fontSize: 12, color: i === 0 ? TEXT : TEXT_MED }}>{item.label}</span>
-                        </div>
-                        <span style={{ fontSize: 10, color: TEXT_DIM, backgroundColor: CHIP_BG, borderRadius: 4, padding: '1px 5px' }}>{item.count}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Main content */}
-                  <div style={{ flex: 1, padding: '20px 24px', overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                      <span style={{ fontSize: 18 }}>⚡</span>
-                      <span style={{ fontWeight: 700, fontSize: 18, color: TEXT }}>Productividad</span>
-                      <span style={{ fontSize: 11, color: TEXT_DIM, backgroundColor: '#f0f0ee', borderRadius: 4, padding: '2px 8px', marginLeft: 4 }}>42 prompts</span>
-                    </div>
-
-                    {/* Table header */}
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 100px 80px',
-                      gap: 8,
-                      padding: '6px 10px',
-                      backgroundColor: BG_WARM,
-                      borderRadius: '8px 8px 0 0',
-                      borderBottom: `1px solid ${BORDER}`,
-                    }}>
-                      {['Prompt', 'IA', 'Copiar'].map((h, i) => (
-                        <span key={i} style={{ fontSize: 11, fontWeight: 600, color: TEXT_DIM, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
-                      ))}
-                    </div>
-
-                    {/* Rows */}
-                    {[
-                      { title: 'Planificador semanal Deep Work con bloques de 90 min', ai: 'Universal', color: '#10a37f' },
-                      { title: 'Resumen ejecutivo con decisiones y próximos pasos', ai: 'ChatGPT', color: '#10a37f' },
-                      { title: 'Email de seguimiento post-demo que cierra sin presionar', ai: 'Claude', color: '#D4A853' },
-                      { title: 'Estrategia de contenido 30 días con calendario y KPIs', ai: 'Gemini', color: '#4285F4' },
-                      { title: 'Análisis FODA completo con plan de acción por cuadrante', ai: 'Universal', color: '#10a37f' },
-                    ].map((row, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 100px 80px',
-                          gap: 8,
-                          padding: '9px 10px',
-                          borderBottom: `1px solid ${BORDER}`,
-                          alignItems: 'center',
-                          backgroundColor: i % 2 === 0 ? BG : '#fafaf8',
-                        }}
-                      >
-                        <span style={{ fontSize: 13, color: TEXT }}>{row.title}</span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: row.color }} />
-                          <span style={{ fontSize: 11, color: TEXT_MED }}>{row.ai}</span>
-                        </div>
-                        <div style={{
-                          fontSize: 11, fontWeight: 600, color: '#667eea',
-                          backgroundColor: '#f0f0ff', borderRadius: 5,
-                          padding: '3px 8px', textAlign: 'center', cursor: 'pointer',
-                        }}>
-                          Copiar ⌘
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            COMPATIBLE CON
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}`, paddingTop: 20, paddingBottom: 20, overflow: 'hidden' }}>
-          <p style={{
-            fontFamily: '"Space Grotesk", sans-serif',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: TEXT_DIM,
-            textAlign: 'center',
-            marginBottom: 16,
-            fontWeight: 500,
+          <h1 className="eb-hero-title" style={{
+            fontWeight: 600,
+            fontSize: 'clamp(2.6rem, 6.5vw, 5rem)',
+            lineHeight: 1.04,
+            letterSpacing: '-0.03em',
+            color: TEXT,
+            maxWidth: 900,
+            margin: '0 auto 24px',
           }}>
-            un prompt · todas las IAs que ya usas
+            Resultados de experto con IA, en un solo click.
+          </h1>
+
+          <p className="eb-hero-fade" style={{ color: MUTED, fontSize: 'clamp(16px, 1.8vw, 19px)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 36px' }}>
+            Todos los prompts están escritos para que puedas adaptarlos fácilmente a tu propio flujo de trabajo. Pégalo en ChatGPT, Claude o Gemini y obtén una respuesta
+            que sirve a la primera.
           </p>
-          <AIMarquee />
-        </section>
 
-        {/* ══════════════════════════════════════════
-            PROBLEMA
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG }}>
-          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
+          <div className="eb-hero-fade flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <BtnPrimary size="lg">Acceder por $10 <ArrowRight size={16} /></BtnPrimary>
+            <BtnSecondary size="lg" href="#incluye">Ver qué incluye</BtnSecondary>
+          </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-              <div>
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  backgroundColor: '#fff3f3', border: '1px solid #fecaca',
-                  borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-                }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#ef4444', letterSpacing: '0.1em', textTransform: 'uppercase' }}>El problema</span>
+          <div className="eb-hero-fade" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '8px 22px', marginBottom: 64 }}>
+            {['Pago único', 'Acceso en 2 minutos', 'Garantía de 30 días'].map((t, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Check size={13} style={{ color: TEXT }} strokeWidth={2.5} />
+                <span style={{ fontSize: 13, color: DIM }}>{t}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Mockup + cursores */}
+          <div className="eb-hero-fade" style={{ position: 'relative', maxWidth: 880, margin: '0 auto', paddingBottom: 0 }}>
+            <div className="eb-hide-cursor"><Cursor label="Tú" color={BLUE} top="38%" right="6%" rotate={-4} flip /></div>
+            <div className="eb-hide-cursor"><Cursor label="ChatGPT" color="#10a37f" top="12%" left="-2%" rotate={5} /></div>
+            <div className="eb-hide-cursor"><Cursor label="Claude" color="#e8590c" top="72%" left="20%" rotate={-6} /></div>
+            <NotionMockup />
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          3 CARDS DE PRODUCTO
+      ══════════════════════════════════════════ */}
+      <section id="incluye" ref={stackRef} className="eb-section" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                title: 'Biblioteca de +200 prompts',
+                desc: 'Encuentra en segundos el prompt exacto para lo que necesitas hoy, organizado por categorías en Notion.',
+                visual: <MiniLibrary />,
+                cursor: { label: 'Tú', color: BLUE },
+              },
+              {
+                title: '50 prompts extra por nicho',
+                desc: 'Casos específicos que no cubre ningún prompt genérico: inmobiliaria, e-commerce, salud, legal y más.',
+                visual: <MiniNichos />,
+                cursor: { label: 'Gemini', color: '#4285F4' },
+              },
+              {
+                title: 'Guía de prompt engineering',
+                desc: 'Los principios detrás de cada prompt, para que crees los tuyos cuando ninguno encaje exactamente.',
+                visual: <MiniGuide />,
+                cursor: { label: 'Claude', color: '#e8590c' },
+              },
+            ].map((card, i) => (
+              <div key={i} className="eb-stack-card" style={{
+                backgroundColor: BG_ALT,
+                border: `1px solid ${BORDER}`,
+                borderRadius: 14,
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}>
+                <h3 style={{ fontWeight: 600, fontSize: 21, letterSpacing: '-0.01em', marginBottom: 10, color: TEXT }}>{card.title}</h3>
+                <p style={{ color: MUTED, fontSize: 14.5, lineHeight: 1.7, marginBottom: 18 }}>{card.desc}</p>
+                <div style={{ marginBottom: 26 }}>
+                  <ArrowLink>Lo quiero</ArrowLink>
+                </div>
+                <div style={{ position: 'relative', marginTop: 'auto' }}>
+                  <div className="eb-hide-cursor"><Cursor label={card.cursor.label} color={card.cursor.color} top="-14px" right="4%" rotate={4} flip /></div>
+                  {card.visual}
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          QUOTE GRANDE (social proof)
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-5xl mx-auto px-6 lg:px-10 py-20 md:py-28 text-center">
+          <p style={{ fontSize: 14, fontWeight: 600, color: DIM, letterSpacing: '0.02em', marginBottom: 28 }}>
+            +200 prompts · 11 categorías · 1 clic para copiar
+          </p>
+          <blockquote style={{
+            fontWeight: 500,
+            fontSize: 'clamp(1.5rem, 3.4vw, 2.5rem)',
+            lineHeight: 1.25,
+            letterSpacing: '-0.02em',
+            color: TEXT,
+            maxWidth: 820,
+            margin: '0 auto 28px',
+          }}>
+            "Aprender a hablarle bien a la IA me tomó cientos de horas de prueba y error.
+            A ti te puede tomar un clic."
+          </blockquote>
+          <p style={{ color: MUTED, fontSize: 14, fontWeight: 600 }}>Esteban</p>
+          <p style={{ color: DIM, fontSize: 13 }}>Creador de alpacka.ai</p>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          FILA DE "LOGOS" — IAs compatibles
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
+          <p style={{ fontSize: 13, color: DIM, textAlign: 'center', marginBottom: 22, fontWeight: 500 }}>
+            El mismo prompt funciona en todas las IAs que ya usas
+          </p>
+          <div className="eb-logo-marquee-wrap">
+            <div className="eb-logo-marquee">
+              {[...Array(2)].map((_, copy) => (
+                <React.Fragment key={copy}>
+                  {['ChatGPT', 'Claude', 'Gemini', 'Copilot', 'Grok', 'Perplexity', 'DeepSeek', 'Mistral'].map((name, i) => (
+                    <span key={i} aria-hidden={copy === 1} style={{ fontSize: 17, fontWeight: 600, color: '#c2c3c9', letterSpacing: '-0.01em', paddingRight: 64, whiteSpace: 'nowrap', flexShrink: 0 }}>{name}</span>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          FEATURE 1 — Copia. Pega. Listo.
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+            <div>
+              <Eyebrow>Cero fricción</Eyebrow>
+              <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)', lineHeight: 1.1, letterSpacing: '-0.025em', marginBottom: 18 }}>
+                Copia. Pega. Listo.
+              </h2>
+              <p style={{ color: MUTED, fontSize: 16, lineHeight: 1.8, marginBottom: 36, maxWidth: 480 }}>
+                Nada que instalar, nada que aprender. Cada prompt ya viene con el rol, el contexto
+                y el formato que la IA necesita para responderte bien a la primera.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Cero curva de aprendizaje</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    Si sabes usar ChatGPT aunque sea a medias, esto lo dominas en el primer minuto. Copiar y pegar; eso es todo.
+                  </p>
+                </div>
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Campos [INSERTAR] guiados</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    Cada prompt te marca exactamente qué completar con tus datos. Sin adivinar qué le falta a la IA.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Visual: prompt malo vs prompt de la biblioteca */}
+            <div style={{ position: 'relative' }}>
+              <div className="eb-hide-cursor"><Cursor label="Tú" color={BLUE} top="52%" right="2%" rotate={-5} flip /></div>
+              <div className="space-y-4">
+                <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, overflow: 'hidden' }}>
+                  <div style={{ padding: '12px 18px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#dc2626' }}>Prompt genérico</span>
+                  </div>
+                  <div style={{ padding: '16px 18px' }}>
+                    <p style={{ fontFamily: 'monospace', fontSize: 13, color: TEXT, marginBottom: 10 }}>"escribe un email de ventas"</p>
+                    <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.6 }}>→ Texto corporativo y genérico que nadie abriría. Tres reescrituras después, sigues igual.</p>
+                  </div>
                 </div>
 
-                <h2 style={{
-                  fontFamily: '"Space Grotesk", sans-serif',
-                  fontWeight: 600,
-                  fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-                  color: TEXT,
-                  lineHeight: 1.15,
-                  marginBottom: 18,
-                  letterSpacing: '-0.02em',
-                }}>
-                  Usas ChatGPT todos los días y sigue dándote respuestas tibias.
-                </h2>
-
-                <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.8, marginBottom: 14 }}>
-                  El problema no es la IA, es cómo le pides las cosas. Le escribes "hazme un email de ventas", esperas magia, y te devuelve algo tan genérico como tu pregunta. Le diste tres palabras. Te dio tres palabras.
-                </p>
-
-                <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.8 }}>
-                  Un buen prompt no es más largo. Está mejor armado: le dice a la IA quién es, qué quieres y cómo lo quieres. Ahí está toda la diferencia entre <strong style={{ color: TEXT }}>borrar la respuesta o copiarla y seguir con tu día.</strong>
-                </p>
+                <div style={{ backgroundColor: '#fff', border: `1.5px solid ${TEXT}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 16px 40px rgba(20,21,26,0.10)' }}>
+                  <div style={{ padding: '12px 18px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#16a34a' }}>Prompt de la biblioteca</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: BLUE, backgroundColor: 'rgba(59,74,247,0.07)', border: '1px solid rgba(59,74,247,0.2)', borderRadius: 5, padding: '2px 8px' }}>Copiar</span>
+                  </div>
+                  <div style={{ padding: '16px 18px' }}>
+                    <p style={{ fontFamily: 'monospace', fontSize: 13, color: TEXT, lineHeight: 1.6, marginBottom: 10 }}>
+                      "Actúa como copywriter senior de respuesta directa. Mi producto es [INSERTAR], mi cliente ideal es [INSERTAR]. Escribe un email de ventas con asunto, gancho en 2 líneas y un solo CTA…"
+                    </p>
+                    <p style={{ fontSize: 13, color: '#16a34a', lineHeight: 1.6, fontWeight: 500 }}>→ Un email que sí se puede enviar, a la primera.</p>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              <div className="space-y-3">
-                {[
-                  { prompt: '"escribe un email de ventas"', result: 'Texto corporativo y genérico que nadie abriría.', bad: true },
-                  { prompt: '"dame una estrategia de marketing"', result: 'Cinco puntos obvios que ya sabías sin la IA.', bad: true },
-                  { prompt: '"ayúdame con mis redes sociales"', result: 'Tres reescrituras después, sigues con la página en blanco.', bad: true },
-                ].map((item, i) => (
-                  <div key={i} style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                    <div style={{ padding: '12px 16px', backgroundColor: BG_WARM, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                      <span style={{ fontFamily: 'monospace', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: TEXT_DIM, flexShrink: 0, marginTop: 2 }}>Prompt</span>
-                      <p style={{ fontFamily: 'monospace', fontSize: 12, color: TEXT, lineHeight: 1.4 }}>{item.prompt}</p>
-                    </div>
-                    <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#fee2e2', border: '1px solid #fca5a5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                        <span style={{ fontSize: 8, color: '#ef4444', fontWeight: 900 }}>✕</span>
-                      </div>
-                      <p style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.5 }}>{item.result}</p>
-                    </div>
-                  </div>
-                ))}
+          </div>
+        </div>
+      </section>
 
-                <div style={{
-                  backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 14,
-                  padding: '16px 18px', display: 'flex', alignItems: 'flex-start', gap: 10,
-                }}>
-                  <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#dcfce7', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Check size={10} style={{ color: '#22c55e' }} strokeWidth={3} />
-                  </div>
-                  <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
-                    <strong>Con el prompt bien hecho:</strong> te sirve la primera respuesta. Sin el "¿me das más contexto?" de siempre, sin cinco intentos.
+      {/* ══════════════════════════════════════════
+          FEATURE 2 — Notion, no PDF (invertida)
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+            <div className="order-2 lg:order-1" style={{ position: 'relative' }}>
+              <div className="eb-hide-cursor"><Cursor label="ChatGPT" color="#10a37f" top="-16px" left="8%" rotate={6} /></div>
+              <NotionMockup />
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <Eyebrow>Organización real</Eyebrow>
+              <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)', lineHeight: 1.1, letterSpacing: '-0.025em', marginBottom: 18 }}>
+                En Notion, no en un PDF de 80 páginas
+              </h2>
+              <p style={{ color: MUTED, fontSize: 16, lineHeight: 1.8, marginBottom: 36, maxWidth: 480 }}>
+                No es un archivo donde haces Ctrl+F y rezas. Es una base de datos que filtras por
+                categoría, buscas por palabra clave y copias con un clic.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Filtra y encuentra en segundos</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    Once categorías: productividad, redes sociales, copywriting, marketing, psicología, vibe coding, negocios, creatividad, email, técnicos y SEO.
+                  </p>
+                </div>
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Duplícalo en tu cuenta</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    Es tuyo. Lo duplicas en tu propio Notion, lo reorganizas a tu manera y lo llevas contigo.
                   </p>
                 </div>
               </div>
             </div>
 
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══════════════════════════════════════════
-            CÓMO FUNCIONA
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
-          <div className="max-w-6xl mx-auto px-6 sm:px-10 py-20 md:py-28">
+      {/* ══════════════════════════════════════════
+          FEATURE 3 — Actualizaciones
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
-            <div className="text-center mb-14">
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: '#fff7ed', border: '1px solid #fed7aa',
-                borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              }}>
-                <Zap size={11} style={{ color: ACCENT }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Así de simple</span>
-              </div>
-
-              <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 14,
-              }}>
-                Copiar, pegar, listo. En serio, eso es todo.
+            <div>
+              <Eyebrow>Comprado hoy, mejor mañana</Eyebrow>
+              <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)', lineHeight: 1.1, letterSpacing: '-0.025em', marginBottom: 18 }}>
+                La biblioteca crece; tu precio no
               </h2>
-              <p style={{ color: TEXT_MED, fontSize: 16, maxWidth: 520, margin: '0 auto' }}>
-                Nada que instalar, nada que aprender. Si sabes usar ChatGPT aunque sea a medias, esto lo dominas en el primer minuto.
+              <p style={{ color: MUTED, fontSize: 16, lineHeight: 1.8, marginBottom: 36, maxWidth: 480 }}>
+                Cuando sale un modelo nuevo o un caso de uso que no estaba, lo añado y aparece en
+                tu espacio automáticamente. Pagaste una vez; eso es todo.
               </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                {
-                  n: '01',
-                  icon: <Layers size={20} style={{ color: ACCENT }} />,
-                  title: 'Encuentra el prompt',
-                  desc: 'Abre la biblioteca en Notion y filtra por categoría. En segundos tienes el prompt exacto para lo que necesitas hoy.',
-                },
-                {
-                  n: '02',
-                  icon: <BookOpen size={20} style={{ color: ACCENT }} />,
-                  title: 'Cópialo en un clic',
-                  desc: 'Ya viene con rol, contexto y formato definidos. No tienes que escribir nada: solo copiar.',
-                },
-                {
-                  n: '03',
-                  icon: <Sparkles size={20} style={{ color: ACCENT }} />,
-                  title: 'Pega y obtén el resultado',
-                  desc: 'Pégalo en ChatGPT, Claude o Gemini, cambia los datos entre corchetes y recibe una respuesta de nivel experto.',
-                },
-              ].map((step, i) => (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: BG_CARD,
-                    border: `1px solid ${BORDER}`,
-                    borderRadius: 20,
-                    padding: '32px 28px',
-                    position: 'relative',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
-                    <div style={{
-                      width: 48, height: 48, borderRadius: 14,
-                      backgroundColor: '#fff7ed', border: '1px solid #fed7aa',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      {step.icon}
-                    </div>
-                    <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 40, color: 'rgba(249,115,22,0.25)', lineHeight: 1 }}>{step.n}</span>
-                  </div>
-                  <p style={{ color: TEXT, fontWeight: 700, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{step.title}</p>
-                  <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.7 }}>{step.desc}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Actualizaciones de por vida</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    Prompts nuevos cada semana, sin costo extra. No hay "versión 2.0" que tengas que volver a comprar.
+                  </p>
                 </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            QUÉ INCLUYE — feature cards
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-          <div className="max-w-6xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="text-center mb-14">
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe',
-                borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              }}>
-                <Database size={11} style={{ color: '#6366f1' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Lo que te llevas</span>
-              </div>
-
-              <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 14,
-              }}>
-                Hay un prompt para casi todo lo que necesitas.
-              </h2>
-              <p style={{ color: TEXT_MED, fontSize: 16, maxWidth: 520, margin: '0 auto' }}>
-                Están repartidos en ocho categorías. Da igual si vives del marketing, escribes correos todo el día o estás armando tu negocio: vas a encontrar los tuyos.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <FeatureCard
-                bg="#fdf4ff"
-                icon={<Zap size={22} style={{ color: '#a855f7' }} />}
-                tag="42 prompts"
-                tagColor="#a855f7"
-                title="Productividad"
-                desc="Planificación semanal, priorización, bloques de foco. Los lunes que tardabas 2 horas organizándote, ahora son 15 minutos."
-              />
-              <FeatureCard
-                bg="#fff7ed"
-                icon={<Target size={22} style={{ color: '#f97316' }} />}
-                tag="38 prompts"
-                tagColor="#f97316"
-                title="Copywriting"
-                desc="Posts, artículos, guiones, hilos. Sin el 'Claro, con gusto te ayudo' de siempre. Directo al texto que publicas."
-              />
-              <FeatureCard
-                bg="#f0fdf4"
-                icon={<TrendingUp size={22} style={{ color: '#22c55e' }} />}
-                tag="35 prompts"
-                tagColor="#22c55e"
-                title="Marketing y Ventas"
-                desc="Estrategias de lanzamiento, copy de ads, análisis de competencia. Para cuando necesitas resultados esta semana."
-              />
-              <FeatureCard
-                bg="#eff6ff"
-                icon={<BookOpen size={22} style={{ color: '#3b82f6' }} />}
-                tag="29 prompts"
-                tagColor="#3b82f6"
-                title="Comunicación"
-                desc="Emails difíciles, negociaciones, propuestas, feedbacks incómodos. Para cuando importa cómo suenas."
-              />
-              <FeatureCard
-                bg="#fff1f2"
-                icon={<Layers size={22} style={{ color: '#f43f5e' }} />}
-                tag="27 prompts"
-                tagColor="#f43f5e"
-                title="Creatividad e Ideas"
-                desc="Brainstorming, conceptos, nombres, ideas de producto. Cuando llevas 20 minutos mirando la pantalla en blanco."
-              />
-              <FeatureCard
-                bg="#fefce8"
-                icon={<Star size={22} style={{ color: '#eab308' }} />}
-                tag="22 prompts"
-                tagColor="#eab308"
-                title="Email Profesional"
-                desc="Seguimientos, emails en frío, re-activaciones. Los que sí consiguen respuesta."
-              />
-              <FeatureCard
-                bg="#f0fdfa"
-                icon={<Gift size={22} style={{ color: '#14b8a6' }} />}
-                tag="18 prompts"
-                tagColor="#14b8a6"
-                title="Plantillas Listas"
-                desc="Los más usados, ya armados. Sin tener que adaptar nada. Copia, pega los corchetes y ya."
-              />
-              <FeatureCard
-                bg="#faf5ff"
-                icon={<Sparkles size={22} style={{ color: '#8b5cf6' }} />}
-                tag="incluido"
-                tagColor="#8b5cf6"
-                title="Prompt Engineering"
-                desc="Los principios detrás de cada prompt. Para que puedas crear los tuyos cuando ninguno encaje exactamente."
-              />
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            POR QUÉ ESTE RECURSO
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG }}>
-          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-16 items-start">
-
-              <div style={{ position: 'sticky', top: 80, zIndex: 0 }}>
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  backgroundColor: '#fefce8', border: '1px solid #fde68a',
-                  borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-                }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#f59e0b' }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase' }}>La diferencia</span>
+                <div>
+                  <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Sin suscripción</h3>
+                  <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>
+                    $10 una sola vez. Nada de cargos recurrentes escondidos ni "premium" más adelante.
+                  </p>
                 </div>
-
-                <h2 style={{
-                  fontFamily: '"Space Grotesk", sans-serif',
-                  fontWeight: 600,
-                  fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-                  color: TEXT,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.15,
-                  marginBottom: 18,
-                }}>
-                  ¿Qué hace que un prompt funcione de verdad?
-                </h2>
-
-                <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.8, marginBottom: 14 }}>
-                  Los prompts que andan dando vueltas gratis por internet son gratis por algo: sirven a medias. La IA no te lee la mente. Si le das poco, te da poco. Así de simple.
-                </p>
-                <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.8 }}>
-                  Los míos ya traen el trabajo hecho: <strong style={{ color: TEXT }}>quién quieres que sea la IA, qué le pides y cómo lo quieres de vuelta.</strong> Le llega todo masticado, y por eso te responde bien a la primera.
-                </p>
               </div>
+            </div>
 
-              <div className="space-y-4" style={{ position: 'relative', zIndex: 1, backgroundColor: BG }}>
+            {/* Visual: changelog */}
+            <div style={{ position: 'relative' }}>
+              <div className="eb-hide-cursor"><Cursor label="Gemini" color="#4285F4" top="8%" right="4%" rotate={-4} flip /></div>
+              <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '22px 24px', boxShadow: '0 16px 40px rgba(20,21,26,0.08)' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: DIM, marginBottom: 16 }}>Últimas actualizaciones</p>
                 {[
-                  {
-                    icon: <Target size={20} style={{ color: '#6366f1' }} />,
-                    bg: '#f0f0ff',
-                    border: '#c7d2fe',
-                    title: 'Funciona en cualquier IA',
-                    desc: 'No está optimizado para un solo modelo. Funciona igual en ChatGPT, Gemini, Claude, Copilot o lo que sea que estés usando hoy, y lo que salga mañana.',
-                  },
-                  {
-                    icon: <Zap size={20} style={{ color: '#f97316' }} />,
-                    bg: '#fff7ed',
-                    border: '#fed7aa',
-                    title: 'El primero ya funciona',
-                    desc: 'No necesitas pasar por tres intentos antes de llegar al que sirve. El prompt ya tiene la estructura completa que la IA necesita para entregarte algo real.',
-                  },
-                  {
-                    icon: <Database size={20} style={{ color: '#22c55e' }} />,
-                    bg: '#f0fdf4',
-                    border: '#bbf7d0',
-                    title: 'Organizado en Notion, no en un PDF',
-                    desc: 'Filtras por categoría en segundos. No es un archivo donde tienes que hacer Ctrl+F. Es una base de datos que puedes duplicar en tu propia cuenta.',
-                  },
-                  {
-                    icon: <TrendingUp size={20} style={{ color: '#8b5cf6' }} />,
-                    bg: '#fdf4ff',
-                    border: '#e9d5ff',
-                    title: 'Se actualiza con el tiempo',
-                    desc: 'Cuando salga un modelo nuevo o un caso de uso que no estaba, lo añado. Sin cobrar otra vez. Es parte del trato desde el día 1.',
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      backgroundColor: item.bg,
-                      border: `1px solid ${item.border}`,
-                      borderRadius: 16,
-                      padding: '20px 22px',
-                      display: 'flex',
-                      gap: 14,
-                      alignItems: 'flex-start',
-                    }}
-                  >
-                    <div style={{
-                      width: 40, height: 40, borderRadius: 12,
-                      backgroundColor: 'rgba(255,255,255,0.7)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                    }}>
-                      {item.icon}
+                  { tag: 'Nuevo', color: '#16a34a', text: '12 prompts de análisis de datos y reportes' },
+                  { tag: 'Nuevo', color: '#16a34a', text: 'Pack: prompts para agentes y automatizaciones' },
+                  { tag: 'Mejora', color: BLUE, text: 'Categoría SEO ampliada con búsqueda por intención' },
+                  { tag: 'Nuevo', color: '#16a34a', text: '8 plantillas de email en frío por industria' },
+                  { tag: 'Mejora', color: BLUE, text: 'Prompts optimizados para los modelos más recientes' },
+                ].map((r, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 0', borderBottom: i < 4 ? `1px solid ${BORDER}` : 'none' }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: r.color, backgroundColor: `${r.color}12`, border: `1px solid ${r.color}30`, borderRadius: 4, padding: '2px 8px', flexShrink: 0, marginTop: 1 }}>{r.tag}</span>
+                    <span style={{ fontSize: 13.5, color: TEXT, lineHeight: 1.5 }}>{r.text}</span>
+                  </div>
+                ))}
+                <p style={{ fontSize: 12, color: DIM, marginTop: 14 }}>Incluido en tu compra — para siempre.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          CARDS DE ACCESO (estilo "libraries")
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+
+          <div className="text-center mb-14">
+            <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)', letterSpacing: '-0.025em', marginBottom: 14 }}>
+              Todo lo que desbloqueas por $10
+            </h2>
+            <p style={{ color: MUTED, fontSize: 16, maxWidth: 520, margin: '0 auto' }}>
+              Sin letra pequeña. Un solo pago, tres accesos, actualizaciones para siempre.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                emoji: '📚',
+                badge: 'Acceso principal',
+                title: 'Biblioteca +200 prompts',
+                bullets: ['11 categorías organizadas en Notion', 'Copiar con un clic, sin fricción', 'Búsqueda por palabra clave', 'Funciona en cualquier IA'],
+              },
+              {
+                emoji: '🎯',
+                badge: 'Incluido',
+                title: '50 prompts por nicho',
+                bullets: ['Inmobiliaria y e-commerce', 'Salud, legal y educación', 'Fitness, restaurantes y creadores', 'Directo a tu caso de uso'],
+              },
+              {
+                emoji: '♾️',
+                badge: 'Para siempre',
+                title: 'Guía + actualizaciones',
+                bullets: ['Guía de prompt engineering', 'Prompts nuevos cada semana', 'Duplica el espacio en tu Notion', 'Sin suscripción ni cargos extra'],
+              },
+            ].map((card, i) => (
+              <div key={i} style={{
+                backgroundColor: '#fff',
+                border: `1px solid ${BORDER}`,
+                borderRadius: 14,
+                padding: '30px 28px',
+                display: 'flex', flexDirection: 'column',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                  <span style={{ fontSize: 28 }}>{card.emoji}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: MUTED, backgroundColor: BG_ALT, border: `1px solid ${BORDER}`, borderRadius: 100, padding: '3px 12px' }}>{card.badge}</span>
+                </div>
+                <h3 style={{ fontWeight: 600, fontSize: 19, marginBottom: 16, letterSpacing: '-0.01em' }}>{card.title}</h3>
+                <div className="space-y-3 mb-7">
+                  {card.bullets.map((b, j) => (
+                    <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                      <Check size={14} style={{ color: TEXT, flexShrink: 0, marginTop: 3 }} strokeWidth={2.5} />
+                      <span style={{ fontSize: 14, color: MUTED, lineHeight: 1.55 }}>{b}</span>
                     </div>
-                    <div>
-                      <p style={{ color: TEXT, fontWeight: 700, fontSize: 15, marginBottom: 5 }}>{item.title}</p>
-                      <p style={{ color: TEXT_MED, fontSize: 13, lineHeight: 1.7 }}>{item.desc}</p>
-                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 'auto' }}>
+                  <ArrowLink>Acceder</ArrowLink>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          PRICING / CTA
+      ══════════════════════════════════════════ */}
+      <section id="precio" className="eb-section" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+            <div>
+              <h2 style={{ fontWeight: 600, fontSize: 'clamp(2rem, 4.2vw, 3.2rem)', lineHeight: 1.08, letterSpacing: '-0.028em', marginBottom: 20 }}>
+                Pruébala en tu próximo proyecto
+              </h2>
+              <p style={{ color: MUTED, fontSize: 17, lineHeight: 1.8, marginBottom: 28, maxWidth: 460 }}>
+                Cuesta menos que un almuerzo y te ahorra horas cada semana. Y si no te sirve,
+                tienes 30 días para pedir el 100% de vuelta — sin formularios, sin preguntas.
+              </p>
+              <div className="space-y-3">
+                {[
+                  'Acceso inmediato: llega a tu correo en 2 minutos',
+                  'Pago único de $10 — sin suscripción',
+                  'Garantía de devolución de 30 días',
+                ].map((t, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <Check size={15} style={{ color: TEXT }} strokeWidth={2.5} />
+                    <span style={{ fontSize: 15, color: MUTED }}>{t}</span>
                   </div>
                 ))}
               </div>
+            </div>
 
+            {/* Card de precio */}
+            <div style={{ position: 'relative' }}>
+              <div className="eb-hide-cursor"><Cursor label="Tú" color={BLUE} top="-16px" right="10%" rotate={5} flip /></div>
+              <div style={{
+                backgroundColor: '#fff',
+                border: `1px solid ${BORDER}`,
+                borderRadius: 16,
+                padding: '38px 34px',
+                boxShadow: '0 24px 60px rgba(20,21,26,0.10)',
+                maxWidth: 460,
+                margin: '0 auto',
+              }}>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: DIM, marginBottom: 18 }}>
+                  Precio de lanzamiento
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 26 }}>
+                  <span style={{ fontWeight: 600, fontSize: 64, lineHeight: 1, letterSpacing: '-0.03em', color: TEXT }}>$10</span>
+                  <div>
+                    <p style={{ fontSize: 14, color: DIM, textDecoration: 'line-through' }}>$37</p>
+                    <p style={{ fontSize: 12, color: DIM }}>pago único</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 mb-8">
+                  {[
+                    '+200 prompts en Notion, listos para usar hoy',
+                    '50 prompts adicionales por nicho',
+                    'Guía de prompt engineering incluida',
+                    'ChatGPT, Claude, Gemini y cualquier IA',
+                    'Prompts nuevos cada semana, gratis',
+                    'Garantía de 30 días',
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                      <Check size={14} style={{ color: TEXT, flexShrink: 0, marginTop: 3 }} strokeWidth={2.5} />
+                      <span style={{ color: MUTED, fontSize: 14, lineHeight: 1.55 }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <a
+                  href={buyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: '100%',
+                    backgroundColor: NAVY, color: '#fff',
+                    fontWeight: 600, fontSize: 16,
+                    padding: '16px 24px', borderRadius: 8,
+                    textDecoration: 'none',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#2a2b33'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = NAVY; }}
+                >
+                  Quiero la biblioteca <ArrowRight size={16} />
+                </a>
+
+                <p style={{ fontSize: 12, color: DIM, marginTop: 14, textAlign: 'center' }}>
+                  Acceso en 2 minutos · Pago único · Garantía 30 días
+                </p>
+              </div>
             </div>
 
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══════════════════════════════════════════
-            BONUS
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-20 md:py-28">
+      {/* ══════════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-14">
 
-            <div className="text-center mb-14">
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0',
-                borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              }}>
-                <Gift size={11} style={{ color: '#22c55e' }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>incluido sin costo extra</span>
-              </div>
-
-              <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 14,
-              }}>
-                Todo lo que te llevas por $10.
+            <div>
+              <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)', letterSpacing: '-0.025em', marginBottom: 14, lineHeight: 1.1 }}>
+                Preguntas frecuentes
               </h2>
-              <p style={{ color: TEXT_MED, fontSize: 16, maxWidth: 480, margin: '0 auto' }}>
-                Sin letra pequeña ni "pero". Esto es literalmente todo lo que incluye.
+              <p style={{ color: MUTED, fontSize: 15, lineHeight: 1.7 }}>
+                Lo que me preguntan antes de comprar. Si tienes otra duda, escríbeme y te respondo directo.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {[
-                {
-                  num: '01',
-                  emoji: '📚',
-                  bg: '#f0f0ff',
-                  border: '#c7d2fe',
-                  accent: '#6366f1',
-                  title: 'Biblioteca de +200 Prompts en Notion',
-                  desc: 'Acceso completo al espacio. Filtros por categoría, búsqueda por caso de uso, y cada prompt listo para copiar en un clic.',
-                  value: 'El acceso principal',
-                },
-                {
-                  num: '02',
-                  emoji: '🎯',
-                  bg: '#fff7ed',
-                  border: '#fed7aa',
-                  accent: '#f97316',
-                  title: '50 Prompts Extra por Nicho',
-                  desc: 'Prompts adicionales para casos más específicos: inmobiliaria, e-commerce, salud, legal, educación. Directo al grano.',
-                  value: 'Incluido',
-                },
-                {
-                  num: '03',
-                  emoji: '♾️',
-                  bg: '#f0fdf4',
-                  border: '#bbf7d0',
-                  accent: '#22c55e',
-                  title: 'Actualizaciones de por vida',
-                  desc: 'Cada vez que añado prompts nuevos, los tienes. No es una suscripción. No hay "versión 2.0" que tengas que comprar de nuevo.',
-                  value: 'Para siempre',
-                },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: item.bg,
-                    border: `1px solid ${item.border}`,
-                    borderRadius: 20,
-                    padding: '28px 24px',
-                    position: 'relative',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 24 }}>{item.emoji}</span>
-                      <span style={{ fontFamily: 'monospace', fontSize: 11, color: item.accent, fontWeight: 700 }}>{item.num}</span>
-                    </div>
-                    <span style={{ fontSize: 11, color: TEXT_DIM, fontWeight: 500 }}>{item.value}</span>
-                  </div>
-                  <p style={{ color: TEXT, fontWeight: 700, fontSize: 15, marginBottom: 8, lineHeight: 1.3 }}>{item.title}</p>
-                  <p style={{ color: TEXT_MED, fontSize: 13, lineHeight: 1.7 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            GARANTÍA
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG }}>
-          <div className="max-w-3xl mx-auto px-6 sm:px-10 py-20 md:py-28 text-center">
-
-            <div style={{
-              width: 72, height: 72, borderRadius: '50%',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              margin: '0 auto 24px',
-              boxShadow: '0 8px 32px rgba(102,126,234,0.25)',
-            }}>
-              <Shield size={32} style={{ color: 'white' }} />
-            </div>
-
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: '#f0f0ff', border: '1px solid #c7d2fe',
-              borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-            }}>
-              <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#6366f1' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', letterSpacing: '0.1em', textTransform: 'uppercase' }}>sin riesgo</span>
-            </div>
-
-            <h2 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
-              fontWeight: 600,
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-              color: TEXT,
-              letterSpacing: '-0.02em',
-              marginBottom: 20,
-            }}>
-              Si no te sirve, te devuelvo cada centavo.
-            </h2>
-
-            <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.85, maxWidth: 500, margin: '0 auto 16px' }}>
-              Tienes 30 días. Ábrelo, úsalo, exprímelo. Si no te sirvió, me mandas un mensaje y te devuelvo el <strong style={{ color: TEXT }}>100%</strong>. Sin formularios, sin "espera, déjame explicarte por qué deberías quedarte".
-            </p>
-            <p style={{ color: TEXT_DIM, fontSize: 14, lineHeight: 1.7, maxWidth: 440, margin: '0 auto' }}>
-              No me interesa quedarme con el dinero de alguien que no quedó contento. Si no es para ti, lo entiendo y ya.
-            </p>
-
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            FAQ
-        ══════════════════════════════════════════ */}
-        <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-          <div className="max-w-3xl mx-auto px-6 sm:px-10 py-20 md:py-28">
-
-            <div className="text-center mb-12">
-              <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-                color: TEXT,
-                letterSpacing: '-0.02em',
-                marginBottom: 10,
-              }}>
-                Preguntas frecuentes
-              </h2>
-              <p style={{ color: TEXT_MED, fontSize: 15 }}>Lo que me preguntan antes de comprar.</p>
-            </div>
-
-            <div style={{ backgroundColor: BG_CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+            <div>
               {faqs.map((faq, i) => (
                 <FaqItem key={i} q={faq.q} a={faq.a} />
               ))}
             </div>
 
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══════════════════════════════════════════
-            CTA FINAL
-        ══════════════════════════════════════════ */}
-        <section style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#0f0f0f' }}>
-          {/* Subtle gradient blobs */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-            <Blob color="radial-gradient(circle, #667eea, #764ba2)" size={500} top="-100px" left="-100px" opacity={0.18} />
-            <Blob color="radial-gradient(circle, #f093fb, #f5576c)" size={400} top="50%" left="70%" opacity={0.14} />
+      {/* ══════════════════════════════════════════
+          CTA FINAL
+      ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-24 md:py-32 text-center">
+          <h2 style={{
+            fontWeight: 600,
+            fontSize: 'clamp(2.2rem, 5vw, 4rem)',
+            lineHeight: 1.06,
+            letterSpacing: '-0.03em',
+            maxWidth: 780,
+            margin: '0 auto 22px',
+          }}>
+            Sigues peleando con la IA, o copias lo que ya funciona
+          </h2>
+          <p style={{ color: MUTED, fontSize: 17, lineHeight: 1.75, maxWidth: 520, margin: '0 auto 36px' }}>
+            $10 una sola vez. En tu correo en 2 minutos. Y si no te sirve, te devuelvo el dinero.
+            Lo peor que puede pasar es que no pierdas nada.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <BtnPrimary size="lg">Acceder por $10 <ArrowRight size={16} /></BtnPrimary>
+            <BtnSecondary size="lg" href="#incluye">Ver qué incluye</BtnSecondary>
           </div>
+        </div>
+      </section>
 
-          <div className="relative max-w-4xl mx-auto px-6 sm:px-10 py-24 md:py-36 text-center">
+      {/* ══════════════════════════════════════════
+          FOOTER (oscuro, multi-columna)
+      ══════════════════════════════════════════ */}
+      <footer style={{ backgroundColor: NAVY, color: '#fff' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 mb-14">
 
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 100, padding: '4px 14px', marginBottom: 24,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} className="animate-pulse" />
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>precio de lanzamiento</span>
+            <div>
+              <div className="flex items-center mb-4">
+                <AlpacaIcon className="w-6 h-6" />
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.7, maxWidth: 300 }}>
+                Prompts probados para trabajar más rápido con IA. Sin prueba y error, sin respuestas tibias.
+              </p>
             </div>
 
-            <h2 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
-              fontWeight: 600,
-              fontSize: 'clamp(2rem, 5vw, 3.6rem)',
-              color: 'white',
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              marginBottom: 20,
-            }}>
-              Sigues peleando con la IA,<br />
-              <span style={{
-                background: 'linear-gradient(135deg, #a78bfa, #f0abfc)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>
-                o copias los que ya funcionan.
-              </span>
-            </h2>
+            {[
+              {
+                title: 'Producto',
+                links: [
+                  { label: 'Biblioteca de prompts', href: buyUrl, external: true },
+                  { label: 'Marketplace', href: '/prompts' },
+                  { label: 'Precios', href: '/pricing' },
+                ],
+              },
+              {
+                title: 'Recursos',
+                links: [
+                  { label: 'Blog', href: '/blog' },
+                  { label: 'Skills', href: '/skills' },
+                ],
+              },
+              {
+                title: 'Legal',
+                links: [
+                  { label: 'Términos', href: '/terms' },
+                  { label: 'Privacidad', href: '/privacy' },
+                ],
+              },
+            ].map((col, i) => (
+              <div key={i}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 16 }}>{col.title}</p>
+                <div className="space-y-3">
+                  {col.links.map((link, j) => (
+                    <a
+                      key={j}
+                      href={link.href}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                      style={{ display: 'block', color: 'rgba(255,255,255,0.45)', fontSize: 14, textDecoration: 'none' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#fff'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.45)'; }}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: '0 auto 52px' }}>
-              Son $10, una sola vez. Lo tienes en tu correo en un par de minutos. Y si no te sirve, te devuelvo el dinero sin preguntar. Lo peor que puede pasar es que no pierdas nada.
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
+              © {new Date().getFullYear()} alpacka.ai — Todos los derechos reservados.
             </p>
-
-            {/* Pricing card */}
-            <div style={{
-              backgroundColor: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 24,
-              padding: '40px 36px',
-              maxWidth: 440,
-              margin: '0 auto 40px',
-              backdropFilter: 'blur(20px)',
-            }}>
-              <p style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-                precio de lanzamiento
-              </p>
-
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 72, color: 'white', lineHeight: 1 }}>$10</span>
-                <div>
-                  <p style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>$37</p>
-                  <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>pago único</p>
-                </div>
-              </div>
-
-              <div className="space-y-3.5 mb-10 text-left">
-                {[
-                  '+200 prompts en Notion, listos para usar hoy',
-                  'ChatGPT, Gemini, Claude y cualquier IA que uses',
-                  '50 prompts adicionales por nicho específico',
-                  'Guía de prompt engineering incluida',
-                  'Nuevos prompts cada semana, sin costo extra',
-                  'Garantía de 30 días, sin formularios',
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{
-                      width: 18, height: 18, borderRadius: '50%',
-                      backgroundColor: 'rgba(167,139,250,0.15)',
-                      border: '1px solid rgba(167,139,250,0.3)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}>
-                      <Check size={9} style={{ color: '#a78bfa' }} strokeWidth={3} />
-                    </div>
-                    <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href={buyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  width: '100%',
-                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: 16,
-                  padding: '17px 24px',
-                  borderRadius: 12,
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 10,
-                  boxShadow: '0 8px 32px rgba(102,126,234,0.35)',
-                  transition: 'transform 0.15s, box-shadow 0.15s',
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(102,126,234,0.5)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(102,126,234,0.35)'; }}
-              >
-                Quiero la biblioteca — $10
-                <ArrowRight size={17} />
-              </a>
-
-              <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 14, letterSpacing: '0.05em' }}>
-                Acceso en 2 minutos · Pago único · Garantía 30 días
-              </p>
-            </div>
-
-            {/* Trust row */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
-              {[
-                { icon: <Shield size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Garantía 30 días' },
-                { icon: <Clock size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Acceso en 2 min' },
-                { icon: <Star size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Pago único' },
-                { icon: <TrendingUp size={13} style={{ color: 'rgba(255,255,255,0.3)' }} />, label: 'Sin suscripción' },
-              ].map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  {t.icon}
-                  <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.08em' }}>{t.label}</span>
-                </div>
-              ))}
-            </div>
-
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
+              Pago único · Garantía 30 días
+            </p>
           </div>
-        </section>
+        </div>
+      </footer>
 
-      </div>
     </div>
   );
 };
