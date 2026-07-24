@@ -247,21 +247,31 @@ const NotionMockup: React.FC = () => (
 );
 
 /* ─── Mini-mockups para las 3 cards de producto ─── */
-const MiniLibrary: React.FC = () => (
-  <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 14, boxShadow: '0 12px 32px rgba(20,21,26,0.08)' }}>
-    {[
-      { emoji: '⚡', t: 'Productividad', n: 42 },
-      { emoji: '📱', t: 'Redes Sociales', n: 36 },
-      { emoji: '🧠', t: 'Psicología', n: 26 },
-      { emoji: '💻', t: 'Vibe Coding', n: 21 },
-    ].map((r, i) => (
-      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 6px', borderBottom: i < 3 ? `1px solid ${BORDER}` : 'none' }}>
-        <span style={{ fontSize: 13, color: TEXT }}>{r.emoji}&nbsp;&nbsp;{r.t}</span>
-        <span style={{ fontSize: 11, color: DIM, backgroundColor: BG_ALT, borderRadius: 4, padding: '1px 7px' }}>{r.n}</span>
-      </div>
-    ))}
-  </div>
-);
+const MiniLibrary: React.FC = () => {
+  const cats = [
+    { emoji: '⚡', t: 'Productividad', n: 42 },
+    { emoji: '✍️', t: 'Copywriting', n: 38 },
+    { emoji: '📱', t: 'Redes Sociales', n: 36 },
+    { emoji: '📈', t: 'Marketing', n: 35 },
+    { emoji: '💼', t: 'Negocios', n: 29 },
+    { emoji: '🎨', t: 'Creatividad', n: 27 },
+    { emoji: '🧠', t: 'Psicología', n: 26 },
+    { emoji: '📧', t: 'Email', n: 22 },
+    { emoji: '💻', t: 'Vibe Coding', n: 21 },
+    { emoji: '🤖', t: 'Técnicos', n: 18 },
+    { emoji: '🌐', t: 'SEO & Contenido', n: 16 },
+  ];
+  return (
+    <div style={{ backgroundColor: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 12, boxShadow: '0 12px 32px rgba(20,21,26,0.08)' }}>
+      {cats.map((r, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '5px 6px', borderBottom: i < cats.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
+          <span style={{ fontSize: 12.5, color: TEXT }}>{r.emoji}&nbsp;&nbsp;{r.t}</span>
+          <span style={{ fontSize: 10.5, color: DIM, backgroundColor: BG_ALT, borderRadius: 4, padding: '1px 7px' }}>{r.n}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const MiniNichos: React.FC = () => (
   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -405,6 +415,16 @@ const Ebook: React.FC = () => {
         @media (prefers-reduced-motion: reduce) {
           .eb-logo-marquee { animation: none; }
         }
+        /* Las secciones bajo el fold no se pintan hasta que se acercan al viewport */
+        .eb-cv { content-visibility: auto; contain-intrinsic-size: auto 700px; }
+        /* El blur del navbar es caro en móviles durante el scroll — se desactiva ahí */
+        @media (max-width: 767px) {
+          .eb-nav {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background-color: rgba(255,255,255,0.98) !important;
+          }
+        }
       `}</style>
 
       {/* ── Announcement banner ── */}
@@ -418,7 +438,7 @@ const Ebook: React.FC = () => {
       </div>
 
       {/* ── Navbar ── */}
-      <header style={{
+      <header className="eb-nav" style={{
         position: 'sticky', top: 0, zIndex: 50,
         backgroundColor: 'rgba(255,255,255,0.92)',
         backdropFilter: 'blur(12px)',
@@ -545,7 +565,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           QUOTE GRANDE (social proof)
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-5xl mx-auto px-6 lg:px-10 py-20 md:py-28 text-center">
           <p style={{ fontSize: 14, fontWeight: 600, color: DIM, letterSpacing: '0.02em', marginBottom: 28 }}>
             +200 prompts · 11 categorías · 1 clic para copiar
@@ -570,7 +590,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FILA DE "LOGOS" — IAs compatibles
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
           <p style={{ fontSize: 13, color: DIM, textAlign: 'center', marginBottom: 22, fontWeight: 500 }}>
             El mismo prompt funciona en todas las IAs que ya usas
@@ -592,7 +612,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FEATURE 1 — Copia. Pega. Listo.
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
@@ -658,7 +678,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FEATURE 2 — Notion, no PDF (invertida)
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
@@ -700,7 +720,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FEATURE 3 — Actualizaciones
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
@@ -758,7 +778,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           CARDS DE ACCESO (estilo "libraries")
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
 
           <div className="text-center mb-14">
@@ -776,19 +796,22 @@ const Ebook: React.FC = () => {
                 emoji: '📚',
                 badge: 'Acceso principal',
                 title: 'Biblioteca +200 prompts',
-                bullets: ['11 categorías organizadas en Notion', 'Copiar con un clic, sin fricción', 'Búsqueda por palabra clave', 'Funciona en cualquier IA'],
+                bullets: ['Copiar con un clic, sin fricción', 'Búsqueda por palabra clave', 'Funciona en cualquier IA'],
+                cats: ['⚡ Productividad', '✍️ Copywriting', '📱 Redes Sociales', '📈 Marketing', '💼 Negocios', '🎨 Creatividad', '🧠 Psicología', '📧 Email', '💻 Vibe Coding', '🤖 Técnicos', '🌐 SEO & Contenido'],
               },
               {
                 emoji: '🎯',
                 badge: 'Incluido',
                 title: '50 prompts por nicho',
                 bullets: ['Inmobiliaria y e-commerce', 'Salud, legal y educación', 'Fitness, restaurantes y creadores', 'Directo a tu caso de uso'],
+                cats: [] as string[],
               },
               {
                 emoji: '♾️',
                 badge: 'Para siempre',
                 title: 'Guía + actualizaciones',
                 bullets: ['Guía de prompt engineering', 'Prompts nuevos cada semana', 'Duplica el espacio en tu Notion', 'Sin suscripción ni cargos extra'],
+                cats: [] as string[],
               },
             ].map((card, i) => (
               <div key={i} style={{
@@ -803,7 +826,7 @@ const Ebook: React.FC = () => {
                   <span style={{ fontSize: 11, fontWeight: 600, color: MUTED, backgroundColor: BG_ALT, border: `1px solid ${BORDER}`, borderRadius: 100, padding: '3px 12px' }}>{card.badge}</span>
                 </div>
                 <h3 style={{ fontWeight: 600, fontSize: 19, marginBottom: 16, letterSpacing: '-0.01em' }}>{card.title}</h3>
-                <div className="space-y-3 mb-7">
+                <div className="space-y-3 mb-5">
                   {card.bullets.map((b, j) => (
                     <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
                       <Check size={14} style={{ color: TEXT, flexShrink: 0, marginTop: 3 }} strokeWidth={2.5} />
@@ -811,6 +834,17 @@ const Ebook: React.FC = () => {
                     </div>
                   ))}
                 </div>
+                {card.cats.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
+                    {card.cats.map((c, j) => (
+                      <span key={j} style={{
+                        fontSize: 11.5, color: MUTED, fontWeight: 500,
+                        backgroundColor: BG_ALT, border: `1px solid ${BORDER}`,
+                        borderRadius: 100, padding: '4px 11px', whiteSpace: 'nowrap',
+                      }}>{c}</span>
+                    ))}
+                  </div>
+                )}
                 <div style={{ marginTop: 'auto' }}>
                   <ArrowLink>Acceder</ArrowLink>
                 </div>
@@ -824,7 +858,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           PRICING / CTA
       ══════════════════════════════════════════ */}
-      <section id="precio" className="eb-section" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+      <section id="precio" className="eb-section eb-cv" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
@@ -922,7 +956,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FAQ
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-14">
 
@@ -948,7 +982,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           CTA FINAL
       ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
+      <section className="eb-cv" style={{ backgroundColor: BG_ALT, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-24 md:py-32 text-center">
           <h2 style={{
             fontWeight: 600,
@@ -974,7 +1008,7 @@ const Ebook: React.FC = () => {
       {/* ══════════════════════════════════════════
           FOOTER (oscuro, multi-columna)
       ══════════════════════════════════════════ */}
-      <footer style={{ backgroundColor: NAVY, color: '#fff' }}>
+      <footer className="eb-cv" style={{ backgroundColor: NAVY, color: '#fff' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 mb-14">
 
