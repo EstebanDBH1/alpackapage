@@ -479,7 +479,7 @@ const Ebook: React.FC = () => {
             maxWidth: 900,
             margin: '0 auto 24px',
           }}>
-            Resultados de experto con IA, en un solo click.
+            Convierte La IA en tu mejor herramienta
           </h1>
 
           <p className="eb-hero-fade" style={{ color: MUTED, fontSize: 'clamp(16px, 1.8vw, 19px)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 36px' }}>
