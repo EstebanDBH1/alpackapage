@@ -40,7 +40,8 @@ export default {
       },
       fontFamily: {
         // Toda la app usa Geist Mono; /ebook define su propia tipografía
-        // inline (Space Grotesk) y no pasa por estos alias.
+        // (JetBrains Mono + Inter) en un <style> con scope `.eb2` que
+        // pisa estos alias solo dentro de esa página.
         sans: ['"Geist Mono"', 'ui-monospace', 'monospace'],
         mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
         display: ['"Geist Mono"', 'ui-monospace', 'monospace'],

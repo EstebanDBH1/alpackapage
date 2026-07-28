@@ -1,0 +1,1228 @@
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Prompts en Notion · alpacka.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Space Mono', 'monospace'],
+                        spacemono: ['Space Mono', 'monospace']
+                    },
+                    colors: {
+                        /* Acento de marca: negro suave (carbón cálido), no azul */
+                        indigo: {
+                            50: '#f5f4f2',
+                            100: '#e9e6e2',
+                            200: '#dbd7d1',
+                            300: '#b5aea6',
+                            400: '#c4c0bb', /* claro: solo se usa sobre fondo oscuro */
+                            500: '#857d76',
+                            600: '#2b2724', /* principal */
+                            700: '#1a1715', /* hover / más oscuro */
+                        },
+                        brand: {
+                            50: '#f5f4f2',
+                            100: '#e9e6e2',
+                            500: '#57504a',
+                            600: '#2b2724',
+                            700: '#1a1715',
+                            900: '#111010',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f5f5f7;
+            color: #111827;
+            font-family: 'JetBrains Mono', monospace;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .border-grid {
+            border-color: #e2e8f0;
+        }
+
+        .bg-canvas {
+            background-color: #f5f5f7;
+        }
+
+        .bg-card {
+            background-color: #ffffff;
+        }
+
+        .dot-pattern {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+    </style>
+</head>
+
+<body class="bg-canvas text-slate-900 selection:bg-indigo-600 selection:text-white">
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-50 bg-[#f5f5f7]/90 backdrop-blur-md border-b border-slate-300/70 text-xs">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="#" class="flex items-center gap-2 font-bold text-slate-900 tracking-tight text-sm">
+                    <span class="w-4 h-4 rounded-full bg-indigo-600 inline-block"></span>
+                    <span>alpacka.ai</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-5 text-slate-600 font-medium">
+                    <a href="#producto" class="hover:text-slate-900 transition">Qué es</a>
+                    <a href="#como-funciona" class="hover:text-slate-900 transition">Cómo funciona</a>
+                    <a href="#categorias" class="hover:text-slate-900 transition">Categorías</a>
+                    <a href="#precio" class="hover:text-slate-900 transition">Precio</a>
+                    <a href="#garantia" class="hover:text-slate-900 transition">Garantía</a>
+                    <a href="#faq" class="hover:text-slate-900 transition">FAQ</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-3">
+                <span
+                    class="hidden sm:inline-block px-2 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-semibold rounded border border-slate-300">+200
+                    prompts</span>
+                <a href="https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034" target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded transition text-xs shadow-sm">
+                    Comprar — $10
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section
+        class="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-16 md:pt-16 md:pb-24 grid md:grid-cols-12 gap-8 items-start">
+        <div class="md:col-span-6 space-y-6 pt-2">
+            <!-- Top Tag -->
+            <div
+                class="inline-flex items-center gap-2 px-2.5 py-1 rounded border border-slate-300 bg-white/80 text-[11px] text-slate-700 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                <span>Biblioteca de prompts en Notion <span class="text-slate-400">· acceso inmediato</span></span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+                El prompt correcto, <br />
+                a un clic <br />
+                de distancia.
+            </h1>
+
+            <!-- Description -->
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md font-sans">
+                Deja de reescribir la misma instrucción cada vez que abres ChatGPT. Más de 200 prompts probados,
+                ordenados en Notion, listos para copiar y pegar en ChatGPT, Claude o Gemini.
+            </p>
+
+            <!-- Action buttons -->
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+                <a href="https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034" target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs px-4 py-2.5 rounded flex items-center gap-2 shadow-sm transition">
+                    <span class="bg-indigo-500/50 px-1.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-wider">Pago
+                        único</span>
+                    <span>Acceder por $10</span>
+                </a>
+                <a href="#producto"
+                    class="bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-medium text-xs px-3.5 py-2.5 rounded flex items-center gap-2 shadow-sm transition">
+                    <span>Ver qué incluye</span>
+                    <kbd
+                        class="bg-slate-100 border border-slate-300 text-[10px] px-1 py-0.5 rounded text-slate-500">↓</kbd>
+                </a>
+            </div>
+
+            <!-- Meta notice -->
+            <p class="text-[10px] text-slate-500 font-sans">
+                Antes $37 — hoy $10. Sin suscripción. Actualizaciones incluidas de por vida.
+            </p>
+
+            <!-- Bottom Badges -->
+            <div class="pt-4 border-t border-slate-200/80 flex flex-wrap items-center gap-4 text-[10px] text-slate-500">
+                <span>Acceso en 2 minutos</span>
+                <span>·</span>
+                <span>Garantía de 30 días</span>
+                <span>·</span>
+                <span>Funciona en cualquier IA</span>
+            </div>
+        </div>
+
+        <!-- HERO IMAGE -->
+        <div class="md:col-span-6 relative">
+            <div class="bg-white border border-slate-300 rounded-lg shadow-xl overflow-hidden">
+                <img src="../public/bundlevtwo.png"
+                    alt="Bundle de Prompts de alpacka.ai abierto en Notion, con las categorías incluidas y el número de prompts de cada una"
+                    class="w-full h-auto block" loading="eager" decoding="async" />
+            </div>
+            <div class="mt-2 flex flex-wrap items-center gap-2 text-[10px] text-slate-500">
+                <span class="bg-white border border-slate-300 px-1.5 py-0.5 rounded font-mono shadow-sm">21
+                    categorías</span>
+                <span class="bg-white border border-slate-300 px-1.5 py-0.5 rounded font-mono shadow-sm">+200
+                    prompts</span>
+                <span class="text-slate-400">así se ve por dentro</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 0: CATEGORÍAS -->
+    <section id="categorias" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80">
+        <div class="grid md:grid-cols-12 gap-8">
+            <div class="md:col-span-4 space-y-3">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">CATEGORÍAS</div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Hay un prompt para <br />casi todo lo que haces.
+                </h2>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Da igual si vives del marketing, escribes correos todo el día, estás armando tu negocio o llevas
+                    cartas del tarot: vas a encontrar los tuyos. Todo filtrable por categoría dentro de Notion.
+                </p>
+                <div class="pt-2 flex flex-wrap items-center gap-3 text-[10px] text-slate-500">
+                    <span class="bg-white border border-slate-300 px-2 py-0.5 rounded shadow-sm">21 categorías</span>
+                    <span class="bg-white border border-slate-300 px-2 py-0.5 rounded shadow-sm">+200 prompts</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-8">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Inteligencia Artificial</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Marketing</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Redes Sociales</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Creación de Contenido</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Productividad</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Negocios</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Emprendimiento</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Ventas</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Copywriting</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">SEO</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Programación</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Branding</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Educación</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Idiomas</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Escritura</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Finanzas</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Inversión</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Astrología</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Tarot</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Espiritualidad</span>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-300 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm hover:border-indigo-300 transition">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-medium text-slate-800">Psicología</span>
+                    </div>
+                    <div
+                        class="bg-indigo-50 border border-indigo-200 rounded px-3 py-2.5 flex items-center gap-2 shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
+                        <span class="text-[11px] font-bold text-indigo-700">+ nuevas cada semana</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: CÓMO FUNCIONA -->
+    <section id="como-funciona" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80">
+        <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1">Así de simple</div>
+        <div class="grid md:grid-cols-12 gap-8">
+            <div class="md:col-span-5 space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Copiar, pegar, listo. <br />En serio, eso es todo.
+                </h2>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Nada que instalar y nada que aprender. Abres la biblioteca en Notion, filtras por categoría, copias
+                    el prompt con un clic y lo pegas en la IA que ya usas. Si sabes usar ChatGPT aunque sea a medias,
+                    esto lo dominas en el primer minuto.
+                </p>
+                <div class="pt-2 flex items-center gap-2 text-xs text-slate-600">
+                    <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm text-[10px]">⌘</kbd>
+                    <span>+</span>
+                    <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm text-[10px]">C</kbd>
+                    <span class="text-slate-400">y</span>
+                    <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm text-[10px]">V</kbd>
+                    <span class="text-slate-500 text-[11px]">es toda la curva de aprendizaje</span>
+                </div>
+            </div>
+
+            <!-- Command Flow UI Card -->
+            <div class="md:col-span-7 bg-white border border-slate-300 rounded-lg p-5 shadow-sm space-y-4">
+                <div
+                    class="flex items-center justify-between border-b border-slate-200 pb-2 text-[10px] text-slate-500">
+                    <span class="font-bold text-slate-800 uppercase tracking-wider">TU FLUJO DIARIO</span>
+                    <span class="text-slate-400">menos de 60 segundos</span>
+                </div>
+
+                <!-- Steps list -->
+                <div class="space-y-3 text-xs">
+                    <div class="flex items-start gap-3">
+                        <span
+                            class="w-5 h-5 rounded bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold text-[10px] flex items-center justify-center shrink-0">01</span>
+                        <div>
+                            <div class="font-bold text-slate-800 flex items-center gap-2">
+                                <span>Encuentra</span>
+                                <span class="text-[9px] text-slate-400 uppercase">Categoría</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 font-sans">Abre la biblioteca en Notion y filtra por
+                                categoría o busca por palabra clave. En segundos tienes el prompt exacto para lo que
+                                necesitas hoy.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <span
+                            class="w-5 h-5 rounded bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold text-[10px] flex items-center justify-center shrink-0">02</span>
+                        <div>
+                            <div class="font-bold text-slate-800 flex items-center gap-2">
+                                <span>Copia</span>
+                                <span class="text-[9px] text-slate-400 uppercase">Un clic</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 font-sans">Ya viene con rol, contexto, instrucción y
+                                formato definidos. No tienes que redactar nada: solo copiar.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <span
+                            class="w-5 h-5 rounded bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold text-[10px] flex items-center justify-center shrink-0">03</span>
+                        <div>
+                            <div class="font-bold text-slate-800 flex items-center gap-2">
+                                <span>Completa</span>
+                                <span class="text-[9px] text-slate-400 uppercase">Corchetes</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 font-sans">Cambias los campos entre corchetes por tus
+                                datos: tu cliente, tu producto, tu tono. Diez segundos de trabajo.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <span
+                            class="w-5 h-5 rounded bg-indigo-50 border border-indigo-200 text-indigo-600 font-bold text-[10px] flex items-center justify-center shrink-0">04</span>
+                        <div>
+                            <div class="font-bold text-slate-800 flex items-center gap-2">
+                                <span>Pega</span>
+                                <span class="text-[9px] text-slate-400 uppercase">Tu IA</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 font-sans">Lo mandas a ChatGPT, Claude o Gemini y
+                                recibes una respuesta de nivel experto. A la primera, sin cinco intentos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rendered output snippet -->
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded text-[11px] text-slate-600 font-mono">
+                    <div class="text-[9px] font-bold text-emerald-600 uppercase mb-1">✓ Prompt listo para pegar</div>
+                    <div class="text-slate-800">Actúa como director comercial B2B. Escribe un email de seguimiento a
+                        [CLIENTE] tras la demo de [PRODUCTO], en tono directo, máximo 120 palabras, con una sola llamada
+                        a la acción.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: EL PRODUCTO -->
+    <section id="producto" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80 space-y-16">
+        <div>
+            <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1">Lo que te llevas</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Una biblioteca de prompts <br />que sí puedes usar todos los días.
+            </h2>
+        </div>
+
+        <!-- BLOCK 1: BIBLIOTECA -->
+        <div class="grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-5 space-y-4">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">+200 Prompts</div>
+                <h3 class="text-xl font-bold text-slate-900">
+                    Todo ordenado en Notion, no en un PDF muerto.
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Es un espacio de Notion que puedes duplicar en tu propia cuenta: base de datos, filtros, búsqueda y
+                    botón de copiar. Nada de hacer Ctrl+F en un archivo de 80 páginas para encontrar el prompt que
+                    usaste el mes pasado.
+                </p>
+                <ul class="text-xs text-slate-700 space-y-2 font-sans">
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Filtra por categoría o busca por caso de uso en segundos.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Duplícalo en tu Notion y añade los tuyos.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Cada prompt se copia con un clic, sin formato roto.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-7 bg-white border border-slate-300 rounded-lg p-4 shadow-md text-xs">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                        <span class="font-bold text-slate-800">Biblioteca de Prompts</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400">buscar · filtrar · copiar</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3">
+                    <!-- Sidebar tags -->
+                    <div class="col-span-4 border-r border-slate-200 pr-2 space-y-2 text-[10px] text-slate-500">
+                        <div class="font-bold text-slate-700 text-[11px]">Categorías</div>
+                        <div class="text-indigo-600 font-medium">⚡ Productividad · 42</div>
+                        <div class="pt-2 font-bold text-slate-700">FILTROS</div>
+                        <div class="flex flex-wrap gap-1">
+                            <span
+                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">Marketing</span>
+                            <span
+                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">Ventas</span>
+                            <span
+                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">Email</span>
+                        </div>
+                    </div>
+
+                    <!-- Items list -->
+                    <div class="col-span-8 space-y-2">
+                        <div class="p-2 border border-slate-200 rounded hover:border-indigo-300">
+                            <div class="font-bold text-slate-800 flex items-center justify-between">
+                                <span>★ Resumen ejecutivo con decisiones</span>
+                                <span
+                                    class="text-[9px] bg-indigo-50 text-indigo-700 px-1 rounded uppercase">NEGOCIOS</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Convierte [NOTAS] en un resumen con próximos
+                                pasos...</p>
+                        </div>
+
+                        <div class="p-2 border border-slate-200 rounded hover:border-indigo-300">
+                            <div class="font-bold text-slate-800 flex items-center justify-between">
+                                <span>★ Copy de anuncio que convierte</span>
+                                <span class="text-[9px] bg-slate-100 text-slate-600 px-1 rounded uppercase">ADS</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-0.5">3 variantes para [PRODUCTO] con ángulos
+                                distintos...
+                            </p>
+                        </div>
+
+                        <div class="p-2 border border-slate-200 rounded hover:border-indigo-300">
+                            <div class="font-bold text-slate-800 flex items-center justify-between">
+                                <span>★ Análisis FODA con plan de acción</span>
+                                <span
+                                    class="text-[9px] bg-slate-100 text-slate-600 px-1 rounded uppercase">ESTRATEGIA</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Cuadrante por cuadrante y qué hacer con cada
+                                uno...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCK 2: ANATOMÍA DEL PROMPT -->
+        <div class="grid md:grid-cols-12 gap-8 items-center pt-8">
+            <div
+                class="md:col-span-7 order-2 md:order-1 bg-white border border-slate-300 rounded-lg p-4 shadow-md text-xs">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
+                    <span class="font-bold text-slate-800 text-[11px]">Anatomía de un prompt de la biblioteca</span>
+                    <span
+                        class="bg-indigo-600 text-white text-[9px] px-2 py-0.5 rounded font-bold uppercase">Copiar</span>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="bg-slate-50 p-3 border border-slate-200 rounded space-y-2">
+                        <div class="text-[10px] font-bold text-slate-500 uppercase">Lo que ya viene escrito</div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="flex items-center gap-1.5"><span class="text-indigo-600">▸</span>
+                                Rol de la IA (quién debe ser)</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 rounded">HECHO</span>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="flex items-center gap-1.5"><span class="text-indigo-600">▸</span>
+                                Contexto y objetivo</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 rounded">HECHO</span>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="flex items-center gap-1.5"><span class="text-indigo-600">▸</span>
+                                Formato exacto de la respuesta</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 rounded">HECHO</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 border border-slate-200 rounded space-y-2">
+                        <div class="text-[10px] font-bold text-slate-500 uppercase">Lo único que pones tú</div>
+                        <div class="grid grid-cols-2 gap-2 text-[10px]">
+                            <div class="bg-white p-1.5 border border-slate-200 rounded">
+                                <span class="text-slate-400">[CLIENTE]:</span> <span
+                                    class="font-bold text-slate-800">tu cliente</span>
+                            </div>
+                            <div class="bg-white p-1.5 border border-slate-200 rounded">
+                                <span class="text-slate-400">[TONO]:</span> <span
+                                    class="font-bold text-slate-800">directo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-5 order-1 md:order-2 space-y-4">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">La diferencia</div>
+                <h3 class="text-xl font-bold text-slate-900">
+                    Un buen prompt no es más largo. Está mejor armado.
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Los prompts que circulan gratis por internet son gratis por algo: sirven a medias. La IA no te lee
+                    la mente; si le das tres palabras, te devuelve tres palabras. Los míos llegan con el trabajo hecho.
+                </p>
+                <ul class="text-xs text-slate-700 space-y-2 font-sans">
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Le dice a la IA quién es y desde dónde responde.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Define el formato para que no tengas que reescribir.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Tú solo rellenas los corchetes con tus datos.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- BLOCK 3: ACTUALIZACIONES -->
+        <div class="grid md:grid-cols-12 gap-8 items-center pt-8">
+            <div class="md:col-span-5 space-y-4">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">Actualizaciones</div>
+                <h3 class="text-xl font-bold text-slate-900">
+                    Compras una vez. Sigue creciendo para siempre.
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Cada vez que añado prompts nuevos, aparecen solos en tu espacio de Notion. Cuando sale un modelo
+                    nuevo o un caso de uso que no estaba, lo agrego. Sin cobrarte de nuevo y sin "versión 2.0" que
+                    tengas que comprar aparte.
+                </p>
+                <ul class="text-xs text-slate-700 space-y-2 font-sans">
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Prompts nuevos cada semana, sin costo extra.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>No es una suscripción: es un pago único.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-indigo-600 font-bold">✓</span>
+                        <span>Se actualiza solo, tú no haces nada.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-7 bg-white border border-slate-300 rounded-lg p-4 shadow-md text-xs">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
+                    <span class="font-bold text-slate-800 text-[11px]">Historial de la biblioteca</span>
+                    <span class="text-[10px] text-slate-400">incluido de por vida</span>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3">
+                    <!-- Version history list -->
+                    <div class="col-span-4 border-r border-slate-200 pr-2 space-y-2 text-[10px]">
+                        <div
+                            class="p-1.5 bg-indigo-50 border border-indigo-200 rounded font-bold text-indigo-700 flex justify-between items-center">
+                            <span>Versión actual</span>
+                            <span class="text-[9px]">+200</span>
+                        </div>
+                        <div class="p-1.5 hover:bg-slate-50 text-slate-600 flex justify-between items-center">
+                            <span>Nicho: e-commerce</span>
+                            <span class="text-[9px] text-slate-400">NUEVO</span>
+                        </div>
+                        <div
+                            class="p-1.5 bg-amber-50 text-amber-800 border border-amber-200 rounded flex justify-between items-center">
+                            <span>Guía de prompting</span>
+                            <span class="text-[9px]">incluida</span>
+                        </div>
+                    </div>
+
+                    <!-- Version detail compare -->
+                    <div class="col-span-8 bg-slate-50 border border-slate-200 p-3 rounded space-y-2">
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="font-bold text-slate-800">Último añadido</span>
+                            <span class="text-amber-500">★★★★★</span>
+                        </div>
+                        <div class="p-2 bg-white border border-slate-200 rounded text-[10px] text-slate-700 space-y-1">
+                            <div class="text-emerald-600 font-semibold">+ 50 prompts por nicho: inmobiliaria,
+                                e-commerce, salud, legal y educación.
+                            </div>
+                            <div class="text-slate-500 font-sans">Ya están disponibles en tu espacio. No tienes que
+                                hacer nada ni pagar nada extra.</div>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-1">
+                            <span
+                                class="px-2 py-1 bg-white border border-slate-300 rounded text-[10px] font-semibold text-slate-700">Sin
+                                suscripción</span>
+                            <span class="px-2 py-1 bg-slate-900 text-white rounded text-[10px] font-semibold">Pago
+                                único</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCK 4: QUÉ INCLUYE EL PAQUETE -->
+        <div class="bg-white border border-slate-300 rounded-xl p-6 md:p-8 shadow-sm space-y-6">
+            <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">EL PAQUETE COMPLETO</div>
+            <div class="max-w-xl space-y-2">
+                <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                    No es solo una lista de prompts. <br />Es todo el sistema, por $10.
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Sin letra pequeña ni "pero". Esto es literalmente todo lo que recibes en el correo, dos minutos
+                    después de pagar.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 pt-4">
+                <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">01 BIBLIOTECA</div>
+                    <div class="font-bold text-slate-800 text-xs">+200 prompts en Notion</div>
+                    <p class="text-[11px] text-slate-500 font-sans">21 categorías, filtros por caso de uso y cada
+                        prompt listo para copiar en un clic.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">02 EXTRAS POR NICHO</div>
+                    <div class="font-bold text-slate-800 text-xs">50 prompts adicionales</div>
+                    <p class="text-[11px] text-slate-500 font-sans">Inmobiliaria, e-commerce, salud, legal y educación.
+                        Casos específicos, directo al grano.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-2">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">03 GUÍA</div>
+                    <div class="font-bold text-slate-800 text-xs">Prompt engineering</div>
+                    <p class="text-[11px] text-slate-500 font-sans">Los principios detrás de cada prompt, para que
+                        crees los tuyos cuando ninguno encaje exacto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: EL PROBLEMA (DARK MODE SECTION) -->
+    <section class="bg-[#0b0f19] text-white py-16 sm:py-24 border-y border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-5 space-y-4">
+                <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">EL PROBLEMA REAL</div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                    Usas ChatGPT a diario y sigue dándote respuestas tibias.
+                </h2>
+                <p class="text-xs text-slate-400 leading-relaxed font-sans">
+                    El problema no es la IA: es cómo le pides las cosas. Le escribes "hazme un email de ventas",
+                    esperas magia, y te devuelve algo tan genérico como tu pregunta.
+                </p>
+
+                <div class="space-y-4 pt-4 text-xs">
+                    <div class="flex items-start gap-3">
+                        <span class="text-indigo-400 text-base">🔁</span>
+                        <div>
+                            <div class="font-bold text-slate-200">Pierdes tiempo reescribiendo</div>
+                            <p class="text-[11px] text-slate-400 font-sans">Tres intentos, cinco correcciones y al final
+                                terminas escribiéndolo tú a mano. Otra vez.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <span class="text-indigo-400 text-base">📉</span>
+                        <div>
+                            <div class="font-bold text-slate-200">Resultados que no puedes publicar</div>
+                            <p class="text-[11px] text-slate-400 font-sans">Texto corporativo, listas obvias y ese
+                                "Claro, con gusto te ayudo" que ya nadie soporta.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <span class="text-indigo-400 text-base">✅</span>
+                        <div>
+                            <div class="font-bold text-slate-200">Con el prompt bien hecho, te sirve la primera</div>
+                            <p class="text-[11px] text-slate-400 font-sans">Sin el "¿me das más contexto?" de siempre.
+                                Copias la respuesta y sigues con tu día.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Mockup -->
+            <div
+                class="md:col-span-7 bg-slate-900 border border-slate-800 rounded-lg p-4 font-mono text-xs space-y-3 shadow-2xl">
+                <div
+                    class="flex items-center justify-between border-b border-slate-800 pb-2 text-[10px] text-slate-500">
+                    <span class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        <span class="font-bold text-slate-300">Lo que pides vs. lo que recibes</span>
+                    </span>
+                    <span>CASOS REALES</span>
+                </div>
+
+                <div class="space-y-2 text-[11px]">
+                    <div class="flex items-center justify-between text-slate-300 gap-3">
+                        <span class="text-slate-500">"escribe un email de ventas"</span>
+                        <span class="text-rose-400 font-bold">✕</span>
+                        <span class="text-slate-500 text-right">Texto corporativo que nadie abriría</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-300 gap-3">
+                        <span class="text-slate-500">"dame una estrategia de marketing"</span>
+                        <span class="text-rose-400 font-bold">✕</span>
+                        <span class="text-slate-500 text-right">Cinco puntos obvios que ya sabías</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-300 gap-3">
+                        <span class="text-slate-500">"ayúdame con mis redes"</span>
+                        <span class="text-rose-400 font-bold">✕</span>
+                        <span class="text-slate-500 text-right">Tres reescrituras y sigues en blanco</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-300 gap-3">
+                        <span class="text-indigo-400 font-bold">Prompt de la biblioteca</span>
+                        <span class="text-emerald-400 font-bold">✓</span>
+                        <span class="text-slate-400 text-right">Respuesta lista para usar, a la primera</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded text-[10px] space-y-1 mt-4">
+                    <div class="text-indigo-400 font-bold uppercase">APRENDER A PROMPTEAR CUESTA MESES</div>
+                    <p class="text-slate-400 font-sans">Ese trabajo ya lo hice yo. Tú solo copias el resultado: $10,
+                        una vez, y te ahorras la curva completa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: COMPATIBILIDAD -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80">
+        <div
+            class="bg-white border border-slate-300 rounded-xl p-6 md:p-8 shadow-sm grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-6 space-y-3">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">COMPATIBLE CON TODO</div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                    Un prompt, todas las IAs que ya usas.
+                </h2>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    No están optimizados para un solo modelo. Están escritos bajo principios de ingeniería del lenguaje
+                    que funcionan en cualquier IA generativa: ChatGPT, Claude, Gemini, Copilot, Grok, DeepSeek… y lo que
+                    salga mañana.
+                </p>
+            </div>
+
+            <div class="md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">◉</span>
+                    <span class="text-[11px] font-medium text-slate-700">ChatGPT, Claude y Gemini</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">◉</span>
+                    <span class="text-[11px] font-medium text-slate-700">Copilot, Grok, DeepSeek y más</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">⚡</span>
+                    <span class="text-[11px] font-medium text-slate-700">Funciona en la versión gratis</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">🇪🇸</span>
+                    <span class="text-[11px] font-medium text-slate-700">Todo en español, listo para usar</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: COMPARISON TABLE -->
+    <section id="comparar" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80 space-y-6">
+        <div>
+            <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">COMPARA</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Por qué esto no es "otro pack de prompts".
+            </h2>
+            <p class="text-xs text-slate-600 font-sans mt-1">
+                Los prompts sueltos de internet, los PDF de 300 páginas y los cursos de IA cubren un pedazo del
+                problema. Esto cubre el trabajo completo: encontrar, copiar, personalizar y obtener el resultado.
+            </p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                    <tr class="border-b border-slate-300 text-slate-500 text-[10px]">
+                        <th class="py-3 px-3 font-bold uppercase">QUÉ NECESITAS</th>
+                        <th class="py-3 px-3 font-semibold uppercase text-center">PROMPTS GRATIS <br /><span
+                                class="text-[9px] font-normal text-slate-400">Internet / TikTok</span></th>
+                        <th class="py-3 px-3 font-semibold uppercase text-center">PACKS EN PDF <br /><span
+                                class="text-[9px] font-normal text-slate-400">Listas sueltas</span></th>
+                        <th class="py-3 px-3 font-semibold uppercase text-center">CURSOS DE IA <br /><span
+                                class="text-[9px] font-normal text-slate-400">$200+</span></th>
+                        <th
+                            class="py-3 px-3 font-bold uppercase text-center text-indigo-600 bg-indigo-50/50 rounded-t border-t border-x border-indigo-200">
+                            BIBLIOTECA ALPACKA <br /><span class="text-[9px] font-semibold text-indigo-600">$10 pago
+                                único</span></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-[11px] text-slate-700">
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Listos para copiar y pegar</td>
+                        <td class="text-center text-slate-500">A medias</td>
+                        <td class="text-center text-indigo-600">✓</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Estructura completa (rol, contexto, formato)</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center text-slate-500">Parcial</td>
+                        <td class="text-center text-indigo-600">✓</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Organizado, filtrable y buscable</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center text-slate-500">Ctrl+F</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Funciona en ChatGPT, Claude, Gemini y Copilot</td>
+                        <td class="text-center text-slate-500">Depende</td>
+                        <td class="text-center text-slate-500">Depende</td>
+                        <td class="text-center text-slate-500">Teoría</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Actualizaciones incluidas</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center text-slate-500">Otro curso</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Sin suscripción</td>
+                        <td class="text-center text-indigo-600">✓</td>
+                        <td class="text-center text-indigo-600">✓</td>
+                        <td class="text-center text-slate-300">—</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">✓
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-semibold">Tiempo hasta tu primer resultado útil</td>
+                        <td class="text-center text-slate-500">Horas</td>
+                        <td class="text-center text-slate-500">Días</td>
+                        <td class="text-center text-slate-500">Semanas</td>
+                        <td class="text-center font-bold text-indigo-600 bg-indigo-50/30 border-x border-indigo-200">2
+                            min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION 6: PRICING -->
+    <section id="precio" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80 space-y-8">
+        <div>
+            <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">PRECIO</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                $10 una sola vez. Nada más, nunca.
+            </h2>
+            <p class="text-xs text-slate-600 font-sans mt-1">
+                Pagas, te llega el enlace a Notion en menos de 2 minutos y ya es tuyo para siempre. No hay suscripción,
+                no hay upsell escondido, no hay "versión premium" más adelante.
+            </p>
+        </div>
+
+        <!-- Precio único -->
+        <div
+            class="bg-white border-2 border-indigo-600 rounded-xl shadow-md overflow-hidden grid md:grid-cols-12 max-w-4xl">
+            <!-- Columna precio -->
+            <div class="md:col-span-5 p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-200 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-900 text-sm">Biblioteca alpacka.ai</span>
+                    <span
+                        class="text-[9px] font-bold text-indigo-700 uppercase bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">LANZAMIENTO</span>
+                </div>
+
+                <div class="flex items-baseline gap-2">
+                    <span class="text-5xl font-extrabold text-slate-900 tracking-tight">$10</span>
+                    <div class="leading-tight">
+                        <div class="text-[10px] text-slate-400 line-through">$37</div>
+                        <div class="text-[11px] text-slate-500 font-sans">pago único</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-600 font-sans leading-relaxed">
+                    Un solo pago. Acceso de por vida a todo el espacio de Notion, con las actualizaciones incluidas
+                    para siempre.
+                </p>
+
+                <a href="https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034" target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3 rounded transition shadow-sm flex items-center justify-center gap-2">
+                    <span>Quiero la biblioteca — $10</span>
+                    <span>→</span>
+                </a>
+
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-500 font-sans">
+                    <span>Acceso en 2 min</span>
+                    <span>·</span>
+                    <span>Garantía 30 días</span>
+                    <span>·</span>
+                    <span>Sin suscripción</span>
+                </div>
+            </div>
+
+            <!-- Columna incluye -->
+            <div class="md:col-span-7 p-6 md:p-8 bg-slate-50 space-y-4">
+                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">TODO ESTO INCLUIDO</div>
+                <ul class="text-xs text-slate-700 space-y-2.5 font-sans">
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>+200
+                            prompts en Notion, repartidos en 21 categorías</span></li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>50
+                            prompts extra por nicho: inmobiliaria, e-commerce, salud, legal y educación</span></li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>Guía de
+                            prompt engineering para crear los tuyos</span></li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>Prompts
+                            nuevos cada semana, sin costo extra</span></li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span>
+                        <span>Compatible con ChatGPT, Claude, Gemini, Copilot y cualquier IA</span>
+                    </li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>Puedes
+                            duplicarlo en tu propia cuenta de Notion</span></li>
+                    <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> <span>Garantía
+                            de 30 días: si no te sirve, te devuelvo el 100%</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-[10px] text-slate-500 font-sans">Pago seguro vía Hotmart · Acceso a Notion por email</div>
+    </section>
+
+    <!-- SECTION 6.5: GARANTÍA -->
+    <section id="garantia" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80">
+        <div
+            class="bg-white border border-slate-300 rounded-xl p-6 md:p-8 shadow-sm grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-7 space-y-3">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">SIN RIESGO</div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                    Si no te sirve, te devuelvo cada centavo.
+                </h2>
+                <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                    Tienes 30 días. Ábrelo, úsalo, exprímelo. Si sientes que no valió la pena, me escribes y te devuelvo
+                    el 100%. Sin formularios raros, sin emails de retención, sin "espera, déjame explicarte por qué
+                    deberías quedarte". No me interesa quedarme con el dinero de alguien que no quedó contento.
+                </p>
+            </div>
+
+            <div class="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">🛡️</span>
+                    <span class="text-[11px] font-medium text-slate-700">30 días de garantía</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">⚡</span>
+                    <span class="text-[11px] font-medium text-slate-700">Acceso en 2 minutos</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">💳</span>
+                    <span class="text-[11px] font-medium text-slate-700">Pago único de $10</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2">
+                    <span class="text-indigo-600 font-bold">♾️</span>
+                    <span class="text-[11px] font-medium text-slate-700">Actualizaciones de por vida</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: FAQ -->
+    <section id="faq"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-300/80 grid md:grid-cols-12 gap-8">
+        <div class="md:col-span-5 space-y-3">
+            <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">PREGUNTAS FRECUENTES</div>
+            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+                Lo que me preguntan antes de comprar.
+            </h2>
+            <p class="text-xs text-slate-600 font-sans leading-relaxed">
+                Respuestas claras sobre acceso, formato, compatibilidad, actualizaciones y garantía. Si te queda alguna
+                duda, escríbeme antes de pagar.
+            </p>
+            <div class="flex flex-wrap gap-2 text-[10px] text-slate-500 pt-2">
+                <span class="bg-slate-200 px-2 py-0.5 rounded">Acceso</span>
+                <span class="bg-slate-200 px-2 py-0.5 rounded">Formato</span>
+                <span class="bg-slate-200 px-2 py-0.5 rounded">Compatibilidad</span>
+                <span class="bg-slate-200 px-2 py-0.5 rounded">Garantía</span>
+            </div>
+        </div>
+
+        <div
+            class="md:col-span-7 bg-white border border-slate-300 rounded-xl divide-y divide-slate-200 text-xs shadow-sm">
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>01 ¿Cuándo recibo el acceso?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    En el momento en que pagas. Te llega un email con el enlace directo a Notion, generalmente en menos
+                    de 2 minutos. No hay proceso de revisión ni tiempos de espera.
+                </p>
+            </details>
+
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>02 ¿Funciona con la IA que yo uso?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    Sí. Los prompts están diseñados bajo principios de ingeniería del lenguaje que funcionan en
+                    cualquier modelo generativo: ChatGPT, Gemini, Claude, Copilot, Grok, lo que sea que uses hoy o lo
+                    que salga mañana.
+                </p>
+            </details>
+
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>03 ¿Es un PDF o qué formato tiene exactamente?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    Es un espacio en Notion, no un PDF. Puedes duplicarlo en tu propia cuenta de Notion, filtrar por
+                    categoría, buscar por palabra clave y copiar cada prompt con un clic. Se actualiza solo cuando añado
+                    contenido nuevo.
+                </p>
+            </details>
+
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>04 ¿Las actualizaciones tienen algún costo extra?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    No. Cada vez que añado prompts nuevos los tienes automáticamente. Es parte de lo que pagas hoy. No
+                    hay suscripción oculta ni "versión premium" más adelante.
+                </p>
+            </details>
+
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>05 ¿Cómo funciona la garantía?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    Tienes 30 días. Si lo abres, lo usas y sientes que no valió la pena, me escribes y te reembolso el
+                    100%. Sin formularios raros ni emails de retención. Solo dime que no funcionó para ti.
+                </p>
+            </details>
+
+            <details class="p-4 group">
+                <summary class="font-bold text-slate-800 cursor-pointer flex justify-between items-center list-none">
+                    <span>06 ¿Necesito saber mucho de IAs para aprovecharlo?</span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform">↓</span>
+                </summary>
+                <p class="mt-2 text-slate-600 text-[11px] font-sans leading-relaxed">
+                    No. Si ya usas ChatGPT aunque sea de vez en cuando, puedes usar esto. El formato es: copias el
+                    prompt, lo pegas en tu IA, completas los campos entre corchetes y ya.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    <!-- SECTION 8: BOTTOM CTA -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+        <div
+            class="bg-white border border-slate-300 rounded-xl p-8 md:p-10 shadow-sm grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-7 space-y-4">
+                <div class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">PRECIO DE LANZAMIENTO</div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Sigues peleando con la IA, o copias los que ya funcionan.
+                </h2>
+                <p class="text-xs text-slate-600 font-sans leading-relaxed">
+                    Son $10, una sola vez. Lo tienes en tu correo en un par de minutos. Y si no te sirve, te devuelvo el
+                    dinero sin preguntar. Lo peor que puede pasar es que no pierdas nada.
+                </p>
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <a href="https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034" target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs px-5 py-2.5 rounded shadow-sm transition">
+                        Quiero la biblioteca — $10 →
+                    </a>
+                    <span class="text-[10px] text-slate-500 font-sans">Pago único · sin suscripción · garantía de 30
+                        días</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-5 bg-slate-50 border border-slate-200 p-4 rounded-lg text-xs space-y-2">
+                <div
+                    class="flex justify-between items-center text-[10px] text-slate-400 font-bold border-b border-slate-200 pb-1">
+                    <span>Lo que recibes hoy</span>
+                    <span class="border border-slate-300 px-1 rounded bg-white">$10</span>
+                </div>
+                <div class="space-y-1.5 text-slate-700 font-sans text-[11px]">
+                    <div class="flex items-center gap-2"><span class="text-emerald-600">✓</span> +200 prompts en Notion
+                    </div>
+                    <div class="flex items-center gap-2"><span class="text-emerald-600">✓</span> 50 prompts extra por
+                        nicho</div>
+                    <div class="flex items-center gap-2"><span class="text-emerald-600">✓</span> Guía de prompt
+                        engineering</div>
+                    <div class="flex items-center gap-2"><span class="text-emerald-600">✓</span> Actualizaciones de por
+                        vida</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-300/80 bg-[#f5f5f7] py-12 text-xs">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <div class="col-span-2 space-y-3">
+                    <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                        <span class="w-3.5 h-3.5 rounded-full bg-indigo-600 inline-block"></span>
+                        <span>alpacka.ai</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 font-sans leading-relaxed max-w-xs">
+                        Una biblioteca de prompts en Notion para gente que usa la IA todos los días y quiere resultados
+                        a la primera. Copiar, pegar, listo.
+                    </p>
+                    <div class="flex gap-2 text-[10px] text-slate-400">
+                        <span class="bg-slate-200 px-1.5 py-0.5 rounded">$10 pago único</span>
+                        <span class="bg-slate-200 px-1.5 py-0.5 rounded">Notion</span>
+                        <span class="bg-slate-200 px-1.5 py-0.5 rounded">+200 prompts</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="font-bold text-slate-800 uppercase text-[10px] tracking-wider mb-3">PRODUCTO</div>
+                    <ul class="space-y-2 text-[11px] text-slate-500 font-sans">
+                        <li><a href="#producto" class="hover:text-slate-800">Qué incluye</a></li>
+                        <li><a href="#como-funciona" class="hover:text-slate-800">Cómo funciona</a></li>
+                        <li><a href="#categorias" class="hover:text-slate-800">Categorías</a></li>
+                        <li><a href="#precio" class="hover:text-slate-800">Precio</a></li>
+                        <li><a href="#garantia" class="hover:text-slate-800">Garantía</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="font-bold text-slate-800 uppercase text-[10px] tracking-wider mb-3">RECURSOS</div>
+                    <ul class="space-y-2 text-[11px] text-slate-500 font-sans">
+                        <li><a href="#faq" class="hover:text-slate-800">Preguntas frecuentes</a></li>
+                        <li><a href="https://www.alpackaai.xyz/blog" class="hover:text-slate-800">Blog</a></li>
+                        <li><a href="https://www.alpackaai.xyz/prompts" class="hover:text-slate-800">Prompts</a></li>
+                        <li><a href="https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034"
+                                class="hover:text-slate-800">Comprar</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="font-bold text-slate-800 uppercase text-[10px] tracking-wider mb-3">LEGAL</div>
+                    <ul class="space-y-2 text-[11px] text-slate-500 font-sans">
+                        <li><a href="https://www.alpackaai.xyz/terms" class="hover:text-slate-800">Términos</a></li>
+                        <li><a href="https://www.alpackaai.xyz/privacy" class="hover:text-slate-800">Privacidad</a></li>
+                        <li><a href="mailto:estebanblancohernandez@gmail.com" class="hover:text-slate-800">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-slate-300/60 pt-6 flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-400 font-sans gap-2">
+                <div>© 2026 alpacka.ai. Sin afiliación con OpenAI, Anthropic, Google ni Notion.</div>
+                <div>alpackaai.xyz</div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
