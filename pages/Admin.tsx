@@ -175,6 +175,12 @@ const Admin: React.FC = () => {
                 >
                     Blog
                 </Link>
+                <Link
+                    to="/admin/suscriptores"
+                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
+                >
+                    Suscriptores
+                </Link>
             </div>
 
             {form ? (

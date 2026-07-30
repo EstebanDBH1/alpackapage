@@ -209,6 +209,12 @@ const AdminBlog: React.FC = () => {
                 <span className="rounded-full border border-accent bg-accent/10 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-accent">
                     Blog
                 </span>
+                <Link
+                    to="/admin/suscriptores"
+                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
+                >
+                    Suscriptores
+                </Link>
             </div>
 
             {form ? (

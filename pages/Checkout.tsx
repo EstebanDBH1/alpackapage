@@ -8,6 +8,7 @@ import AlpacaIcon from '../components/AlpacaIcon';
 
 const FEATURES = [
     'Acceso ilimitado a más de 500 prompts',
+    'Generador de prompts con IA — 10 al día',
     'Actualizaciones semanales',
     'Guarda tus prompts favoritos',
     'Cancela cuando quieras',
