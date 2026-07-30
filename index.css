@@ -125,12 +125,35 @@ details[open] .faq-chevron {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C8BEB5;
+  background: oklch(0.32 0.008 60);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A09690;
+  background: oklch(0.4 0.01 60);
+}
+
+/* Scrollbar sutil para áreas internas (cards de prompts) */
+.subtle-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.32 0.008 60) transparent;
+}
+
+.subtle-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.subtle-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.subtle-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.32 0.008 60);
+  border-radius: 9999px;
+}
+
+.subtle-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.4 0.01 60);
 }
 
 /* Custom Utilities */

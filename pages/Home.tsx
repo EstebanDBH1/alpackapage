@@ -102,6 +102,51 @@ Ejecuta estas 5 acciones: 1) Haz un diagnóstico honesto de mi situación con lo
   },
 ];
 
+const DEMO_PROMPT = `Adopta el rol de un media buyer senior que ha gestionado más de 2 millones de USD en publicidad digital y sabe exactamente por qué el 90% de los anuncios quema presupuesto sin vender. Tu misión es escribir los anuncios de mi producto. El problema es serio: cada día que mis campañas corren con un copy mediocre es dinero que se va directo a la basura, mientras mi competencia se lleva a mis clientes con anuncios que sí conectan. Respira hondo y trabaja en este problema paso a paso.
+
+Ejecuta estas 5 acciones: 1) Escribe 3 variantes de anuncio: una centrada en el dolor del cliente, una en la transformación y una con prueba social. 2) Para cada variante dame un hook de máximo 5 palabras que detenga el scroll. 3) Escribe el cuerpo de cada anuncio en máximo 50 palabras, sin relleno. 4) Cierra cada variante con un CTA directo y específico. 5) Dime cuál de las 3 lanzarías primero y por qué.
+
+#INFORMACIÓN SOBRE MÍ:
+- Mi producto o servicio: [INSERTAR PRODUCTO]
+- Mi cliente ideal: [INSERTAR CLIENTE]
+- Tono de mi marca: [INSERTAR TONO]
+- Plataforma donde anuncio: [INSERTAR PLATAFORMA]
+
+¡LO MÁS IMPORTANTE!: Estructura tu respuesta con las secciones: A, B, C, D, y E. Al final, dame una versión de 15 palabras de la mejor variante para usarla como anuncio de remarketing.`;
+
+const DemoPromptCard: React.FC = () => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(DEMO_PROMPT).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="mx-auto w-full max-w-xl rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
+      <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Marketing · Anuncio</span>
+        <button
+          onClick={handleCopy}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground transition hover:border-accent/50"
+        >
+          {copied ? <Check size={14} className="text-accent" /> : <Copy size={14} />}
+          {copied ? 'Copiado' : 'Copiar'}
+        </button>
+      </div>
+      <pre className="subtle-scrollbar max-h-80 overflow-y-auto whitespace-pre-wrap px-5 py-5 font-sans text-xs leading-relaxed text-foreground/90">
+        {DEMO_PROMPT}
+      </pre>
+      <div className="flex items-center gap-2 border-t border-border/60 px-5 py-3.5 text-xs text-muted-foreground">
+        <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
+        Listo para pegar en Claude, ChatGPT o Gemini
+      </div>
+    </div>
+  );
+};
+
 const FreePromptCard: React.FC<{ prompt: (typeof FREE_PROMPTS)[number] }> = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
 
@@ -122,7 +167,7 @@ const FreePromptCard: React.FC<{ prompt: (typeof FREE_PROMPTS)[number] }> = ({ p
       </div>
       <div className="flex flex-1 flex-col px-5 py-5">
         <h3 className="mb-3 text-base font-medium leading-snug text-foreground">{prompt.title}</h3>
-        <pre className="max-h-64 flex-1 overflow-y-auto whitespace-pre-wrap font-sans text-xs leading-relaxed text-muted-foreground">
+        <pre className="subtle-scrollbar max-h-64 flex-1 overflow-y-auto whitespace-pre-wrap pr-2 font-sans text-xs leading-relaxed text-muted-foreground">
           {prompt.content}
         </pre>
       </div>
@@ -226,6 +271,16 @@ const Home: React.FC = () => {
             <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
               Explora una colección de prompts, guías y recursos para trabajar más rápido y obtener mejores resultados.
             </p>
+
+            <div className="mt-9">
+              <Link
+                to="/prompts"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
+              >
+                Explorar prompts
+                <ArrowRight size={16} />
+              </Link>
+            </div>
           </section>
 
           {/* ============ MARQUEE DE COMPATIBILIDAD ============ */}
@@ -253,67 +308,62 @@ const Home: React.FC = () => {
 
           {/* ============ EL PROBLEMA ============ */}
           <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
-            <article className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
-              <div>
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-md border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground">
-                    <Zap size={14} className="text-muted-foreground" />
-                    01
-                  </span>
-                  <span className="rounded-md border border-border/50 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">El problema</span>
-                </div>
+            <article className="mx-auto max-w-2xl text-center">
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-md border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground">
+                  <Zap size={14} className="text-muted-foreground" />
+                  01
+                </span>
+                <span className="rounded-md border border-border/50 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">El problema</span>
+              </div>
 
-                <h2 className="text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
-                  Los resultados mediocres no son culpa de la IA. Son culpa del <em className="not-italic text-primary/90">prompt</em>.
-                </h2>
+              <h2 className="text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                Los resultados mediocres no son culpa de la IA. Son culpa del <em className="not-italic text-primary/90">prompt</em>.
+              </h2>
 
-                <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">
-                  La misma IA que hoy te da respuestas genéricas puede escribir tu marketing, enseñarte un idioma o construir tu web. Solo necesita las instrucciones correctas. Y eso es exactamente lo que te llevas: los prompts que ya funcionan, listos para copiar y pegar.
-                </p>
+              <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">
+                La misma IA que hoy te da respuestas genéricas puede escribir tu marketing, enseñarte un idioma o construir tu web. Solo necesita las instrucciones correctas. Y eso es exactamente lo que te llevas: los prompts que ya funcionan, listos para copiar y pegar.
+              </p>
 
-                <ul className="mt-6 space-y-2.5">
-                  <CheckItem>Prompts probados, no experimentos</CheckItem>
-                  <CheckItem>Resultados de experto desde el primer mensaje</CheckItem>
-                  <CheckItem>Sin cursos ni teoría: copiar, pegar y listo</CheckItem>
-                </ul>
+              <ul className="mx-auto mt-6 inline-flex flex-col items-start space-y-2.5 text-left">
+                <CheckItem>Prompts probados, no experimentos</CheckItem>
+                <CheckItem>Resultados de experto desde el primer mensaje</CheckItem>
+                <CheckItem>Sin cursos ni teoría: copiar, pegar y listo</CheckItem>
+              </ul>
 
-                <a href="#comprar" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90">
+              <div className="mt-8">
+                <a href="#comprar" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90">
                   Quiero el banco de prompts
                   <ArrowRight size={16} />
                 </a>
               </div>
-
-              <div>
-                <div className="relative">
-                  <div className="absolute -inset-8 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
-                  <div className="mx-auto w-full max-w-xl space-y-4">
-                    {/* Prompt malo */}
-                    <div className="rounded-2xl border border-border/70 bg-card p-5 opacity-70">
-                      <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-border text-muted-foreground">✕</span>
-                        Lo que escribe todo el mundo
-                      </div>
-                      <p className="text-sm text-muted-foreground">“Escríbeme un post para Instagram sobre mi negocio”</p>
-                      <p className="mt-3 border-t border-border/60 pt-3 text-xs italic text-muted-foreground/70">→ Resultado: genérico, robótico, inservible.</p>
-                    </div>
-
-                    {/* Prompt del banco */}
-                    <div className="rounded-2xl border border-accent/40 bg-card p-5 shadow-[0_0_40px_oklch(0.72_0.16_40_/_0.08)]">
-                      <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-accent">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-accent/50 text-accent">✓</span>
-                        Prompt del banco
-                      </div>
-                      <p className="text-sm leading-relaxed text-foreground/90">
-                        “Actúa como estratega de contenido con 10 años creando marcas en Instagram. Escribe un post para{' '}
-                        <span className="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU NEGOCIO]</span> usando la estructura hook–historia–giro–CTA, dirigido a{' '}
-                        <span className="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU CLIENTE]</span>…”
-                      </p>
-                      <p className="mt-3 border-t border-border/60 pt-3 text-xs italic text-muted-foreground">→ Resultado: un post que suena a ti y vende.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </article>
+          </section>
+
+          {/* ============ PROMPTS GRATIS DE MUESTRA ============ */}
+          <section id="prompts-gratis" className="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
+            <div className="mb-12 text-center md:mb-16">
+              <Pill>Pruébalos gratis</Pill>
+              <h2 className="mx-auto mt-6 max-w-3xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+                No te lo contamos: <em className="not-italic text-primary/90">cópialos ahora</em>.
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
+                Estos 3 prompts completos son tuyos, sin registro. Así es exactamente cada uno de los +1.000 que hay dentro del banco.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {FREE_PROMPTS.map((p) => (
+                <FreePromptCard key={p.id} prompt={p} />
+              ))}
+            </div>
+
+            <p className="mt-8 text-center text-sm text-muted-foreground">
+              ¿Te gustaron? Hay más de 1.000 como estos, organizados en +20 categorías.{' '}
+              <a href="#comprar" className="text-accent transition hover:opacity-80">
+                Desbloquéalos todos →
+              </a>
+            </p>
           </section>
 
           {/* ============ CATEGORÍAS ============ */}
@@ -379,63 +429,10 @@ const Home: React.FC = () => {
               <div className="md:order-1">
                 <div className="relative">
                   <div className="absolute -inset-8 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
-                  <div className="mx-auto w-full max-w-xl rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
-                    <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
-                      <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Marketing · Anuncio</span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
-                        <Copy size={14} />
-                        Copiar
-                      </span>
-                    </div>
-                    <div className="space-y-3 px-5 py-5 text-sm leading-relaxed text-foreground/90">
-                      <p>
-                        Actúa como un media buyer senior que ha gestionado más de 2M USD en publicidad. Escribe 3 variantes de anuncio para{' '}
-                        <span className="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU PRODUCTO]</span>:
-                      </p>
-                      <p className="text-muted-foreground">
-                        1. Una centrada en el dolor del cliente<br />
-                        2. Una centrada en la transformación<br />
-                        3. Una con prueba social
-                      </p>
-                      <p>
-                        Para cada variante incluye: hook de 5 palabras, cuerpo de máximo 50 y un CTA directo. Tono:{' '}
-                        <span className="rounded bg-secondary px-1.5 py-0.5 text-primary">[TU TONO]</span>.
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 border-t border-border/60 px-5 py-3.5 text-xs text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
-                      Listo para pegar en Claude, ChatGPT o Gemini
-                    </div>
-                  </div>
+                  <DemoPromptCard />
                 </div>
               </div>
             </article>
-          </section>
-
-          {/* ============ PROMPTS GRATIS DE MUESTRA ============ */}
-          <section id="prompts-gratis" className="mx-auto max-w-6xl px-4 pb-24 sm:px-8 md:pb-32">
-            <div className="mb-12 text-center md:mb-16">
-              <Pill>Pruébalos gratis</Pill>
-              <h2 className="mx-auto mt-6 max-w-3xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
-                No te lo contamos: <em className="not-italic text-primary/90">cópialos ahora</em>.
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-                Estos 3 prompts completos son tuyos, sin registro. Así es exactamente cada uno de los +1.000 que hay dentro del banco.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {FREE_PROMPTS.map((p) => (
-                <FreePromptCard key={p.id} prompt={p} />
-              ))}
-            </div>
-
-            <p className="mt-8 text-center text-sm text-muted-foreground">
-              ¿Te gustaron? Hay más de 1.000 como estos, organizados en +20 categorías.{' '}
-              <a href="#comprar" className="text-accent transition hover:opacity-80">
-                Desbloquéalos todos →
-              </a>
-            </p>
           </section>
 
           {/* ============ PRECIO / OFERTA ============ */}
