@@ -98,7 +98,7 @@ const FAQS = [
   },
   {
     question: '¿Cuánto cuesta y puedo cancelar?',
-    answer: 'La suscripción cuesta 4 USD al mes. Sin permanencia ni letra pequeña: puedes cancelar cuando quieras desde tu panel y mantienes el acceso hasta el final del período pagado.',
+    answer: 'La suscripción cuesta 7 USD al mes. Sin permanencia ni letra pequeña: puedes cancelar cuando quieras desde tu panel y mantienes el acceso hasta el final del período pagado.',
   },
   {
     question: '¿Se actualiza con nuevos prompts?',
@@ -277,7 +277,7 @@ const Home: React.FC = () => {
                 </ul>
 
                 <a href="#comprar" className="mt-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-primary/40 hover:bg-secondary">
-                  Empezar por 4 USD/mes
+                  Empezar por 7 USD/mes
                   <ArrowRight size={16} />
                 </a>
               </div>
@@ -355,7 +355,7 @@ const Home: React.FC = () => {
                   <ArrowRight size={16} />
                 </Link>
 
-                <p className="mt-4 text-xs text-muted-foreground">4 USD/mes · Acceso inmediato · Cancela cuando quieras</p>
+                <p className="mt-4 text-xs text-muted-foreground">7 USD/mes · Acceso inmediato · Cancela cuando quieras</p>
               </div>
             </div>
           </section>
@@ -385,10 +385,10 @@ const Home: React.FC = () => {
               Por el precio de un café, deja de improvisar prompts y empieza a obtener resultados de experto hoy mismo.
             </p>
             <a href="#comprar" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90">
-              Quiero mis +1.000 prompts por 4 USD/mes
+              Quiero mis +1.000 prompts por 7 USD/mes
               <ArrowRight size={16} />
             </a>
-            <p className="mt-4 text-xs text-muted-foreground">4 USD/mes · Acceso inmediato · Cancela cuando quieras</p>
+            <p className="mt-4 text-xs text-muted-foreground">7 USD/mes · Acceso inmediato · Cancela cuando quieras</p>
           </section>
         </main>
 

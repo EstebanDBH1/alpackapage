@@ -1,7 +1,7 @@
 import React from 'react';
 
 const steps = [
-  { num: "01", title: "Activa tu acceso", desc: "Suscríbete por $4/mes. Sin contratos ni letras pequeñas. Libertad total para cancelar cuando quieras.", emoji: "⚡", bg: '#faf5ff', accent: '#a855f7' },
+  { num: "01", title: "Activa tu acceso", desc: "Suscríbete por $7/mes. Sin contratos ni letras pequeñas. Libertad total para cancelar cuando quieras.", emoji: "⚡", bg: '#faf5ff', accent: '#a855f7' },
   { num: "02", title: "Encuentra la solución", desc: "Navega por una biblioteca curada de prompts de alto nivel, optimizados para los modelos de IA más potentes.", emoji: "🔍", bg: '#eff6ff', accent: '#3b82f6' },
   { num: "03", title: "Copia con precisión", desc: "Obtén con un clic la estructura exacta, parámetros técnicos y las instrucciones que otros ignoran.", emoji: "⌘", bg: '#f0fdf4', accent: '#22c55e' },
   { num: "04", title: "Domina la IA", desc: "Pégalo en ChatGPT, Claude o Gemini y mira cómo la IA entrega resultados profesionales al instante.", emoji: "🚀", bg: '#fff7ed', accent: '#f97316' },

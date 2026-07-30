@@ -59,7 +59,7 @@ const Hero: React.FC = () => {
       <div className="flex flex-col items-center gap-3 w-full max-w-sm mx-auto">
         <Link to="/pricing" className="w-full">
           <button className="w-full bg-[#ff3333] hover:bg-[#cc0000] text-white font-bold text-sm uppercase tracking-widest py-4 px-8 rounded-sm transition-colors duration-200">
-            Quiero acceso — $4/mes
+            Quiero acceso — $7/mes
           </button>
         </Link>
         <p className="text-[#ff3333] text-[11px] font-bold tracking-widest uppercase mt-2">

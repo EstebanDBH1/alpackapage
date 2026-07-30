@@ -376,7 +376,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                                 to="/pricing"
                                                 className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
                                             >
-                                                Desbloquear por 4 USD/mes
+                                                Desbloquear por 7 USD/mes
                                                 <ArrowRight size={14} />
                                             </Link>
                                             <Link
@@ -463,7 +463,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                 </p>
                                 <Link to="/pricing" className="block w-full">
                                     <button className="w-full rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-                                        Ver planes — 4 USD/mes
+                                        Ver planes — 7 USD/mes
                                     </button>
                                 </Link>
                             </div>

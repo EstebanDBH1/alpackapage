@@ -54,7 +54,13 @@
       "Skill(claude-in-chrome)",
       "WebFetch(domain:www.relume.ai)",
       "PowerShell(npx -y skills add https://github.com/greensock/gsap-skills)",
-      "PowerShell(Copy-Item *)"
+      "PowerShell(Copy-Item *)",
+      "Skill(claude-api)",
+      "PowerShell(supabase *)",
+      "PowerShell(claude mcp *)",
+      "mcp__paddle-live__search",
+      "mcp__paddle-live__execute",
+      "Bash(node *)"
     ]
   }
 }

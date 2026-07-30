@@ -32,7 +32,7 @@ const testimonials = [
     avatar: 'AB',
     avatarBg: '#222222',
     avatarColor: '#ffffff',
-    content: 'Gestiono el contenido de 4 marcas yo sola. Sin alpacka era imposible. Ahora entrego calendarios editoriales completos en una tarde. Los $4/mes son lo mejor que invierto.',
+    content: 'Gestiono el contenido de 4 marcas yo sola. Sin alpacka era imposible. Ahora entrego calendarios editoriales completos en una tarde. Los $7/mes son lo mejor que invierto.',
     metric: '4 marcas · 1 persona',
     metricBg: 'rgba(255, 255, 255, 0.05)',
     metricColor: '#cccccc',

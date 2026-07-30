@@ -4,6 +4,7 @@ import { Check, ArrowLeft, ChevronDown } from 'lucide-react';
 import type { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
 import { supabase } from '../lib/supabase';
 import { loadPaddle, onPaddleEvent, formatMoney } from '../lib/paddle';
+import AlpacaIcon from '../components/AlpacaIcon';
 
 const FEATURES = [
     'Acceso ilimitado a más de 500 prompts',
@@ -171,9 +172,8 @@ const Checkout: React.FC = () => {
                     className="group mb-10 inline-flex items-center gap-3 text-foreground transition-opacity hover:opacity-80"
                 >
                     <ArrowLeft size={16} className="text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
-                    <span className="flex items-center gap-2">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-xs font-medium">A</span>
-                        <span className="text-sm font-medium">Alpacka.ai</span>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
+                        <AlpacaIcon variant="light" className="h-5 w-auto" />
                     </span>
                 </Link>
 

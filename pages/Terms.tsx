@@ -71,7 +71,7 @@ const Terms: React.FC = () => {
             , nuestro <strong className="font-medium text-foreground">Vendedor Autorizado (Merchant of Record)</strong>. Paddle es responsable de la facturación, el cobro de impuestos aplicables, y la gestión de disputas y reembolsos.
           </p>
           <p>
-            <strong className="font-medium text-foreground">Precio:</strong> La suscripción tiene un coste de <strong className="font-medium text-foreground">$4 USD / mes</strong>, con renovación automática al inicio de cada período. Los precios no incluyen impuestos locales que Paddle pueda aplicar según tu ubicación.
+            <strong className="font-medium text-foreground">Precio:</strong> La suscripción tiene un coste de <strong className="font-medium text-foreground">$7 USD / mes</strong>, con renovación automática al inicio de cada período. Los precios no incluyen impuestos locales que Paddle pueda aplicar según tu ubicación.
           </p>
           <p>
             <strong className="font-medium text-foreground">Cancelación:</strong> Puedes cancelar en cualquier momento desde el panel de tu cuenta o a través del soporte de Paddle. El acceso al contenido premium se mantiene hasta el final del período de facturación en curso, sin cargos adicionales.

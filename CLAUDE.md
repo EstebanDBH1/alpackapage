@@ -28,6 +28,7 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 - `/login` — Google OAuth (supports `?redirect=/path`)
 - `/dashboard` — Subscription management
 - `/guardados` — Saved prompts
+- `/generador` — AI prompt generator (subscribers only; calls the `generate-prompt` Edge Function)
 - `/pricing` — Single-plan pricing ($4/month via Paddle)
 - `/payment-success` — Post-checkout confirmation
 - `/ebook` — Standalone sales page for the Notion prompt library ($10 one-time via Hotmart)
@@ -45,6 +46,8 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 **Subscription gating:** Premium prompt content is gated by subscription status. `subscriptions` table tracks `subscription_id`, `status` (`active`, `trialing`, `cancelled`, `past_due`, `paused`), and `paddle_customer_id`. The Dashboard page reads subscription state from Supabase.
 
 **Paddle integration:** Checkout SDK is loaded dynamically. Opens as an overlay with user email pre-filled and Supabase user ID in custom data. Success redirects to `/payment-success`. The `supabase/functions/create-portal-session` Edge Function (Deno) handles sensitive Paddle API calls server-side.
+
+**Prompt generator:** `supabase/functions/generate-prompt` (Deno) powers `/generador`. It verifies the JWT, requires an `active`/`trialing` subscription, enforces a 10-generations-per-day limit per user (UTC day; atomic upsert via the `increment_generator_usage` RPC on the `generator_usage` table, refunded on failure via `decrement_generator_usage`), and calls the Gemini API (`GEMINI_API_KEY` secret; model `gemini-3.6-flash`, override with `GEMINI_MODEL`; limit override with `GENERATOR_DAILY_LIMIT`). Users can SELECT their own `generator_usage` row (RLS) so the UI shows the remaining count; only the service role can write. CORS is restricted to the production domains + `localhost:3000`.
 
 **Data fetching:** Supabase client is initialized in `lib/`. Public reads follow a shared pattern — lightweight payloads + memory/sessionStorage cache with stale-while-revalidate: `lib/promptsList.ts` (prompt catalog via `get_prompts_list()` RPC, no `content` column; shared by `/prompts` and the Home marquee) and `lib/blogList.ts` (blog list without `content` + per-slug post cache). Full prompt content is only fetched per-prompt via `get_prompt_detail()` (subscription-gated). Admin pages intentionally do NOT cache (fresh data while editing). Auth checks use `getSession()` (local read), not `getUser()` (network round-trip). The older `get_public_prompts()` RPC still exists in the DB but the frontend no longer calls it. The `saved_prompts` table joins users to bookmarked prompts.
 

@@ -66,6 +66,9 @@ const Dashboard: React.FC = () => {
     };
 
     const isActive = subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing';
+    // Precio lanzamiento ($4) para suscriptores anclados; $7 para el resto
+    const GRANDFATHERED_PRICE_ID = 'pri_01kjneczae0gfxdwde1q1h0app';
+    const monthlyPrice = subscription?.price_id === GRANDFATHERED_PRICE_ID ? '$4' : '$7';
     const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario';
     const initials = (user?.user_metadata?.full_name || user?.email || 'U')
         .split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase();
@@ -218,7 +221,7 @@ const Dashboard: React.FC = () => {
                                 </div>
                                 {isActive && (
                                     <div className="flex flex-shrink-0 items-baseline gap-1 rounded-xl border border-border/60 bg-secondary px-4 py-2">
-                                        <span className="text-2xl font-medium leading-none text-foreground">$4</span>
+                                        <span className="text-2xl font-medium leading-none text-foreground">{monthlyPrice}</span>
                                         <span className="font-mono text-[10px] text-muted-foreground">/mes</span>
                                     </div>
                                 )}

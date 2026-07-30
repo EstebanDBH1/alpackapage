@@ -14,7 +14,7 @@ function getMeta(pathname: string): { title: string; description: string } {
   if (pathname.startsWith('/pricing')) {
     return {
       title: 'Precios | alpacka.ai',
-      description: 'Acceso completo a 300+ prompts por $4 al mes. Sin contrato.',
+      description: 'Acceso completo a 300+ prompts por $7 al mes. Sin contrato.',
     };
   }
   if (pathname.startsWith('/dashboard')) {

@@ -293,7 +293,7 @@ const Prompts: React.FC = () => {
                                     </div>
 
                                     <h2 className="mt-6 mb-4 text-balance text-2xl font-medium leading-tight tracking-tight text-foreground sm:text-3xl">
-                                        Acceso total por <em className="not-italic text-primary/90">4 USD/mes</em>
+                                        Acceso total por <em className="not-italic text-primary/90">7 USD/mes</em>
                                     </h2>
 
                                     <p className="mx-auto mb-8 max-w-md text-sm leading-relaxed text-muted-foreground">
