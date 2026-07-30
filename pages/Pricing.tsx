@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 
 const FEATURES = [
     'Acceso ilimitado a más de 500 prompts',
+    'Generador de prompts con IA — hasta 10 prompts al día',
     'Actualizaciones constantes con los últimos modelos',
     'Búsqueda técnica avanzada por categoría',
     'Guarda tus prompts favoritos',
@@ -13,7 +14,7 @@ const FEATURES = [
 ];
 
 const FAQ_DATA = [
-    { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $7 USD al mes, desbloqueas el acceso total a nuestra librería. No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
+    { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $7 USD al mes, desbloqueas el acceso total a nuestra librería y el generador de prompts con IA (hasta 10 prompts a medida al día). No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
     { question: '¿Realmente funcionan estos prompts?', answer: 'Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento.' },
     { question: '¿Con qué modelos de IA puedo usarlos?', answer: 'Están diseñados para brillar en los modelos más potentes como GPT-5, Claude y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E.' },
     { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado.' },

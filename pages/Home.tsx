@@ -342,6 +342,7 @@ const Home: React.FC = () => {
                 <ul className="mx-auto mt-8 max-w-md space-y-3 text-left">
                   <CheckItem><span className="text-foreground">+1.000 prompts probados</span> organizados en +10 categorías</CheckItem>
                   <CheckItem>Funciona con <span className="text-foreground">Claude, ChatGPT y Gemini</span></CheckItem>
+                  <CheckItem><span className="text-foreground">Generador de prompts con IA</span> — hasta 10 prompts a medida al día</CheckItem>
                   <CheckItem><span className="text-foreground">Acceso inmediato</span> después del pago</CheckItem>
                   <CheckItem>Prompts nuevos cada semana <span className="text-foreground">sin coste extra</span></CheckItem>
                   <CheckItem>Cancela cuando quieras. <span className="text-foreground">Sin permanencia.</span></CheckItem>
