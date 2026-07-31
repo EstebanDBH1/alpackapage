@@ -25,6 +25,7 @@ const AdminSubscribers = React.lazy(() => import('./pages/AdminSubscribers'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Checkout = React.lazy(() => import('./pages/Checkout'));
 const Generator = React.lazy(() => import('./pages/Generator'));
+const BankPrompts = React.lazy(() => import('./pages/BankPrompts'));
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -73,9 +74,10 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <div key={transitionKey} className="animate-fade-in">{children}</div>;
 };
 
-// Rutas autocontenidas (sin Navbar/Footer): la home y el ebook traen su propio
-// header/footer; el checkout es una página de pago enfocada, estilo Stripe.
-const STANDALONE_ROUTES = ['/', '/ebook', '/checkout'];
+// Rutas autocontenidas (sin Navbar/Footer): la home, el ebook y /bank-prompts
+// traen su propio header/footer; el checkout es una página de pago enfocada,
+// estilo Stripe.
+const STANDALONE_ROUTES = ['/', '/ebook', '/checkout', '/bank-prompts'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
@@ -118,6 +120,7 @@ const App: React.FC = () => {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/ebook" element={<Ebook />} />
+          <Route path="/bank-prompts" element={<BankPrompts />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/skills" element={<Skills />} />
           <Route path="/blog" element={<Blog />} />
