@@ -117,9 +117,9 @@ const Blob: React.FC<{ color: string; size: number; top: string; left: string; o
   }} />
 );
 
-/* ─── Feature card (card pastel + ícono/etiqueta de color) ─── */
-const FeatureCard: React.FC<{ icon: React.ReactNode; bg: string; title: string; desc: string; tag: string; tagColor: string }> = ({
-  icon, bg, title, desc, tag, tagColor
+/* ─── Feature card (card pastel + ícono de color) ─── */
+const FeatureCard: React.FC<{ icon: React.ReactNode; bg: string; title: string; desc: string }> = ({
+  icon, bg, title, desc
 }) => (
   <div style={{
     backgroundColor: bg,
@@ -142,18 +142,6 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; bg: string; title: string; 
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
     }}>
       {icon}
-    </div>
-    <div style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 5,
-      backgroundColor: 'rgba(255,255,255,0.65)',
-      borderRadius: 100,
-      padding: '3px 10px',
-      marginBottom: 12,
-    }}>
-      <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: tagColor }} />
-      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: tagColor }}>{tag}</span>
     </div>
     <p style={{ color: TEXT, fontWeight: 700, fontSize: 16, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
     <p style={{ color: TEXT_MED, fontSize: 13, lineHeight: 1.7 }}>{desc}</p>
@@ -581,64 +569,48 @@ const Ebook: React.FC = () => {
               <FeatureCard
                 bg="#fdf4ff"
                 icon={<Zap size={22} style={{ color: '#a855f7' }} />}
-                tag="42 prompts"
-                tagColor="#a855f7"
                 title="Productividad"
                 desc="Planificación semanal, priorización, bloques de foco. Los lunes que tardabas 2 horas organizándote, ahora son 15 minutos."
               />
               <FeatureCard
                 bg="#fff7ed"
                 icon={<Target size={22} style={{ color: '#f97316' }} />}
-                tag="38 prompts"
-                tagColor="#f97316"
                 title="Copywriting"
                 desc="Posts, artículos, guiones, hilos. Sin el 'Claro, con gusto te ayudo' de siempre. Directo al texto que publicas."
               />
               <FeatureCard
                 bg="#f0fdf4"
                 icon={<TrendingUp size={22} style={{ color: '#22c55e' }} />}
-                tag="35 prompts"
-                tagColor="#22c55e"
                 title="Marketing y Ventas"
                 desc="Estrategias de lanzamiento, copy de ads, análisis de competencia. Para cuando necesitas resultados esta semana."
               />
               <FeatureCard
                 bg="#eff6ff"
                 icon={<BookOpen size={22} style={{ color: '#3b82f6' }} />}
-                tag="29 prompts"
-                tagColor="#3b82f6"
                 title="Comunicación"
                 desc="Emails difíciles, negociaciones, propuestas, feedbacks incómodos. Para cuando importa cómo suenas."
               />
               <FeatureCard
                 bg="#fff1f2"
                 icon={<Layers size={22} style={{ color: '#f43f5e' }} />}
-                tag="27 prompts"
-                tagColor="#f43f5e"
                 title="Creatividad e Ideas"
                 desc="Brainstorming, conceptos, nombres, ideas de producto. Cuando llevas 20 minutos mirando la pantalla en blanco."
               />
               <FeatureCard
                 bg="#fefce8"
                 icon={<Star size={22} style={{ color: '#eab308' }} />}
-                tag="22 prompts"
-                tagColor="#eab308"
                 title="Email Profesional"
                 desc="Seguimientos, emails en frío, re-activaciones. Los que sí consiguen respuesta."
               />
               <FeatureCard
                 bg="#f0fdfa"
                 icon={<Gift size={22} style={{ color: '#14b8a6' }} />}
-                tag="18 prompts"
-                tagColor="#14b8a6"
                 title="Plantillas Listas"
                 desc="Los más usados, ya armados. Sin tener que adaptar nada. Copia, pega los corchetes y ya."
               />
               <FeatureCard
                 bg="#faf5ff"
                 icon={<Sparkles size={22} style={{ color: '#8b5cf6' }} />}
-                tag="incluido"
-                tagColor="#8b5cf6"
                 title="Prompt Engineering"
                 desc="Los principios detrás de cada prompt. Para que puedas crear los tuyos cuando ninguno encaje exactamente."
               />
@@ -788,7 +760,7 @@ const Ebook: React.FC = () => {
                   bg: '#f0f0ff',
                   border: '#c7d2fe',
                   accent: '#6366f1',
-                  title: 'Biblioteca de +200 Prompts en Notion',
+                  title: 'Biblioteca de +1.000 Prompts en Notion',
                   desc: 'Acceso completo al espacio. Filtros por categoría, búsqueda por caso de uso, y cada prompt listo para copiar en un clic.',
                   value: 'El acceso principal',
                 },
@@ -983,7 +955,7 @@ const Ebook: React.FC = () => {
 
               <div className="space-y-3.5 mb-10 text-left">
                 {[
-                  '+200 prompts en Notion, listos para usar hoy',
+                  '+1.000 prompts en Notion, listos para usar hoy',
                   'ChatGPT, Gemini, Claude y cualquier IA que uses',
                   '50 prompts adicionales por nicho específico',
                   'Guía de prompt engineering incluida',
