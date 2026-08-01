@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Check, X, Zap, Shield, Mail, Lock, ArrowRight, Copy,
-  Star, Clock, ChevronRight, LayoutGrid, Search, RefreshCw, Infinity as InfinityIcon,
+  Check, Zap, Shield, Mail, Lock, ArrowRight, Copy,
+  Star, Clock, LayoutGrid, Search, RefreshCw, Infinity as InfinityIcon,
 } from 'lucide-react';
 import AlpacaIcon from '../components/AlpacaIcon';
+import {
+  BG, BG_WARM, BG_INK, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
+  useEuclidFont, LandingStyles, Eyebrow, H2, P, Row, Cta, HoverCard,
+} from '../components/landingKit';
 
 /* ══════════════════════════════════════════════════════════════
    /bank-prompts — Landing autocontenida (ajena a la app).
@@ -14,115 +18,10 @@ import AlpacaIcon from '../components/AlpacaIcon';
 /* ⚠️ TODO: reemplazar por el enlace real de pago (Hotmart/Stripe/…) */
 const BUY_URL = '#comprar';
 
-/* ─── Paleta ─── */
-const BG        = '#ffffff';
-const BG_WARM   = '#f8f8f6';
-const BG_INK    = '#0e0e10';
-const TEXT      = '#15151a';
-const TEXT_MED  = '#5c5c66';
-const TEXT_DIM  = '#9a9aa3';
-const BORDER    = '#e7e7e2';
-const ACCENT    = '#f5324f';   // rojo del titular
-const YELLOW    = '#ffc93e';   // botón de compra
-const GREEN     = '#16a34a';
-
-const FONT = '"Euclid Circular A", "Euclid Circular B", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-
-/* ─── Bloque de texto reutilizable ─── */
-const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; bg?: string; border?: string }> = ({
-  children, color = TEXT_MED, bg = BG_WARM, border = BORDER,
-}) => (
-  <div
-    className="inline-flex items-center gap-2 rounded-full"
-    style={{ backgroundColor: bg, border: `1px solid ${border}`, padding: '5px 13px', marginBottom: 18 }}
-  >
-    <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: color, flexShrink: 0 }} />
-    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color }}>
-      {children}
-    </span>
-  </div>
-);
-
-const H2: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h2
-    style={{
-      fontWeight: 600,
-      fontSize: 'clamp(1.55rem, 3vw, 2.1rem)',
-      lineHeight: 1.2,
-      letterSpacing: '-0.025em',
-      color: TEXT,
-      marginBottom: 18,
-    }}
-  >
-    {children}
-  </h2>
-);
-
-const P: React.FC<{ children: React.ReactNode; dim?: boolean }> = ({ children, dim }) => (
-  <p style={{ color: dim ? TEXT_DIM : TEXT_MED, fontSize: 16, lineHeight: 1.8, marginBottom: 12 }}>{children}</p>
-);
-
-/* Fila con icono ✓ / ✕ / 👉 */
-const Row: React.FC<{ kind: 'yes' | 'no' | 'point'; children: React.ReactNode }> = ({ kind, children }) => {
-  const map = {
-    yes:   { bg: '#eefbf2', bd: '#c3ecd1', fg: GREEN,   icon: <Check size={11} strokeWidth={3.2} /> },
-    no:    { bg: '#fef1f1', bd: '#fbcfcf', fg: '#e0463f', icon: <X size={11} strokeWidth={3.2} /> },
-    point: { bg: '#fff7e8', bd: '#fbe3b0', fg: '#c98200', icon: <ChevronRight size={11} strokeWidth={3.2} /> },
-  }[kind];
-
-  return (
-    <div className="flex items-start gap-3" style={{ padding: '9px 0' }}>
-      <span
-        style={{
-          width: 20, height: 20, borderRadius: 7, flexShrink: 0, marginTop: 1,
-          backgroundColor: map.bg, border: `1px solid ${map.bd}`, color: map.fg,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}
-      >
-        {map.icon}
-      </span>
-      <span style={{ color: TEXT_MED, fontSize: 15.5, lineHeight: 1.6 }}>{children}</span>
-    </div>
-  );
-};
-
-/* ─── Botón de compra ─── */
+/* ─── Botón de compra (usa el CTA del kit con la URL de pago) ─── */
 const BuyButton: React.FC<{ full?: boolean; label?: string; size?: 'sm' | 'md' | 'lg' }> = ({
   full, label = 'Obtenerlo ahora', size = 'md',
-}) => {
-  const pad = size === 'lg' ? '17px 30px' : size === 'sm' ? '9px 18px' : '14px 26px';
-  const fs  = size === 'lg' ? 16.5 : size === 'sm' ? 13.5 : 15;
-  return (
-    <a
-      href={BUY_URL}
-      style={{
-        display: full ? 'flex' : 'inline-flex',
-        width: full ? '100%' : undefined,
-        alignItems: 'center', justifyContent: 'center', gap: 9,
-        backgroundColor: YELLOW, color: '#1a1500',
-        fontWeight: 600, fontSize: fs, padding: pad, borderRadius: 12,
-        textDecoration: 'none', whiteSpace: 'nowrap',
-        boxShadow: '0 6px 20px rgba(255,201,62,0.38)',
-        transition: 'transform .15s, box-shadow .15s, filter .15s',
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = 'translateY(-2px)';
-        el.style.filter = 'brightness(1.04)';
-        el.style.boxShadow = '0 10px 28px rgba(255,201,62,0.5)';
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = 'translateY(0)';
-        el.style.filter = 'none';
-        el.style.boxShadow = '0 6px 20px rgba(255,201,62,0.38)';
-      }}
-    >
-      {label}
-      <ArrowRight size={size === 'sm' ? 14 : 16} />
-    </a>
-  );
-};
+}) => <Cta href={BUY_URL} label={label} full={full} size={size} />;
 
 /* ─── Categorías del pack ─── */
 const categorias = [
@@ -139,17 +38,7 @@ const categorias = [
 const BankPrompts: React.FC = () => {
   const [showBar, setShowBar] = useState(false);
 
-  /* Euclid Circular no está en Google Fonts: se carga solo en esta ruta. */
-  useEffect(() => {
-    const id = 'euclid-circular-font';
-    if (!document.getElementById(id)) {
-      const link = document.createElement('link');
-      link.id = id;
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.cdnfonts.com/css/euclid-circular-a';
-      document.head.appendChild(link);
-    }
-  }, []);
+  useEuclidFont();
 
   /* Barra de compra fija en móvil a partir del primer scroll */
   useEffect(() => {
@@ -161,17 +50,7 @@ const BankPrompts: React.FC = () => {
 
   return (
     <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
-      <style>{`
-        .bp-scope, .bp-scope * { font-family: ${FONT}; }
-        .bp-scope ::selection { background: ${YELLOW}; color: #1a1500; }
-        @keyframes bpGlow {
-          0%,100% { opacity: .55; transform: scale(1); }
-          50%     { opacity: .85; transform: scale(1.06); }
-        }
-        .bp-glow { animation: bpGlow 7s ease-in-out infinite; }
-        @keyframes bpUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .bp-up { animation: bpUp .5s ease-out both; }
-      `}</style>
+      <LandingStyles />
 
       {/* ══════════ HEADER ══════════ */}
       <header
@@ -381,31 +260,13 @@ const BankPrompts: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
                 {categorias.map(c => (
-                  <div
-                    key={c.title}
-                    style={{
-                      backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 16,
-                      padding: '20px 20px 18px', transition: 'transform .15s, box-shadow .15s, border-color .15s',
-                    }}
-                    onMouseEnter={e => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.transform = 'translateY(-2px)';
-                      el.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
-                      el.style.borderColor = '#d8d8d2';
-                    }}
-                    onMouseLeave={e => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.transform = 'translateY(0)';
-                      el.style.boxShadow = 'none';
-                      el.style.borderColor = BORDER;
-                    }}
-                  >
+                  <HoverCard key={c.title}>
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <span style={{ fontSize: 19, lineHeight: 1 }}>{c.emoji}</span>
                       <span style={{ fontWeight: 600, fontSize: 15.5, color: TEXT, letterSpacing: '-0.01em' }}>{c.title}</span>
                     </div>
                     <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.65 }}>{c.desc}</p>
-                  </div>
+                  </HoverCard>
                 ))}
               </div>
             </section>

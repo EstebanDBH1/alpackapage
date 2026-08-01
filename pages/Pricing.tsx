@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Lock, Plus, Shield, Sparkles, Wand2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
 
 const FEATURES = [
-    'Acceso ilimitado a más de 500 prompts',
+    'Acceso ilimitado a más de 1.000 prompts',
     'Generador de prompts con IA — hasta 10 prompts al día',
     'Actualizaciones constantes con los últimos modelos',
     'Búsqueda técnica avanzada por categoría',
@@ -22,11 +26,19 @@ const FAQ_DATA = [
     { question: '¿Puedo sugerir un prompt que no esté?', answer: '¡Nos encantaría! Aunque nuestra curaduría es interna para mantener la calidad premium, escuchamos a nuestros suscriptores. Si necesitas un prompt específico, escríbenos y nuestro equipo lo diseñará para la próxima actualización.' },
 ];
 
+const TRUST = [
+    { icon: <Sparkles size={18} style={{ color: '#c98200' }} />, bg: '#fff7e8', bd: '#fbe3b0', title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.' },
+    { icon: <Wand2 size={18} style={{ color: '#8b5cf6' }} />,   bg: '#f7f2ff', bd: '#e2d5fb', title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.' },
+    { icon: <Lock size={18} style={{ color: GREEN }} />,        bg: '#eefbf2', bd: '#c3ecd1', title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.' },
+];
+
 const Pricing: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    useEuclidFont();
 
     useEffect(() => {
         const checkUser = async () => {
@@ -56,124 +68,175 @@ const Pricing: React.FC = () => {
     };
 
     return (
-        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
 
-            <main className="relative mx-auto max-w-3xl px-4 py-16 sm:px-8 md:py-20">
+            <main className="mx-auto max-w-3xl px-5 sm:px-8 py-14 md:py-18">
 
                 {/* ── Hero ─────────────────────────────────────────────── */}
-                <div className="mb-14 text-center">
-                    <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
-                        <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
-                        <span>Membresía Premium</span>
+                <div className="mb-10 text-center">
+                    <div
+                        className="inline-flex items-center gap-2 rounded-full"
+                        style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 18 }}
+                    >
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
+                        <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                            Membresía premium
+                        </span>
                     </div>
-                    <h1 className="mx-auto mt-6 max-w-2xl text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
-                        Un plan. <em className="not-italic text-primary/90">Acceso total.</em>
+
+                    <h1
+                        style={{
+                            fontWeight: 600,
+                            fontSize: 'clamp(1.9rem, 4vw, 2.8rem)',
+                            lineHeight: 1.1,
+                            letterSpacing: '-0.035em',
+                            marginBottom: 14,
+                        }}
+                    >
+                        Un plan. <span style={{ color: ACCENT }}>Acceso total.</span>
                     </h1>
-                    <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-                        Desbloquea todo el banco de prompts por lo que cuesta un café al mes.
+                    <p style={{ color: TEXT_MED, fontSize: 16.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
+                        Desbloquea todo el banco de prompts y el generador con IA por lo que cuesta un café al mes.
                     </p>
                 </div>
 
-                {/* ── Pricing card ─────────────────────────────────────── */}
-                <div className="relative mx-auto mb-20 max-w-xl">
-                    <div className="absolute -inset-10 -z-10 rounded-full bg-accent/5 blur-3xl"></div>
+                {/* ── Card de precio ───────────────────────────────────── */}
+                <div className="mx-auto mb-16" style={{ maxWidth: 560 }}>
+                    <div
+                        style={{
+                            border: `1px solid ${BORDER}`, borderRadius: 22, overflow: 'hidden',
+                            backgroundColor: BG, boxShadow: '0 14px 44px rgba(0,0,0,0.06)',
+                        }}
+                    >
+                        <div style={{ padding: '30px 28px' }}>
+                            <div
+                                className="inline-flex items-center gap-2 rounded-full"
+                                style={{ backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', padding: '5px 13px', marginBottom: 18 }}
+                            >
+                                <Sparkles size={11} style={{ color: '#c98200' }} />
+                                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#a86a00' }}>
+                                    Membresía pro
+                                </span>
+                            </div>
 
-                    <div className="rounded-3xl border border-primary/30 bg-card p-8 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)] sm:p-12">
-                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-accent/40 bg-secondary px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-accent">
-                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
-                            <span>Membresía Pro</span>
+                            <div className="flex items-end gap-2.5 mb-1">
+                                <span style={{ fontWeight: 600, fontSize: 52, lineHeight: 1, letterSpacing: '-0.045em', color: TEXT }}>7 USD</span>
+                                <span style={{ fontSize: 16, color: TEXT_MED, paddingBottom: 6 }}>/ mes</span>
+                            </div>
+                            <p style={{ color: TEXT_DIM, fontSize: 13.5, marginBottom: 24 }}>
+                                Facturación mensual · cancela cuando quieras, sin dramas.
+                            </p>
+
+                            <div className="flex flex-col gap-2.5 mb-8">
+                                {FEATURES.map(feature => (
+                                    <div key={feature} className="flex items-start gap-2.5">
+                                        <Check size={14} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
+                                        <span style={{ fontSize: 14.5, color: TEXT_MED, lineHeight: 1.55 }}>{feature}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={handleJoinClick}
+                                disabled={isSubscribed}
+                                style={{
+                                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                                    backgroundColor: isSubscribed ? BG_WARM : YELLOW,
+                                    border: isSubscribed ? `1px solid ${BORDER}` : 'none',
+                                    color: isSubscribed ? TEXT_MED : '#1a1500',
+                                    fontWeight: 600, fontSize: 16, padding: '16px 26px', borderRadius: 12,
+                                    cursor: isSubscribed ? 'default' : 'pointer',
+                                    boxShadow: isSubscribed ? 'none' : '0 6px 20px rgba(255,201,62,0.38)',
+                                }}
+                            >
+                                {isSubscribed ? 'Plan actual' : (user ? 'Suscribirme ahora' : 'Unirme al banco')}
+                            </button>
                         </div>
 
-                        <div className="mt-6 flex items-baseline justify-center gap-2">
-                            <span className="text-6xl font-medium text-foreground sm:text-7xl">7</span>
-                            <span className="text-2xl text-muted-foreground">USD/mes</span>
-                        </div>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                            Facturación mensual · cancela cuando quieras, sin dramas.
-                        </p>
-
-                        {/* Features */}
-                        <ul className="mx-auto mt-8 max-w-md space-y-3 text-left">
-                            {FEATURES.map(feature => (
-                                <li key={feature} className="flex items-center gap-3 text-sm text-foreground/90">
-                                    <Check size={16} strokeWidth={2.5} className="shrink-0 text-accent" />
-                                    <span>{feature}</span>
-                                </li>
-                            ))}
-                        </ul>
-
-                        {/* CTA */}
-                        <button
-                            onClick={handleJoinClick}
-                            disabled={isSubscribed}
-                            className={`mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-medium transition ${
-                                isSubscribed
-                                    ? 'cursor-default border border-border text-muted-foreground'
-                                    : 'bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] hover:opacity-90'
-                            }`}
+                        <div
+                            className="flex items-center justify-center gap-2"
+                            style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, padding: '13px 26px' }}
                         >
-                            {isSubscribed
-                                ? 'Plan Actual'
-                                : (user ? 'Suscribirse ahora' : 'Unirse al banco')}
-                        </button>
-
-                        {/* Secure note */}
-                        <div className="mt-5 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                            <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                            Pago seguro vía Paddle · SSL 256-bit
+                            <Shield size={13} style={{ color: TEXT_DIM }} />
+                            <span style={{ fontSize: 12.5, color: TEXT_MED }}>Pago seguro vía Paddle · SSL 256-bit</span>
                         </div>
                     </div>
                 </div>
 
-                {/* ── Trust props ──────────────────────────────────────── */}
-                <div className="mb-20 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    {[
-                        { title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.' },
-                        { title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.' },
-                        { title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.' },
-                    ].map(({ title, desc }) => (
-                        <div key={title} className="rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/40">
-                            <h4 className="text-base font-medium text-foreground">{title}</h4>
-                            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+                {/* ── Garantías ────────────────────────────────────────── */}
+                <div className="mb-16 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {TRUST.map(t => (
+                        <div key={t.title} style={{ backgroundColor: t.bg, border: `1px solid ${t.bd}`, borderRadius: 18, padding: '22px 20px' }}>
+                            <div
+                                style={{
+                                    width: 40, height: 40, borderRadius: 13, marginBottom: 14,
+                                    backgroundColor: 'rgba(255,255,255,0.75)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                }}
+                            >
+                                {t.icon}
+                            </div>
+                            <p style={{ fontWeight: 600, fontSize: 15, color: TEXT, marginBottom: 6, letterSpacing: '-0.01em' }}>{t.title}</p>
+                            <p style={{ color: TEXT_MED, fontSize: 13.5, lineHeight: 1.65 }}>{t.desc}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* ── FAQ ──────────────────────────────────────────────── */}
                 <div>
-                    <div className="mb-10 text-center">
-                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
-                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
-                            <span>Preguntas frecuentes</span>
+                    <div className="mb-8 text-center">
+                        <div
+                            className="inline-flex items-center gap-2 rounded-full"
+                            style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 18 }}
+                        >
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: TEXT_MED }} />
+                            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                                Preguntas frecuentes
+                            </span>
                         </div>
-                        <h2 className="mt-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl">
+                        <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.55rem, 3vw, 2.1rem)', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
                             Todo lo que necesitas saber.
                         </h2>
                     </div>
 
-                    <div className="space-y-3">
+                    <div style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18, overflow: 'hidden' }}>
                         {FAQ_DATA.map((item, index) => {
                             const open = openIndex === index;
+                            const last = index === FAQ_DATA.length - 1;
                             return (
-                                <div key={index} className="rounded-2xl border border-border/70 bg-card px-5">
+                                <div key={index} style={{ borderBottom: last ? 'none' : `1px solid ${BORDER}` }}>
                                     <button
-                                        className="flex w-full items-center justify-between gap-4 py-4 text-left focus:outline-none"
                                         onClick={() => setOpenIndex(open ? null : index)}
+                                        style={{
+                                            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                            gap: 16, padding: '17px 20px', background: 'none', border: 'none',
+                                            cursor: 'pointer', textAlign: 'left',
+                                        }}
                                     >
-                                        <span className="text-sm font-medium text-foreground">
-                                            {item.question}
-                                        </span>
-                                        <span className={`shrink-0 text-lg leading-none text-muted-foreground transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>
-                                            +
-                                        </span>
+                                        <span style={{ fontSize: 15, fontWeight: 500, color: TEXT, lineHeight: 1.5 }}>{item.question}</span>
+                                        <Plus
+                                            size={16}
+                                            style={{
+                                                color: TEXT_DIM, flexShrink: 0,
+                                                transition: 'transform .25s',
+                                                transform: open ? 'rotate(45deg)' : 'none',
+                                            }}
+                                        />
                                     </button>
-                                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${open ? 'max-h-96 opacity-100 pb-5' : 'max-h-0 opacity-0'}`}>
-                                        <p className="text-sm leading-relaxed text-muted-foreground">
-                                            {item.answer}
-                                        </p>
+                                    <div
+                                        style={{
+                                            display: 'grid',
+                                            gridTemplateRows: open ? '1fr' : '0fr',
+                                            transition: 'grid-template-rows .25s ease',
+                                        }}
+                                    >
+                                        <div style={{ overflow: 'hidden' }}>
+                                            <p style={{ padding: '0 20px 18px', color: TEXT_MED, fontSize: 14.5, lineHeight: 1.75 }}>
+                                                {item.answer}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             );

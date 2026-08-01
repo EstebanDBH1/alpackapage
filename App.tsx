@@ -74,10 +74,10 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <div key={transitionKey} className="animate-fade-in">{children}</div>;
 };
 
-// Rutas autocontenidas (sin Navbar/Footer): la home, el ebook y /bank-prompts
-// traen su propio header/footer; el checkout es una página de pago enfocada,
+// Rutas autocontenidas (sin Navbar/Footer): la home, el ebook, /bank-prompts y
+// el login traen su propio header; el checkout es una página de pago enfocada,
 // estilo Stripe.
-const STANDALONE_ROUTES = ['/', '/ebook', '/checkout', '/bank-prompts'];
+const STANDALONE_ROUTES = ['/', '/ebook', '/checkout', '/bank-prompts', '/login'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();

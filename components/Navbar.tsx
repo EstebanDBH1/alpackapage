@@ -2,11 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import AlpacaIcon from './AlpacaIcon';
+import {
+  BG, BG_WARM, TEXT, TEXT_MED, BORDER, FONT,
+  useEuclidFont, LandingStyles, Cta,
+} from './landingKit';
+
+/* Header de la app — mismo lenguaje visual que las landings
+   (/ y /bank-prompts): fondo claro, Euclid Circular y CTA amarillo. */
+
+const LINKS = [
+  { to: '/prompts', label: 'Prompts' },
+  { to: '/generador', label: 'Generador' },
+  { to: '/skills', label: 'Skills' },
+  { to: '/blog', label: 'Blog' },
+  { to: '/pricing', label: 'Precios' },
+];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
+
+  useEuclidFont();
 
   const checkUser = async () => {
     // getSession() lee la sesión local al instante; getUser() hace una petición
@@ -34,112 +51,134 @@ const Navbar: React.FC = () => {
     }
   };
 
-  return (
-    <nav className="sticky top-0 z-50 w-full px-3 pt-3 font-space text-foreground sm:px-6">
-      <div className="relative mx-auto max-w-6xl rounded-2xl border border-border/50 bg-card/50 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl">
-        <div className="flex h-14 items-center justify-between px-3 sm:px-4">
+  const linkStyle: React.CSSProperties = {
+    fontSize: 13.5, fontWeight: 500, color: TEXT_MED, textDecoration: 'none',
+    padding: '6px 2px', transition: 'color .15s',
+  };
 
-        {/* Logo */}
-        <Link
-          to="/"
-          className="group flex items-center rounded-full p-1 transition hover:bg-secondary/60"
-          aria-label="Inicio"
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
-            <AlpacaIcon variant="light" className="h-6 w-auto" />
-          </span>
+  const mobileLinkStyle: React.CSSProperties = {
+    fontSize: 14.5, fontWeight: 500, color: TEXT_MED, textDecoration: 'none',
+    padding: '11px 14px', borderRadius: 10, display: 'block',
+  };
+
+  return (
+    <nav
+      className="bp-scope"
+      style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        backgroundColor: 'rgba(255,255,255,0.86)',
+        backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+        borderBottom: `1px solid ${BORDER}`,
+        fontFamily: FONT,
+      }}
+    >
+      <LandingStyles />
+
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between" style={{ height: 60 }}>
+        <Link to="/" className="flex items-center" aria-label="Inicio">
+          <AlpacaIcon className="h-7 w-auto" />
         </Link>
 
         {/* Navegación de escritorio */}
-        <div className="hidden md:flex items-center gap-2">
-          <Link to="/prompts" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Prompts</Link>
-          <Link to="/generador" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Generador</Link>
-          <Link to="/skills" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Skills</Link>
-          <Link to="/blog" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Blog</Link>
-          <Link to="/pricing" className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground">Precios</Link>
+        <div className="hidden md:flex items-center gap-7">
+          {LINKS.map(l => (
+            <Link
+              key={l.to}
+              to={l.to}
+              style={linkStyle}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = TEXT_MED; }}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
 
-          <span className="mx-2 h-4 w-px bg-border" />
-
+        <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div className="flex items-center gap-2">
-              <Link
-                to="/dashboard"
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
-              >
-                Mi cuenta
-              </Link>
+            <>
+              <Link to="/dashboard" style={linkStyle}>Mi cuenta</Link>
               <button
                 onClick={handleLogout}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-accent"
+                style={{ ...linkStyle, background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 Salir
               </button>
-            </div>
+            </>
           ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => navigate('/login')}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
-              >
-                Acceder
-              </button>
-              <button
-                onClick={() => navigate('/pricing')}
-                className="ml-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_20px_oklch(0.86_0.09_90_/_0.2)] transition hover:opacity-90"
-              >
-                Acceso total
-              </button>
-            </div>
+            <>
+              <Link to="/login" style={linkStyle}>Acceder</Link>
+              <Cta to="/pricing" size="sm" label="Acceso total" />
+            </>
           )}
         </div>
 
-        {/* Botón hamburguesa (móvil): las 3 barras se transforman en X con transiciones CSS */}
+        {/* Botón hamburguesa (móvil) */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden flex h-6 w-6 flex-col items-center justify-center gap-[5px] focus:outline-none"
           aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={isOpen}
         >
-          <span className={`h-0.5 w-6 rounded-full bg-foreground transition-transform duration-300 ${isOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
-          <span className={`h-0.5 w-6 rounded-full bg-foreground transition-all duration-200 ${isOpen ? 'scale-x-0 opacity-0' : ''}`} />
-          <span className={`h-0.5 w-6 rounded-full bg-foreground transition-transform duration-300 ${isOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+          <span
+            className={`h-0.5 w-6 rounded-full transition-transform duration-300 ${isOpen ? 'translate-y-[7px] rotate-45' : ''}`}
+            style={{ backgroundColor: TEXT }}
+          />
+          <span
+            className={`h-0.5 w-6 rounded-full transition-all duration-200 ${isOpen ? 'scale-x-0 opacity-0' : ''}`}
+            style={{ backgroundColor: TEXT }}
+          />
+          <span
+            className={`h-0.5 w-6 rounded-full transition-transform duration-300 ${isOpen ? '-translate-y-[7px] -rotate-45' : ''}`}
+            style={{ backgroundColor: TEXT }}
+          />
         </button>
-        </div>
+      </div>
 
-        {/* Menú móvil: siempre en el DOM; solo se transicionan transform/opacity
-            (animar height dentro de un backdrop-blur repinta el blur en cada frame) */}
-        <div className={`md:hidden absolute inset-x-0 top-full mt-2 origin-top rounded-2xl border border-border/50 bg-card/90 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_oklch(0.93_0.02_85_/_0.06)] backdrop-blur-xl transition-all duration-200 ease-out ${isOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-2 scale-[0.98] opacity-0'}`}>
-          <div className="flex flex-col gap-1 px-3 py-3 text-sm font-medium">
-          <Link to="/prompts" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Prompts</Link>
-          <Link to="/generador" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Generador</Link>
-          <Link to="/skills" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Skills</Link>
-          <Link to="/blog" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Blog</Link>
-          <Link to="/pricing" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Precios</Link>
+      {/* Menú móvil: siempre en el DOM; solo se transicionan transform/opacity */}
+      <div
+        className={`md:hidden absolute inset-x-0 top-full transition-all duration-200 ease-out ${
+          isOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'
+        }`}
+        style={{
+          backgroundColor: BG,
+          borderBottom: `1px solid ${BORDER}`,
+          boxShadow: '0 14px 34px rgba(0,0,0,0.07)',
+        }}
+      >
+        <div className="px-4 py-3 flex flex-col gap-0.5">
+          {LINKS.map(l => (
+            <Link key={l.to} to={l.to} style={mobileLinkStyle} onClick={() => setIsOpen(false)}>
+              {l.label}
+            </Link>
+          ))}
 
-          <div className="h-px bg-border/60 w-full my-2" />
+          <div style={{ height: 1, backgroundColor: BORDER, margin: '8px 0' }} />
 
           {user ? (
             <>
-              <Link to="/dashboard" className="rounded-xl px-3 py-2.5 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground" onClick={() => setIsOpen(false)}>Mi cuenta</Link>
-              <button onClick={handleLogout} className="rounded-xl px-3 py-2.5 text-left text-muted-foreground transition hover:bg-secondary/60 hover:text-accent">Salir</button>
+              <Link to="/dashboard" style={mobileLinkStyle} onClick={() => setIsOpen(false)}>Mi cuenta</Link>
+              <button
+                onClick={handleLogout}
+                style={{ ...mobileLinkStyle, background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', width: '100%' }}
+              >
+                Salir
+              </button>
             </>
           ) : (
             <>
-              <button
-                onClick={() => { navigate('/login'); setIsOpen(false); }}
-                className="rounded-xl px-3 py-2.5 text-left text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
+              <Link
+                to="/login"
+                style={{ ...mobileLinkStyle, backgroundColor: BG_WARM }}
+                onClick={() => setIsOpen(false)}
               >
                 Acceder
-              </button>
-              <button
-                onClick={() => { navigate('/pricing'); setIsOpen(false); }}
-                className="mt-2 rounded-full bg-primary px-5 py-3 text-center font-medium text-primary-foreground shadow-[0_0_20px_oklch(0.86_0.09_90_/_0.2)] transition hover:opacity-90"
-              >
-                Acceso total
-              </button>
+              </Link>
+              <div className="mt-2" onClick={() => setIsOpen(false)}>
+                <Cta to="/pricing" full label="Acceso total" />
+              </div>
             </>
           )}
-          </div>
         </div>
       </div>
     </nav>

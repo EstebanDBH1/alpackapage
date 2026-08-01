@@ -3,7 +3,19 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { getAiToolMeta } from '../lib/aiTools';
 import { Prompt } from '../types';
-import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download } from 'lucide-react';
+import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download, ArrowLeft } from 'lucide-react';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
+
+// Badges de herramienta IA en versión clara (los de lib/aiTools son para el tema oscuro)
+const AI_BADGE: Record<string, { bg: string; bd: string; fg: string }> = {
+    'cualquier-modelo': { bg: BG_WARM,   bd: BORDER,    fg: TEXT_MED },
+    chatgpt:            { bg: '#eefbf2', bd: '#c3ecd1', fg: '#0f8a44' },
+    claude:             { bg: '#fff4ea', bd: '#fbdcc0', fg: '#c2620d' },
+    gemini:             { bg: '#eff6ff', bd: '#cfe0fd', fg: '#2563eb' },
+};
 
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -14,6 +26,8 @@ const PromptDetail: React.FC = () => {
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [saving, setSaving] = useState(false);
+
+    useEuclidFont();
 
     useEffect(() => {
         const fetchPromptAndUser = async () => {
@@ -220,124 +234,195 @@ const PromptDetail: React.FC = () => {
 
     // ── Loading ──────────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="min-h-screen bg-background bg-radial-glow font-space">
-            <div className="mx-auto max-w-3xl space-y-6 px-4 py-16 sm:px-6">
-                <div className="h-4 w-24 animate-pulse rounded-full bg-card" />
-                <div className="h-10 w-2/3 animate-pulse rounded-xl bg-card" />
-                <div className="h-5 w-full animate-pulse rounded-lg bg-card" />
-                <div className="mt-8 h-64 w-full animate-pulse rounded-2xl bg-card" />
+        <div className="bp-scope" style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
+            <div className="mx-auto max-w-3xl px-5 sm:px-8 py-16 space-y-5">
+                {[16, 44, 20, 280].map((h, i) => (
+                    <div
+                        key={i}
+                        className="animate-pulse"
+                        style={{
+                            height: h, borderRadius: h > 100 ? 18 : 10,
+                            backgroundColor: BG_WARM, border: `1px solid ${BORDER}`,
+                            width: i === 1 ? '70%' : i === 0 ? 120 : '100%',
+                        }}
+                    />
+                ))}
             </div>
         </div>
     );
 
     // ── Not found ────────────────────────────────────────────────────────────
     if (!prompt) return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 bg-background bg-radial-glow font-space text-foreground">
-            <AlertCircle size={36} className="text-muted-foreground" />
-            <h2 className="text-2xl font-medium tracking-tight">Prompt no encontrado</h2>
-            <Link to="/prompts" className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground underline transition hover:text-foreground">
+        <div
+            className="bp-scope flex min-h-screen flex-col items-center justify-center gap-4 px-5 text-center"
+            style={{ backgroundColor: BG, color: TEXT, fontFamily: FONT }}
+        >
+            <LandingStyles />
+            <div
+                style={{
+                    width: 52, height: 52, borderRadius: 16,
+                    backgroundColor: BG_WARM, border: `1px solid ${BORDER}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+            >
+                <AlertCircle size={22} style={{ color: TEXT_DIM }} />
+            </div>
+            <h2 style={{ fontWeight: 600, fontSize: 24, letterSpacing: '-0.03em' }}>Prompt no encontrado</h2>
+            <Link
+                to="/prompts"
+                style={{ fontSize: 14, color: TEXT_MED, textDecoration: 'none', borderBottom: `1px solid ${BORDER}`, paddingBottom: 2 }}
+            >
                 Volver al catálogo
             </Link>
         </div>
     );
 
     const isLocked = prompt.is_premium && !isSubscribed;
+    const tool = getAiToolMeta(prompt.ai_tool);
+    const badge = AI_BADGE[tool.value] ?? AI_BADGE['cualquier-modelo'];
+
+    const chip: React.CSSProperties = {
+        borderRadius: 8, padding: '4px 10px', fontSize: 10,
+        fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase',
+    };
+
+    const boxBtn: React.CSSProperties = {
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 9,
+        padding: '7px 12px', fontSize: 12.5, fontWeight: 600, color: TEXT,
+        cursor: 'pointer', transition: 'border-color .15s, background .15s',
+    };
 
     return (
-        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
 
-            <main className="relative mx-auto max-w-6xl px-4 py-12 sm:px-8 md:py-16">
+            <main className="mx-auto max-w-6xl px-5 sm:px-8 py-10 md:py-14">
 
-                {/* Back nav */}
+                {/* Volver */}
                 <button
                     onClick={() => navigate(-1)}
-                    className="mb-12 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                    style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 7, marginBottom: 28,
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        fontSize: 13.5, color: TEXT_MED,
+                    }}
                 >
-                    <span>←</span> Volver al catálogo
+                    <ArrowLeft size={14} /> Volver al catálogo
                 </button>
 
-                <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_280px]">
+                <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_300px] lg:gap-10">
 
-                    {/* ── LEFT: Main content ──────────────────────────────────── */}
+                    {/* ── IZQUIERDA: contenido ──────────────────────────────── */}
                     <div className="min-w-0">
 
-                        {/* Category + Premium badge */}
-                        <div className="mb-5 flex flex-wrap items-center gap-2">
-                            <span className="inline-block rounded-md border border-border/50 bg-secondary px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                        {/* Chips */}
+                        <div className="mb-4 flex flex-wrap items-center gap-2">
+                            <span style={{ ...chip, backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, color: TEXT_MED }}>
                                 {prompt.category || 'general'}
                             </span>
-                            <span className={`inline-block rounded-md border px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] ${getAiToolMeta(prompt.ai_tool).badgeClass}`}>
-                                {getAiToolMeta(prompt.ai_tool).label}
+                            <span style={{ ...chip, backgroundColor: badge.bg, border: `1px solid ${badge.bd}`, color: badge.fg }}>
+                                {tool.label}
                             </span>
                             {prompt.is_premium && (
-                                <span className="inline-flex items-center gap-1.5 rounded-md border border-accent/40 bg-secondary px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-accent">
+                                <span
+                                    className="inline-flex items-center gap-1.5"
+                                    style={{ ...chip, backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', color: '#a86a00' }}
+                                >
                                     <Lock size={9} /> Premium
                                 </span>
                             )}
                         </div>
 
-                        {/* Title */}
-                        <h1 className="mb-6 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground md:text-4xl">
+                        {/* Título */}
+                        <h1
+                            style={{
+                                fontWeight: 600,
+                                fontSize: 'clamp(1.8rem, 3.8vw, 2.6rem)',
+                                lineHeight: 1.12,
+                                letterSpacing: '-0.035em',
+                                color: TEXT,
+                                marginBottom: 20,
+                            }}
+                        >
                             {prompt.title}
                         </h1>
 
-                        {/* Image */}
+                        {/* Imagen */}
                         {prompt.image_url && (
-                            <div className="mb-8 w-full overflow-hidden rounded-2xl border border-border/70">
+                            <div
+                                className="mb-7 w-full overflow-hidden"
+                                style={{ borderRadius: 18, border: `1px solid ${BORDER}` }}
+                            >
                                 <img src={prompt.image_url} alt={prompt.title} className="block h-auto w-full" />
                             </div>
                         )}
 
-                        {/* Description */}
+                        {/* Descripción */}
                         {prompt.description && (
-                            <p className="mb-10 border-l-2 border-accent/40 pl-5 text-base leading-relaxed text-muted-foreground">
+                            <p
+                                style={{
+                                    borderLeft: `2px solid ${BORDER}`, paddingLeft: 18, marginBottom: 30,
+                                    color: TEXT_MED, fontSize: 16, lineHeight: 1.8,
+                                }}
+                            >
                                 {prompt.description}
                             </p>
                         )}
 
-                        {/* ── Prompt Box ──────────────────────────────────────── */}
-                        <div className="mb-8 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
-
-                            {/* Box Header */}
-                            <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
-                                <div className="flex items-center gap-3">
-                                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
-                                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                                        PROMPT_SYSTEM.txt
+                        {/* ── Caja del prompt ───────────────────────────────── */}
+                        <div
+                            className="mb-6 overflow-hidden"
+                            style={{
+                                borderRadius: 20, border: `1px solid ${BORDER}`, backgroundColor: BG,
+                                boxShadow: '0 12px 40px rgba(0,0,0,0.05)',
+                            }}
+                        >
+                            {/* Cabecera */}
+                            <div
+                                className="flex items-center justify-between gap-3"
+                                style={{ padding: '12px 18px', backgroundColor: BG_WARM, borderBottom: `1px solid ${BORDER}` }}
+                            >
+                                <div className="flex items-center gap-2.5">
+                                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ACCENT }} />
+                                    <span style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: TEXT_MED }}>
+                                        El prompt
                                     </span>
                                 </div>
                                 {!isLocked && (
                                     <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={handleDownloadPdf}
-                                            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground transition hover:border-primary/40 focus:outline-none"
-                                            title="Descargar como PDF"
-                                        >
-                                            <Download size={13} />
-                                            <span>PDF</span>
+                                        <button onClick={handleDownloadPdf} style={boxBtn} title="Descargar como PDF">
+                                            <Download size={13} /> PDF
                                         </button>
                                         <button
                                             onClick={handleCopy}
-                                            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus:outline-none ${
-                                                copied
-                                                    ? 'border-accent/50 bg-secondary text-accent'
-                                                    : 'border-border bg-secondary text-foreground hover:border-primary/40'
-                                            }`}
+                                            style={{
+                                                ...boxBtn,
+                                                backgroundColor: copied ? '#eefbf2' : BG,
+                                                borderColor: copied ? '#c3ecd1' : BORDER,
+                                                color: copied ? GREEN : TEXT,
+                                            }}
                                         >
-                                            {copied ? <Check size={13} /> : <Copy size={13} />}
-                                            <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+                                            {copied ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
+                                            {copied ? '¡Copiado!' : 'Copiar'}
                                         </button>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Content or Lock */}
+                            {/* Contenido o bloqueo */}
                             {isLocked ? (
-                                <div className="relative min-h-[500px]">
-                                    {/* Blurred preview */}
-                                    <div className="pointer-events-none absolute inset-0 select-none p-8 opacity-20 blur-sm" aria-hidden="true">
-                                        <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-foreground/80">
+                                <div style={{ position: 'relative', minHeight: 470 }}>
+                                    {/* Vista previa difuminada */}
+                                    <div
+                                        aria-hidden="true"
+                                        style={{
+                                            position: 'absolute', inset: 0, padding: 30,
+                                            opacity: 0.4, filter: 'blur(4px)', pointerEvents: 'none', userSelect: 'none',
+                                        }}
+                                    >
+                                        <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: 13.5, lineHeight: 1.8, color: TEXT_MED }}>
 {`Actúa como un experto en [área] con más de 10 años de experiencia
 demostrable. Tu objetivo principal es [objetivo], considerando en todo
 momento [contexto relevante] y las restricciones de [límites].
@@ -357,31 +442,44 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                         </pre>
                                     </div>
 
-                                    {/* Lock overlay */}
-                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-card/70 to-card p-6">
-                                        <div className="flex max-w-xs flex-col items-center text-center">
-
-                                            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent">
-                                                <Lock size={22} />
+                                    {/* Overlay */}
+                                    <div
+                                        className="absolute inset-0 flex items-center justify-center p-6"
+                                        style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.55), rgba(255,255,255,0.94) 45%, #ffffff)' }}
+                                    >
+                                        <div className="flex flex-col items-center text-center" style={{ maxWidth: 340 }}>
+                                            <div
+                                                style={{
+                                                    width: 56, height: 56, borderRadius: 18, marginBottom: 20,
+                                                    backgroundColor: '#fff7e8', border: '1px solid #fbe3b0',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                }}
+                                            >
+                                                <Lock size={22} style={{ color: '#c98200' }} />
                                             </div>
 
-                                            <h4 className="mb-2 text-xl font-medium tracking-tight text-foreground">
-                                                Contenido Premium
+                                            <h4 style={{ fontWeight: 600, fontSize: 21, letterSpacing: '-0.025em', marginBottom: 10 }}>
+                                                Contenido premium
                                             </h4>
-                                            <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
-                                                Suscríbete para desbloquear este prompt y los 150+ de la librería.
+                                            <p style={{ color: TEXT_MED, fontSize: 14.5, lineHeight: 1.7, marginBottom: 24 }}>
+                                                Suscríbete para desbloquear este prompt y los más de 1.000 del banco.
                                             </p>
 
                                             <Link
                                                 to="/pricing"
-                                                className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
+                                                style={{
+                                                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                                                    backgroundColor: YELLOW, color: '#1a1500', fontWeight: 600, fontSize: 15,
+                                                    padding: '14px 24px', borderRadius: 12, textDecoration: 'none',
+                                                    marginBottom: 12,
+                                                }}
                                             >
                                                 Desbloquear por 7 USD/mes
-                                                <ArrowRight size={14} />
+                                                <ArrowRight size={15} />
                                             </Link>
                                             <Link
                                                 to={`/login?redirect=/prompts/${id}`}
-                                                className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                                                style={{ fontSize: 13, color: TEXT_MED, textDecoration: 'none' }}
                                             >
                                                 Ya tengo cuenta
                                             </Link>
@@ -389,92 +487,123 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                     </div>
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto p-6 md:p-8">
-                                    <pre className="select-all whitespace-pre-wrap break-words font-mono text-sm leading-[1.8] text-foreground/90 md:text-base">
+                                <div style={{ padding: '26px 24px', overflowX: 'auto' }}>
+                                    <pre
+                                        style={{
+                                            whiteSpace: 'pre-wrap', wordBreak: 'break-word', userSelect: 'all',
+                                            fontSize: 14.5, lineHeight: 1.85, color: TEXT,
+                                        }}
+                                    >
                                         {prompt.content}
                                     </pre>
                                 </div>
                             )}
                         </div>
 
-                        {/* Tip */}
+                        {/* Cómo usarlo */}
                         {!isLocked && (
-                            <div className="flex items-start gap-4 rounded-2xl border border-border/70 bg-card p-5">
-                                <AlertCircle size={15} className="mt-0.5 flex-shrink-0 text-accent" />
-                                <p className="text-sm leading-relaxed text-muted-foreground">
-                                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">Cómo usarlo: </span>
-                                    Reemplaza los parámetros entre{' '}
-                                    <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-xs text-primary">
+                            <div
+                                className="flex items-start gap-3.5"
+                                style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '18px 20px' }}
+                            >
+                                <AlertCircle size={16} style={{ color: '#c98200', flexShrink: 0, marginTop: 2 }} />
+                                <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.7 }}>
+                                    <strong style={{ color: TEXT, fontWeight: 600 }}>Cómo usarlo: </strong>
+                                    reemplaza los parámetros entre{' '}
+                                    <code
+                                        style={{
+                                            backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 6,
+                                            padding: '1px 6px', fontSize: 13, color: TEXT,
+                                        }}
+                                    >
                                         [corchetes]
                                     </code>{' '}
-                                    con tus datos específicos para obtener el mejor resultado del modelo en la primera respuesta.
+                                    con tus datos para obtener el mejor resultado del modelo en la primera respuesta.
                                 </p>
                             </div>
                         )}
                     </div>
 
-                    {/* ── RIGHT: Metadata Sidebar ─────────────────────────────── */}
-                    <div className="flex flex-col gap-4 lg:sticky lg:top-24">
+                    {/* ── DERECHA: metadatos ────────────────────────────────── */}
+                    <div className="flex flex-col gap-3 lg:sticky" style={{ top: 84 }}>
 
-                        {/* Save button */}
+                        {/* Guardar */}
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className={`flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm font-medium transition-colors duration-200 disabled:opacity-50 ${
-                                isSaved
-                                    ? 'border-accent/50 bg-accent/10 text-accent hover:bg-accent/20'
-                                    : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
-                            }`}
+                            style={{
+                                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                backgroundColor: isSaved ? '#eefbf2' : BG,
+                                border: `1px solid ${isSaved ? '#c3ecd1' : BORDER}`,
+                                color: isSaved ? GREEN : TEXT,
+                                borderRadius: 12, padding: '12px 18px', fontSize: 14, fontWeight: 600,
+                                cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.6 : 1,
+                                transition: 'background .15s, border-color .15s',
+                            }}
                         >
                             {isSaved ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
                             {isSaved ? 'Guardado' : 'Guardar prompt'}
                         </button>
 
-                        {/* Metadata card */}
-                        <div className="rounded-2xl border border-border/70 bg-card p-5">
-                            <h3 className="mb-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                        {/* Detalles */}
+                        <div style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '18px 20px' }}>
+                            <h3 style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 14 }}>
                                 Detalles del prompt
                             </h3>
-                            <div className="flex flex-col gap-3">
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Categoría</span>
-                                    <span className="text-xs font-medium uppercase text-foreground">{prompt.category || 'General'}</span>
-                                </div>
-                                <div className="h-px bg-border/60" />
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Acceso</span>
-                                    <span className={`text-xs font-medium uppercase ${prompt.is_premium ? 'text-accent' : 'text-foreground'}`}>
-                                        {prompt.is_premium ? 'Premium' : 'Gratuito'}
-                                    </span>
-                                </div>
-                                <div className="h-px bg-border/60" />
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Modelo</span>
-                                    <span className="text-xs font-medium uppercase text-foreground">{getAiToolMeta(prompt.ai_tool).label}</span>
-                                </div>
+                            <div className="flex flex-col">
+                                {[
+                                    { k: 'Categoría', v: prompt.category || 'General', accent: false },
+                                    { k: 'Acceso', v: prompt.is_premium ? 'Premium' : 'Gratuito', accent: !!prompt.is_premium },
+                                    { k: 'Modelo', v: tool.label, accent: false },
+                                ].map((row, i, arr) => (
+                                    <React.Fragment key={row.k}>
+                                        <div className="flex items-center justify-between gap-3" style={{ padding: '9px 0' }}>
+                                            <span style={{ fontSize: 12.5, color: TEXT_DIM }}>{row.k}</span>
+                                            <span style={{ fontSize: 13, fontWeight: 600, color: row.accent ? '#a86a00' : TEXT }}>
+                                                {row.v}
+                                            </span>
+                                        </div>
+                                        {i < arr.length - 1 && <div style={{ height: 1, backgroundColor: BORDER }} />}
+                                    </React.Fragment>
+                                ))}
                             </div>
                         </div>
 
-                        {/* CTA if not subscribed and not locked (encourage upgrade) */}
+                        {/* CTA si no está suscrito */}
                         {!isSubscribed && !isLocked && (
-                            <div className="rounded-2xl border border-accent/40 bg-card p-5 text-center">
-                                <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-                                    Desbloquea <strong className="font-medium text-foreground">150+ prompts premium</strong> para resultados profesionales.
+                            <div
+                                style={{
+                                    backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', borderRadius: 18,
+                                    padding: '18px 20px', textAlign: 'center',
+                                }}
+                            >
+                                <p style={{ fontSize: 13.5, lineHeight: 1.65, color: '#8a5b00', marginBottom: 14 }}>
+                                    Desbloquea <strong style={{ fontWeight: 700 }}>+1.000 prompts premium</strong> y el generador con IA.
                                 </p>
-                                <Link to="/pricing" className="block w-full">
-                                    <button className="w-full rounded-full bg-primary py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-                                        Ver planes — 7 USD/mes
-                                    </button>
+                                <Link
+                                    to="/pricing"
+                                    style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                        backgroundColor: YELLOW, color: '#1a1500', fontWeight: 600, fontSize: 14,
+                                        padding: '12px 18px', borderRadius: 11, textDecoration: 'none',
+                                    }}
+                                >
+                                    Ver el plan — 7 USD/mes
                                 </Link>
                             </div>
                         )}
 
-                        {/* Back link */}
+                        {/* Volver */}
                         <Link
                             to="/prompts"
-                            className="flex items-center justify-center gap-2 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                            style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+                                padding: '11px', borderRadius: 12,
+                                border: `1px solid ${BORDER}`, backgroundColor: BG_WARM,
+                                fontSize: 13.5, color: TEXT_MED, textDecoration: 'none',
+                            }}
                         >
-                            ← Todos los prompts
+                            <ArrowLeft size={13} /> Todos los prompts
                         </Link>
                     </div>
 

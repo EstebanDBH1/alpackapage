@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, Check, Copy, Lock, Sparkles, Wand2 } from 'lucide-react';
+import { AlertCircle, ArrowRight, Check, ChevronDown, Copy, Lock, Sparkles, Wand2 } from 'lucide-react';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
 
 // Estado de acceso: se resuelve una vez al montar (getSession es local, la
 // suscripción es un solo round-trip a Supabase).
@@ -27,7 +31,7 @@ const STEPS = [
     {
         emoji: '💎',
         title: 'Hazte premium',
-        text: 'Por 7 USD/mes desbloqueas el generador — hasta 10 prompts al día — y los 150+ prompts de la librería.',
+        text: 'Por 7 USD/mes desbloqueas el generador — hasta 10 prompts al día — y los +1.000 prompts del banco.',
     },
     {
         emoji: '⚡',
@@ -84,25 +88,145 @@ const PREVIEWS = [
 const VALUE_PROPS = [
     {
         kicker: 'El problema',
+        color: '#e0463f',
         title: 'Deja de perder tiempo con prueba y error',
         text: 'La mayoría de los prompts fallan en silencio: salidas vagas, tono genérico, restricciones que faltan. Iteras durante horas y aun así te conformas.',
     },
     {
         kicker: 'El oficio',
+        color: '#8b5cf6',
         title: 'Cada mega-prompt está construido con intención',
         text: 'Rol, audiencia, restricciones, formato de salida y guardarraíles — codificados tal y como los escriben los mejores prompt engineers.',
     },
     {
         kicker: 'El atajo',
+        color: '#c98200',
         title: 'Sáltate un proceso de ingeniería de 3.000 $+',
         text: 'Las agencias cobran miles por una especificación de prompt así. Tú consigues la misma estructura en segundos, incluida en tu suscripción.',
     },
     {
         kicker: 'La ventaja',
+        color: GREEN,
         title: 'Convierte tareas en tu ventaja con IA',
         text: 'Convierte cada tarea repetible — posts, briefs, outreach, imágenes — en un activo reutilizable que tu yo del futuro agradecerá.',
     },
 ];
+
+// Paso 2 opcional: tono y formato. No son campos nuevos de la API — se añaden
+// al final de la idea antes de mandarla a la Edge Function.
+const TONES = ['Profesional', 'Cercano', 'Persuasivo', 'Didáctico', 'Directo', 'Creativo'];
+const FORMATS = ['Texto', 'Lista', 'Paso a paso', 'Tabla', 'Guion de vídeo', 'Email', 'Hilo para redes'];
+
+/* Selector compacto tipo chip (tono / formato) */
+const ChipSelect: React.FC<{
+    label: string;
+    options: string[];
+    value: string | null;
+    onChange: (v: string | null) => void;
+}> = ({ label, options, value, onChange }) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const onClick = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+        document.addEventListener('mousedown', onClick);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('mousedown', onClick);
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [open]);
+
+    const active = value !== null;
+
+    return (
+        <div ref={ref} style={{ position: 'relative' }}>
+            <button
+                type="button"
+                onClick={() => setOpen(o => !o)}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    backgroundColor: active ? '#fff7e8' : BG_WARM,
+                    border: `1px solid ${active ? '#fbe3b0' : BORDER}`,
+                    color: active ? '#a86a00' : TEXT_MED,
+                    borderRadius: 100, padding: '6px 12px',
+                    fontSize: 12.5, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
+                }}
+            >
+                {value ?? label}
+                <ChevronDown size={13} style={{ transition: 'transform .2s', transform: open ? 'rotate(180deg)' : 'none' }} />
+            </button>
+
+            {open && (
+                <ul
+                    role="listbox"
+                    style={{
+                        position: 'absolute', left: 0, bottom: '100%', marginBottom: 8, zIndex: 30,
+                        minWidth: 180, backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 14,
+                        boxShadow: '0 14px 34px rgba(0,0,0,0.12)', padding: 5,
+                    }}
+                >
+                    {value !== null && (
+                        <li>
+                            <button
+                                type="button"
+                                onClick={() => { onChange(null); setOpen(false); }}
+                                style={{
+                                    width: '100%', textAlign: 'left', border: 'none', background: 'none', cursor: 'pointer',
+                                    borderRadius: 9, padding: '8px 11px', fontSize: 13, color: TEXT_DIM,
+                                }}
+                            >
+                                Sin especificar
+                            </button>
+                        </li>
+                    )}
+                    {options.map(opt => (
+                        <li key={opt} role="option" aria-selected={opt === value}>
+                            <button
+                                type="button"
+                                onClick={() => { onChange(opt); setOpen(false); }}
+                                style={{
+                                    width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
+                                    backgroundColor: opt === value ? BG_WARM : 'transparent',
+                                    color: opt === value ? TEXT : TEXT_MED,
+                                    borderRadius: 9, padding: '8px 11px',
+                                    fontSize: 13, fontWeight: opt === value ? 600 : 500,
+                                }}
+                            >
+                                {opt}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+};
+
+/* Cabecera de sección reutilizable */
+const SectionHead: React.FC<{ kicker: string; title: string; text: string }> = ({ kicker, title, text }) => (
+    <div className="mb-8 text-center">
+        <div
+            className="inline-flex items-center gap-2 rounded-full"
+            style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 16 }}
+        >
+            <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
+            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                {kicker}
+            </span>
+        </div>
+        <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.4rem, 2.8vw, 1.9rem)', letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: 10 }}>
+            {title}
+        </h2>
+        <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>{text}</p>
+    </div>
+);
 
 const Generator: React.FC = () => {
     const [access, setAccess] = useState<Access>('loading');
@@ -112,8 +236,13 @@ const Generator: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [remaining, setRemaining] = useState<number | null>(null);
+    const [tone, setTone] = useState<string | null>(null);
+    const [format, setFormat] = useState<string | null>(null);
+    const [focused, setFocused] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
     const ideaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEuclidFont();
 
     useEffect(() => {
         const checkAccess = async () => {
@@ -160,8 +289,15 @@ const Generator: React.FC = () => {
         setError(null);
         setResult(null);
         try {
+            // Tono y formato viajan dentro de la idea: la Edge Function solo recibe `idea`.
+            const extras = [
+                tone ? `Tono: ${tone}.` : null,
+                format ? `Formato de salida: ${format}.` : null,
+            ].filter(Boolean).join(' ');
+            const fullIdea = extras ? `${idea.trim()}\n\n${extras}` : idea.trim();
+
             const { data, error: fnError } = await supabase.functions.invoke('generate-prompt', {
-                body: { idea: idea.trim() },
+                body: { idea: fullIdea },
             });
             if (fnError) {
                 // El servidor responde con el motivo real (límite diario, validación...).
@@ -195,88 +331,198 @@ const Generator: React.FC = () => {
 
     // ── Loading ──────────────────────────────────────────────────────────────
     if (access === 'loading') return (
-        <div className="min-h-screen bg-background bg-radial-glow font-space">
-            <div className="mx-auto max-w-3xl space-y-6 px-4 py-16 sm:px-6">
-                <div className="h-10 w-2/3 animate-pulse rounded-xl bg-card" />
-                <div className="h-5 w-full animate-pulse rounded-lg bg-card" />
-                <div className="mt-8 h-64 w-full animate-pulse rounded-2xl bg-card" />
+        <div className="bp-scope" style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
+            <div className="mx-auto max-w-3xl px-5 sm:px-8 py-16 space-y-5">
+                {[44, 20, 280].map((h, i) => (
+                    <div
+                        key={i}
+                        className="animate-pulse"
+                        style={{
+                            height: h, borderRadius: h > 100 ? 18 : 10, width: i === 0 ? '70%' : '100%',
+                            backgroundColor: BG_WARM, border: `1px solid ${BORDER}`,
+                        }}
+                    />
+                ))}
             </div>
         </div>
     );
 
-    return (
-        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+    const cardStyle: React.CSSProperties = {
+        backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.05)',
+    };
 
-            <main className="relative mx-auto max-w-3xl px-4 py-12 sm:px-6 md:py-16">
+    const boxHeader: React.CSSProperties = {
+        padding: '12px 18px', backgroundColor: BG_WARM, borderBottom: `1px solid ${BORDER}`,
+    };
+
+    const ctaStyle: React.CSSProperties = {
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+        backgroundColor: YELLOW, color: '#1a1500', border: 'none',
+        fontWeight: 600, fontSize: 15.5, padding: '15px 28px', borderRadius: 12,
+        textDecoration: 'none', cursor: 'pointer',
+    };
+
+    return (
+        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
+
+            <main className="mx-auto max-w-3xl px-5 sm:px-8 py-12 md:py-16">
 
                 {/* ── Hero ────────────────────────────────────────────────── */}
-                <div className="mb-10 text-center">
-                    <span className="mb-4 inline-flex items-center gap-2 rounded-md border border-accent/40 bg-secondary px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-accent">
-                        <Sparkles size={10} /> Exclusivo suscriptores
-                    </span>
-                    <h1 className="mb-4 text-balance text-3xl font-medium leading-tight tracking-tight md:text-4xl">
-                        Genera tus prompts de IA
-                        <span className="block text-accent">en un solo clic</span>
-                    </h1>
-                    <p className="mx-auto max-w-xl text-base leading-relaxed text-muted-foreground">
-                        Consigue prompts de IA potentes sin esfuerzo — describe tu objetivo
-                        como si hablaras con un amigo y nosotros nos encargamos del resto.
-                    </p>
-                </div>
-
-                {/* ── Formulario ──────────────────────────────────────────── */}
-                <div ref={formRef} className="mb-8 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
-                    <div className="flex items-center gap-3 border-b border-border/60 px-5 py-3.5">
-                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
-                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                            GENERADOR.exe
+                <div className="mb-9 text-center">
+                    <div
+                        className="inline-flex items-center gap-2 rounded-full"
+                        style={{ backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', padding: '5px 13px', marginBottom: 18 }}
+                    >
+                        <Sparkles size={11} style={{ color: '#c98200' }} />
+                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#a86a00' }}>
+                            Exclusivo suscriptores
                         </span>
                     </div>
 
-                    <div className="flex flex-col gap-5 p-6 md:p-8">
-                        <div>
-                            <label htmlFor="idea" className="mb-2 block text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                                ¿Cuál es tu objetivo?
-                            </label>
+                    <h1
+                        style={{
+                            fontWeight: 600,
+                            fontSize: 'clamp(1.9rem, 4vw, 2.8rem)',
+                            lineHeight: 1.1,
+                            letterSpacing: '-0.035em',
+                            marginBottom: 14,
+                        }}
+                    >
+                        Genera tus prompts de IA
+                        <span style={{ display: 'block', color: ACCENT }}>en un solo clic</span>
+                    </h1>
+                    <p style={{ color: TEXT_MED, fontSize: 16.5, lineHeight: 1.7, maxWidth: 560, margin: '0 auto' }}>
+                        Consigue prompts potentes sin esfuerzo — describe tu objetivo como si hablaras con un amigo
+                        y nosotros nos encargamos del resto.
+                    </p>
+                </div>
+
+                {/* ── Formulario: barra de prompt ─────────────────────────── */}
+                <div ref={formRef} className="mb-4">
+                    <div
+                        style={{
+                            backgroundColor: BG,
+                            border: `1px solid ${focused ? '#c9c9c2' : BORDER}`,
+                            borderRadius: 22,
+                            padding: '14px 16px 12px',
+                            boxShadow: focused ? '0 14px 44px rgba(0,0,0,0.09)' : '0 10px 34px rgba(0,0,0,0.05)',
+                            transition: 'border-color .15s, box-shadow .15s',
+                        }}
+                    >
+                        {/* Fila 1: @ + idea */}
+                        <div className="flex items-start gap-3">
+                            <span
+                                aria-hidden="true"
+                                style={{
+                                    width: 30, height: 30, borderRadius: 10, flexShrink: 0, marginTop: 2,
+                                    backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, color: TEXT_MED,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: 14, fontWeight: 600,
+                                }}
+                            >
+                                @
+                            </span>
+
                             <textarea
                                 id="idea"
                                 ref={ideaRef}
                                 value={idea}
                                 onChange={(e) => setIdea(e.target.value.slice(0, IDEA_MAX))}
-                                rows={4}
-                                placeholder="Describe qué quieres lograr — un post de LinkedIn, keywords SEO, un email en frío, una imagen, lo que sea…"
-                                className="w-full resize-none rounded-xl border border-border bg-secondary px-4 py-3 font-mono text-sm leading-relaxed text-foreground placeholder:text-muted-foreground/60 focus:border-primary/50 focus:outline-none"
+                                onFocus={() => setFocused(true)}
+                                onBlur={() => setFocused(false)}
+                                onKeyDown={(e) => {
+                                    // Enter genera; Shift+Enter hace salto de línea.
+                                    if (e.key === 'Enter' && !e.shiftKey && access === 'subscribed') {
+                                        e.preventDefault();
+                                        handleGenerate();
+                                    }
+                                }}
+                                rows={2}
+                                aria-label="¿Cuál es tu objetivo?"
+                                placeholder="¿Cuál es tu objetivo? Un post de LinkedIn, keywords SEO, un email en frío, una imagen…"
+                                style={{
+                                    flex: 1, minWidth: 0, resize: 'none', background: 'transparent',
+                                    border: 'none', outline: 'none', padding: '5px 0',
+                                    fontSize: 16, lineHeight: 1.6, color: TEXT,
+                                }}
                             />
-                            <div className="mt-1 text-right">
-                                <span className="font-mono text-[10px] text-muted-foreground">
-                                    {idea.length}/{IDEA_MAX}
-                                </span>
-                            </div>
                         </div>
 
+                        {/* Fila 2: paso opcional + acción */}
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-3" style={{ paddingLeft: 42 }}>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span style={{ fontSize: 11.5, color: TEXT_DIM, marginRight: 2 }}>Opcional:</span>
+                                <ChipSelect label="Tono" options={TONES} value={tone} onChange={setTone} />
+                                <ChipSelect label="Formato" options={FORMATS} value={format} onChange={setFormat} />
+                            </div>
+
+                            <div className="flex items-center gap-3 ml-auto">
+                                <span style={{ fontSize: 11.5, color: TEXT_DIM }}>{idea.length}/{IDEA_MAX}</span>
+
+                                {access === 'subscribed' ? (
+                                    <button
+                                        onClick={handleGenerate}
+                                        disabled={generating || idea.trim().length < 10 || remaining === 0}
+                                        style={{
+                                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                            backgroundColor: YELLOW, color: '#1a1500', border: 'none',
+                                            fontWeight: 600, fontSize: 14.5, padding: '11px 20px', borderRadius: 12,
+                                            opacity: (generating || idea.trim().length < 10 || remaining === 0) ? 0.45 : 1,
+                                            cursor: (generating || idea.trim().length < 10 || remaining === 0) ? 'not-allowed' : 'pointer',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        {generating ? (
+                                            <>
+                                                <span
+                                                    className="animate-spin"
+                                                    style={{
+                                                        width: 13, height: 13, borderRadius: '50%',
+                                                        border: '2px solid rgba(26,21,0,0.25)', borderTopColor: '#1a1500',
+                                                    }}
+                                                />
+                                                Generando…
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Wand2 size={15} />
+                                                Generar
+                                            </>
+                                        )}
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to="/pricing"
+                                        style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                                            backgroundColor: YELLOW, color: '#1a1500',
+                                            fontWeight: 600, fontSize: 14.5, padding: '11px 20px', borderRadius: 12,
+                                            textDecoration: 'none',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        <Lock size={14} />
+                                        Desbloquear
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pie de la barra */}
+                    <div className="mt-3 flex flex-col items-center gap-2">
                         {access === 'subscribed' ? (
                             <>
-                                <button
-                                    onClick={handleGenerate}
-                                    disabled={generating || idea.trim().length < 10 || remaining === 0}
-                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-                                >
-                                    {generating ? (
-                                        <>
-                                            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
-                                            Generando... puede tardar unos segundos
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Wand2 size={15} />
-                                            Generar prompt
-                                        </>
-                                    )}
-                                </button>
-
-                                {remaining !== null && (
-                                    <p className={`text-center font-mono text-[11px] uppercase tracking-[0.2em] ${remaining === 0 ? 'text-accent' : 'text-muted-foreground'}`}>
+                                {generating && (
+                                    <p style={{ fontSize: 12.5, color: TEXT_DIM }}>
+                                        Construyendo tu mega-prompt… puede tardar unos segundos.
+                                    </p>
+                                )}
+                                {remaining !== null && !generating && (
+                                    <p style={{ fontSize: 12.5, color: remaining === 0 ? ACCENT : TEXT_DIM }}>
                                         {remaining === 0
                                             ? 'Límite diario alcanzado — vuelve mañana'
                                             : `Te quedan ${remaining} de ${DAILY_LIMIT} generaciones hoy`}
@@ -284,63 +530,57 @@ const Generator: React.FC = () => {
                                 )}
                             </>
                         ) : (
-                            <div className="flex flex-col items-center gap-3">
-                                <Link
-                                    to="/pricing"
-                                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
-                                >
-                                    <Lock size={14} />
-                                    Hazte premium — 7 USD/mes
-                                    <ArrowRight size={14} />
-                                </Link>
-                                <p className="max-w-sm text-center text-xs leading-relaxed text-muted-foreground">
-                                    El generador está incluido en la suscripción premium: hasta {DAILY_LIMIT} prompts
-                                    al día, más acceso total a la librería. El resultado aparece aquí mismo,
-                                    listo para copiar.
+                            <>
+                                <p style={{ maxWidth: 460, textAlign: 'center', fontSize: 13, lineHeight: 1.7, color: TEXT_MED }}>
+                                    El generador está incluido en la suscripción premium: hasta {DAILY_LIMIT} prompts al día,
+                                    más acceso total al banco. Son 7 USD/mes y cancelas cuando quieras.
                                 </p>
                                 {access === 'anonymous' && (
-                                    <Link
-                                        to="/login?redirect=/generador"
-                                        className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-                                    >
+                                    <Link to="/login?redirect=/generador" style={{ fontSize: 13, color: TEXT_MED, textDecoration: 'none' }}>
                                         Ya tengo cuenta
                                     </Link>
                                 )}
-                            </div>
+                            </>
                         )}
 
                         {error && (
-                            <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-                                {error}
-                            </p>
+                            <div
+                                className="flex w-full items-start gap-2.5"
+                                style={{ backgroundColor: '#fef1f1', border: '1px solid #fbcfcf', borderRadius: 13, padding: '13px 15px', marginTop: 4 }}
+                            >
+                                <AlertCircle size={15} style={{ color: '#e0463f', flexShrink: 0, marginTop: 2 }} />
+                                <p style={{ fontSize: 14, lineHeight: 1.6, color: '#a52f2a' }}>{error}</p>
+                            </div>
                         )}
                     </div>
                 </div>
 
                 {/* ── Resultado ───────────────────────────────────────────── */}
                 {result && (
-                    <div className="animate-fade-in mb-8 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_0_60px_oklch(0.86_0.09_90_/_0.06)]">
-                        <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
-                                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                                    PROMPT_GENERADO.txt
+                    <div className="animate-fade-in mb-4" style={cardStyle}>
+                        <div className="flex items-center justify-between gap-3" style={boxHeader}>
+                            <div className="flex items-center gap-2.5">
+                                <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: GREEN }} />
+                                <span style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: TEXT_MED }}>
+                                    Tu prompt
                                 </span>
                             </div>
                             <button
                                 onClick={handleCopy}
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus:outline-none ${
-                                    copied
-                                        ? 'border-accent/50 bg-secondary text-accent'
-                                        : 'border-border bg-secondary text-foreground hover:border-primary/40'
-                                }`}
+                                style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                                    backgroundColor: copied ? '#eefbf2' : BG,
+                                    border: `1px solid ${copied ? '#c3ecd1' : BORDER}`,
+                                    color: copied ? GREEN : TEXT,
+                                    borderRadius: 9, padding: '7px 12px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer',
+                                }}
                             >
-                                {copied ? <Check size={13} /> : <Copy size={13} />}
-                                <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+                                {copied ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
+                                {copied ? '¡Copiado!' : 'Copiar'}
                             </button>
                         </div>
-                        <div className="overflow-x-auto p-6 md:p-8">
-                            <pre className="select-all whitespace-pre-wrap break-words font-mono text-sm leading-[1.8] text-foreground/90">
+                        <div style={{ padding: '24px 22px', overflowX: 'auto' }}>
+                            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', userSelect: 'all', fontSize: 14.5, lineHeight: 1.85, color: TEXT }}>
                                 {result}
                             </pre>
                         </div>
@@ -348,160 +588,140 @@ const Generator: React.FC = () => {
                 )}
 
                 {result && (
-                    <p className="mb-8 text-center text-xs leading-relaxed text-muted-foreground">
-                        Reemplaza los campos <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[11px] text-primary">[INSERTAR ...]</code> con
-                        tus datos antes de usarlo.
+                    <p className="mb-8 text-center" style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.7 }}>
+                        Reemplaza los campos{' '}
+                        <code style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 6, padding: '1px 6px', fontSize: 12.5, color: TEXT }}>
+                            [INSERTAR …]
+                        </code>{' '}
+                        con tus datos antes de usarlo.
                     </p>
                 )}
 
                 {/* ── Cómo funciona ───────────────────────────────────────── */}
-                <section className="mt-20">
-                    <div className="mb-10 text-center">
-                        <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-                            Cómo funciona
-                        </span>
-                        <h2 className="mb-3 text-balance text-2xl font-medium tracking-tight md:text-3xl">
-                            Cómo usar el generador de prompts
-                        </h2>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                            Cuatro pasos. Sin tecnicismos ni configuración.
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <section className="mt-16">
+                    <SectionHead
+                        kicker="Cómo funciona"
+                        title="Cómo usar el generador de prompts"
+                        text="Cuatro pasos. Sin tecnicismos ni configuración."
+                    />
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {STEPS.map((step, i) => (
-                            <div
-                                key={step.title}
-                                className="rounded-2xl border border-border/70 bg-card p-6 transition hover:border-primary/30"
-                            >
+                            <div key={step.title} style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '22px 20px' }}>
                                 <div className="mb-4 flex items-center gap-3">
-                                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', color: TEXT_DIM }}>
                                         {String(i + 1).padStart(2, '0')}
                                     </span>
-                                    <span className="h-px flex-1 bg-border/60" />
-                                    <span className="text-xl" aria-hidden="true">{step.emoji}</span>
+                                    <span style={{ flex: 1, height: 1, backgroundColor: BORDER }} />
+                                    <span style={{ fontSize: 20 }} aria-hidden="true">{step.emoji}</span>
                                 </div>
-                                <h3 className="mb-2 text-base font-medium tracking-tight text-foreground">
+                                <h3 style={{ fontWeight: 600, fontSize: 15.5, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em' }}>
                                     {step.title}
                                 </h3>
-                                <p className="text-sm leading-relaxed text-muted-foreground">
-                                    {step.text}
-                                </p>
+                                <p style={{ color: TEXT_MED, fontSize: 13.5, lineHeight: 1.65 }}>{step.text}</p>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 {/* ── Empieza desde un ejemplo ────────────────────────────── */}
-                <section className="mt-20">
-                    <div className="mb-8 text-center">
-                        <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-                            Pruébalo ahora
-                        </span>
-                        <h2 className="mb-3 text-balance text-2xl font-medium tracking-tight md:text-3xl">
-                            Empieza desde un ejemplo
-                        </h2>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                            Toca cualquier idea — se coloca en la caja de arriba para que la ajustes antes de generar.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-3">
+                <section className="mt-16">
+                    <SectionHead
+                        kicker="Pruébalo ahora"
+                        title="Empieza desde un ejemplo"
+                        text="Toca cualquier idea — se coloca en la caja de arriba para que la ajustes antes de generar."
+                    />
+                    <div className="flex flex-col gap-2.5">
                         {EXAMPLES.map((ex) => (
                             <button
                                 key={ex}
                                 onClick={() => useExample(ex)}
-                                className="group flex items-center justify-between gap-4 rounded-2xl border border-border/70 bg-card px-5 py-4 text-left transition hover:border-primary/40"
+                                className="group flex items-center justify-between gap-4 text-left"
+                                style={{
+                                    backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 14,
+                                    padding: '15px 18px', cursor: 'pointer',
+                                }}
                             >
-                                <span className="text-sm leading-relaxed text-muted-foreground transition group-hover:text-foreground">
-                                    {ex}
-                                </span>
-                                <ArrowRight size={14} className="flex-shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-accent" />
+                                <span style={{ fontSize: 14.5, color: TEXT_MED, lineHeight: 1.6 }}>{ex}</span>
+                                <ArrowRight size={15} style={{ color: TEXT_DIM, flexShrink: 0 }} />
                             </button>
                         ))}
                     </div>
                 </section>
 
                 {/* ── Qué incluye: vista previa de mega-prompts ───────────── */}
-                <section className="mt-20">
-                    <div className="mb-10 text-center">
-                        <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-                            ¿Qué incluye?
-                        </span>
-                        <h2 className="mb-3 text-balance text-2xl font-medium tracking-tight md:text-3xl">
-                            Vista previa de 3 mega-prompts generados
-                        </h2>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                            Estructura real, restricciones reales, calidad de salida real.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-5">
+                <section className="mt-16">
+                    <SectionHead
+                        kicker="¿Qué incluye?"
+                        title="Vista previa de 3 mega-prompts generados"
+                        text="Estructura real, restricciones reales, calidad de salida real."
+                    />
+                    <div className="flex flex-col gap-4">
                         {PREVIEWS.map((preview) => (
-                            <div
-                                key={preview.title}
-                                className="overflow-hidden rounded-2xl border border-border/70 bg-card transition hover:border-primary/30"
-                            >
-                                <div className="p-6">
+                            <div key={preview.title} style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18, overflow: 'hidden' }}>
+                                <div style={{ padding: '22px 20px' }}>
                                     <div className="mb-4 flex items-center gap-3">
-                                        <span className="text-xl" aria-hidden="true">{preview.emoji}</span>
-                                        <h3 className="text-base font-medium tracking-tight text-foreground">
+                                        <span style={{ fontSize: 20 }} aria-hidden="true">{preview.emoji}</span>
+                                        <h3 style={{ fontWeight: 600, fontSize: 15.5, color: TEXT, letterSpacing: '-0.01em' }}>
                                             {preview.title}
                                         </h3>
                                     </div>
-                                    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                         {preview.features.map((feature) => (
-                                            <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Check size={13} className="flex-shrink-0 text-accent" />
-                                                {feature}
-                                            </li>
+                                            <div key={feature} className="flex items-start gap-2.5">
+                                                <Check size={13} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
+                                                <span style={{ fontSize: 13.5, color: TEXT_MED, lineHeight: 1.5 }}>{feature}</span>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
                                 </div>
-                                <div className="border-t border-border/60 bg-secondary/40 p-5">
-                                    <pre className="whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-foreground/70">
+                                <div style={{ borderTop: `1px solid ${BORDER}`, backgroundColor: BG_WARM, padding: '16px 20px' }}>
+                                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: 12.5, lineHeight: 1.75, color: TEXT_MED }}>
                                         {preview.sample}
                                     </pre>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div className="mt-8 text-center">
-                        <button
-                            onClick={scrollToForm}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
-                        >
-                            <Wand2 size={15} />
+                    <div className="mt-7 text-center">
+                        <button onClick={scrollToForm} style={ctaStyle}>
+                            <Wand2 size={16} />
                             Generar mi prompt
                         </button>
                     </div>
                 </section>
 
                 {/* ── Propuesta de valor ──────────────────────────────────── */}
-                <section className="mt-20">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <section className="mt-16">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {VALUE_PROPS.map((prop) => (
-                            <div key={prop.kicker} className="rounded-2xl border border-border/70 bg-card p-6">
-                                <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                            <div key={prop.kicker} style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '22px 20px' }}>
+                                <span
+                                    style={{
+                                        display: 'block', fontSize: 10.5, fontWeight: 700,
+                                        letterSpacing: '0.16em', textTransform: 'uppercase',
+                                        color: prop.color, marginBottom: 10,
+                                    }}
+                                >
                                     {prop.kicker}
                                 </span>
-                                <h3 className="mb-2 text-base font-medium tracking-tight text-foreground">
+                                <h3 style={{ fontWeight: 600, fontSize: 15.5, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em', lineHeight: 1.3 }}>
                                     {prop.title}
                                 </h3>
-                                <p className="text-sm leading-relaxed text-muted-foreground">
-                                    {prop.text}
-                                </p>
+                                <p style={{ color: TEXT_MED, fontSize: 13.5, lineHeight: 1.65 }}>{prop.text}</p>
                             </div>
                         ))}
                     </div>
-                    <div className="mt-10 text-center">
-                        <button
-                            onClick={scrollToForm}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90"
-                        >
-                            <Wand2 size={15} />
+
+                    <div className="mt-9 text-center">
+                        <button onClick={scrollToForm} style={ctaStyle}>
+                            <Wand2 size={16} />
                             Generar mi prompt
                         </button>
-                        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+                        <p style={{ marginTop: 16, fontSize: 13.5, color: TEXT_MED }}>
                             ¿Prefieres uno ya probado?{' '}
-                            <Link to="/prompts" className="underline transition hover:text-foreground">Explora la librería</Link>.
+                            <Link to="/prompts" style={{ color: TEXT, fontWeight: 600, textDecoration: 'none' }}>
+                                Explora el banco →
+                            </Link>
                         </p>
                     </div>
                 </section>
