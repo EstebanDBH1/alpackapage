@@ -256,7 +256,7 @@ const Ebook: React.FC = () => {
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#222'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#000'; }}
           >
-            Comprar — $10
+            Comprar — $14,99
             <ArrowRight size={12} />
           </a>
         </div>
@@ -338,7 +338,7 @@ const Ebook: React.FC = () => {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '10px 22px' }}>
                 {[
-                  'Pago único de $10',
+                  'Pago único de $14,99',
                   'Acceso en 2 minutos',
                   'Garantía de 30 días',
                 ].map((t, i) => (
@@ -773,7 +773,7 @@ const Ebook: React.FC = () => {
                 letterSpacing: '-0.02em',
                 marginBottom: 14,
               }}>
-                Todo lo que te llevas por $10.
+                Todo lo que te llevas por $14,99.
               </h2>
               <p style={{ color: TEXT_MED, fontSize: 16, maxWidth: 480, margin: '0 auto' }}>
                 Sin letra pequeña ni "pero". Esto es literalmente todo lo que incluye.
@@ -956,7 +956,7 @@ const Ebook: React.FC = () => {
             </h2>
 
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 17, lineHeight: 1.8, maxWidth: 480, margin: '0 auto 52px' }}>
-              Son $10, una sola vez. Lo tienes en tu correo en un par de minutos. Y si no te sirve, te devuelvo el dinero sin preguntar. Lo peor que puede pasar es que no pierdas nada.
+              Son $14,99, una sola vez. Lo tienes en tu correo en un par de minutos. Y si no te sirve, te devuelvo el dinero sin preguntar. Lo peor que puede pasar es que no pierdas nada.
             </p>
 
             {/* Pricing card */}
@@ -974,7 +974,7 @@ const Ebook: React.FC = () => {
               </p>
 
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 72, color: 'white', lineHeight: 1 }}>$10</span>
+                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 62, color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>$14,99</span>
                 <div>
                   <p style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>$37</p>
                   <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>pago único</p>
@@ -1027,7 +1027,7 @@ const Ebook: React.FC = () => {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(102,126,234,0.5)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(102,126,234,0.35)'; }}
               >
-                Quiero la biblioteca — $10
+                Quiero la biblioteca — $14,99
                 <ArrowRight size={17} />
               </a>
 
