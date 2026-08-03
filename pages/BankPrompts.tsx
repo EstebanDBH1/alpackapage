@@ -25,14 +25,22 @@ const BuyButton: React.FC<{ full?: boolean; label?: string; size?: 'sm' | 'md' |
 
 /* ─── Categorías del pack ─── */
 const categorias = [
-  { emoji: '💼', title: 'Negocios y emprendimiento', desc: 'Crea ofertas, analiza a tus competidores, encuentra fuentes de ingresos.' },
-  { emoji: '🎬', title: 'Creación de contenido',     desc: 'Ganchos virales, guiones de video, descripciones, hilos, ideas ilimitadas.' },
-  { emoji: '✍️', title: 'Ventas y copywriting',      desc: 'Páginas de venta, correos de seguimiento, argumentarios, embudos de conversión.' },
-  { emoji: '⚡', title: 'Productividad y organización', desc: 'Planificación, rutinas, gestión del tiempo, toma de decisiones.' },
-  { emoji: '🧠', title: 'Aprendizaje acelerado',     desc: 'Domina cualquier habilidad 3x más rápido.' },
-  { emoji: '💰', title: 'Finanzas personales',       desc: 'Presupuesto, ahorro, inversión, fuentes de ingresos pasivos.' },
-  { emoji: '📱', title: 'Redes sociales',            desc: 'Estrategias de crecimiento, formatos virales, calendarios de contenido.' },
-  { emoji: '🎯', title: 'Vida profesional',          desc: 'Redacta tu CV, prepara tus entrevistas, negocia tu salario, evoluciona más rápido en tu carrera.' },
+  { emoji: '✍️', title: 'Copywriting & Contenido',        desc: 'Copy, emails, guiones, storytelling, plan multicanal.' },
+  { emoji: '📈', title: 'Marketing & Ventas',             desc: 'Embudos, leads, scripts de cierre, estrategia social.' },
+  { emoji: '📱', title: 'Marketing para Redes Sociales',  desc: 'Ideas virales, calendarios, engagement, branding.' },
+  { emoji: '🌎', title: 'Aprender Inglés',                desc: 'Vocabulario, conversación, phrasal verbs, negocios.' },
+  { emoji: '🎬', title: 'Creación de Contenido',          desc: 'YouTube, guiones, títulos, monetización.' },
+  { emoji: '💰', title: 'Finanzas Personales',            desc: 'Presupuesto, deudas, ahorro, inversión.' },
+  { emoji: '🔮', title: 'Astrología',                     desc: 'Carta natal, compatibilidad, horóscopo personalizado.' },
+  { emoji: '🎥', title: 'Canal de YouTube Sin Rostro',    desc: 'Nicho, producción con IA, marca anónima.' },
+  { emoji: '🧠', title: 'Crecimiento Personal',           desc: 'Autosabotaje, excusas, mentalidad, plan de acción.' },
+  { emoji: '🏃', title: 'Bajar de Peso',                  desc: 'Nutrición, hábitos, planes personalizados.' },
+  { emoji: '💼', title: 'Conseguir Empleo',               desc: 'CV, carta de presentación, LinkedIn, entrevistas.' },
+  { emoji: '⚡', title: 'Productividad',                  desc: 'Priorización, procrastinación, rutinas y flujo de trabajo.' },
+  { emoji: '🇫🇷', title: 'Aprender Francés',               desc: 'Programa intensivo, conversación y pronunciación.' },
+  { emoji: '🔍', title: 'SEO y Contenido',                desc: 'Investigación de keywords, auditoría on-page, redacción de artículos.' },
+  { emoji: '💻', title: 'Vibe Coding',                    desc: 'De la idea al brief, debugging sin saber código, ordenar proyectos caóticos.' },
+  { emoji: '🎨', title: 'Creatividad',                    desc: 'Generación de ideas, bloqueo creativo, naming, crítica de obra, voz propia y dirección visual.' },
 ];
 
 const BankPrompts: React.FC = () => {
@@ -126,55 +134,18 @@ const BankPrompts: React.FC = () => {
               </p>
             </div>
 
-            {/* Banner del producto */}
+            {/* Imagen del producto */}
             <div
-              className="relative mt-8 overflow-hidden"
-              style={{
-                borderRadius: 20,
-                border: `1px solid ${BORDER}`,
-                background: 'linear-gradient(135deg, #07080d 0%, #101528 55%, #0b0d16 100%)',
-                boxShadow: '0 22px 60px rgba(10,12,25,0.28)',
-              }}
+              className="mt-8 overflow-hidden"
+              style={{ borderRadius: 20, border: `1px solid ${BORDER}`, backgroundColor: BG_WARM }}
             >
-              <div
-                className="bp-glow"
-                style={{
-                  position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)',
-                  width: 620, height: 420, pointerEvents: 'none',
-                  background: 'radial-gradient(circle, rgba(88,160,255,0.55), rgba(88,160,255,0) 62%)',
-                  filter: 'blur(30px)',
-                }}
+              <img
+                src="/bank-prompts/Alpacka-hero.png"
+                alt="Pack de prompts en Notion: organizado, actualizado y accesible desde cualquier dispositivo, compatible con ChatGPT, Claude, Gemini, Perplexity y Midjourney"
+                loading="eager"
+                decoding="async"
+                style={{ display: 'block', width: '100%', height: 'auto' }}
               />
-              <div
-                style={{
-                  position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.35,
-                  backgroundImage:
-                    'linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)',
-                  backgroundSize: '46px 46px',
-                  maskImage: 'radial-gradient(circle at 50% 40%, #000 30%, transparent 78%)',
-                  WebkitMaskImage: 'radial-gradient(circle at 50% 40%, #000 30%, transparent 78%)',
-                }}
-              />
-              <div className="relative text-center px-6 py-14 sm:py-20">
-                <p style={{ fontSize: 11, letterSpacing: '0.34em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.42)', marginBottom: 16 }}>
-                  Notion · ChatGPT · Claude · Gemini
-                </p>
-                <p
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 'clamp(1.9rem, 5.2vw, 3.4rem)',
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1.05,
-                    color: '#ffffff',
-                    marginBottom: 18,
-                  }}
-                >
-                  PACK DE <span style={{ color: YELLOW }}>500</span> PROMPTS
-                </p>
-                <p style={{ fontSize: 'clamp(13.5px, 1.9vw, 17px)', color: 'rgba(255,255,255,0.62)' }}>
-                  La IA no es <span style={{ color: '#8ab6ff' }}>mágica</span>. Tu prompt <span style={{ color: YELLOW }}>sí lo es</span>.
-                </p>
-              </div>
             </div>
 
             {/* Entrega */}
@@ -256,7 +227,7 @@ const BankPrompts: React.FC = () => {
             {/* LO QUE OBTIENES — cards a todo el ancho de la columna */}
             <section className="mt-14">
               <Eyebrow>Lo que obtienes</Eyebrow>
-              <H2>📁 +500 prompts organizados por área</H2>
+              <H2>📁 +500 prompts organizados en 16 áreas</H2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
                 {categorias.map(c => (
@@ -337,12 +308,16 @@ const BankPrompts: React.FC = () => {
                 <Eyebrow color="#c98200" bg="#fff7e8" border="#fbe3b0">Para quién es esto</Eyebrow>
                 <H2>Esto es para ti si…</H2>
                 <div style={{ marginTop: -4 }}>
-                  <Row kind="point">Creas contenido y quieres producir 10x más rápido.</Row>
-                  <Row kind="point">Tienes un negocio y quieres usar la IA como un experto.</Row>
-                  <Row kind="point">Vendes productos o servicios y quieres un copywriting profesional.</Row>
-                  <Row kind="point">Quieres aprender una nueva habilidad rápidamente.</Row>
+                  <Row kind="point">Creas contenido o vendes online y quieres producir 10x más rápido.</Row>
+                  <Row kind="point">Tienes un negocio y quieres usar la IA como un experto: copy, embudos, SEO, redes.</Row>
+                  <Row kind="point">Estás aprendiendo algo —inglés, francés, código— y quieres un tutor disponible 24/7.</Row>
+                  <Row kind="point">Quieres ordenar tu vida: dinero, peso, hábitos, productividad, cabeza.</Row>
+                  <Row kind="point">Estás buscando trabajo y necesitas CV, LinkedIn y entrevistas que sí funcionen.</Row>
                   <Row kind="point">Estás harto de las respuestas mediocres de ChatGPT o cualquier otra IA generativa.</Row>
                 </div>
+                <p style={{ color: TEXT_DIM, fontSize: 14.5, lineHeight: 1.7, marginTop: 14 }}>
+                  No hace falta que te encaje todo: con que uses dos o tres de las 16 áreas, el pack ya se paga solo.
+                </p>
               </section>
 
               {/* ANTES / DESPUÉS */}
@@ -372,8 +347,9 @@ const BankPrompts: React.FC = () => {
               <section className="mt-14">
                 <Eyebrow>Ya lo están usando</Eyebrow>
                 <P>
-                  Creadores de contenido, emprendedores y freelancers. Quienes usan la IA para ciertas tareas ya utilizan
-                  estos prompts todos los días para ahorrar tiempo y dinero.
+                  Creadores de contenido, emprendedores y freelancers, pero también gente que solo quería ordenar sus
+                  finanzas, preparar una entrevista o por fin aprender inglés. Todos usan estos prompts a diario para
+                  ahorrar tiempo y dinero.
                 </P>
                 <p
                   style={{
@@ -473,7 +449,7 @@ const BankPrompts: React.FC = () => {
                   {[
                     '+500 prompts listos para usar',
                     'Organizados en Notion, duplicable en tu cuenta',
-                    '8 áreas: negocio, contenido, ventas…',
+                    '16 áreas: marketing, finanzas, empleo…',
                     'Compatible con ChatGPT y Claude',
                     'Actualizaciones de por vida incluidas',
                   ].map(t => (
