@@ -146,7 +146,18 @@ export const Cta: React.FC<{
     return <Link to={to} style={style}>{content}</Link>;
   }
 
-  return <a href={href} style={style}>{content}</a>;
+  // Los enlaces externos (checkout de Hotmart, etc.) se abren en otra pestaña.
+  const external = /^https?:\/\//.test(href);
+
+  return (
+    <a
+      href={href}
+      style={style}
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      {content}
+    </a>
+  );
 };
 
 /* Card con hover sutil (usada en las rejillas de categorías) */

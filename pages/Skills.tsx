@@ -1,6 +1,10 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, Check, Copy, X } from 'lucide-react';
+import { Search, Check, Copy, X, ArrowRight } from 'lucide-react';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
 
 // ── Datos de skills (estático, fácil de ampliar) ─────────────────────────────
 interface ClaudeSkill {
@@ -482,25 +486,9 @@ const CATEGORIES = ['todas', ...Array.from(new Set(SKILLS.map(s => s.category)))
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// ── Entrada sutil del texto del hero (CSS, respeta prefers-reduced-motion) ───
-const AnimatedText: React.FC<{ text: string; className?: string; delay?: number; stagger?: number }> = ({
-    text, className = '', delay = 0,
-}) => (
-    <span key={text} className={`animate-fade-up inline-block ${className}`} style={{ animationDelay: `${delay}s` }}>
-        {text}
-    </span>
-);
-
-// ── Aparición suave ───────────────────────────────────────────────────────────
-const FadeIn: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({
-    children, className = '', delay = 0,
-}) => (
-    <p className={`animate-fade-up ${className}`} style={{ animationDelay: `${delay}s` }}>{children}</p>
-);
-
 // ── Botón copiar reutilizable ────────────────────────────────────────────────
-const CopyButton: React.FC<{ text: string; label?: string; className?: string }> = ({
-    text, label = 'Copiar skill', className = '',
+const CopyButton: React.FC<{ text: string; label?: string; full?: boolean }> = ({
+    text, label = 'Copiar skill', full,
 }) => {
     const [copied, setCopied] = useState(false);
 
@@ -519,9 +507,17 @@ const CopyButton: React.FC<{ text: string; label?: string; className?: string }>
         <button
             type="button"
             onClick={copy}
-            className={`inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 ${className}`}
+            style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                width: full ? '100%' : undefined,
+                backgroundColor: copied ? '#eefbf2' : YELLOW,
+                border: `1px solid ${copied ? '#c3ecd1' : YELLOW}`,
+                color: copied ? GREEN : '#1a1500',
+                fontWeight: 600, fontSize: 14.5, padding: '13px 24px', borderRadius: 12,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+            }}
         >
-            {copied ? <Check size={15} /> : <Copy size={15} />}
+            {copied ? <Check size={15} strokeWidth={3} /> : <Copy size={15} />}
             {copied ? '¡Copiada!' : label}
         </button>
     );
@@ -531,6 +527,8 @@ const Skills: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState('todas');
     const [searchQuery, setSearchQuery] = useState('');
     const [openSkill, setOpenSkill] = useState<ClaudeSkill | null>(null);
+
+    useEuclidFont();
 
     const filteredSkills = useMemo(() => SKILLS.filter(skill => {
         const matchesCategory = selectedCategory === 'todas' || skill.category === selectedCategory;
@@ -543,135 +541,185 @@ const Skills: React.FC = () => {
     const cardsKey = useMemo(() => filteredSkills.map(s => s.id).join(','), [filteredSkills]);
 
     return (
-        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
 
-            <div className="relative">
-                {/* ── Hero ──────────────────────────────────────────────────────── */}
-                <div className="px-4 pt-14 pb-10 text-center sm:px-8">
-                    <div className="mx-auto max-w-3xl">
+            {/* ── Hero ──────────────────────────────────────────────────────── */}
+            <div className="px-5 sm:px-8 pt-12 pb-9 text-center">
+                <div className="mx-auto" style={{ maxWidth: 720 }}>
+                    <div
+                        className="inline-flex items-center gap-2 rounded-full"
+                        style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 18 }}
+                    >
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
+                        <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                            Skills para Claude
+                        </span>
+                    </div>
 
-                        {/* Badge */}
-                        <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
-                            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
-                            <span>Skills para Claude</span>
-                        </div>
+                    <h1
+                        className="animate-fade-up"
+                        style={{
+                            fontWeight: 600,
+                            fontSize: 'clamp(1.75rem, 3.6vw, 2.6rem)',
+                            lineHeight: 1.12,
+                            letterSpacing: '-0.03em',
+                            color: TEXT,
+                            marginBottom: 14,
+                        }}
+                    >
+                        Skills listas para copiar. Claude, con superpoderes.
+                    </h1>
 
-                        <h1 className="mt-6 mb-5 text-balance text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
-                            <AnimatedText text="Skills listas para copiar. Claude, con superpoderes." />
-                        </h1>
-                        <FadeIn
-                            delay={0.25}
-                            className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground"
+                    <p
+                        className="animate-fade-up"
+                        style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.75, maxWidth: 620, margin: '0 auto', animationDelay: '0.15s' }}
+                    >
+                        Una skill es un conjunto de instrucciones que convierte a Claude en un especialista.
+                        Copia la que necesites, pégala en tu conversación y listo: sin instalar nada.
+                    </p>
+                </div>
+            </div>
+
+            {/* ── Barra de filtros (sticky bajo el navbar) ───────────────────── */}
+            <div
+                style={{
+                    position: 'sticky', top: 60, zIndex: 40,
+                    backgroundColor: 'rgba(255,255,255,0.88)',
+                    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+                    borderTop: `1px solid ${BORDER}`,
+                    borderBottom: `1px solid ${BORDER}`,
+                }}
+            >
+                <div className="mx-auto max-w-4xl px-5 sm:px-8 py-3.5 flex flex-col items-center gap-3.5">
+
+                    {/* Búsqueda */}
+                    <div className="relative w-full" style={{ maxWidth: 560 }}>
+                        <Search
+                            size={15}
+                            style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: TEXT_DIM, pointerEvents: 'none' }}
+                        />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Buscar una skill…"
+                            style={{
+                                width: '100%', backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 12,
+                                padding: '11px 18px 11px 42px', fontSize: 14, color: TEXT, outline: 'none',
+                            }}
+                            onFocus={e => { e.currentTarget.style.borderColor = '#c9c9c2'; }}
+                            onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
+                        />
+                    </div>
+
+                    {/* Categorías */}
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                        {CATEGORIES.map(cat => {
+                            const active = selectedCategory === cat;
+                            return (
+                                <button
+                                    key={cat}
+                                    onClick={() => setSelectedCategory(cat)}
+                                    style={{
+                                        backgroundColor: active ? '#fff7e8' : BG_WARM,
+                                        border: `1px solid ${active ? '#fbe3b0' : BORDER}`,
+                                        color: active ? '#a86a00' : TEXT_MED,
+                                        borderRadius: 100, padding: '6px 13px',
+                                        fontSize: 12.5, fontWeight: 600, cursor: 'pointer',
+                                        textTransform: 'capitalize', whiteSpace: 'nowrap',
+                                    }}
+                                >
+                                    {cat}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            <main className="mx-auto max-w-6xl px-5 sm:px-8 pt-10 pb-20">
+
+                {/* ── Grid de skills ──────────────────────────────────── */}
+                <div
+                    key={cardsKey}
+                    className="animate-fade-in grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3"
+                >
+                    {filteredSkills.map(skill => (
+                        <SkillCard key={skill.id} skill={skill} onOpen={() => setOpenSkill(skill)} />
+                    ))}
+                </div>
+
+                {/* Estado vacío */}
+                {filteredSkills.length === 0 && (
+                    <div className="text-center" style={{ padding: '48px 0' }}>
+                        <p style={{ color: TEXT_MED, fontSize: 15, marginBottom: 20 }}>
+                            Ninguna skill coincide con tu búsqueda.
+                        </p>
+                        <button
+                            onClick={() => { setSelectedCategory('todas'); setSearchQuery(''); }}
+                            style={{
+                                backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 12,
+                                padding: '11px 20px', fontSize: 14, fontWeight: 600, color: TEXT, cursor: 'pointer',
+                            }}
                         >
-                            Una skill es un conjunto de instrucciones que convierte a Claude en un especialista.
-                            Copia la que necesites, pégala en tu conversación y listo: sin instalar nada.
-                        </FadeIn>
+                            Ver todas las skills
+                        </button>
                     </div>
-                </div>
+                )}
 
-                {/* ── Barra de filtros (sticky) ──────────────────────────────────── */}
-                <div className="sticky top-[70px] z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-                    <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 py-4 sm:px-6">
-
-                        {/* Búsqueda */}
-                        <div className="relative w-full max-w-xl">
-                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                                placeholder="Buscar una skill..."
-                                className="w-full rounded-full border border-border/60 bg-card/60 py-2.5 pl-11 pr-5 text-sm text-foreground placeholder-muted-foreground/60 backdrop-blur transition focus:border-primary/40 focus:outline-none"
-                            />
-                        </div>
-
-                        {/* Categorías */}
-                        <div className="flex flex-wrap items-center justify-center gap-5">
-                            {CATEGORIES.map(cat => {
-                                const active = selectedCategory === cat;
-                                return (
-                                    <button
-                                        key={cat}
-                                        onClick={() => setSelectedCategory(cat)}
-                                        className={`border-b pb-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                                            active
-                                                ? 'border-accent text-accent'
-                                                : 'border-transparent text-muted-foreground hover:text-foreground'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-
-                <main className="flex flex-col items-center px-4 pt-12 pb-16 sm:px-8">
-                    <div className="flex w-full flex-col items-center">
-
-                        {/* ── Grid de skills ──────────────────────────────────── */}
+                {/* ── Cómo se usa una skill ────────────────────────────── */}
+                <div className="mx-auto mt-16" style={{ maxWidth: 640 }}>
+                    <div style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 22, padding: '30px 28px' }}>
                         <div
-                            key={cardsKey}
-                            className="animate-fade-in mb-24 grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+                            className="inline-flex items-center gap-2 rounded-full"
+                            style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 18 }}
                         >
-                            {filteredSkills.map(skill => (
-                                <SkillCard key={skill.id} skill={skill} onOpen={() => setOpenSkill(skill)} />
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
+                            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                                ¿Cómo se usa?
+                            </span>
+                        </div>
+
+                        <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.4rem, 2.8vw, 1.9rem)', letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: 22 }}>
+                            Tres formas, <span style={{ color: ACCENT }}>todas en 30 segundos</span>
+                        </h2>
+
+                        <div className="flex flex-col gap-4">
+                            {[
+                                {
+                                    t: 'Al inicio de un chat:',
+                                    d: 'copia la skill, pégala como primer mensaje y después pide lo que necesites. Claude actuará según esas instrucciones toda la conversación.',
+                                },
+                                {
+                                    t: 'En un Proyecto de claude.ai:',
+                                    d: 'pégala en las instrucciones del proyecto y todos los chats de ese proyecto la usarán automáticamente.',
+                                },
+                                {
+                                    t: 'En Claude Code (avanzado):',
+                                    d: 'guárdala como archivo SKILL.md dentro de .claude/skills/nombre-skill/ y se activará sola cuando haga falta.',
+                                },
+                            ].map((step, i) => (
+                                <div key={i} className="flex items-start gap-3">
+                                    <span
+                                        style={{
+                                            width: 24, height: 24, borderRadius: 8, flexShrink: 0, marginTop: 1,
+                                            backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', color: '#a86a00',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: 12, fontWeight: 700,
+                                        }}
+                                    >
+                                        {i + 1}
+                                    </span>
+                                    <p style={{ color: TEXT_MED, fontSize: 14.5, lineHeight: 1.7 }}>
+                                        <strong style={{ color: TEXT, fontWeight: 600 }}>{step.t}</strong> {step.d}
+                                    </p>
+                                </div>
                             ))}
                         </div>
-
-                        {/* Estado vacío */}
-                        {filteredSkills.length === 0 && (
-                            <div className="-mt-16 mb-24 w-full max-w-3xl text-center">
-                                <p className="mb-6 text-sm text-muted-foreground">
-                                    Ninguna skill coincide con tu búsqueda.
-                                </p>
-                                <button
-                                    onClick={() => { setSelectedCategory('todas'); setSearchQuery(''); }}
-                                    className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:border-primary/40 hover:bg-secondary"
-                                >
-                                    Ver todas las skills
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Divisor */}
-                        <div className="mb-16 h-px w-full max-w-3xl bg-border/60" />
-
-                        {/* ── Cómo se usa una skill ────────────────────────────── */}
-                        <div className="relative w-full max-w-xl">
-                            <div className="absolute -inset-10 -z-10 rounded-full bg-accent/5 blur-3xl"></div>
-
-                            <div className="rounded-3xl border border-primary/30 bg-card px-8 py-10 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)]">
-                                <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-accent/40 bg-secondary px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-accent">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]"></span>
-                                    <span>¿Cómo se usa?</span>
-                                </div>
-
-                                <h2 className="mt-6 mb-6 text-balance text-2xl font-medium leading-tight tracking-tight text-foreground sm:text-3xl">
-                                    Tres formas, <em className="not-italic text-primary/90">todas en 30 segundos</em>
-                                </h2>
-
-                                <ol className="mx-auto mb-2 max-w-md space-y-4 text-left text-sm leading-relaxed text-muted-foreground">
-                                    <li className="flex gap-3">
-                                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-accent">1</span>
-                                        <span><strong className="text-foreground">Al inicio de un chat:</strong> copia la skill, pégala como primer mensaje y después pide lo que necesites. Claude actuará según esas instrucciones toda la conversación.</span>
-                                    </li>
-                                    <li className="flex gap-3">
-                                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-accent">2</span>
-                                        <span><strong className="text-foreground">En un Proyecto de claude.ai:</strong> pégala en las instrucciones del proyecto y todos los chats de ese proyecto la usarán automáticamente.</span>
-                                    </li>
-                                    <li className="flex gap-3">
-                                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-accent">3</span>
-                                        <span><strong className="text-foreground">En Claude Code (avanzado):</strong> guárdala como archivo <span className="font-mono text-xs">SKILL.md</span> dentro de <span className="font-mono text-xs">.claude/skills/nombre-skill/</span> y se activará sola cuando haga falta.</span>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
                     </div>
-                </main>
-            </div>
+                </div>
+            </main>
 
             {/* ── Modal de skill ───────────────────────────────────────────── */}
             {openSkill && <SkillModal skill={openSkill} onClose={() => setOpenSkill(null)} />}
@@ -684,26 +732,55 @@ const SkillCard: React.FC<{ skill: ClaudeSkill; onOpen: () => void }> = ({ skill
     <button
         type="button"
         onClick={onOpen}
-        className="skill-card group relative flex cursor-pointer flex-col rounded-2xl border border-border/70 bg-card p-6 text-left transition hover:border-primary/40"
+        className="flex flex-col text-left"
+        style={{
+            backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 18,
+            padding: '22px 22px 20px', cursor: 'pointer',
+            transition: 'transform .15s, box-shadow .15s, border-color .15s',
+        }}
+        onMouseEnter={e => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.transform = 'translateY(-2px)';
+            el.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
+            el.style.borderColor = '#d8d8d2';
+        }}
+        onMouseLeave={e => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.transform = 'translateY(0)';
+            el.style.boxShadow = 'none';
+            el.style.borderColor = BORDER;
+        }}
     >
-        <div className="mb-4 flex items-center justify-between">
-            <span className="inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="mb-3.5 flex items-center justify-between gap-2">
+            <span
+                style={{
+                    backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 7,
+                    padding: '3px 8px', fontSize: 10, fontWeight: 600,
+                    letterSpacing: '0.12em', textTransform: 'uppercase', color: TEXT_MED,
+                }}
+            >
                 {titleCase(skill.category)}
             </span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-accent">
+            <span
+                style={{
+                    backgroundColor: '#eefbf2', border: '1px solid #c3ecd1', borderRadius: 7,
+                    padding: '3px 8px', fontSize: 10, fontWeight: 700,
+                    letterSpacing: '0.12em', textTransform: 'uppercase', color: GREEN,
+                }}
+            >
                 Gratis
             </span>
         </div>
 
-        <h3 className="mb-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-primary">
+        <h3 style={{ fontWeight: 600, fontSize: 15.5, lineHeight: 1.35, color: TEXT, marginBottom: 8, letterSpacing: '-0.01em' }}>
             {skill.name}
         </h3>
-        <p className="mb-5 flex-grow text-sm leading-relaxed text-muted-foreground line-clamp-3">
+        <p className="line-clamp-3 flex-grow" style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.65, marginBottom: 16 }}>
             {skill.description}
         </p>
 
-        <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors group-hover:text-foreground">
-            Ver y copiar skill →
+        <span className="inline-flex items-center gap-1.5" style={{ fontSize: 13, fontWeight: 600, color: TEXT }}>
+            Ver y copiar skill <ArrowRight size={13} />
         </span>
     </button>
 );
@@ -731,46 +808,83 @@ const SkillModal: React.FC<{ skill: ClaudeSkill; onClose: () => void }> = ({ ski
         <div
             ref={backdropRef}
             onClick={e => { if (e.target === backdropRef.current) onClose(); }}
-            className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-6"
+            className="bp-scope fixed inset-0 z-[60] flex items-end justify-center p-0 sm:items-center sm:p-6"
+            style={{ backgroundColor: 'rgba(15,15,17,0.45)', backdropFilter: 'blur(3px)', fontFamily: FONT }}
             role="dialog"
             aria-modal="true"
             aria-label={`Skill: ${skill.name}`}
         >
+            <LandingStyles />
+
             <div
-                className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border/70 bg-card shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl"
+                className="flex w-full max-w-3xl flex-col overflow-hidden rounded-t-[22px] sm:rounded-[22px]"
+                style={{
+                    maxHeight: '92vh', backgroundColor: BG,
+                    border: `1px solid ${BORDER}`,
+                    boxShadow: '0 24px 70px rgba(0,0,0,0.22)',
+                }}
             >
                 {/* Cabecera */}
-                <div className="flex items-start justify-between gap-4 border-b border-border/60 px-6 py-5 sm:px-8">
+                <div
+                    className="flex items-start justify-between gap-4"
+                    style={{ padding: '20px 24px', borderBottom: `1px solid ${BORDER}`, backgroundColor: BG_WARM }}
+                >
                     <div>
-                        <span className="mb-2 inline-block rounded-md border border-border/50 bg-secondary px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                        <span
+                            className="inline-block mb-2"
+                            style={{
+                                backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 7,
+                                padding: '3px 8px', fontSize: 10, fontWeight: 600,
+                                letterSpacing: '0.12em', textTransform: 'uppercase', color: TEXT_MED,
+                            }}
+                        >
                             {titleCase(skill.category)}
                         </span>
-                        <h2 className="text-xl font-medium leading-tight text-foreground sm:text-2xl">{skill.name}</h2>
+                        <h2 style={{ fontWeight: 600, fontSize: 20, lineHeight: 1.25, letterSpacing: '-0.02em', color: TEXT }}>
+                            {skill.name}
+                        </h2>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
                         aria-label="Cerrar"
-                        className="rounded-full p-2 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                        style={{
+                            width: 34, height: 34, borderRadius: 10, flexShrink: 0,
+                            backgroundColor: BG, border: `1px solid ${BORDER}`, color: TEXT_MED,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                        }}
                     >
-                        <X size={18} />
+                        <X size={17} />
                     </button>
                 </div>
 
                 {/* Contenido */}
-                <div className="flex-1 overflow-y-auto px-6 py-5 sm:px-8">
-                    <p className="mb-5 text-sm leading-relaxed text-muted-foreground">{skill.description}</p>
-                    <pre className="whitespace-pre-wrap rounded-2xl border border-border/60 bg-secondary/50 p-5 font-mono text-[13px] leading-relaxed text-foreground/90">
+                <div className="flex-1 overflow-y-auto subtle-scrollbar" style={{ padding: '20px 24px' }}>
+                    <p style={{ color: TEXT_MED, fontSize: 14.5, lineHeight: 1.7, marginBottom: 18 }}>
+                        {skill.description}
+                    </p>
+                    <pre
+                        style={{
+                            whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                            backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 16,
+                            padding: 20, fontSize: 13.5, lineHeight: 1.75, color: TEXT,
+                        }}
+                    >
                         {skill.content}
                     </pre>
                 </div>
 
                 {/* Pie con acciones */}
-                <div className="flex flex-col items-center gap-3 border-t border-border/60 px-6 py-5 sm:flex-row sm:justify-between sm:px-8">
-                    <p className="text-xs leading-relaxed text-muted-foreground">
+                <div
+                    className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between"
+                    style={{ padding: '16px 24px', borderTop: `1px solid ${BORDER}`, backgroundColor: BG_WARM }}
+                >
+                    <p style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.6 }}>
                         Pégala al inicio de tu chat con Claude y pide lo que necesites.
                     </p>
-                    <CopyButton text={skill.content} className="w-full sm:w-auto" />
+                    <div className="w-full sm:w-auto">
+                        <CopyButton text={skill.content} full />
+                    </div>
                 </div>
             </div>
         </div>,

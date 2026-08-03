@@ -15,8 +15,8 @@ import {
    header, footer y tipografía (Euclid Circular).
    ══════════════════════════════════════════════════════════════ */
 
-/* ⚠️ TODO: reemplazar por el enlace real de pago (Hotmart/Stripe/…) */
-const BUY_URL = '#comprar';
+/* Checkout de Hotmart (el mismo producto que /ebook) */
+const BUY_URL = 'https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034';
 
 /* ─── Botón de compra (usa el CTA del kit con la URL de pago) ─── */
 const BuyButton: React.FC<{ full?: boolean; label?: string; size?: 'sm' | 'md' | 'lg' }> = ({
@@ -69,7 +69,7 @@ const BankPrompts: React.FC = () => {
 
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline" style={{ fontSize: 13, color: TEXT_DIM, textDecoration: 'line-through' }}>29$</span>
-            <BuyButton size="sm" label="Obtenerlo — 11$" />
+            <BuyButton size="sm" label="Obtenerlo — 14,99$" />
           </div>
         </div>
       </header>
@@ -323,7 +323,7 @@ const BankPrompts: React.FC = () => {
                 style={{ backgroundColor: BG_INK, borderRadius: 14, padding: '14px 18px' }}
               >
                 <InfinityIcon size={16} style={{ color: YELLOW, flexShrink: 0 }} />
-                <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 600 }}>Un solo pago de 11$.</span>
+                <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 600 }}>Un solo pago de 14,99$.</span>
                 <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
                   Sin suscripción, sin “versión 2.0” que comprar de nuevo. Todo lo que añada, lo tienes.
                 </span>
@@ -398,7 +398,7 @@ const BankPrompts: React.FC = () => {
                   <div style={{ padding: '28px 26px', backgroundColor: BG }}>
                     <div className="flex items-end gap-3 mb-1">
                       <span style={{ fontSize: 17, color: TEXT_DIM, textDecoration: 'line-through' }}>29$</span>
-                      <span style={{ fontWeight: 600, fontSize: 46, lineHeight: 1, letterSpacing: '-0.04em', color: TEXT }}>11$</span>
+                      <span style={{ fontWeight: 600, fontSize: 46, lineHeight: 1, letterSpacing: '-0.04em', color: TEXT }}>14,99$</span>
                       <span style={{ fontSize: 14, color: TEXT_MED, paddingBottom: 5 }}>hoy ⚡️</span>
                     </div>
                     <p style={{ color: TEXT_DIM, fontSize: 13.5, marginBottom: 22 }}>
@@ -422,7 +422,7 @@ const BankPrompts: React.FC = () => {
                     </div>
 
                     <div className="mt-7">
-                      <BuyButton full size="lg" label="Obtener el pack — 11$" />
+                      <BuyButton full size="lg" label="Obtener el pack — 14,99$" />
                     </div>
                   </div>
 
@@ -463,7 +463,7 @@ const BankPrompts: React.FC = () => {
               <div style={{ padding: '24px 22px' }}>
                 <div className="flex items-baseline gap-2.5 mb-1">
                   <span style={{ fontSize: 15, color: TEXT_DIM, textDecoration: 'line-through' }}>29$</span>
-                  <span style={{ fontWeight: 600, fontSize: 34, lineHeight: 1, letterSpacing: '-0.035em', color: ACCENT }}>11$</span>
+                  <span style={{ fontWeight: 600, fontSize: 34, lineHeight: 1, letterSpacing: '-0.035em', color: ACCENT }}>14,99$</span>
                 </div>
                 <p style={{ color: TEXT_DIM, fontSize: 12.5, marginBottom: 18 }}>Pago único · Notion · Acceso de por vida</p>
 
@@ -526,11 +526,11 @@ const BankPrompts: React.FC = () => {
             <span style={{ color: YELLOW }}>tiempo perdido</span>, contenido fallido y dinero dejado sobre la mesa.
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, lineHeight: 1.75, marginBottom: 36 }}>
-            11$ hoy.<br />
+            14,99$ hoy.<br />
             Horas ahorradas cada semana para el resto de tu vida.
           </p>
 
-          <BuyButton size="lg" label="Quiero los 500 prompts — 11$" />
+          <BuyButton size="lg" label="Quiero los 500 prompts — 14,99$" />
 
           <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 mt-9">
             {[
@@ -579,7 +579,7 @@ const BankPrompts: React.FC = () => {
         <div>
           <div className="flex items-baseline gap-2">
             <span style={{ fontSize: 12.5, color: TEXT_DIM, textDecoration: 'line-through' }}>29$</span>
-            <span style={{ fontWeight: 600, fontSize: 20, color: TEXT, letterSpacing: '-0.02em' }}>11$</span>
+            <span style={{ fontWeight: 600, fontSize: 20, color: TEXT, letterSpacing: '-0.02em' }}>14,99$</span>
           </div>
           <p style={{ fontSize: 11, color: TEXT_DIM }}>+500 prompts en Notion · pago único</p>
         </div>
