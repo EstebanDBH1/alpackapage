@@ -96,6 +96,37 @@ details[open] .faq-chevron {
   @apply font-semibold text-foreground;
 }
 
+/* Variante clara: dentro de las páginas migradas al diseño nuevo (.bp-scope)
+   los tokens semánticos son del tema oscuro y el texto quedaría invisible. */
+.bp-scope .blog-prose {
+  color: #43434d;
+}
+
+.bp-scope .blog-prose h2,
+.bp-scope .blog-prose h3,
+.bp-scope .blog-prose strong,
+.bp-scope .blog-prose b {
+  color: #15151a;
+}
+
+.bp-scope .blog-prose li::marker {
+  color: #f5324f;
+}
+
+.bp-scope .blog-prose blockquote {
+  border-left-color: #e7e7e2;
+  color: #5c5c66;
+}
+
+.bp-scope .blog-prose img {
+  border-color: #e7e7e2;
+}
+
+.bp-scope .blog-prose a {
+  color: #15151a;
+  text-decoration-color: #c9c9c2;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

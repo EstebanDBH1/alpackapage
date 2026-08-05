@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Bookmark, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, FONT } from './landingKit';
 
 const CATEGORY_EMOJIS: Record<string, string> = {
     marketing: '📣', copywriting: '✍️', ventas: '💰',
@@ -31,26 +32,34 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
     }, [userId]);
 
     return (
-        <div className="rounded-2xl border border-border/70 bg-card p-7 md:p-8">
+        <div
+            className="bp-scope"
+            style={{
+                backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 20,
+                padding: '24px 22px', fontFamily: FONT,
+            }}
+        >
             {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <Bookmark size={14} className="text-muted-foreground" />
-                    <h3 className="text-lg font-medium tracking-tight text-foreground">
+            <div className="mb-5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                    <Bookmark size={15} style={{ color: TEXT_MED }} />
+                    <h3 style={{ fontWeight: 600, fontSize: 16.5, letterSpacing: '-0.02em', color: TEXT }}>
                         Prompts guardados
                     </h3>
                     {!loading && savedPrompts.length > 0 && (
-                        <span className="rounded-full bg-secondary px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+                        <span
+                            style={{
+                                backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 100,
+                                padding: '2px 8px', fontSize: 11.5, fontWeight: 600, color: TEXT_MED,
+                            }}
+                        >
                             {savedPrompts.length}
                         </span>
                     )}
                 </div>
                 {!loading && savedPrompts.length > 0 && (
-                    <Link
-                        to="/prompts"
-                        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-accent"
-                    >
-                        explorar más →
+                    <Link to="/prompts" style={{ fontSize: 13, color: TEXT_MED, textDecoration: 'none' }}>
+                        Explorar más →
                     </Link>
                 )}
             </div>
@@ -59,7 +68,11 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
             {loading && (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-24 animate-pulse rounded-xl bg-secondary" />
+                        <div
+                            key={i}
+                            className="animate-pulse"
+                            style={{ height: 96, borderRadius: 14, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }}
+                        />
                     ))}
                 </div>
             )}
@@ -74,30 +87,41 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
                             <Link
                                 key={item.id}
                                 to={`/prompts/${item.prompts.id}`}
-                                className="group flex flex-col rounded-xl border border-border/60 bg-secondary/40 p-4 transition hover:border-primary/40"
+                                className="flex flex-col"
+                                style={{
+                                    backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 14,
+                                    padding: '14px 15px', textDecoration: 'none',
+                                }}
                             >
-                                {/* Top row */}
-                                <div className="mb-3 flex items-center justify-between">
-                                    <span className="rounded-md border border-border/50 bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+                                <div className="mb-2.5 flex items-center justify-between gap-2">
+                                    <span
+                                        style={{
+                                            backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 7,
+                                            padding: '3px 8px', fontSize: 10, fontWeight: 600,
+                                            letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_MED,
+                                        }}
+                                    >
                                         {emoji} {item.prompts.category || 'general'}
                                     </span>
                                     {item.prompts.is_premium && (
-                                        <span className="flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.15em] text-accent">
-                                            <Lock size={8} /> premium
+                                        <span
+                                            className="inline-flex items-center gap-1"
+                                            style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#a86a00' }}
+                                        >
+                                            <Lock size={9} /> premium
                                         </span>
                                     )}
                                 </div>
 
-                                {/* Title */}
-                                <h4 className="mb-3 flex-1 text-sm font-medium leading-snug text-foreground line-clamp-2">
+                                <h4
+                                    className="line-clamp-2 flex-1"
+                                    style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, color: TEXT, marginBottom: 10 }}
+                                >
                                     {item.prompts.title}
                                 </h4>
 
-                                {/* Footer */}
                                 <div className="flex justify-end">
-                                    <span className="font-mono text-[10px] text-accent transition-transform group-hover:translate-x-1">
-                                        abrir →
-                                    </span>
+                                    <span style={{ fontSize: 12, fontWeight: 600, color: TEXT_MED }}>abrir →</span>
                                 </div>
                             </Link>
                         );
@@ -107,21 +131,39 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
 
             {/* Empty state */}
             {!loading && savedPrompts.length === 0 && (
-                <div className="rounded-xl border border-dashed border-border/70 bg-secondary/30 py-14 text-center">
-                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-border/60 bg-secondary">
-                        <Sparkles size={18} className="text-accent" />
+                <div
+                    className="text-center"
+                    style={{
+                        border: `1px dashed ${BORDER}`, borderRadius: 16, backgroundColor: BG_WARM,
+                        padding: '44px 20px',
+                    }}
+                >
+                    <div
+                        className="mx-auto mb-4"
+                        style={{
+                            width: 46, height: 46, borderRadius: 15,
+                            backgroundColor: BG, border: `1px solid ${BORDER}`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}
+                    >
+                        <Sparkles size={19} style={{ color: '#c98200' }} />
                     </div>
-                    <p className="mb-1 text-sm font-medium text-foreground">
+                    <p style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 6 }}>
                         Aún no guardaste ningún prompt
                     </p>
-                    <p className="mb-5 text-xs text-muted-foreground">
-                        Marca prompts como favoritos desde la biblioteca.
+                    <p style={{ fontSize: 13.5, color: TEXT_MED, marginBottom: 20 }}>
+                        Marca prompts como favoritos desde el banco.
                     </p>
                     <Link
                         to="/prompts"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-xs font-medium text-primary-foreground transition hover:opacity-90"
+                        style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            backgroundColor: YELLOW, color: '#1a1500',
+                            fontWeight: 600, fontSize: 14, padding: '11px 20px', borderRadius: 11,
+                            textDecoration: 'none',
+                        }}
                     >
-                        Explorar biblioteca <ArrowRight size={12} />
+                        Explorar el banco <ArrowRight size={14} />
                     </Link>
                 </div>
             )}

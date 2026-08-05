@@ -127,7 +127,7 @@ const BankPrompts: React.FC = () => {
 
               <p style={{ color: TEXT_MED, fontSize: 'clamp(15.5px, 1.7vw, 18px)', lineHeight: 1.7, maxWidth: 620 }}>
                 <strong style={{ color: TEXT, fontWeight: 600 }}>+500 prompts</strong> probados y listos para copiar y pegar
-                para obtener resultados profesionales con ChatGPT y Claude. A partir de hoy.
+                para obtener resultados profesionales con ChatGPT, Gemini, Claude y cualquier IA generativa. A partir de hoy.
               </p>
               <p style={{ color: TEXT_DIM, fontSize: 14.5, lineHeight: 1.7, marginTop: 12, maxWidth: 620 }}>
                 Todo dentro de un Notion organizado, con actualizaciones de por vida por un solo pago.
@@ -338,7 +338,7 @@ const BankPrompts: React.FC = () => {
                   </p>
                   <Row kind="yes">Abrir este pack.</Row>
                   <Row kind="yes">Copiar el prompt que se adapte a tu necesidad.</Row>
-                  <Row kind="yes">Pegarlo en ChatGPT o Claude.</Row>
+                  <Row kind="yes">Pegarlo en ChatGPT, Gemini, Claude o la IA que uses.</Row>
                   <Row kind="yes">Obtener un resultado profesional en 30 segundos.</Row>
                 </div>
               </section>
@@ -450,7 +450,7 @@ const BankPrompts: React.FC = () => {
                     '+500 prompts listos para usar',
                     'Organizados en Notion, duplicable en tu cuenta',
                     '16 áreas: marketing, finanzas, empleo…',
-                    'Compatible con ChatGPT y Claude',
+                    'Compatible con ChatGPT, Gemini, Claude y cualquier LLM',
                     'Actualizaciones de por vida incluidas',
                   ].map(t => (
                     <div key={t} className="flex items-start gap-2.5">

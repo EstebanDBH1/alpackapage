@@ -3,11 +3,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import SavedPrompts from '../components/SavedPrompts';
 import { ChevronLeft, LayoutDashboard } from 'lucide-react';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, BORDER, ACCENT, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
 
 const SavedPromptsPage: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+
+    useEuclidFont();
 
     useEffect(() => {
         // getSession lee del almacenamiento local: la página aparece al instante
@@ -20,63 +26,81 @@ const SavedPromptsPage: React.FC = () => {
     }, [navigate]);
 
     if (loading) return (
-        <div className="min-h-screen bg-background bg-radial-glow font-space">
-            <div className="max-w-3xl mx-auto px-6 pt-16 space-y-4">
-                <div className="h-4 w-20 animate-pulse rounded-full bg-card" />
-                <div className="h-9 w-56 animate-pulse rounded-xl bg-card" />
-                <div className="mt-8 grid grid-cols-2 gap-3">
+        <div className="bp-scope" style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: FONT }}>
+            <LandingStyles />
+            <div className="mx-auto max-w-3xl px-5 sm:px-8 pt-16 space-y-4">
+                <div className="animate-pulse" style={{ height: 14, width: 90, borderRadius: 7, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
+                <div className="animate-pulse" style={{ height: 40, width: 260, borderRadius: 12, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
+                <div className="grid grid-cols-2 gap-3" style={{ marginTop: 28 }}>
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-28 animate-pulse rounded-xl bg-card" />
+                        <div key={i} className="animate-pulse" style={{ height: 104, borderRadius: 14, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
                     ))}
                 </div>
             </div>
         </div>
     );
 
+    const subNavLink: React.CSSProperties = {
+        display: 'inline-flex', alignItems: 'center', gap: 7,
+        fontSize: 13.5, color: TEXT_MED, textDecoration: 'none',
+        background: 'none', border: 'none', cursor: 'pointer',
+    };
+
     return (
-        <div className="relative min-h-screen overflow-x-clip bg-background bg-radial-glow pb-24 font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT, paddingBottom: 60 }}>
+            <LandingStyles />
 
-            <div className="relative">
             {/* Sub-nav */}
-            <div className="sticky top-[70px] z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-                <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-6">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        <ChevronLeft size={14} />
-                        volver
+            <div
+                style={{
+                    position: 'sticky', top: 60, zIndex: 40,
+                    backgroundColor: 'rgba(255,255,255,0.88)',
+                    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+                    borderTop: `1px solid ${BORDER}`,
+                    borderBottom: `1px solid ${BORDER}`,
+                }}
+            >
+                <div className="mx-auto max-w-3xl px-5 sm:px-8 flex items-center justify-between" style={{ height: 52 }}>
+                    <button onClick={() => navigate(-1)} style={subNavLink}>
+                        <ChevronLeft size={15} /> Volver
                     </button>
-
-                    <Link
-                        to="/dashboard"
-                        className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        <LayoutDashboard size={13} />
-                        dashboard
+                    <Link to="/dashboard" style={subNavLink}>
+                        <LayoutDashboard size={14} /> Mi cuenta
                     </Link>
                 </div>
             </div>
 
             {/* Header */}
-            <div className="max-w-3xl mx-auto px-6 pt-12 pb-8">
-                <p className="mb-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_10px_oklch(0.72_0.16_40)]" />
-                    tu colección
-                </p>
-                <h1 className="text-4xl font-medium leading-tight tracking-tight text-foreground sm:text-5xl">
+            <div className="mx-auto max-w-3xl px-5 sm:px-8 pt-12 pb-7">
+                <div
+                    className="inline-flex items-center gap-2 rounded-full"
+                    style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 18 }}
+                >
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: ACCENT }} />
+                    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                        Tu colección
+                    </span>
+                </div>
+
+                <h1
+                    style={{
+                        fontWeight: 600,
+                        fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
+                        lineHeight: 1.1,
+                        letterSpacing: '-0.035em',
+                        marginBottom: 12,
+                    }}
+                >
                     Prompts guardados
                 </h1>
-                <p className="mt-3 text-base text-muted-foreground">
+                <p style={{ color: TEXT_MED, fontSize: 16, lineHeight: 1.7 }}>
                     Todos los prompts que marcaste como favoritos.
                 </p>
             </div>
 
             {/* Content */}
-            <div className="max-w-3xl mx-auto px-6">
+            <div className="mx-auto max-w-3xl px-5 sm:px-8">
                 <SavedPrompts userId={user.id} />
-            </div>
             </div>
         </div>
     );

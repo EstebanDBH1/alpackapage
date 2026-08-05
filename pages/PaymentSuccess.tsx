@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, ArrowRight, Sparkles, Zap, BookOpen, Loader2 } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, Zap, Wand2, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import {
+    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
+    useEuclidFont, LandingStyles,
+} from '../components/landingKit';
 
 const REDIRECT_SECONDS = 7;
 
@@ -10,6 +14,8 @@ const PaymentSuccess: React.FC = () => {
     const [countdown, setCountdown] = useState(REDIRECT_SECONDS);
     const [isVerifying, setIsVerifying] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
+
+    useEuclidFont();
 
     useEffect(() => {
         let attempts = 0;
@@ -68,82 +74,106 @@ const PaymentSuccess: React.FC = () => {
     }, [navigate]);
 
     const perks = [
-        { icon: Zap, text: 'Acceso ilimitado a 1.2M+ prompts' },
-        { icon: BookOpen, text: 'Actualizaciones diarias de contenido' },
-        { icon: Sparkles, text: 'Uso comercial incluido' },
+        { icon: Zap, color: '#c98200', bg: '#fff7e8', bd: '#fbe3b0', text: 'Acceso ilimitado a +1.000 prompts' },
+        { icon: Wand2, color: '#8b5cf6', bg: '#f7f2ff', bd: '#e2d5fb', text: 'Generador con IA — 10 prompts al día' },
+        { icon: Sparkles, color: GREEN, bg: '#eefbf2', bd: '#c3ecd1', text: 'Prompts nuevos cada semana, incluidos' },
     ];
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-x-clip bg-background bg-radial-glow px-4 py-20 font-space text-foreground">
-            <div className="pointer-events-none absolute inset-0 bg-star-field opacity-40"></div>
+        <div
+            className="bp-scope flex min-h-screen items-center justify-center px-5 py-16"
+            style={{ backgroundColor: BG, color: TEXT, fontFamily: FONT }}
+        >
+            <LandingStyles />
 
-            <div className="relative w-full max-w-lg">
-                <div className="absolute -inset-10 -z-10 rounded-full bg-primary/5 blur-3xl"></div>
-
-                {/* Card principal */}
-                <div className="rounded-3xl border border-primary/30 bg-card p-10 text-center shadow-[0_0_80px_oklch(0.86_0.09_90_/_0.08)]">
-
-                    {/* Icono animado */}
-                    <div className="mb-8 flex justify-center">
-                        <div className="relative">
-                            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)]">
-                                <CheckCircle size={36} className="text-primary-foreground" strokeWidth={2} />
-                            </div>
-                            <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-10" />
+            <div className="bp-up w-full" style={{ maxWidth: 480 }}>
+                <div
+                    className="text-center"
+                    style={{
+                        backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 22,
+                        padding: '38px 32px', boxShadow: '0 14px 44px rgba(0,0,0,0.06)',
+                    }}
+                >
+                    {/* Icono */}
+                    <div className="mb-7 flex justify-center">
+                        <div
+                            style={{
+                                width: 68, height: 68, borderRadius: 22,
+                                backgroundColor: '#eefbf2', border: '1px solid #c3ecd1',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}
+                        >
+                            <CheckCircle size={32} strokeWidth={2} style={{ color: GREEN }} />
                         </div>
                     </div>
 
-                    {/* Título */}
-                    <h1 className="mb-3 text-3xl font-medium tracking-tight text-foreground">
+                    <h1 style={{ fontWeight: 600, fontSize: 28, letterSpacing: '-0.035em', lineHeight: 1.15, marginBottom: 12 }}>
                         ¡Ya eres premium!
                     </h1>
-                    <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
+                    <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>
                         Tu suscripción está activa. Bienvenido al banco de prompts más completo en español.
                     </p>
 
                     {/* Estado de verificación */}
                     {isVerifying && (
-                        <div className="mb-6 flex items-center justify-center gap-2 font-mono text-xs text-muted-foreground">
-                            <Loader2 size={12} className="animate-spin" />
-                            verificando suscripción...
+                        <div className="mb-6 flex items-center justify-center gap-2" style={{ fontSize: 13, color: TEXT_DIM }}>
+                            <Loader2 size={13} className="animate-spin" />
+                            Verificando suscripción…
                         </div>
                     )}
                     {!isVerifying && isConfirmed && (
-                        <div className="mx-auto mb-6 flex w-fit items-center justify-center gap-2 rounded-full border border-accent/40 bg-secondary px-4 py-2 font-mono text-xs text-accent">
-                            <CheckCircle size={12} />
-                            suscripción confirmada
+                        <div
+                            className="mx-auto mb-6 flex w-fit items-center gap-2"
+                            style={{
+                                backgroundColor: '#eefbf2', border: '1px solid #c3ecd1', borderRadius: 100,
+                                padding: '6px 14px', fontSize: 12.5, fontWeight: 600, color: GREEN,
+                            }}
+                        >
+                            <CheckCircle size={13} /> Suscripción confirmada
                         </div>
                     )}
 
-                    {/* Perks */}
-                    <ul className="mb-10 space-y-3 text-left">
-                        {perks.map(({ icon: Icon, text }, i) => (
-                            <li key={i} className="flex items-center gap-3 text-sm text-foreground/90">
-                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-secondary">
-                                    <Icon size={14} className="text-accent" />
-                                </div>
-                                <span className="font-medium">{text}</span>
-                            </li>
+                    {/* Beneficios */}
+                    <div className="mb-8 flex flex-col gap-2.5 text-left">
+                        {perks.map(({ icon: Icon, color, bg, bd, text }, i) => (
+                            <div
+                                key={i}
+                                className="flex items-center gap-3"
+                                style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 13, padding: '12px 14px' }}
+                            >
+                                <span
+                                    style={{
+                                        width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                                        backgroundColor: bg, border: `1px solid ${bd}`,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    }}
+                                >
+                                    <Icon size={15} style={{ color }} />
+                                </span>
+                                <span style={{ fontSize: 14, fontWeight: 500, color: TEXT }}>{text}</span>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
 
-                    {/* Botón CTA */}
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-sm font-medium text-primary-foreground shadow-[0_0_30px_oklch(0.86_0.09_90_/_0.25)] transition hover:opacity-90 active:scale-[0.98]"
+                        style={{
+                            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                            backgroundColor: YELLOW, border: 'none', borderRadius: 12,
+                            padding: '15px 24px', fontSize: 15.5, fontWeight: 600, color: '#1a1500', cursor: 'pointer',
+                        }}
                     >
-                        Ir al Dashboard <ArrowRight size={16} />
+                        Ir a mi cuenta <ArrowRight size={16} />
                     </button>
 
-                    {/* Countdown */}
-                    <p className="mt-5 font-mono text-xs text-muted-foreground">
-                        redirigiendo en <span className="font-bold text-foreground">{countdown}s</span>...
+                    <p style={{ fontSize: 12.5, color: TEXT_DIM, marginTop: 16 }}>
+                        Redirigiendo en <strong style={{ color: TEXT, fontWeight: 600 }}>{countdown}s</strong>…
                     </p>
                 </div>
 
-                <p className="mt-6 text-center font-mono text-xs text-muted-foreground">
+                <p className="text-center" style={{ fontSize: 12.5, color: TEXT_DIM, marginTop: 20 }}>
                     ¿Algún problema? Escríbenos a{' '}
-                    <a href="mailto:soporte@alpackaai.xyz" className="underline transition-colors hover:text-foreground">
+                    <a href="mailto:soporte@alpackaai.xyz" style={{ color: TEXT_MED, textDecoration: 'underline' }}>
                         soporte@alpackaai.xyz
                     </a>
                 </p>
