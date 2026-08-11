@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack de Prompts para Profesores — Recupera tus tardes | Alpacka.ai</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Pack de prompts en PDF listos para copiar y pegar que hacen por ti la planificación de clases, exámenes, rúbricas, adaptaciones y comunicados. Deja de trabajar hasta las 11 de la noche.">
+    <meta name="keywords" content="prompts para profesores, ia para docentes, chatgpt para profesores, planificar clases con ia, rubricas con ia, examenes con ia">
+    <meta name="author" content="Alpacka.ai">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.alpackaai.xyz/teachers/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.alpackaai.xyz/teachers/">
+    <meta property="og:title" content="Pack de Prompts para Profesores — Recupera tus tardes">
+    <meta property="og:description" content="Prompts listos para planificar clases, crear exámenes, rúbricas y comunicados en minutos, no en horas.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.alpackaai.xyz/teachers/">
+    <meta property="twitter:title" content="Pack de Prompts para Profesores — Recupera tus tardes">
+    <meta property="twitter:description" content="Prompts listos para planificar clases, crear exámenes, rúbricas y comunicados en minutos, no en horas.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="/icon/alpacka-icon.jpg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-darker: #174fc2;
+            --navy: #0f2747;
+            --text: #172033;
+            --muted: #64748b;
+            --dim: #94a3b8;
+            --bg: #ffffff;
+            --soft: #f7faff;
+            --sky: #eff6ff;
+            --sky-border: #bfdbfe;
+            --border: #d8e1eb;
+            --amber: #f59e0b;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --green-border: #bbf7d0;
+            --red: #dc2626;
+            --red-bg: #fff1f2;
+            --red-border: #fecaca;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+        .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+        /* ── Header ── */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+            display: flex; align-items: center;
+        }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo img { height: 34px; width: auto; border-radius: 8px; }
+        .logo span { font-weight: 700; font-size: 16px; color: var(--navy); letter-spacing: -0.01em; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--blue); color: #fff;
+            font-weight: 600; font-size: 15px;
+            padding: 14px 28px; border-radius: 12px;
+            text-decoration: none; white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.28);
+            transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+        }
+        .btn:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.38); }
+        .btn-sm { padding: 9px 18px; font-size: 13px; border-radius: 10px; box-shadow: none; }
+        .btn-sm:hover { transform: none; box-shadow: none; }
+        .btn-lg { padding: 17px 38px; font-size: 16px; }
+        .btn-full { width: 100%; padding: 17px 24px; font-size: 16px; font-weight: 700; }
+        .arrow { display: inline-block; transition: transform 0.15s; }
+        .btn:hover .arrow { transform: translateX(3px); }
+
+        /* ── Eyebrow chips ── */
+        .chip {
+            display: inline-flex; align-items: center; gap: 7px;
+            border-radius: 100px; padding: 6px 14px; margin-bottom: 20px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+        }
+        .chip-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .chip-blue { background: var(--sky); border: 1px solid var(--sky-border); color: var(--blue); }
+        .chip-red { background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); }
+        .chip-green { background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green); }
+        .chip-amber { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; }
+
+        /* ── Type ── */
+        h1 {
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 800; line-height: 1.08; letter-spacing: -0.03em;
+            color: var(--navy); margin-bottom: 22px;
+        }
+        h2 {
+            font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+            font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+            color: var(--navy); margin-bottom: 16px;
+        }
+        .highlight { color: var(--blue); }
+        .sub { color: var(--muted); font-size: clamp(15px, 1.6vw, 18px); line-height: 1.75; }
+
+        section { padding: 72px 0; }
+        .section-soft { background: var(--soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+
+        /* ── Hero ── */
+        .hero { padding: 130px 0 0; text-align: center; position: relative; overflow: hidden; }
+        .hero-bg {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(circle 420px at 15% 10%, rgba(191,219,254,0.55), transparent 70%),
+                radial-gradient(circle 380px at 85% 20%, rgba(219,234,254,0.6), transparent 70%),
+                radial-gradient(circle 300px at 50% 60%, rgba(239,246,255,0.8), transparent 70%);
+        }
+        .hero-inner { position: relative; }
+        .trust-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 22px; margin-top: 24px; }
+        .trust-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }
+        .trust-item svg { color: var(--blue); flex-shrink: 0; }
+
+        /* ── Prompt mockup card ── */
+        .mockup {
+            max-width: 720px; margin: 56px auto 0;
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 18px 18px 0 0; border-bottom: none;
+            box-shadow: 0 -4px 0 var(--sky-border), 0 24px 80px rgba(15,39,71,0.12);
+            text-align: left; overflow: hidden;
+        }
+        .mockup-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 18px; background: var(--soft); border-bottom: 1px solid var(--border);
+        }
+        .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .mockup-title { margin-left: 8px; font-size: 12px; color: var(--dim); font-weight: 500; }
+        .mockup-body { padding: 22px 24px 28px; }
+        .mockup-label {
+            display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--blue); background: var(--sky); border: 1px solid var(--sky-border);
+            border-radius: 6px; padding: 3px 8px; margin-bottom: 12px;
+        }
+        .mockup-prompt {
+            font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 13px; line-height: 1.8; color: var(--text);
+            background: var(--soft); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px;
+        }
+        .mockup-prompt .var { color: var(--blue); font-weight: 600; }
+        .mockup-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+        .mockup-copy {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600; color: var(--blue);
+            background: var(--sky); border: 1px solid var(--sky-border);
+            border-radius: 8px; padding: 6px 12px;
+        }
+        .mockup-time { font-size: 12px; color: var(--dim); }
+
+        /* ── Marquee ── */
+        .marquee-section { padding: 22px 0; overflow: hidden; }
+        .marquee-label {
+            font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--dim); text-align: center; margin-bottom: 16px; font-weight: 600;
+        }
+        .marquee-track { overflow: hidden; position: relative; }
+        .marquee {
+            display: flex; width: max-content; gap: 10px; align-items: center;
+            animation: marqueeScroll 32s linear infinite; padding: 4px 0;
+        }
+        .marquee:hover { animation-play-state: paused; }
+        @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ai-pill {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: #fff; border: 1px solid var(--border); border-radius: 100px;
+            padding: 7px 16px; white-space: nowrap; flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(15,39,71,0.05);
+            font-size: 12px; color: var(--muted); font-weight: 500;
+        }
+        .ai-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+        /* ── Problema ── */
+        .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+        .problem-copy p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 14px; }
+        .problem-copy strong { color: var(--navy); }
+        .task-card {
+            background: #fff; border: 1px solid var(--border); border-radius: 14px;
+            overflow: hidden; box-shadow: 0 2px 8px rgba(15,39,71,0.05); margin-bottom: 12px;
+        }
+        .task-top {
+            padding: 12px 16px; background: var(--soft); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .task-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+        .task-hours {
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 11px; font-weight: 700; color: var(--red);
+            background: var(--red-bg); border: 1px solid var(--red-border);
+            border-radius: 6px; padding: 2px 8px; white-space: nowrap;
+        }
+        .task-body { padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+        .task-solution {
+            background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 14px;
+            padding: 16px 18px; display: flex; gap: 10px; align-items: flex-start;
+            font-size: 13px; color: #166534; line-height: 1.6;
+        }
+        .task-solution svg { flex-shrink: 0; margin-top: 2px; }
+
+        /* ── Pasos ── */
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .step-card {
+            background: #fff; border: 1px solid var(--border); border-radius: 18px;
+            padding: 30px 26px; box-shadow: 0 2px 8px rgba(15,39,71,0.05);
+        }
+        .step-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .step-icon {
+            width: 46px; height: 46px; border-radius: 13px;
+            background: var(--sky); border: 1px solid var(--sky-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+        }
+        .step-num { font-weight: 800; font-size: 38px; color: rgba(37,99,235,0.18); line-height: 1; }
+        .step-card h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+        .step-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+        /* ── Bloques del PDF ── */
+        .bloque-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .bloque-card {
+            background: #fff; border: 1px solid var(--border); border-radius: 18px;
+            padding: 26px 24px; box-shadow: 0 2px 8px rgba(15,39,71,0.05);
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+        }
+        .bloque-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(15,39,71,0.1); border-color: var(--sky-border); }
+        .bloque-card.wide { grid-column: 1 / -1; }
+        .bloque-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .bloque-num {
+            width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--sky); border: 1px solid var(--sky-border);
+            font-weight: 800; font-size: 14px; color: var(--blue); letter-spacing: 0.02em;
+        }
+        .bloque-head h3 { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+        .bloque-cats { display: flex; flex-wrap: wrap; gap: 8px; }
+        .bloque-cat {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: var(--soft); border: 1px solid var(--border); border-radius: 100px;
+            padding: 6px 13px; font-size: 12.5px; font-weight: 500; color: var(--muted);
+        }
+        .bloque-cat::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+
+        /* ── Incluye ── */
+        .incl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .incl-card {
+            border-radius: 18px; padding: 28px 24px;
+            background: var(--sky); border: 1px solid var(--sky-border);
+        }
+        .incl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .incl-emoji { font-size: 24px; }
+        .incl-tag { font-size: 11px; color: var(--muted); font-weight: 600; }
+        .incl-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; line-height: 1.35; }
+        .incl-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+        /* ── Garantía ── */
+        .guarantee { text-align: center; }
+        .shield {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--blue-darker));
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px; box-shadow: 0 8px 32px rgba(37,99,235,0.3);
+            font-size: 30px;
+        }
+        .guarantee p { color: var(--muted); font-size: 16px; line-height: 1.85; max-width: 520px; margin: 0 auto 14px; }
+        .guarantee p strong { color: var(--navy); }
+        .guarantee .small { font-size: 14px; color: var(--dim); max-width: 460px; }
+
+        /* ── FAQ ── */
+        .faq-box {
+            background: #fff; border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden; box-shadow: 0 4px 20px rgba(15,39,71,0.05);
+        }
+        details { border-bottom: 1px solid var(--border); }
+        details:last-child { border-bottom: none; }
+        summary {
+            list-style: none; cursor: pointer; user-select: none;
+            padding: 20px 24px; font-size: 15px; font-weight: 600; color: var(--navy);
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; font-size: 20px; font-weight: 400; color: var(--dim); flex-shrink: 0; transition: transform 0.2s; }
+        details[open] summary::after { transform: rotate(45deg); }
+        details p { padding: 0 24px 20px; font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+        /* ── CTA final ── */
+        .final {
+            background: var(--navy); position: relative; overflow: hidden;
+            padding: 90px 0; text-align: center;
+        }
+        .final-bg {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(circle 500px at 0% 0%, rgba(37,99,235,0.25), transparent 70%),
+                radial-gradient(circle 420px at 90% 80%, rgba(59,130,246,0.18), transparent 70%);
+        }
+        .final-inner { position: relative; }
+        .final .chip-live { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.6); }
+        .pulse { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: pulse 1.8s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .final h2 { color: #fff; font-size: clamp(1.9rem, 5vw, 3.2rem); margin-bottom: 18px; }
+        .final .grad {
+            background: linear-gradient(135deg, #93c5fd, #bfdbfe);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .final .sub { color: rgba(255,255,255,0.5); max-width: 480px; margin: 0 auto 48px; }
+
+        .price-card {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px; padding: 38px 34px; max-width: 440px;
+            margin: 0 auto 36px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .price-label {
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+            color: rgba(255,255,255,0.35); margin-bottom: 18px;
+        }
+        .price-row { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .price-big { font-weight: 800; font-size: 58px; color: #fff; line-height: 1; letter-spacing: -0.02em; }
+        .price-old { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: rgba(255,255,255,0.3); text-decoration: line-through; }
+        .price-note { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: rgba(255,255,255,0.3); }
+        .price-list { text-align: left; margin-bottom: 32px; }
+        .price-item { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+        .price-check {
+            width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(147,197,253,0.15); border: 1px solid rgba(147,197,253,0.35);
+            display: flex; align-items: center; justify-content: center;
+            color: #93c5fd; font-size: 10px; font-weight: 800;
+        }
+        .price-item span { color: rgba(255,255,255,0.6); font-size: 14px; }
+        .price-foot { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 14px; letter-spacing: 0.05em; }
+
+        .final-trust { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 28px; }
+        .final-trust span { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; }
+
+        footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); padding: 28px 0; text-align: center; }
+        footer p { font-size: 12px; color: rgba(255,255,255,0.3); }
+        footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .bloque-grid { grid-template-columns: 1fr; }
+            .steps-grid, .incl-grid { grid-template-columns: 1fr; }
+            .problem-grid { grid-template-columns: 1fr; gap: 36px; }
+            section { padding: 56px 0; }
+        }
+        @media (max-width: 520px) {
+            .logo span { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Header ── -->
+    <header>
+        <div class="container header-inner">
+            <a class="logo" href="/teachers/">
+                <img src="/icon/alpacka-icon.jpg" alt="Alpacka.ai">
+                <span>alpacka.ai</span>
+            </a>
+            <a class="btn btn-sm buy-link" href="#">Comprar — $14,99 <span class="arrow">→</span></a>
+        </div>
+    </header>
+
+    <!-- ══════════════ HERO ══════════════ -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container hero-inner">
+            <div class="chip chip-blue">
+                <span class="chip-dot" style="background:var(--blue)"></span>
+                Pack de Prompts para Profesores · PDF
+            </div>
+
+            <h1>Tus clases se planifican solas.<br><span class="highlight">Tus tardes vuelven a ser tuyas.</span></h1>
+
+            <p class="sub" style="max-width:620px;margin:0 auto 36px;">
+                Un pack de prompts en PDF, listos para copiar y pegar, que hacen el trabajo pesado por ti: planificaciones, exámenes, rúbricas, adaptaciones y comunicados. Lo que hoy te toma la tarde entera, mañana te toma 10 minutos.
+            </p>
+
+            <a class="btn btn-lg buy-link" href="#">Quiero mi pack <span class="arrow">→</span></a>
+
+            <div class="trust-row">
+                <div class="trust-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                    Pago único de $14,99
+                </div>
+                <div class="trust-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                    Descarga inmediata en PDF
+                </div>
+                <div class="trust-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                    Garantía de 30 días
+                </div>
+            </div>
+
+            <!-- Mockup de prompt -->
+            <div class="mockup">
+                <div class="mockup-bar">
+                    <span class="mockup-dot" style="background:#fca5a5"></span>
+                    <span class="mockup-dot" style="background:#fcd34d"></span>
+                    <span class="mockup-dot" style="background:#86efac"></span>
+                    <span class="mockup-title">Pack de Prompts para Profesores · prompt #23</span>
+                </div>
+                <div class="mockup-body">
+                    <span class="mockup-label">Planificación de clases</span>
+                    <div class="mockup-prompt">
+                        Actúa como un profesor experto en <span class="var">[TU ASIGNATURA]</span> con 15 años de experiencia. Diseña una clase de <span class="var">[DURACIÓN]</span> para estudiantes de <span class="var">[CURSO/EDAD]</span> sobre <span class="var">[TEMA]</span>. Incluye: objetivo de aprendizaje, actividad de inicio para captar la atención, desarrollo paso a paso, una actividad práctica en grupos y un cierre con evaluación rápida de comprensión…
+                    </div>
+                    <div class="mockup-foot">
+                        <span class="mockup-copy">⧉ Copiar prompt</span>
+                        <span class="mockup-time">Planificación completa en ~2 min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ COMPATIBLE CON ══════════════ -->
+    <div class="marquee-section section-soft">
+        <p class="marquee-label">funciona con la IA que ya usas · sin instalar nada</p>
+        <div class="marquee-track">
+            <div class="marquee" id="marquee">
+                <span class="ai-pill"><span class="ai-dot" style="background:#10a37f"></span>ChatGPT</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#D4A853"></span>Claude</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#4285F4"></span>Gemini</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#3B82F6"></span>DeepSeek</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#20B2AA"></span>Perplexity</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#0078D4"></span>Copilot</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#555555"></span>Grok</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#FF6B35"></span>Mistral</span>
+                <span class="ai-pill"><span class="ai-dot" style="background:#0668E1"></span>Meta AI</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ PROBLEMA ══════════════ -->
+    <section>
+        <div class="container">
+            <div class="problem-grid">
+                <div class="problem-copy">
+                    <div class="chip chip-red">
+                        <span class="chip-dot" style="background:var(--red)"></span>
+                        El problema
+                    </div>
+                    <h2>Enseñar te toma 6 horas. Todo lo demás, otras 6.</h2>
+                    <p>
+                        Nadie se hizo profesor por amor a las planificaciones. Y sin embargo ahí estás: domingo por la noche, armando la semana; martes a las 11, redactando un comunicado; jueves, inventando una rúbrica desde cero porque la del año pasado ya no sirve.
+                    </p>
+                    <p>
+                        La parte que amas de tu trabajo pasa dentro del aula. <strong>La parte que te está quemando pasa fuera de ella</strong> — y es justo la parte que la IA puede hacer por ti, si sabes pedírselo bien.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="task-card">
+                        <div class="task-top">
+                            <span class="task-name">Planificar la semana de clases</span>
+                            <span class="task-hours">~4 h</span>
+                        </div>
+                        <div class="task-body">Buscar ideas, estructurar objetivos, pensar actividades para cada curso. Casi siempre en domingo.</div>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-top">
+                            <span class="task-name">Crear exámenes y rúbricas</span>
+                            <span class="task-hours">~3 h</span>
+                        </div>
+                        <div class="task-body">Redactar preguntas, balancear dificultad, armar la pauta de corrección. Desde cero, cada vez.</div>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-top">
+                            <span class="task-name">Adaptar material y dar retroalimentación</span>
+                            <span class="task-hours">~3 h</span>
+                        </div>
+                        <div class="task-body">Diferenciar por niveles, escribir comentarios personalizados, responder a las familias.</div>
+                    </div>
+
+                    <div class="task-solution">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span><strong>Con el prompt correcto:</strong> cada una de estas tareas baja de horas a minutos. Tú revisas, ajustas con tu criterio profesional y listo. La IA hace el borrador; tú sigues siendo el profesor.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ CÓMO FUNCIONA ══════════════ -->
+    <section class="section-soft">
+        <div class="container">
+            <div class="section-head">
+                <div class="chip chip-blue">
+                    <span class="chip-dot" style="background:var(--blue)"></span>
+                    Así de simple
+                </div>
+                <h2>Copiar, pegar, dar clases.</h2>
+                <p class="sub">No necesitas saber de inteligencia artificial ni de "ingeniería de prompts". Si sabes copiar y pegar, ya sabes usar esto.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-head">
+                        <div class="step-icon">📂</div>
+                        <span class="step-num">01</span>
+                    </div>
+                    <h3>Busca el prompt en el PDF</h3>
+                    <p>Está organizado en 5 bloques con su índice: planificación, enseñanza, evaluación, gestión y bienestar. Encuentras el que necesitas en segundos.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-head">
+                        <div class="step-icon">⧉</div>
+                        <span class="step-num">02</span>
+                    </div>
+                    <h3>Cópialo y completa los corchetes</h3>
+                    <p>Cada prompt trae campos como [ASIGNATURA], [CURSO] o [TEMA]. Los rellenas con tu realidad y ya está personalizado.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-head">
+                        <div class="step-icon">✨</div>
+                        <span class="step-num">03</span>
+                    </div>
+                    <h3>Pégalo en tu IA favorita</h3>
+                    <p>ChatGPT, Gemini, Claude… la que uses. Recibes un material completo y editable, listo para tu revisión final.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ QUÉ INCLUYE ══════════════ -->
+    <section>
+        <div class="container">
+            <div class="section-head">
+                <div class="chip chip-blue">
+                    <span class="chip-dot" style="background:var(--blue)"></span>
+                    Lo que te llevas
+                </div>
+                <h2>Un prompt para cada tarea que te roba tiempo.</h2>
+                <p class="sub">Cinco bloques que cubren tu trabajo completo: desde planificar la clase del lunes hasta el acto escolar de fin de año. Da igual la asignatura o el nivel que enseñes.</p>
+            </div>
+
+            <div class="bloque-grid">
+                <div class="bloque-card">
+                    <div class="bloque-head">
+                        <span class="bloque-num">I</span>
+                        <h3>Planificación y diseño de clase</h3>
+                    </div>
+                    <div class="bloque-cats">
+                        <span class="bloque-cat">Planificación de clases</span>
+                        <span class="bloque-cat">Tareas y estudio en casa</span>
+                    </div>
+                </div>
+                <div class="bloque-card">
+                    <div class="bloque-head">
+                        <span class="bloque-num">II</span>
+                        <h3>Estrategias de enseñanza y atención a la diversidad</h3>
+                    </div>
+                    <div class="bloque-cats">
+                        <span class="bloque-cat">Actividades, dinámicas y proyectos</span>
+                        <span class="bloque-cat">Diferenciación e inclusión</span>
+                        <span class="bloque-cat">Tecnología e IA en el aula</span>
+                    </div>
+                </div>
+                <div class="bloque-card">
+                    <div class="bloque-head">
+                        <span class="bloque-num">III</span>
+                        <h3>Evaluación, retroalimentación y desempeño</h3>
+                    </div>
+                    <div class="bloque-cats">
+                        <span class="bloque-cat">Exámenes y evaluaciones</span>
+                        <span class="bloque-cat">Rúbricas de evaluación</span>
+                        <span class="bloque-cat">Retroalimentación a estudiantes</span>
+                        <span class="bloque-cat">Recuperación académica y estudiantes en riesgo</span>
+                    </div>
+                </div>
+                <div class="bloque-card">
+                    <div class="bloque-head">
+                        <span class="bloque-num">IV</span>
+                        <h3>Gestión de aula y trabajo administrativo</h3>
+                    </div>
+                    <div class="bloque-cats">
+                        <span class="bloque-cat">Gestión del aula y disciplina</span>
+                        <span class="bloque-cat">Comunicación con padres de familia</span>
+                        <span class="bloque-cat">Documentación y trabajo administrativo</span>
+                        <span class="bloque-cat">Trabajo colaborativo entre docentes</span>
+                    </div>
+                </div>
+                <div class="bloque-card wide">
+                    <div class="bloque-head">
+                        <span class="bloque-num">V</span>
+                        <h3>Bienestar docente y vida escolar</h3>
+                    </div>
+                    <div class="bloque-cats">
+                        <span class="bloque-cat">Motivación y bienestar docente</span>
+                        <span class="bloque-cat">Actos escolares y efemérides</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ TODO LO QUE INCLUYE ══════════════ -->
+    <section class="section-soft">
+        <div class="container">
+            <div class="section-head">
+                <div class="chip chip-green">
+                    <span class="chip-dot" style="background:var(--green)"></span>
+                    Todo incluido
+                </div>
+                <h2>Todo lo que te llevas por $14,99.</h2>
+                <p class="sub">Sin letra pequeña, sin suscripción, sin "versión premium" escondida. Esto es todo lo que incluye.</p>
+            </div>
+
+            <div class="incl-grid">
+                <div class="incl-card">
+                    <div class="incl-head">
+                        <span class="incl-emoji">📕</span>
+                        <span class="incl-tag">El pack completo</span>
+                    </div>
+                    <h3>El PDF con los 5 bloques completos</h3>
+                    <p>De la planificación del lunes al acto escolar de fin de año: 15 categorías que cubren todo tu trabajo dentro y fuera del aula. Tuyo para siempre, descargable al instante.</p>
+                </div>
+                <div class="incl-card">
+                    <div class="incl-head">
+                        <span class="incl-emoji">🎯</span>
+                        <span class="incl-tag">Listo para usar</span>
+                    </div>
+                    <h3>Prompts que se personalizan en segundos</h3>
+                    <p>Cada prompt trae campos [ENTRE CORCHETES] — asignatura, curso, tema — para adaptarlo a tu realidad. Copias, rellenas, pegas. Nada que redactar desde cero.</p>
+                </div>
+                <div class="incl-card">
+                    <div class="incl-head">
+                        <span class="incl-emoji">🤖</span>
+                        <span class="incl-tag">Sin costos ocultos</span>
+                    </div>
+                    <h3>Funciona con cualquier IA gratuita</h3>
+                    <p>ChatGPT, Gemini, Claude, Copilot… en sus versiones gratis. No necesitas pagar ninguna suscripción de IA para aprovechar el pack completo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ GARANTÍA ══════════════ -->
+    <section>
+        <div class="container-narrow guarantee">
+            <div class="shield">🛡️</div>
+            <div class="chip chip-blue">
+                <span class="chip-dot" style="background:var(--blue)"></span>
+                Sin riesgo
+            </div>
+            <h2>Si no te ahorra tiempo, te devuelvo cada centavo.</h2>
+            <p>
+                Tienes 30 días. Úsalo con tus clases reales, tus evaluaciones reales, tus comunicados reales. Si al final sientes que no valió la pena, me escribes y te reembolso el <strong>100%</strong>. Sin formularios ni preguntas incómodas.
+            </p>
+            <p class="small">
+                No me interesa quedarme con el dinero de un profesor al que no le sirvió. Bastante tienen ya con su carga horaria.
+            </p>
+        </div>
+    </section>
+
+    <!-- ══════════════ FAQ ══════════════ -->
+    <section class="section-soft">
+        <div class="container-narrow">
+            <div class="section-head" style="margin-bottom:36px;">
+                <h2>Preguntas frecuentes</h2>
+                <p class="sub">Lo que los profesores me preguntan antes de comprar.</p>
+            </div>
+
+            <div class="faq-box">
+                <details>
+                    <summary>¿Cuándo recibo el pack?</summary>
+                    <p>Inmediatamente después del pago. Te llega un email con el enlace de descarga del PDF, normalmente en menos de 2 minutos. Puedes usarlo esa misma tarde para preparar la clase de mañana.</p>
+                </details>
+                <details>
+                    <summary>¿Sirve para mi asignatura y mi nivel?</summary>
+                    <p>Sí. Los prompts no están atados a una materia ni a un país: cada uno tiene campos como [ASIGNATURA], [CURSO/EDAD] y [TEMA] que tú completas. Funcionan igual para matemáticas de primaria que para historia de secundaria o formación técnica.</p>
+                </details>
+                <details>
+                    <summary>¿Necesito pagar ChatGPT Plus o alguna IA de pago?</summary>
+                    <p>No. Todos los prompts funcionan con las versiones gratuitas de ChatGPT, Gemini, Claude o la IA que prefieras. El pack es lo único que pagas, y una sola vez.</p>
+                </details>
+                <details>
+                    <summary>No sé casi nada de IA, ¿puedo usarlo igual?</summary>
+                    <p>Sí, está pensado justo para eso. El método es copiar el prompt, rellenar los corchetes con tus datos y pegarlo en la IA. No hay nada que instalar ni configurar: si sabes copiar y pegar, ya tienes todo lo necesario.</p>
+                </details>
+                <details>
+                    <summary>¿Esto no es "hacer trampa" como profesor?</summary>
+                    <p>No: la IA redacta borradores, pero el criterio pedagógico sigue siendo tuyo. Tú decides qué se enseña, revisas y ajustas cada material antes de usarlo. Es exactamente lo mismo que usar un libro de actividades o una plantilla, pero infinitamente más rápido y personalizado.</p>
+                </details>
+                <details>
+                    <summary>¿Cómo funciona la garantía?</summary>
+                    <p>Tienes 30 días desde la compra. Si no te sirvió, me escribes y te devuelvo el 100% del dinero, sin formularios raros ni emails de retención. Solo dime que no funcionó para ti.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ CTA FINAL ══════════════ -->
+    <section class="final">
+        <div class="final-bg"></div>
+        <div class="container final-inner">
+            <div class="chip chip-live">
+                <span class="pulse"></span>
+                Precio de lanzamiento
+            </div>
+
+            <h2>Sigues regalando tus tardes,<br><span class="grad">o dejas que la IA haga el borrador.</span></h2>
+
+            <p class="sub">
+                Son $14,99, una sola vez. Menos de lo que cuesta una salida a comer, a cambio de horas recuperadas cada semana. Y si no te sirve, te devuelvo el dinero.
+            </p>
+
+            <div class="price-card">
+                <p class="price-label">Pack de Prompts para Profesores</p>
+
+                <div class="price-row">
+                    <span class="price-big">$14,99</span>
+                    <span>
+                        <span class="price-old" style="display:block;">$29</span>
+                        <span class="price-note">pago único</span>
+                    </span>
+                </div>
+
+                <div class="price-list">
+                    <div class="price-item"><span class="price-check">✓</span><span>El pack completo en PDF, listo para usar hoy</span></div>
+                    <div class="price-item"><span class="price-check">✓</span><span>5 bloques: planificar, enseñar, evaluar, gestionar y más</span></div>
+                    <div class="price-item"><span class="price-check">✓</span><span>Funciona con ChatGPT, Gemini, Claude y más</span></div>
+                    <div class="price-item"><span class="price-check">✓</span><span>Campos [ENTRE CORCHETES] para personalizar en segundos</span></div>
+                    <div class="price-item"><span class="price-check">✓</span><span>Descarga inmediata, tuyo para siempre</span></div>
+                    <div class="price-item"><span class="price-check">✓</span><span>Garantía de 30 días, sin preguntas</span></div>
+                </div>
+
+                <a class="btn btn-full buy-link" href="#">Quiero mi pack — $14,99 <span class="arrow">→</span></a>
+
+                <p class="price-foot">Descarga inmediata · Pago único · Garantía 30 días</p>
+            </div>
+
+            <div class="final-trust">
+                <span>🛡️ Garantía 30 días</span>
+                <span>⚡ Descarga en 2 min</span>
+                <span>💳 Pago único</span>
+                <span>🚫 Sin suscripción</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 <a href="https://www.alpackaai.xyz">alpacka.ai</a> · Hecho por un humano, acelerado con IA.</p>
+    </footer>
+
+    <script>
+        // ⚠️ CAMBIA ESTE ENLACE por tu link de checkout (Hotmart, Paddle, etc.)
+        const BUY_URL = 'https://pay.hotmart.com/REEMPLAZA-CON-TU-LINK';
+
+        document.querySelectorAll('.buy-link').forEach(a => {
+            a.href = BUY_URL;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        });
+
+        // Duplicar pastillas del marquee para el loop infinito
+        const marquee = document.getElementById('marquee');
+        marquee.innerHTML += marquee.innerHTML;
+    </script>
+
+</body>
+
+</html>
