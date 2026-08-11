@@ -2,8 +2,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { DarkHeader, DarkFooter } from './components/darkKit';
 
 // Code-splitting por ruta: cada página se descarga solo cuando se visita.
 const Login = React.lazy(() => import('./pages/Login'));
@@ -74,10 +73,11 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <div key={transitionKey} className="animate-fade-in">{children}</div>;
 };
 
-// Rutas autocontenidas (sin Navbar/Footer): la home, el ebook, /bank-prompts y
-// el login traen su propio header; el checkout es una página de pago enfocada,
-// estilo Stripe.
-const STANDALONE_ROUTES = ['/', '/ebook', '/checkout', '/bank-prompts', '/login'];
+// Rutas autocontenidas (sin el header/footer compartido): solo las landings
+// que venden contenido por Hotmart (/ebook, /bank-prompts) — son contenido
+// aparte — y el checkout, que es una página de pago enfocada estilo Stripe.
+// Todo lo demás comparte el header/nav oscuro (darkKit).
+const STANDALONE_ROUTES = ['/ebook', '/bank-prompts', '/checkout'];
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
@@ -88,12 +88,12 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground font-space antialiased selection:bg-primary selection:text-primary-foreground">
-      <Navbar />
+    <div className="flex flex-col min-h-screen antialiased" style={{ backgroundColor: '#000000' }}>
+      <DarkHeader />
       <main className="flex-grow">
         <PageTransition>{children}</PageTransition>
       </main>
-      <Footer />
+      <DarkFooter />
     </div>
   );
 };

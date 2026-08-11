@@ -4,7 +4,7 @@ import { Search, Check, Copy, X, ArrowRight } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+} from '../components/darkKit';
 
 // ── Datos de skills (estático, fácil de ampliar) ─────────────────────────────
 interface ClaudeSkill {
@@ -510,8 +510,8 @@ const CopyButton: React.FC<{ text: string; label?: string; full?: boolean }> = (
             style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
                 width: full ? '100%' : undefined,
-                backgroundColor: copied ? '#eefbf2' : YELLOW,
-                border: `1px solid ${copied ? '#c3ecd1' : YELLOW}`,
+                backgroundColor: copied ? 'rgba(63,207,142,0.1)' : YELLOW,
+                border: `1px solid ${copied ? 'rgba(63,207,142,0.3)' : YELLOW}`,
                 color: copied ? GREEN : '#1a1500',
                 fontWeight: 600, fontSize: 14.5, padding: '13px 24px', borderRadius: 12,
                 cursor: 'pointer', whiteSpace: 'nowrap',
@@ -584,8 +584,8 @@ const Skills: React.FC = () => {
             {/* ── Barra de filtros (sticky bajo el navbar) ───────────────────── */}
             <div
                 style={{
-                    position: 'sticky', top: 60, zIndex: 40,
-                    backgroundColor: 'rgba(255,255,255,0.88)',
+                    position: 'sticky', top: 0, zIndex: 40,
+                    backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                     borderTop: `1px solid ${BORDER}`,
                     borderBottom: `1px solid ${BORDER}`,
@@ -608,7 +608,7 @@ const Skills: React.FC = () => {
                                 width: '100%', backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 12,
                                 padding: '11px 18px 11px 42px', fontSize: 14, color: TEXT, outline: 'none',
                             }}
-                            onFocus={e => { e.currentTarget.style.borderColor = '#c9c9c2'; }}
+                            onFocus={e => { e.currentTarget.style.borderColor = '#3a3a3a'; }}
                             onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
                         />
                     </div>
@@ -622,9 +622,9 @@ const Skills: React.FC = () => {
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
                                     style={{
-                                        backgroundColor: active ? '#fff7e8' : BG_WARM,
-                                        border: `1px solid ${active ? '#fbe3b0' : BORDER}`,
-                                        color: active ? '#a86a00' : TEXT_MED,
+                                        backgroundColor: active ? 'rgba(255,178,36,0.08)' : BG_WARM,
+                                        border: `1px solid ${active ? 'rgba(255,178,36,0.28)' : BORDER}`,
+                                        color: active ? '#ffb224' : TEXT_MED,
                                         borderRadius: 100, padding: '6px 13px',
                                         fontSize: 12.5, fontWeight: 600, cursor: 'pointer',
                                         textTransform: 'capitalize', whiteSpace: 'nowrap',
@@ -704,7 +704,7 @@ const Skills: React.FC = () => {
                                     <span
                                         style={{
                                             width: 24, height: 24, borderRadius: 8, flexShrink: 0, marginTop: 1,
-                                            backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', color: '#a86a00',
+                                            backgroundColor: 'rgba(255,178,36,0.08)', border: '1px solid #fbe3b0', color: '#ffb224',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                                             fontSize: 12, fontWeight: 700,
                                         }}
@@ -742,7 +742,7 @@ const SkillCard: React.FC<{ skill: ClaudeSkill; onOpen: () => void }> = ({ skill
             const el = e.currentTarget as HTMLElement;
             el.style.transform = 'translateY(-2px)';
             el.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
-            el.style.borderColor = '#d8d8d2';
+            el.style.borderColor = '#3a3a3a';
         }}
         onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement;
@@ -763,7 +763,7 @@ const SkillCard: React.FC<{ skill: ClaudeSkill; onOpen: () => void }> = ({ skill
             </span>
             <span
                 style={{
-                    backgroundColor: '#eefbf2', border: '1px solid #c3ecd1', borderRadius: 7,
+                    backgroundColor: 'rgba(63,207,142,0.1)', border: '1px solid #c3ecd1', borderRadius: 7,
                     padding: '3px 8px', fontSize: 10, fontWeight: 700,
                     letterSpacing: '0.12em', textTransform: 'uppercase', color: GREEN,
                 }}

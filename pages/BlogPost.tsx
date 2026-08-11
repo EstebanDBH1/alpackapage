@@ -5,9 +5,11 @@ import { BlogPost as BlogPostType } from '../types';
 import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import { ArrowLeft, Clock } from 'lucide-react';
 import {
-    BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, FONT,
-    useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, MONO,
+} from '../components/darkKit';
+
+/* Artículo del blog — mismo lenguaje visual oscuro estilo skills.sh que el
+   resto de la app. El HTML del artículo usa la variante .dk-scope del prose. */
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -24,8 +26,6 @@ const BlogPost: React.FC = () => {
     const [status, setStatus] = useState<'loading' | 'ready' | 'notfound'>(() =>
         slug && getCachedBlogPost(slug) ? 'ready' : 'loading'
     );
-
-    useEuclidFont();
 
     useEffect(() => {
         if (!slug) return;
@@ -57,15 +57,14 @@ const BlogPost: React.FC = () => {
 
     if (status === 'loading') {
         return (
-            <div className="bp-scope" style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: FONT }}>
-                <LandingStyles />
+            <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: MONO }}>
                 <div className="mx-auto w-full max-w-3xl px-5 sm:px-8 py-16 space-y-5">
-                    <div className="animate-pulse" style={{ height: 14, width: 130, borderRadius: 7, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
-                    <div className="animate-pulse" style={{ height: 46, width: '100%', borderRadius: 12, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
-                    <div className="animate-pulse" style={{ aspectRatio: '16 / 9', width: '100%', borderRadius: 18, backgroundColor: BG_WARM, border: `1px solid ${BORDER}` }} />
+                    <div className="animate-pulse" style={{ height: 14, width: 130, borderRadius: 7, backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}` }} />
+                    <div className="animate-pulse" style={{ height: 46, width: '100%', borderRadius: 10, backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}` }} />
+                    <div className="animate-pulse" style={{ aspectRatio: '16 / 9', width: '100%', borderRadius: 12, backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}` }} />
                     <div className="space-y-3">
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <div key={i} className="animate-pulse" style={{ height: 14, width: i === 4 ? '60%' : '100%', borderRadius: 7, backgroundColor: BG_WARM }} />
+                            <div key={i} className="animate-pulse" style={{ height: 14, width: i === 4 ? '60%' : '100%', borderRadius: 7, backgroundColor: CARD }} />
                         ))}
                     </div>
                 </div>
@@ -76,20 +75,19 @@ const BlogPost: React.FC = () => {
     if (status === 'notfound' || !post) {
         return (
             <div
-                className="bp-scope flex min-h-screen flex-col items-center justify-center gap-5 px-5 text-center"
-                style={{ backgroundColor: BG, color: TEXT, fontFamily: FONT }}
+                className="flex flex-col items-center justify-center gap-5 px-5 py-24 text-center"
+                style={{ backgroundColor: BG, color: TEXT, minHeight: '70vh', fontFamily: MONO }}
             >
-                <LandingStyles />
-                <h1 style={{ fontWeight: 600, fontSize: 24, letterSpacing: '-0.03em' }}>Artículo no encontrado</h1>
-                <p style={{ color: TEXT_MED, fontSize: 15, maxWidth: 380, lineHeight: 1.7 }}>
+                <h1 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Artículo no encontrado</h1>
+                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, maxWidth: 380, lineHeight: 1.7 }}>
                     Este artículo no existe o ya no está disponible.
                 </p>
                 <Link
                     to="/blog"
                     style={{
                         display: 'inline-flex', alignItems: 'center', gap: 8,
-                        backgroundColor: YELLOW, color: '#1a1500', fontWeight: 600, fontSize: 14.5,
-                        padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
+                        fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 13.5,
+                        padding: '12px 22px', borderRadius: 10, textDecoration: 'none',
                     }}
                 >
                     <ArrowLeft size={15} /> Volver al blog
@@ -99,16 +97,15 @@ const BlogPost: React.FC = () => {
     }
 
     return (
-        <div className="bp-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT }}>
-            <LandingStyles />
+        <div className="dk-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
 
-            <div className="bp-up mx-auto w-full max-w-3xl px-5 sm:px-8 pt-10 pb-20">
+            <div className="mx-auto w-full max-w-3xl px-5 sm:px-8 pt-10 pb-20">
 
                 {/* Volver */}
                 <Link
                     to="/blog"
                     className="inline-flex items-center gap-2 mb-9"
-                    style={{ fontSize: 13.5, color: TEXT_MED, textDecoration: 'none' }}
+                    style={{ fontFamily: MONO, fontSize: 13, color: MUTED, textDecoration: 'none' }}
                 >
                     <ArrowLeft size={14} /> Volver al blog
                 </Link>
@@ -118,26 +115,26 @@ const BlogPost: React.FC = () => {
                     <div className="mb-5 flex flex-wrap items-center gap-3">
                         <span
                             style={{
-                                backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 7,
+                                fontFamily: MONO, backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 6,
                                 padding: '3px 9px', fontSize: 10, fontWeight: 600,
-                                letterSpacing: '0.12em', textTransform: 'uppercase', color: TEXT_MED,
+                                letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED,
                             }}
                         >
                             {post.category ? titleCase(post.category) : 'General'}
                         </span>
-                        <time dateTime={post.created_at} style={{ fontSize: 13, color: TEXT_DIM }}>
+                        <time dateTime={post.created_at} style={{ fontFamily: MONO, fontSize: 12.5, color: DIM }}>
                             {formatDate(post.created_at)}
                         </time>
-                        <span className="inline-flex items-center gap-1.5" style={{ fontSize: 13, color: TEXT_DIM }}>
+                        <span className="inline-flex items-center gap-1.5" style={{ fontFamily: MONO, fontSize: 12.5, color: DIM }}>
                             <Clock size={12} />
                             {readingTime(post.content)} min de lectura
                         </span>
                         {!post.published && (
                             <span
                                 style={{
-                                    backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', borderRadius: 7,
-                                    padding: '3px 9px', fontSize: 10, fontWeight: 700,
-                                    letterSpacing: '0.12em', textTransform: 'uppercase', color: '#a86a00',
+                                    fontFamily: MONO, backgroundColor: 'rgba(255,178,36,0.08)', border: '1px solid rgba(255,178,36,0.28)',
+                                    borderRadius: 6, padding: '3px 9px', fontSize: 10, fontWeight: 700,
+                                    letterSpacing: '0.1em', textTransform: 'uppercase', color: AMBER,
                                 }}
                             >
                                 Borrador
@@ -147,17 +144,19 @@ const BlogPost: React.FC = () => {
 
                     <h1
                         style={{
-                            fontWeight: 600,
-                            fontSize: 'clamp(1.9rem, 4vw, 2.7rem)',
-                            lineHeight: 1.12,
-                            letterSpacing: '-0.035em',
+                            fontFamily: MONO,
+                            fontWeight: 700,
+                            fontSize: 'clamp(1.7rem, 3.6vw, 2.4rem)',
+                            lineHeight: 1.2,
+                            letterSpacing: '-0.02em',
+                            color: TEXT,
                         }}
                     >
                         {post.title}
                     </h1>
 
                     {post.excerpt && (
-                        <p style={{ marginTop: 18, color: TEXT_MED, fontSize: 17.5, lineHeight: 1.7 }}>
+                        <p style={{ marginTop: 18, fontFamily: MONO, color: MUTED, fontSize: 15.5, lineHeight: 1.7 }}>
                             {post.excerpt}
                         </p>
                     )}
@@ -169,7 +168,7 @@ const BlogPost: React.FC = () => {
                         src={post.cover_image_url}
                         alt={post.title}
                         className="w-full object-cover"
-                        style={{ aspectRatio: '16 / 9', borderRadius: 18, border: `1px solid ${BORDER}`, marginBottom: 40 }}
+                        style={{ aspectRatio: '16 / 9', borderRadius: 12, border: `1px solid ${BORDER_SOFT}`, marginBottom: 40 }}
                     />
                 )}
 
@@ -179,29 +178,29 @@ const BlogPost: React.FC = () => {
                 </article>
 
                 {/* Divisor */}
-                <div style={{ height: 1, backgroundColor: BORDER, margin: '56px 0' }} />
+                <div style={{ height: 1, backgroundColor: BORDER_SOFT, margin: '56px 0' }} />
 
                 {/* CTA */}
                 <div
                     className="text-center"
-                    style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 22, padding: '34px 28px' }}
+                    style={{ backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14, padding: '32px 26px' }}
                 >
-                    <h2 style={{ fontWeight: 600, fontSize: 'clamp(1.4rem, 2.8vw, 1.9rem)', letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: 12 }}>
+                    <h2 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.4vw, 1.6rem)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 12, color: TEXT }}>
                         ¿Quieres resultados así con tu IA?
                     </h2>
-                    <p style={{ color: TEXT_MED, fontSize: 15.5, lineHeight: 1.7, maxWidth: 460, margin: '0 auto 26px' }}>
-                        Explora el banco con más de 1.000 prompts probados para ChatGPT, Claude y Gemini,
+                    <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 460, margin: '0 auto 24px' }}>
+                        Explora el directorio con más de 1.000 prompts probados para ChatGPT, Claude y Gemini,
                         organizados por categoría.
                     </p>
                     <Link
-                        to="/prompts"
+                        to="/"
                         style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                            backgroundColor: YELLOW, color: '#1a1500', fontWeight: 600, fontSize: 15.5,
-                            padding: '15px 28px', borderRadius: 12, textDecoration: 'none',
+                            fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 14,
+                            padding: '14px 26px', borderRadius: 10, textDecoration: 'none',
                         }}
                     >
-                        Explorar el banco
+                        Explorar el directorio
                     </Link>
                 </div>
             </div>

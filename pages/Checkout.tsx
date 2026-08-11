@@ -4,11 +4,10 @@ import { Check, ArrowLeft, ChevronDown } from 'lucide-react';
 import type { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
 import { supabase } from '../lib/supabase';
 import { loadPaddle, onPaddleEvent, formatMoney } from '../lib/paddle';
-import AlpacaIcon from '../components/AlpacaIcon';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+} from '../components/darkKit';
 
 const FEATURES = [
     'Acceso ilimitado a más de 1.000 prompts',
@@ -97,8 +96,9 @@ const Checkout: React.FC = () => {
                         frameTarget: 'paddle-checkout-frame',
                         frameInitialHeight: 450,
                         frameStyle: 'width: 100%; min-width: 286px; background-color: transparent; border: none;',
-                        // La página ahora es clara: el frame de Paddle debe acompañarla.
-                        theme: 'light',
+                        // La página es oscura: sin esto el frame de Paddle se monta
+                        // en blanco y queda como un bloque luminoso sobre el negro.
+                        theme: 'dark',
                         locale: 'es',
                         allowLogout: false,
                         successUrl: `${window.location.origin}/payment-success`,
@@ -128,7 +128,7 @@ const Checkout: React.FC = () => {
                     <div
                         style={{
                             width: 56, height: 56, borderRadius: 18, marginBottom: 22,
-                            backgroundColor: '#eefbf2', border: '1px solid #c3ecd1',
+                            backgroundColor: 'rgba(63,207,142,0.1)', border: '1px solid rgba(63,207,142,0.3)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}
                     >
@@ -139,11 +139,11 @@ const Checkout: React.FC = () => {
                         Tu suscripción está activa: tienes acceso completo al banco de prompts y al generador.
                     </p>
                     <Link
-                        to="/prompts"
+                        to="/"
                         style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                            backgroundColor: YELLOW, color: '#1a1500', fontWeight: 600, fontSize: 15,
-                            padding: '14px 28px', borderRadius: 12, textDecoration: 'none',
+                            backgroundColor: YELLOW, color: '#1a1500', fontWeight: 700, fontSize: 14.5,
+                            padding: '14px 28px', borderRadius: 10, textDecoration: 'none',
                         }}
                     >
                         Ir a los prompts
@@ -208,7 +208,7 @@ const Checkout: React.FC = () => {
                     style={{ textDecoration: 'none', color: TEXT_MED }}
                 >
                     <ArrowLeft size={16} />
-                    <AlpacaIcon className="h-6 w-auto" />
+                    <span style={{ fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>alpacka.ai</span>
                 </Link>
 
                 <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.15fr] md:gap-12">
@@ -266,8 +266,8 @@ const Checkout: React.FC = () => {
                     <div
                         className="bp-up"
                         style={{
-                            backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 20,
-                            padding: '22px 20px', boxShadow: '0 12px 40px rgba(0,0,0,0.06)',
+                            backgroundColor: '#0a0a0a', border: `1px solid ${BORDER}`, borderRadius: 14,
+                            padding: '22px 20px',
                         }}
                     >
                         <p style={{ fontSize: 14.5, fontWeight: 600, color: TEXT, marginBottom: 20 }}>Datos de pago</p>

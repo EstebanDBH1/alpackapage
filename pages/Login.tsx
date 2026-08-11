@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
-import { ArrowLeft, Check, ExternalLink } from 'lucide-react';
-import AlpacaIcon from '../components/AlpacaIcon';
+import { Check, ExternalLink } from 'lucide-react';
 import {
-  BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, GREEN, FONT,
-  useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+  BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, MONO,
+} from '../components/darkKit';
+
+/* Login — mismo lenguaje visual oscuro estilo skills.sh que el resto de la
+   app. El header/nav lo aporta el layout compartido (darkKit). */
 
 function detectInAppBrowser(): { inApp: boolean; isAndroid: boolean; isIOS: boolean; appName: string } {
   const ua = navigator.userAgent;
@@ -47,8 +48,6 @@ const Login: React.FC = () => {
   const redirect = searchParams.get('redirect') || '/dashboard';
   const browser = React.useMemo(() => detectInAppBrowser(), []);
 
-  useEuclidFont();
-
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) return;
@@ -83,71 +82,44 @@ const Login: React.FC = () => {
   const [showIOSInstructions, setShowIOSInstructions] = React.useState(false);
 
   return (
-    <div
-      className="bp-scope"
-      style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: FONT, display: 'flex', flexDirection: 'column' }}
-    >
-      <LandingStyles />
+    <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
 
-      {/* ── Header mínimo ── */}
-      <header
-        style={{
-          height: 60, borderBottom: `1px solid ${BORDER}`,
-          display: 'flex', alignItems: 'center',
-          backgroundColor: 'rgba(255,255,255,0.86)',
-          backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 w-full flex items-center justify-between">
-          <Link to="/" className="flex items-center" aria-label="Inicio">
-            <AlpacaIcon className="h-7 w-auto" />
-          </Link>
-          <Link
-            to="/"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13.5, color: TEXT_MED, textDecoration: 'none' }}
-          >
-            <ArrowLeft size={14} /> Volver al inicio
-          </Link>
-        </div>
-      </header>
-
-      {/* ── Acceso ── */}
-      <main className="flex-1 flex items-start justify-center px-5 py-14 sm:py-20">
-        <div className="bp-up w-full" style={{ maxWidth: 420 }}>
+      <main className="flex items-start justify-center px-5 py-14 sm:py-20">
+        <div className="w-full" style={{ maxWidth: 420 }}>
 
           <div
             style={{
-              backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 22,
-              boxShadow: '0 14px 44px rgba(0,0,0,0.06)', overflow: 'hidden',
+              backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14,
+              overflow: 'hidden',
             }}
           >
-            <div style={{ padding: '34px 30px 30px' }}>
+            <div style={{ padding: '32px 28px 28px' }}>
               <div
                 className="inline-flex items-center gap-2 rounded-full"
-                style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 20 }}
+                style={{ backgroundColor: PANEL, border: `1px solid ${BORDER}`, padding: '5px 13px', marginBottom: 20 }}
               >
-                <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: TEXT_MED }} />
-                <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: TEXT_MED }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: GREEN }} />
+                <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED }}>
                   Acceso · alpacka.ai
                 </span>
               </div>
 
-              <h1 style={{ fontWeight: 600, fontSize: 28, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 10 }}>
+              <h1 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10, color: TEXT }}>
                 Iniciar sesión
               </h1>
-              <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.7, marginBottom: 26 }}>
-                Entra con tu cuenta de Google para acceder al banco de prompts, al generador y a tus prompts guardados.
+              <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 26 }}>
+                Entra con tu cuenta de Google para acceder al directorio de prompts, al generador y a tus prompts guardados.
               </p>
 
               {/* Aviso de navegador in-app */}
               {browser.inApp && (
                 <div
                   style={{
-                    backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', borderRadius: 14,
-                    padding: '16px 16px 14px', marginBottom: 20,
+                    backgroundColor: 'rgba(255,178,36,0.06)', border: '1px solid rgba(255,178,36,0.25)',
+                    borderRadius: 12, padding: '15px 15px 13px', marginBottom: 20,
                   }}
                 >
-                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: '#8a5b00', marginBottom: 12 }}>
+                  <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.6, color: AMBER, marginBottom: 12 }}>
                     Estás dentro de {browser.appName}. Para iniciar sesión con Google, abre esta página en{' '}
                     {browser.isAndroid ? 'Chrome' : 'Safari'}.
                   </p>
@@ -155,8 +127,8 @@ const Login: React.FC = () => {
                   {showIOSInstructions && (
                     <div
                       style={{
-                        backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 11,
-                        padding: '11px 13px', marginBottom: 12, fontSize: 12.5, color: TEXT_MED, lineHeight: 1.6,
+                        backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 9,
+                        padding: '10px 12px', marginBottom: 12, fontFamily: MONO, fontSize: 12, color: MUTED, lineHeight: 1.6,
                       }}
                     >
                       Toca <strong style={{ color: TEXT }}>···</strong> o <strong style={{ color: TEXT }}>⋮</strong> y selecciona{' '}
@@ -168,8 +140,8 @@ const Login: React.FC = () => {
                     onClick={handleOpenInBrowser}
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                      backgroundColor: '#1a1500', color: '#fff', border: 'none', cursor: 'pointer',
-                      borderRadius: 11, padding: '12px 16px', fontSize: 14, fontWeight: 600,
+                      fontFamily: MONO, backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
+                      borderRadius: 9, padding: '11px 16px', fontSize: 13, fontWeight: 700,
                     }}
                   >
                     <ExternalLink size={14} />
@@ -183,8 +155,8 @@ const Login: React.FC = () => {
                 <div
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                    border: `1px solid ${BORDER}`, borderRadius: 12, padding: '14px 18px',
-                    fontSize: 14.5, fontWeight: 600, color: TEXT_DIM, cursor: 'not-allowed',
+                    fontFamily: MONO, border: `1px solid ${BORDER_SOFT}`, borderRadius: 10, padding: '13px 18px',
+                    fontSize: 13.5, fontWeight: 600, color: DIM, cursor: 'not-allowed',
                   }}
                 >
                   <GoogleLogo muted />
@@ -195,25 +167,27 @@ const Login: React.FC = () => {
                   onClick={handleGoogleLogin}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                    backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 12,
-                    padding: '14px 18px', fontSize: 14.5, fontWeight: 600, color: TEXT,
-                    cursor: 'pointer',
+                    fontFamily: MONO, backgroundColor: '#ffffff', border: '1px solid #ffffff', borderRadius: 10,
+                    padding: '13px 18px', fontSize: 13.5, fontWeight: 700, color: '#111',
+                    cursor: 'pointer', transition: 'opacity .15s',
                   }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.9'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
                 >
                   <GoogleLogo />
                   Continuar con Google
                 </button>
               )}
 
-              <p style={{ fontSize: 12.5, color: TEXT_DIM, lineHeight: 1.7, marginTop: 18 }}>
+              <p style={{ fontFamily: MONO, fontSize: 11.5, color: DIM, lineHeight: 1.7, marginTop: 18 }}>
                 Al continuar, aceptas nuestros{' '}
-                <Link to="/terms" style={{ color: TEXT_MED, textDecoration: 'underline' }}>Términos</Link> y la{' '}
-                <Link to="/privacy" style={{ color: TEXT_MED, textDecoration: 'underline' }}>Privacidad</Link>.
+                <Link to="/terms" style={{ color: MUTED, textDecoration: 'underline' }}>Términos</Link> y la{' '}
+                <Link to="/privacy" style={{ color: MUTED, textDecoration: 'underline' }}>Privacidad</Link>.
               </p>
             </div>
 
             {/* Qué incluye la cuenta */}
-            <div style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, padding: '18px 30px' }}>
+            <div style={{ backgroundColor: PANEL, borderTop: `1px solid ${BORDER_SOFT}`, padding: '17px 28px' }}>
               {[
                 'Acceso a tus prompts guardados',
                 'Generador de prompts con IA',
@@ -221,13 +195,13 @@ const Login: React.FC = () => {
               ].map(t => (
                 <div key={t} className="flex items-start gap-2.5" style={{ padding: '4px 0' }}>
                   <Check size={13} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
-                  <span style={{ fontSize: 13.5, color: TEXT_MED, lineHeight: 1.5 }}>{t}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{t}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <p style={{ textAlign: 'center', fontSize: 13, color: TEXT_DIM, marginTop: 20 }}>
+          <p style={{ textAlign: 'center', fontFamily: MONO, fontSize: 12.5, color: DIM, marginTop: 20 }}>
             ¿Todavía no tienes cuenta?{' '}
             <Link to="/pricing" style={{ color: TEXT, fontWeight: 600, textDecoration: 'none' }}>
               Ver el plan →

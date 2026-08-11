@@ -127,6 +127,38 @@ details[open] .faq-chevron {
   text-decoration-color: #c9c9c2;
 }
 
+/* Variante oscura: páginas del diseño nuevo estilo skills.sh (.dk-scope) */
+.dk-scope .blog-prose {
+  color: #a0a0a0;
+  font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 14.5px;
+}
+
+.dk-scope .blog-prose h2,
+.dk-scope .blog-prose h3,
+.dk-scope .blog-prose strong,
+.dk-scope .blog-prose b {
+  color: #ededed;
+}
+
+.dk-scope .blog-prose li::marker {
+  color: #3fcf8e;
+}
+
+.dk-scope .blog-prose blockquote {
+  border-left-color: #262626;
+  color: #a0a0a0;
+}
+
+.dk-scope .blog-prose img {
+  border-color: #1a1a1a;
+}
+
+.dk-scope .blog-prose a {
+  color: #ededed;
+  text-decoration-color: #3a3a3a;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

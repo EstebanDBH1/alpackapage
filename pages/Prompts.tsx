@@ -8,8 +8,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Shield, Search, ChevronDown, Sparkles, Check } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
-    useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+    useEuclidFont, LandingStyles, CategoryBadge,
+} from '../components/darkKit';
 
 const PAGE_SIZE = 12;
 
@@ -27,9 +27,9 @@ const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 // Badges de herramienta IA en versión clara (los de lib/aiTools son para el tema oscuro)
 const AI_BADGE: Record<string, { bg: string; bd: string; fg: string }> = {
     'cualquier-modelo': { bg: BG_WARM,   bd: BORDER,    fg: TEXT_MED },
-    chatgpt:            { bg: '#eefbf2', bd: '#c3ecd1', fg: '#0f8a44' },
-    claude:             { bg: '#fff4ea', bd: '#fbdcc0', fg: '#c2620d' },
-    gemini:             { bg: '#eff6ff', bd: '#cfe0fd', fg: '#2563eb' },
+    chatgpt:            { bg: 'rgba(63,207,142,0.1)', bd: 'rgba(63,207,142,0.3)', fg: '#3fcf8e' },
+    claude:             { bg: 'rgba(212,168,83,0.09)', bd: 'rgba(212,168,83,0.3)', fg: '#d4a853' },
+    gemini:             { bg: 'rgba(66,133,244,0.09)', bd: 'rgba(66,133,244,0.3)', fg: '#6ea8ff' },
 };
 
 const Prompts: React.FC = () => {
@@ -186,8 +186,8 @@ const Prompts: React.FC = () => {
             {/* ── Barra de filtros (sticky bajo el navbar) ───────────────────── */}
             <div
                 style={{
-                    position: 'sticky', top: 60, zIndex: 40,
-                    backgroundColor: 'rgba(255,255,255,0.88)',
+                    position: 'sticky', top: 0, zIndex: 40,
+                    backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                     borderTop: `1px solid ${BORDER}`,
                     borderBottom: `1px solid ${BORDER}`,
@@ -212,7 +212,7 @@ const Prompts: React.FC = () => {
                                 transition: 'border-color .15s, box-shadow .15s',
                             }}
                             onFocus={e => {
-                                e.currentTarget.style.borderColor = '#c9c9c2';
+                                e.currentTarget.style.borderColor = '#3a3a3a';
                                 e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)';
                             }}
                             onBlur={e => {
@@ -347,10 +347,10 @@ const Prompts: React.FC = () => {
                             <div style={{ padding: '30px 28px' }}>
                                 <div
                                     className="inline-flex items-center gap-2 rounded-full"
-                                    style={{ backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', padding: '5px 13px', marginBottom: 18 }}
+                                    style={{ backgroundColor: 'rgba(255,178,36,0.08)', border: '1px solid #fbe3b0', padding: '5px 13px', marginBottom: 18 }}
                                 >
-                                    <Sparkles size={11} style={{ color: '#c98200' }} />
-                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#a86a00' }}>
+                                    <Sparkles size={11} style={{ color: '#ffb224' }} />
+                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ffb224' }}>
                                         Acceso total
                                     </span>
                                 </div>
@@ -440,7 +440,7 @@ const FilterSelect: React.FC<{
                 aria-expanded={open}
                 style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    backgroundColor: BG, border: `1px solid ${open ? '#c9c9c2' : BORDER}`, borderRadius: 11,
+                    backgroundColor: BG, border: `1px solid ${open ? '#3a3a3a' : BORDER}`, borderRadius: 11,
                     padding: '10px 15px', cursor: 'pointer', outline: 'none',
                 }}
             >
@@ -513,7 +513,7 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.transform = 'translateY(-2px)';
                 el.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
-                el.style.borderColor = '#d8d8d2';
+                el.style.borderColor = '#3a3a3a';
             }}
             onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement;
@@ -526,7 +526,7 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => {
                 <span
                     style={{
                         position: 'absolute', top: -8, right: -6,
-                        backgroundColor: ACCENT, color: '#fff',
+                        backgroundColor: ACCENT, color: '#1a1500',
                         borderRadius: 100, padding: '3px 9px',
                         fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
                         boxShadow: '0 4px 12px rgba(245,50,79,0.35)',
@@ -538,15 +538,7 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => {
 
             <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-1.5">
-                    <span
-                        style={{
-                            backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 7,
-                            padding: '3px 8px', fontSize: 10, fontWeight: 600,
-                            letterSpacing: '0.12em', textTransform: 'uppercase', color: TEXT_MED,
-                        }}
-                    >
-                        {prompt.category || 'General'}
-                    </span>
+                    <CategoryBadge category={prompt.category} />
                     <span
                         style={{
                             backgroundColor: badge.bg, border: `1px solid ${badge.bd}`, borderRadius: 7,
@@ -560,9 +552,9 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => {
                 {prompt.is_premium && (
                     <span
                         style={{
-                            backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', borderRadius: 7,
+                            backgroundColor: 'rgba(255,178,36,0.08)', border: '1px solid #fbe3b0', borderRadius: 7,
                             padding: '3px 8px', fontSize: 10, fontWeight: 700,
-                            letterSpacing: '0.12em', textTransform: 'uppercase', color: '#a86a00',
+                            letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ffb224',
                         }}
                     >
                         Premium

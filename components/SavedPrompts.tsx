@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Bookmark, Lock, ArrowRight, Sparkles } from 'lucide-react';
-import { BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, FONT } from './landingKit';
+import { BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, FONT } from './darkKit';
 
 const CATEGORY_EMOJIS: Record<string, string> = {
     marketing: '📣', copywriting: '✍️', ventas: '💰',
@@ -106,7 +106,7 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
                                     {item.prompts.is_premium && (
                                         <span
                                             className="inline-flex items-center gap-1"
-                                            style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#a86a00' }}
+                                            style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ffb224' }}
                                         >
                                             <Lock size={9} /> premium
                                         </span>
@@ -146,7 +146,7 @@ const SavedPrompts: React.FC<Props> = ({ userId }) => {
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}
                     >
-                        <Sparkles size={19} style={{ color: '#c98200' }} />
+                        <Sparkles size={19} style={{ color: '#ffb224' }} />
                     </div>
                     <p style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 6 }}>
                         Aún no guardaste ningún prompt

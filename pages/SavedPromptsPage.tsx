@@ -6,7 +6,7 @@ import { ChevronLeft, LayoutDashboard } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, BORDER, ACCENT, FONT,
     useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+} from '../components/darkKit';
 
 const SavedPromptsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -53,8 +53,8 @@ const SavedPromptsPage: React.FC = () => {
             {/* Sub-nav */}
             <div
                 style={{
-                    position: 'sticky', top: 60, zIndex: 40,
-                    backgroundColor: 'rgba(255,255,255,0.88)',
+                    position: 'sticky', top: 0, zIndex: 40,
+                    backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                     borderTop: `1px solid ${BORDER}`,
                     borderBottom: `1px solid ${BORDER}`,

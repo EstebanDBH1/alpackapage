@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+} from '../components/darkKit';
 
 const REDIRECT_SECONDS = 7;
 
@@ -74,9 +74,9 @@ const PaymentSuccess: React.FC = () => {
     }, [navigate]);
 
     const perks = [
-        { icon: Zap, color: '#c98200', bg: '#fff7e8', bd: '#fbe3b0', text: 'Acceso ilimitado a +1.000 prompts' },
-        { icon: Wand2, color: '#8b5cf6', bg: '#f7f2ff', bd: '#e2d5fb', text: 'Generador con IA — 10 prompts al día' },
-        { icon: Sparkles, color: GREEN, bg: '#eefbf2', bd: '#c3ecd1', text: 'Prompts nuevos cada semana, incluidos' },
+        { icon: Zap, color: '#ffb224', bg: 'rgba(255,178,36,0.08)', bd: 'rgba(255,178,36,0.28)', text: 'Acceso ilimitado a +1.000 prompts' },
+        { icon: Wand2, color: '#b39dff', bg: 'rgba(139,92,246,0.1)', bd: 'rgba(139,92,246,0.3)', text: 'Generador con IA — 10 prompts al día' },
+        { icon: Sparkles, color: GREEN, bg: 'rgba(63,207,142,0.1)', bd: 'rgba(63,207,142,0.3)', text: 'Prompts nuevos cada semana, incluidos' },
     ];
 
     return (
@@ -99,7 +99,7 @@ const PaymentSuccess: React.FC = () => {
                         <div
                             style={{
                                 width: 68, height: 68, borderRadius: 22,
-                                backgroundColor: '#eefbf2', border: '1px solid #c3ecd1',
+                                backgroundColor: 'rgba(63,207,142,0.1)', border: '1px solid #c3ecd1',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}
                         >
@@ -125,7 +125,7 @@ const PaymentSuccess: React.FC = () => {
                         <div
                             className="mx-auto mb-6 flex w-fit items-center gap-2"
                             style={{
-                                backgroundColor: '#eefbf2', border: '1px solid #c3ecd1', borderRadius: 100,
+                                backgroundColor: 'rgba(63,207,142,0.1)', border: '1px solid #c3ecd1', borderRadius: 100,
                                 padding: '6px 14px', fontSize: 12.5, fontWeight: 600, color: GREEN,
                             }}
                         >

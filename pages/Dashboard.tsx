@@ -9,7 +9,7 @@ import { Subscription } from '../types';
 import {
     BG, BG_WARM, BG_INK, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
-} from '../components/landingKit';
+} from '../components/darkKit';
 
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -144,8 +144,8 @@ const Dashboard: React.FC = () => {
                         className="hidden sm:inline-flex items-center gap-2"
                         style={{
                             flexShrink: 0, borderRadius: 100, padding: '6px 13px',
-                            backgroundColor: isActive ? '#eefbf2' : BG,
-                            border: `1px solid ${isActive ? '#c3ecd1' : BORDER}`,
+                            backgroundColor: isActive ? 'rgba(63,207,142,0.1)' : BG,
+                            border: `1px solid ${isActive ? 'rgba(63,207,142,0.3)' : BORDER}`,
                             color: isActive ? GREEN : TEXT_MED,
                             fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
                         }}
@@ -346,10 +346,10 @@ const Dashboard: React.FC = () => {
                             {subscription?.cancel_at_period_end && (
                                 <div
                                     className="mt-4 flex items-start gap-3"
-                                    style={{ backgroundColor: '#fff7e8', border: '1px solid #fbe3b0', borderRadius: 13, padding: '14px 16px' }}
+                                    style={{ backgroundColor: 'rgba(255,178,36,0.08)', border: '1px solid #fbe3b0', borderRadius: 13, padding: '14px 16px' }}
                                 >
-                                    <AlertTriangle size={15} style={{ color: '#c98200', flexShrink: 0, marginTop: 2 }} />
-                                    <p style={{ fontSize: 14, lineHeight: 1.6, color: '#8a5b00' }}>
+                                    <AlertTriangle size={15} style={{ color: '#ffb224', flexShrink: 0, marginTop: 2 }} />
+                                    <p style={{ fontSize: 14, lineHeight: 1.6, color: '#ffb224' }}>
                                         Cancelación programada. Mantendrás el acceso hasta{' '}
                                         <strong style={{ fontWeight: 700 }}>
                                             {new Date(subscription.current_period_end!).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
