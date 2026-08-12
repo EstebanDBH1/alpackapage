@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 /* ══════════════════════════════════════════════════════════════
@@ -87,6 +87,7 @@ export const AI_BADGE_DARK: Record<string, { bg: string; bd: string; fg: string 
 
 /* ── Header oscuro (estático: se desplaza con la página) ────── */
 const NAV_LINKS = [
+    { to: '/prompts', label: 'Prompts' },
     { to: '/skills', label: 'Skills' },
     { to: '/generador', label: 'Generador' },
     { to: '/blog', label: 'Blog' },
@@ -101,6 +102,12 @@ export const DarkHeader: React.FC = () => {
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+        // Sin esto el header seguiría mostrando "Cuenta" tras cerrar sesión
+        // (o "Acceder" tras entrar) hasta recargar la página.
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (_event, session) => setUser(session?.user ?? null),
+        );
+        return () => subscription.unsubscribe();
     }, []);
 
     // Al navegar se cierra solo: si no, el panel sigue abierto sobre la página nueva
@@ -123,8 +130,19 @@ export const DarkHeader: React.FC = () => {
         return () => { document.body.style.overflow = previous; };
     }, [menuOpen]);
 
-    const authLabel = user ? 'Dashboard' : 'Acceder';
+    const authLabel = user ? 'Cuenta' : 'Acceder';
     const goAuth = () => { setMenuOpen(false); navigate(user ? '/dashboard' : '/login'); };
+
+    const handleLogout = async () => {
+        setMenuOpen(false);
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+        } catch (e) {
+            console.error('Error al cerrar sesión:', e);
+        }
+        navigate('/');
+    };
 
     return (
         <header
@@ -143,8 +161,9 @@ export const DarkHeader: React.FC = () => {
                     </span>
                 </Link>
 
-                {/* Navegación de escritorio */}
-                <nav className="hidden sm:flex items-center gap-5">
+                {/* Navegación de escritorio — a partir de md: con 5 enlaces más el
+                    botón de cuenta, en tablet no cabe y se usa la hamburguesa. */}
+                <nav className="hidden md:flex items-center gap-4">
                     {NAV_LINKS.map(l => (
                         <Link
                             key={l.to}
@@ -166,12 +185,37 @@ export const DarkHeader: React.FC = () => {
                     >
                         {authLabel}
                     </button>
+                    {user && (
+                        <button
+                            onClick={handleLogout}
+                            title="Cerrar sesión"
+                            aria-label="Cerrar sesión"
+                            className="inline-flex items-center justify-center"
+                            style={{
+                                width: 32, height: 32, borderRadius: 8,
+                                backgroundColor: 'transparent', border: `1px solid ${BORDER}`,
+                                color: MUTED, cursor: 'pointer', transition: 'color .15s, border-color .15s',
+                            }}
+                            onMouseEnter={e => {
+                                const el = e.currentTarget as HTMLElement;
+                                el.style.color = TEXT;
+                                el.style.borderColor = '#3a3a3a';
+                            }}
+                            onMouseLeave={e => {
+                                const el = e.currentTarget as HTMLElement;
+                                el.style.color = MUTED;
+                                el.style.borderColor = BORDER;
+                            }}
+                        >
+                            <LogOut size={15} />
+                        </button>
+                    )}
                 </nav>
 
-                {/* Hamburguesa (solo móvil) */}
+                {/* Hamburguesa (móvil y tablet) */}
                 <button
                     type="button"
-                    className="sm:hidden inline-flex items-center justify-center"
+                    className="md:hidden inline-flex items-center justify-center"
                     onClick={() => setMenuOpen(o => !o)}
                     aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                     aria-expanded={menuOpen}
@@ -192,7 +236,7 @@ export const DarkHeader: React.FC = () => {
             {menuOpen && (
                 <>
                     <div
-                        className="sm:hidden"
+                        className="md:hidden"
                         onClick={() => setMenuOpen(false)}
                         aria-hidden="true"
                         style={{
@@ -202,7 +246,7 @@ export const DarkHeader: React.FC = () => {
                     />
                     <nav
                         id="alp-mobile-nav"
-                        className="sm:hidden"
+                        className="md:hidden"
                         style={{
                             position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60,
                             // Un punto más claro que el fondo: sobre negro atenuado, un
@@ -240,6 +284,23 @@ export const DarkHeader: React.FC = () => {
                         >
                             {authLabel}
                         </button>
+
+                        {user && (
+                            <button
+                                onClick={handleLogout}
+                                className="inline-flex items-center justify-center gap-2"
+                                style={{
+                                    marginTop: 10, width: '100%',
+                                    fontFamily: MONO, fontSize: 13.5, fontWeight: 600,
+                                    backgroundColor: 'transparent', color: MUTED,
+                                    border: `1px solid ${BORDER}`, cursor: 'pointer',
+                                    borderRadius: 10, padding: '12px 18px',
+                                }}
+                            >
+                                <LogOut size={14} />
+                                Cerrar sesión
+                            </button>
+                        )}
                     </nav>
                 </>
             )}
