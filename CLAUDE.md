@@ -38,7 +38,9 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 - `/admin` / `/admin/blog` — Admin panels (protected by `is_admin` RLS in Supabase)
 - `/terms` / `/privacy` — Static legal pages
 
-`STANDALONE_ROUTES` (`/` and `/ebook`) render without the shared Navbar/Footer layout — they bring their own header/footer.
+`STANDALONE_ROUTES` (`/ebook`, `/bank-prompts`, `/checkout`) render without the shared layout — they bring their own header/footer. Every other route gets `DarkHeader` / `DarkFooter` from `components/darkKit.tsx`; that is the *only* navigation (the old `components/Navbar.tsx` was dead code and has been deleted).
+
+**Navigation.** `DarkHeader` carries a categories dropdown and `DarkFooter` a category list, both built from `useCatalogCategories()` in `darkKit.tsx`. Category links go through `categoryHref()`, which lowercases and encodes the name because `/prompts` matches the URL param against `category.toLowerCase()` — change one without the other and every category page silently returns zero results. The header search navigates to `/prompts?q=…`, which `Prompts.tsx` reads via `useSearchParams`. The header only fetches the catalog when a menu is opened; the footer always does, which doubles as warming the cache `/prompts` reads from.
 
 ### Key Patterns
 

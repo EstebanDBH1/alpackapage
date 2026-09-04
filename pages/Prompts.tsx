@@ -5,7 +5,7 @@ import { hasLibraryAccess } from '../lib/access';
 import { getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Shield, Search, ChevronDown, Sparkles, Check } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
@@ -38,7 +38,12 @@ const Prompts: React.FC = () => {
     const { category: categoryParam } = useParams<{ category?: string }>();
     const selectedCategory = categoryParam ?? 'todas';
     const [selectedTier, setSelectedTier] = useState<'todos' | 'gratis' | 'premium'>('todos');
-    const [searchQuery, setSearchQuery] = useState('');
+    // El buscador del header navega a /prompts?q=…, así que la búsqueda
+    // arranca desde la URL y se sincroniza si el parámetro cambia.
+    const [searchParams] = useSearchParams();
+    const queryParam = searchParams.get('q') ?? '';
+    const [searchQuery, setSearchQuery] = useState(queryParam);
+    useEffect(() => { setSearchQuery(queryParam); }, [queryParam]);
     // Debounce: filtramos 200ms después de que el usuario deja de teclear,
     // en vez de recalcular el filtro en cada pulsación.
     const [debouncedSearch, setDebouncedSearch] = useState('');

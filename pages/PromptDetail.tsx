@@ -13,6 +13,23 @@ import {
 /* Detalle de prompt — mismo lenguaje visual oscuro estilo skills.sh
    que la home (ver public/reference-new-app/reference.png). */
 
+/* Guardar exige sesión. Si no la hay, se anota la intención antes de mandar
+   al login y se completa sola al volver: sin esto el usuario inicia sesión,
+   aterriza de nuevo aquí y su guardado se ha perdido por el camino. */
+const PENDING_SAVE_KEY = 'alp-pending-save';
+
+const rememberPendingSave = (promptId: string) => {
+    try { sessionStorage.setItem(PENDING_SAVE_KEY, promptId); } catch { /* sin sessionStorage: se pierde, no rompe */ }
+};
+
+const takePendingSave = (): string | null => {
+    try {
+        const v = sessionStorage.getItem(PENDING_SAVE_KEY);
+        if (v) sessionStorage.removeItem(PENDING_SAVE_KEY);
+        return v;
+    } catch { return null; }
+};
+
 const PromptDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -48,6 +65,15 @@ const PromptDetail: React.FC = () => {
             if (!error) setPrompt(promptData as Prompt);
             setIsSubscribed(subscribed);
             setLoading(false);
+
+            // ¿Venía de pulsar "guardar" sin sesión? Se completa ahora.
+            const pending = takePendingSave();
+            if (pending === id && user && subscribed && !savedRes.data) {
+                const { error: saveError } = await supabase
+                    .from('saved_prompts')
+                    .insert({ user_id: user.id, prompt_id: id });
+                if (!saveError) setIsSaved(true);
+            }
         };
         fetchPromptAndUser();
     }, [id]);
@@ -212,7 +238,10 @@ const PromptDetail: React.FC = () => {
     const handleSave = async () => {
         const { data: { session } } = await supabase.auth.getSession();
         const user = session?.user;
-        if (!user) return navigate('/login');
+        if (!user) {
+            rememberPendingSave(String(id));
+            return navigate(`/login?redirect=${encodeURIComponent(`/prompts/${id}`)}`);
+        }
         if (!isSubscribed) return navigate('/pricing');
         setSaving(true);
         try {

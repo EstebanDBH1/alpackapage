@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { Menu, X, LogOut, ChevronDown, Search, Bookmark, User as UserIcon, Shield } from 'lucide-react';
+import { supabase, isAdminUser } from '../lib/supabase';
+import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 
 /* ══════════════════════════════════════════════════════════════
    Kit visual del nuevo diseño oscuro estilo skills.sh
@@ -91,20 +92,95 @@ export const AI_BADGE_DARK: Record<string, { bg: string; bd: string; fg: string 
     gemini: { bg: 'rgba(66,133,244,0.08)', bd: 'rgba(66,133,244,0.3)', fg: '#6ea8ff' },
 };
 
-/* ── Header oscuro (estático: se desplaza con la página) ────── */
+/* ── Navegación ──────────────────────────────────────────────────
+   El catálogo tiene 20+ categorías y cientos de prompts, así que
+   "Prompts" es un desplegable con todas ellas en vez de un enlace
+   suelto: sin eso, las rutas /prompts/categoria/* existen pero no
+   las enlaza nadie y el catálogo entero cuelga de una sola puerta. */
+
 const NAV_LINKS = [
-    { to: '/prompts', label: 'Prompts' },
-    { to: '/skills', label: 'Skills' },
     { to: '/generador', label: 'Generador' },
+    { to: '/skills', label: 'Skills' },
     { to: '/blog', label: 'Blog' },
     { to: '/pricing', label: 'Precios' },
 ];
+
+/* El slug de categoría es el nombre en minúsculas y codificado: es lo que
+   espera /prompts (compara contra `category.toLowerCase()`). Cambiar esto
+   sin cambiar Prompts.tsx deja el filtro sin coincidencias. */
+export const categoryHref = (name: string) =>
+    `/prompts/categoria/${encodeURIComponent(name.toLowerCase())}`;
+
+type CategorySummary = { name: string; count: number };
+
+const summarizeCategories = (list: { category?: string | null }[] | null): CategorySummary[] => {
+    if (!list) return [];
+    const counts = new Map<string, number>();
+    for (const p of list) {
+        const name = (p.category ?? '').trim();
+        if (name) counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'es'));
+};
+
+/* Las categorías salen del listado ya cacheado (memoria/sessionStorage). Si
+   el visitante aún no ha pasado por /prompts no hay caché, y entonces solo
+   se descarga cuando abre el menú: así una visita que nunca lo abre no paga
+   ninguna petición extra. */
+const useCatalogCategories = (shouldLoad: boolean): CategorySummary[] => {
+    const [cats, setCats] = useState<CategorySummary[]>(() => summarizeCategories(getCachedPromptsList()));
+
+    useEffect(() => {
+        if (!shouldLoad || cats.length) return;
+        let cancelled = false;
+        fetchPromptsList().then(list => {
+            if (!cancelled && list) setCats(summarizeCategories(list));
+        });
+        return () => { cancelled = true; };
+    }, [shouldLoad, cats.length]);
+
+    return cats;
+};
 
 export const DarkHeader: React.FC = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const [user, setUser] = useState<any>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [catsOpen, setCatsOpen] = useState(false);
+    const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
+    const [accountOpen, setAccountOpen] = useState(false);
+    const [query, setQuery] = useState('');
+    const accountRef = useRef<HTMLDivElement>(null);
+
+    // Solo se cargan cuando hacen falta: al abrir el desplegable o el menú móvil
+    const categories = useCatalogCategories(catsOpen || menuOpen);
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const inPrompts = pathname === '/prompts' || pathname.startsWith('/prompts/');
+    const isActive = (to: string) => pathname === to || pathname.startsWith(to + '/');
+
+    // Un pequeño retardo al salir evita que el panel se cierre al cruzar el
+    // hueco entre el botón y el desplegable.
+    const openCats = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        setCatsOpen(true);
+    };
+    const scheduleCloseCats = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        closeTimer.current = setTimeout(() => setCatsOpen(false), 140);
+    };
+    useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+
+    const submitSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        const q = query.trim();
+        setCatsOpen(false);
+        setMenuOpen(false);
+        navigate(q ? `/prompts?q=${encodeURIComponent(q)}` : '/prompts');
+    };
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
@@ -116,16 +192,36 @@ export const DarkHeader: React.FC = () => {
         return () => subscription.unsubscribe();
     }, []);
 
-    // Al navegar se cierra solo: si no, el panel sigue abierto sobre la página nueva
-    useEffect(() => { setMenuOpen(false); }, [pathname]);
-
-    // Escape cierra el menú (y evita dejarlo abierto sin salida en teclado)
+    // Al navegar se cierra todo: si no, el panel sigue abierto sobre la página nueva
     useEffect(() => {
-        if (!menuOpen) return;
-        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false); };
+        setMenuOpen(false);
+        setCatsOpen(false);
+        setMobileCatsOpen(false);
+        setAccountOpen(false);
+    }, [pathname]);
+
+    // Escape cierra lo que esté abierto (y evita dejarlo sin salida en teclado)
+    useEffect(() => {
+        if (!menuOpen && !catsOpen && !accountOpen) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            setMenuOpen(false);
+            setCatsOpen(false);
+            setAccountOpen(false);
+        };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
-    }, [menuOpen]);
+    }, [menuOpen, catsOpen, accountOpen]);
+
+    // El menú de cuenta se cierra al pulsar fuera, como en cualquier web
+    useEffect(() => {
+        if (!accountOpen) return;
+        const onDown = (e: MouseEvent) => {
+            if (!accountRef.current?.contains(e.target as Node)) setAccountOpen(false);
+        };
+        document.addEventListener('mousedown', onDown);
+        return () => document.removeEventListener('mousedown', onDown);
+    }, [accountOpen]);
 
     // Bloquea el scroll del fondo: sin esto la página se desliza por detrás
     // del panel al arrastrar sobre él.
@@ -136,8 +232,18 @@ export const DarkHeader: React.FC = () => {
         return () => { document.body.style.overflow = previous; };
     }, [menuOpen]);
 
-    const authLabel = user ? 'Cuenta' : 'Acceder';
-    const goAuth = () => { setMenuOpen(false); navigate(user ? '/dashboard' : '/login'); };
+    // Datos para el menú de cuenta
+    const displayName: string = user?.user_metadata?.full_name || user?.email || '';
+    const firstName = displayName.split(' ')[0] || 'Mi cuenta';
+    const avatarUrl: string | undefined = user?.user_metadata?.avatar_url;
+    const initial = (displayName.trim()[0] || 'U').toUpperCase();
+    const admin = isAdminUser(user);
+
+    // El admin gestiona su cuenta en /admin; el resto en /dashboard
+    const accountHome = admin ? '/admin' : '/dashboard';
+
+    // Al entrar se vuelve a donde estabas, no a una página cualquiera
+    const loginHref = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`;
 
     const handleLogout = async () => {
         setMenuOpen(false);
@@ -170,51 +276,214 @@ export const DarkHeader: React.FC = () => {
                 {/* Navegación de escritorio — a partir de md: con 5 enlaces más el
                     botón de cuenta, en tablet no cabe y se usa la hamburguesa. */}
                 <nav className="hidden md:flex items-center gap-4">
+                    {/* Prompts: enlace + desplegable con todas las categorías */}
+                    <div
+                        className="relative flex items-center"
+                        onMouseEnter={openCats}
+                        onMouseLeave={scheduleCloseCats}
+                    >
+                        <Link
+                            to="/prompts"
+                            style={{
+                                fontFamily: SANS, fontSize: 13, textDecoration: 'none',
+                                color: inPrompts ? TEXT : MUTED, transition: 'color .15s',
+                                display: 'inline-flex', alignItems: 'center', gap: 4,
+                            }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
+                            onMouseLeave={e => { if (!inPrompts) (e.currentTarget as HTMLElement).style.color = MUTED; }}
+                        >
+                            Prompts
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => (catsOpen ? setCatsOpen(false) : openCats())}
+                            aria-expanded={catsOpen}
+                            aria-haspopup="true"
+                            aria-label="Ver categorías"
+                            style={{
+                                background: 'none', border: 'none', cursor: 'pointer', padding: '4px 2px',
+                                color: inPrompts ? TEXT : MUTED, display: 'inline-flex', alignItems: 'center',
+                            }}
+                        >
+                            <ChevronDown
+                                size={13}
+                                style={{ transition: 'transform .18s', transform: catsOpen ? 'rotate(180deg)' : 'none' }}
+                            />
+                        </button>
+                    </div>
+
                     {NAV_LINKS.map(l => (
                         <Link
                             key={l.to}
                             to={l.to}
-                            style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none', transition: 'color .15s' }}
+                            style={{
+                                fontFamily: SANS, fontSize: 13, textDecoration: 'none',
+                                color: isActive(l.to) ? TEXT : MUTED, transition: 'color .15s',
+                            }}
                             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
+                            onMouseLeave={e => { if (!isActive(l.to)) (e.currentTarget as HTMLElement).style.color = MUTED; }}
                         >
                             {l.label}
                         </Link>
                     ))}
-                    <button
-                        onClick={goAuth}
-                        style={{
-                            fontFamily: SANS, fontSize: 12.5, fontWeight: 600,
-                            backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
-                            borderRadius: 8, padding: '7px 14px', marginLeft: 3,
-                        }}
-                    >
-                        {authLabel}
-                    </button>
-                    {user && (
-                        <button
-                            onClick={handleLogout}
-                            title="Cerrar sesión"
-                            aria-label="Cerrar sesión"
-                            className="inline-flex items-center justify-center"
+
+                    {/* Buscador: lleva a /prompts?q= */}
+                    <form onSubmit={submitSearch} className="hidden lg:flex items-center" style={{ marginLeft: 4 }}>
+                        <div className="relative flex items-center">
+                            <Search size={13} style={{ position: 'absolute', left: 9, color: DIM, pointerEvents: 'none' }} />
+                            <input
+                                value={query}
+                                onChange={e => setQuery(e.target.value)}
+                                placeholder="Buscar prompts"
+                                aria-label="Buscar prompts"
+                                style={{
+                                    fontFamily: SANS, fontSize: 12.5, color: TEXT,
+                                    backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                    borderRadius: 8, padding: '6px 10px 6px 27px', width: 150, outline: 'none',
+                                    transition: 'border-color .15s, width .18s',
+                                }}
+                                onFocus={e => { e.currentTarget.style.borderColor = '#3a3a3a'; e.currentTarget.style.width = '190px'; }}
+                                onBlur={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.width = '150px'; }}
+                            />
+                        </div>
+                    </form>
+                    {!user ? (
+                        <Link
+                            to={loginHref}
                             style={{
-                                width: 32, height: 32, borderRadius: 8,
-                                backgroundColor: 'transparent', border: `1px solid ${BORDER}`,
-                                color: MUTED, cursor: 'pointer', transition: 'color .15s, border-color .15s',
-                            }}
-                            onMouseEnter={e => {
-                                const el = e.currentTarget as HTMLElement;
-                                el.style.color = TEXT;
-                                el.style.borderColor = '#3a3a3a';
-                            }}
-                            onMouseLeave={e => {
-                                const el = e.currentTarget as HTMLElement;
-                                el.style.color = MUTED;
-                                el.style.borderColor = BORDER;
+                                fontFamily: SANS, fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+                                backgroundColor: TEXT, color: '#000',
+                                borderRadius: 8, padding: '7px 14px', marginLeft: 3,
                             }}
                         >
-                            <LogOut size={15} />
-                        </button>
+                            Acceder
+                        </Link>
+                    ) : (
+                        <div ref={accountRef} className="relative" style={{ marginLeft: 3 }}>
+                            <button
+                                type="button"
+                                onClick={() => setAccountOpen(o => !o)}
+                                aria-expanded={accountOpen}
+                                aria-haspopup="menu"
+                                aria-label="Menú de cuenta"
+                                className="inline-flex items-center gap-2"
+                                style={{
+                                    backgroundColor: accountOpen ? PANEL : 'transparent',
+                                    border: `1px solid ${accountOpen ? BORDER : 'transparent'}`,
+                                    borderRadius: 100, padding: '4px 9px 4px 4px', cursor: 'pointer',
+                                    transition: 'background-color .15s, border-color .15s',
+                                }}
+                            >
+                                {avatarUrl ? (
+                                    <img
+                                        src={avatarUrl}
+                                        alt=""
+                                        referrerPolicy="no-referrer"
+                                        style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    <span
+                                        className="inline-flex items-center justify-center"
+                                        style={{
+                                            width: 26, height: 26, borderRadius: '50%',
+                                            backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                            fontFamily: SANS, fontSize: 11.5, fontWeight: 700, color: TEXT,
+                                        }}
+                                    >
+                                        {initial}
+                                    </span>
+                                )}
+                                <span
+                                    className="max-w-[92px] truncate"
+                                    style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED }}
+                                >
+                                    {firstName}
+                                </span>
+                                <ChevronDown
+                                    size={12}
+                                    style={{ color: DIM, transition: 'transform .18s', transform: accountOpen ? 'rotate(180deg)' : 'none' }}
+                                />
+                            </button>
+
+                            {accountOpen && (
+                                <div
+                                    role="menu"
+                                    style={{
+                                        position: 'absolute', top: 'calc(100% + 9px)', right: 0, zIndex: 70,
+                                        minWidth: 224, backgroundColor: CARD,
+                                        border: `1px solid ${BORDER}`, borderRadius: 12,
+                                        boxShadow: '0 18px 40px rgba(0,0,0,0.6)', overflow: 'hidden',
+                                    }}
+                                >
+                                    <div style={{ padding: '12px 14px', borderBottom: `1px solid ${BORDER_SOFT}` }}>
+                                        <p className="truncate" style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: TEXT }}>
+                                            {displayName}
+                                        </p>
+                                        {admin && (
+                                            <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: AMBER, marginTop: 3 }}>
+                                                Administrador
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div style={{ padding: 6 }}>
+                                        {[
+                                            { to: accountHome, icon: <UserIcon size={14} />, label: admin ? 'Panel de admin' : 'Mi cuenta' },
+                                            { to: '/guardados', icon: <Bookmark size={14} />, label: 'Mis guardados' },
+                                            ...(admin ? [{ to: '/admin/suscriptores', icon: <Shield size={14} />, label: 'Suscriptores' }] : []),
+                                        ].map(item => (
+                                            <Link
+                                                key={item.to}
+                                                to={item.to}
+                                                role="menuitem"
+                                                onClick={() => setAccountOpen(false)}
+                                                className="flex items-center gap-2.5"
+                                                style={{
+                                                    fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none',
+                                                    padding: '9px 10px', borderRadius: 8, transition: 'background-color .12s, color .12s',
+                                                }}
+                                                onMouseEnter={e => {
+                                                    const el = e.currentTarget as HTMLElement;
+                                                    el.style.backgroundColor = PANEL; el.style.color = TEXT;
+                                                }}
+                                                onMouseLeave={e => {
+                                                    const el = e.currentTarget as HTMLElement;
+                                                    el.style.backgroundColor = 'transparent'; el.style.color = MUTED;
+                                                }}
+                                            >
+                                                {item.icon}
+                                                {item.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ padding: 6, borderTop: `1px solid ${BORDER_SOFT}` }}>
+                                        <button
+                                            type="button"
+                                            role="menuitem"
+                                            onClick={handleLogout}
+                                            className="flex w-full items-center gap-2.5"
+                                            style={{
+                                                fontFamily: SANS, fontSize: 13, color: MUTED, textAlign: 'left',
+                                                background: 'none', border: 'none', cursor: 'pointer',
+                                                padding: '9px 10px', borderRadius: 8, transition: 'background-color .12s, color .12s',
+                                            }}
+                                            onMouseEnter={e => {
+                                                const el = e.currentTarget as HTMLElement;
+                                                el.style.backgroundColor = PANEL; el.style.color = TEXT;
+                                            }}
+                                            onMouseLeave={e => {
+                                                const el = e.currentTarget as HTMLElement;
+                                                el.style.backgroundColor = 'transparent'; el.style.color = MUTED;
+                                            }}
+                                        >
+                                            <LogOut size={14} />
+                                            Cerrar sesión
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </nav>
 
@@ -237,6 +506,82 @@ export const DarkHeader: React.FC = () => {
                     {menuOpen ? <X size={19} /> : <Menu size={19} />}
                 </button>
             </div>
+
+            {/* Desplegable de categorías (escritorio). Ocupa el ancho del header
+                en vez de colgar del botón: con 20+ categorías, un panel anclado
+                se saldría de la pantalla por la derecha. */}
+            {catsOpen && (
+                <div
+                    className="hidden md:block"
+                    onMouseEnter={openCats}
+                    onMouseLeave={scheduleCloseCats}
+                    style={{
+                        position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60,
+                        backgroundColor: CARD,
+                        borderTop: `1px solid ${BORDER_SOFT}`,
+                        borderBottom: `1px solid ${BORDER}`,
+                        boxShadow: '0 20px 44px rgba(0,0,0,0.6)',
+                    }}
+                >
+                    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8" style={{ paddingTop: 20, paddingBottom: 18 }}>
+                        <div className="flex items-baseline justify-between" style={{ marginBottom: 14 }}>
+                            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: DIM }}>
+                                Categorías
+                            </span>
+                            <Link
+                                to="/prompts"
+                                style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
+                            >
+                                Ver todo el catálogo →
+                            </Link>
+                        </div>
+
+                        {categories.length === 0 ? (
+                            <div className="grid grid-cols-4 gap-x-6 gap-y-1.5">
+                                {Array.from({ length: 12 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="animate-pulse"
+                                        style={{ height: 15, borderRadius: 5, backgroundColor: PANEL, margin: '7px 0' }}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-4 gap-x-6 gap-y-0.5">
+                                {categories.map(c => (
+                                    <Link
+                                        key={c.name}
+                                        to={categoryHref(c.name)}
+                                        onClick={() => setCatsOpen(false)}
+                                        className="flex items-baseline justify-between gap-3"
+                                        style={{
+                                            fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none',
+                                            padding: '7px 8px', borderRadius: 7, transition: 'background-color .12s, color .12s',
+                                        }}
+                                        onMouseEnter={e => {
+                                            const el = e.currentTarget as HTMLElement;
+                                            el.style.backgroundColor = PANEL;
+                                            el.style.color = TEXT;
+                                        }}
+                                        onMouseLeave={e => {
+                                            const el = e.currentTarget as HTMLElement;
+                                            el.style.backgroundColor = 'transparent';
+                                            el.style.color = MUTED;
+                                        }}
+                                    >
+                                        <span className="truncate">{c.name}</span>
+                                        <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>
+                                            {c.count}
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Panel móvil + capa para cerrar tocando fuera */}
             {menuOpen && (
@@ -262,8 +607,85 @@ export const DarkHeader: React.FC = () => {
                             padding: '10px 20px 18px',
                             display: 'flex', flexDirection: 'column',
                             boxShadow: '0 18px 40px rgba(0,0,0,0.6)',
+                            // Con las categorías desplegadas la lista no cabe en pantalla:
+                            // el panel se desplaza por dentro en vez de desbordarse.
+                            maxHeight: `calc(100vh - ${HEADER_H}px)`,
+                            overflowY: 'auto',
+                            overscrollBehavior: 'contain',
                         }}
                     >
+                        <form onSubmit={submitSearch} style={{ marginBottom: 6 }}>
+                            <div className="relative flex items-center">
+                                <Search size={14} style={{ position: 'absolute', left: 11, color: DIM, pointerEvents: 'none' }} />
+                                <input
+                                    value={query}
+                                    onChange={e => setQuery(e.target.value)}
+                                    placeholder="Buscar prompts"
+                                    aria-label="Buscar prompts"
+                                    style={{
+                                        fontFamily: SANS, fontSize: 14, color: TEXT, width: '100%',
+                                        backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                        borderRadius: 10, padding: '11px 12px 11px 32px', outline: 'none',
+                                    }}
+                                />
+                            </div>
+                        </form>
+
+                        {/* Prompts, con las categorías dentro */}
+                        <div style={{ borderBottom: `1px solid ${BORDER_SOFT}` }}>
+                            <div className="flex items-center justify-between">
+                                <Link
+                                    to="/prompts"
+                                    onClick={() => setMenuOpen(false)}
+                                    style={{
+                                        flex: 1, fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
+                                        color: inPrompts ? TEXT : MUTED, textDecoration: 'none', padding: '13px 2px',
+                                    }}
+                                >
+                                    Prompts
+                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={() => setMobileCatsOpen(o => !o)}
+                                    aria-expanded={mobileCatsOpen}
+                                    aria-label={mobileCatsOpen ? 'Ocultar categorías' : 'Ver categorías'}
+                                    style={{
+                                        background: 'none', border: 'none', cursor: 'pointer',
+                                        color: MUTED, padding: '10px 6px', display: 'inline-flex', alignItems: 'center',
+                                    }}
+                                >
+                                    <ChevronDown
+                                        size={16}
+                                        style={{ transition: 'transform .18s', transform: mobileCatsOpen ? 'rotate(180deg)' : 'none' }}
+                                    />
+                                </button>
+                            </div>
+
+                            {mobileCatsOpen && (
+                                <div className="flex flex-col" style={{ paddingBottom: 8 }}>
+                                    {categories.length === 0 ? (
+                                        <span style={{ fontFamily: SANS, fontSize: 13, color: DIM, padding: '8px 12px' }}>
+                                            Cargando categorías…
+                                        </span>
+                                    ) : categories.map(c => (
+                                        <Link
+                                            key={c.name}
+                                            to={categoryHref(c.name)}
+                                            onClick={() => setMenuOpen(false)}
+                                            className="flex items-baseline justify-between gap-3"
+                                            style={{
+                                                fontFamily: SANS, fontSize: 13.5, color: MUTED, textDecoration: 'none',
+                                                padding: '10px 12px', borderRadius: 8, backgroundColor: PANEL, marginBottom: 4,
+                                            }}
+                                        >
+                                            <span className="truncate">{c.name}</span>
+                                            <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>{c.count}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         {NAV_LINKS.map(l => (
                             <Link
                                 key={l.to}
@@ -271,7 +693,7 @@ export const DarkHeader: React.FC = () => {
                                 onClick={() => setMenuOpen(false)}
                                 style={{
                                     fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
-                                    color: pathname === l.to ? TEXT : MUTED,
+                                    color: isActive(l.to) ? TEXT : MUTED,
                                     textDecoration: 'none', padding: '13px 2px',
                                     borderBottom: `1px solid ${BORDER_SOFT}`,
                                 }}
@@ -279,33 +701,84 @@ export const DarkHeader: React.FC = () => {
                                 {l.label}
                             </Link>
                         ))}
-                        <button
-                            onClick={goAuth}
-                            style={{
-                                marginTop: 16, width: '100%',
-                                fontFamily: SANS, fontSize: 14, fontWeight: 700,
-                                backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
-                                borderRadius: 10, padding: '13px 18px',
-                            }}
-                        >
-                            {authLabel}
-                        </button>
-
-                        {user && (
-                            <button
-                                onClick={handleLogout}
-                                className="inline-flex items-center justify-center gap-2"
+                        {!user ? (
+                            <Link
+                                to={loginHref}
+                                onClick={() => setMenuOpen(false)}
+                                className="block text-center"
                                 style={{
-                                    marginTop: 10, width: '100%',
-                                    fontFamily: SANS, fontSize: 13.5, fontWeight: 600,
-                                    backgroundColor: 'transparent', color: MUTED,
-                                    border: `1px solid ${BORDER}`, cursor: 'pointer',
-                                    borderRadius: 10, padding: '12px 18px',
+                                    marginTop: 16, width: '100%',
+                                    fontFamily: SANS, fontSize: 14, fontWeight: 700, textDecoration: 'none',
+                                    backgroundColor: TEXT, color: '#000',
+                                    borderRadius: 10, padding: '13px 18px',
                                 }}
                             >
-                                <LogOut size={14} />
-                                Cerrar sesión
-                            </button>
+                                Acceder
+                            </Link>
+                        ) : (
+                            <>
+                                <div
+                                    className="flex items-center gap-2.5"
+                                    style={{ marginTop: 14, marginBottom: 4, padding: '4px 2px' }}
+                                >
+                                    {avatarUrl ? (
+                                        <img
+                                            src={avatarUrl}
+                                            alt=""
+                                            referrerPolicy="no-referrer"
+                                            style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <span
+                                            className="inline-flex items-center justify-center"
+                                            style={{
+                                                width: 28, height: 28, borderRadius: '50%',
+                                                backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                                fontFamily: SANS, fontSize: 12, fontWeight: 700, color: TEXT,
+                                            }}
+                                        >
+                                            {initial}
+                                        </span>
+                                    )}
+                                    <span className="truncate" style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT }}>
+                                        {displayName}
+                                    </span>
+                                </div>
+
+                                {[
+                                    { to: accountHome, icon: <UserIcon size={15} />, label: admin ? 'Panel de admin' : 'Mi cuenta' },
+                                    { to: '/guardados', icon: <Bookmark size={15} />, label: 'Mis guardados' },
+                                ].map(item => (
+                                    <Link
+                                        key={item.to}
+                                        to={item.to}
+                                        onClick={() => setMenuOpen(false)}
+                                        className="flex items-center gap-2.5"
+                                        style={{
+                                            fontFamily: SANS, fontSize: 14, color: MUTED, textDecoration: 'none',
+                                            padding: '12px 12px', borderRadius: 9, backgroundColor: PANEL, marginBottom: 6,
+                                        }}
+                                    >
+                                        {item.icon}
+                                        {item.label}
+                                    </Link>
+                                ))}
+
+                                <button
+                                    onClick={handleLogout}
+                                    className="inline-flex items-center justify-center gap-2"
+                                    style={{
+                                        marginTop: 4, width: '100%',
+                                        fontFamily: SANS, fontSize: 13.5, fontWeight: 600,
+                                        backgroundColor: 'transparent', color: MUTED,
+                                        border: `1px solid ${BORDER}`, cursor: 'pointer',
+                                        borderRadius: 10, padding: '12px 18px',
+                                    }}
+                                >
+                                    <LogOut size={14} />
+                                    Cerrar sesión
+                                </button>
+                            </>
                         )}
                     </nav>
                 </>
@@ -339,33 +812,120 @@ export const LandingStyles: React.FC = () => (
   `}</style>
 );
 
-/* ── Footer oscuro minimal ──────────────────────────────────── */
-export const DarkFooter: React.FC = () => (
-    <footer style={{ borderTop: `1px solid ${BORDER_SOFT}`, backgroundColor: BG }}>
-        <div
-            className="mx-auto max-w-6xl px-5 sm:px-8 flex flex-wrap items-center justify-between gap-3"
-            style={{ paddingTop: 22, paddingBottom: 22 }}
-        >
-            <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
-                © {new Date().getFullYear()} alpacka.ai
-            </span>
-            <div className="flex items-center gap-5">
-                {[
-                    { to: '/terms', label: 'Términos' },
-                    { to: '/privacy', label: 'Privacidad' },
-                    { to: '/blog', label: 'Blog' },
-                ].map(l => (
-                    <Link
-                        key={l.to}
-                        to={l.to}
-                        style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, textDecoration: 'none' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DIM; }}
-                    >
-                        {l.label}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    </footer>
+/* ── Footer oscuro ───────────────────────────────────────────────
+   Además de lo legal, expone todas las categorías. Es la segunda vía
+   de entrada al catálogo (la primera es el desplegable del header) y
+   la que deja esos enlaces al alcance de un buscador. */
+
+const FooterLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
+    <Link
+        to={to}
+        style={{ fontFamily: SANS, fontSize: 12.5, color: DIM, textDecoration: 'none', transition: 'color .15s' }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DIM; }}
+    >
+        {children}
+    </Link>
 );
+
+const FooterHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <p style={{
+        fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em',
+        textTransform: 'uppercase', color: MUTED, marginBottom: 14,
+    }}>
+        {children}
+    </p>
+);
+
+export const DarkFooter: React.FC = () => {
+    // Una sola petición por sesión, compartida con el catálogo: al cargarla
+    // aquí, /prompts ya la encuentra en caché y renderiza al instante.
+    const categories = useCatalogCategories(true);
+
+    return (
+        <footer style={{ borderTop: `1px solid ${BORDER_SOFT}`, backgroundColor: BG }}>
+            <div className="mx-auto max-w-6xl px-5 sm:px-8" style={{ paddingTop: 48, paddingBottom: 32 }}>
+
+                <div className="grid gap-10 md:gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+
+                    {/* Marca */}
+                    <div style={{ minWidth: 180 }}>
+                        <Link to="/" style={{ textDecoration: 'none' }}>
+                            <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>
+                                alpacka.ai
+                            </span>
+                        </Link>
+                        <p style={{ fontFamily: SANS, fontSize: 12.5, color: DIM, lineHeight: 1.7, marginTop: 12, maxWidth: 240 }}>
+                            Prompts profesionales en español para ChatGPT, Claude y Gemini.
+                        </p>
+                    </div>
+
+                    {/* Producto */}
+                    <div className="flex flex-col">
+                        <FooterHeading>Producto</FooterHeading>
+                        <div className="flex flex-col gap-2.5">
+                            <FooterLink to="/prompts">Catálogo de prompts</FooterLink>
+                            <FooterLink to="/generador">Generador con IA</FooterLink>
+                            <FooterLink to="/skills">Skills</FooterLink>
+                            <FooterLink to="/pricing">Precios</FooterLink>
+                            <FooterLink to="/blog">Blog</FooterLink>
+                        </div>
+                    </div>
+
+                    {/* Cuenta */}
+                    <div className="flex flex-col">
+                        <FooterHeading>Cuenta</FooterHeading>
+                        <div className="flex flex-col gap-2.5">
+                            <FooterLink to="/login">Iniciar sesión</FooterLink>
+                            <FooterLink to="/dashboard">Mi cuenta</FooterLink>
+                            <FooterLink to="/guardados">Mis guardados</FooterLink>
+                            <FooterLink to="/terms">Términos</FooterLink>
+                            <FooterLink to="/privacy">Privacidad</FooterLink>
+                        </div>
+                    </div>
+
+                    {/* Categorías */}
+                    {/* Ocupa dos columnas solo a partir de md: en móvil la rejilla
+                        tiene una sola columna y un span 2 crearía una implícita,
+                        desbordando la página a lo ancho. */}
+                    <div className="flex flex-col md:col-span-2" style={{ minWidth: 240 }}>
+                        <FooterHeading>Categorías</FooterHeading>
+                        {categories.length === 0 ? (
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
+                                {Array.from({ length: 8 }).map((_, i) => (
+                                    <div key={i} className="animate-pulse" style={{ height: 12, borderRadius: 4, backgroundColor: PANEL }} />
+                                ))}
+                            </div>
+                        ) : (
+                            <>
+                                <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
+                                    {categories.slice(0, 14).map(c => (
+                                        <FooterLink key={c.name} to={categoryHref(c.name)}>{c.name}</FooterLink>
+                                    ))}
+                                </div>
+                                {categories.length > 14 && (
+                                    <div style={{ marginTop: 14 }}>
+                                        <FooterLink to="/prompts">Ver las {categories.length} categorías →</FooterLink>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Barra inferior */}
+                <div
+                    className="flex flex-wrap items-center justify-between gap-3"
+                    style={{ borderTop: `1px solid ${BORDER_SOFT}`, marginTop: 40, paddingTop: 22 }}
+                >
+                    <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
+                        © {new Date().getFullYear()} alpacka.ai
+                    </span>
+                    <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
+                        Pagos procesados por Paddle
+                    </span>
+                </div>
+            </div>
+        </footer>
+    );
+};
