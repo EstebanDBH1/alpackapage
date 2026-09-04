@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { hasLibraryAccess } from '../lib/access';
 import { getAiToolMeta } from '../lib/aiTools';
+import GeneratorCallout from '../components/GeneratorCallout';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download, ArrowLeft } from 'lucide-react';
 import {
@@ -540,6 +541,14 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                     con tus datos para obtener el mejor resultado del modelo en la primera respuesta.
                                 </p>
                             </div>
+                        )}
+
+                        {/* Para quien ya lo tiene pagado: si este prompt casi encaja
+                            pero no del todo, aquí es donde el generador tiene sentido.
+                            A quien no está suscrito ya se le ofrece la suscripción
+                            más abajo, así que no se le enseña. */}
+                        {!isLocked && isSubscribed && (
+                            <GeneratorCallout from="detalle-prompt" />
                         )}
                     </div>
 

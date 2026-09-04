@@ -98,12 +98,35 @@ export const AI_BADGE_DARK: Record<string, { bg: string; bd: string; fg: string 
    suelto: sin eso, las rutas /prompts/categoria/* existen pero no
    las enlaza nadie y el catálogo entero cuelga de una sola puerta. */
 
-const NAV_LINKS = [
-    { to: '/generador', label: 'Generador' },
+const NAV_LINKS: { to: string; label: string; highlight?: boolean }[] = [
+    { to: '/generador', label: 'Generador', highlight: true },
     { to: '/skills', label: 'Skills' },
     { to: '/blog', label: 'Blog' },
     { to: '/pricing', label: 'Precios' },
 ];
+
+/* El generador lleva un distintivo "Nuevo" hasta que la persona entra por
+   primera vez. Es descubrimiento sin insistir: se ve, y en cuanto cumple su
+   función desaparece para siempre en ese navegador. */
+const SEEN_GENERATOR_KEY = 'alp-seen-generator';
+
+const readSeenGenerator = (): boolean => {
+    try { return localStorage.getItem(SEEN_GENERATOR_KEY) === '1'; }
+    catch { return true; } // sin localStorage no insistimos
+};
+
+const NewBadge: React.FC = () => (
+    <span
+        style={{
+            fontFamily: MONO, fontSize: 8.5, fontWeight: 700, letterSpacing: '0.1em',
+            textTransform: 'uppercase', color: AMBER,
+            backgroundColor: 'rgba(255,178,36,0.1)', border: '1px solid rgba(255,178,36,0.3)',
+            borderRadius: 100, padding: '1px 5px', lineHeight: 1.5, whiteSpace: 'nowrap',
+        }}
+    >
+        Nuevo
+    </span>
+);
 
 /* El slug de categoría es el nombre en minúsculas y codificado: es lo que
    espera /prompts (compara contra `category.toLowerCase()`). Cambiar esto
@@ -153,7 +176,15 @@ export const DarkHeader: React.FC = () => {
     const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
     const [query, setQuery] = useState('');
+    const [seenGenerator, setSeenGenerator] = useState(readSeenGenerator);
     const accountRef = useRef<HTMLDivElement>(null);
+
+    // Al visitar el generador el distintivo cumple su función y se retira
+    useEffect(() => {
+        if (pathname !== '/generador' || seenGenerator) return;
+        try { localStorage.setItem(SEEN_GENERATOR_KEY, '1'); } catch { /* sin localStorage: se seguirá viendo */ }
+        setSeenGenerator(true);
+    }, [pathname, seenGenerator]);
 
     // Solo se cargan cuando hacen falta: al abrir el desplegable o el menú móvil
     const categories = useCatalogCategories(catsOpen || menuOpen);
@@ -316,6 +347,7 @@ export const DarkHeader: React.FC = () => {
                         <Link
                             key={l.to}
                             to={l.to}
+                            className="inline-flex items-center gap-1.5"
                             style={{
                                 fontFamily: SANS, fontSize: 13, textDecoration: 'none',
                                 color: isActive(l.to) ? TEXT : MUTED, transition: 'color .15s',
@@ -324,6 +356,7 @@ export const DarkHeader: React.FC = () => {
                             onMouseLeave={e => { if (!isActive(l.to)) (e.currentTarget as HTMLElement).style.color = MUTED; }}
                         >
                             {l.label}
+                            {l.highlight && !seenGenerator && <NewBadge />}
                         </Link>
                     ))}
 
@@ -691,6 +724,7 @@ export const DarkHeader: React.FC = () => {
                                 key={l.to}
                                 to={l.to}
                                 onClick={() => setMenuOpen(false)}
+                                className="flex items-center gap-2"
                                 style={{
                                     fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
                                     color: isActive(l.to) ? TEXT : MUTED,
@@ -699,6 +733,7 @@ export const DarkHeader: React.FC = () => {
                                 }}
                             >
                                 {l.label}
+                                {l.highlight && !seenGenerator && <NewBadge />}
                             </Link>
                         ))}
                         {!user ? (

@@ -4,6 +4,7 @@ import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 import { hasLibraryAccess } from '../lib/access';
 import { getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
+import GeneratorCallout from '../components/GeneratorCallout';
 import { Prompt } from '../types';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Shield, Search, ChevronDown, Sparkles, Check } from 'lucide-react';
@@ -288,21 +289,26 @@ const Prompts: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Estado vacío */}
+                {/* Estado vacío. Una búsqueda sin resultados es el mejor momento
+                    para ofrecer el generador: la intención ya está ahí y lo que
+                    falta es exactamente lo que hace. */}
                 {!loading && filteredPrompts.length === 0 && (
-                    <div className="text-center" style={{ padding: '48px 0' }}>
-                        <p style={{ color: TEXT_MED, fontSize: 15, marginBottom: 20 }}>
-                            Ningún prompt coincide con tu búsqueda.
-                        </p>
-                        <button
-                            onClick={() => { handleCategorySelect('todas'); setSelectedTier('todos'); setSearchQuery(''); }}
-                            style={{
-                                backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 12,
-                                padding: '11px 20px', fontSize: 14, fontWeight: 600, color: TEXT, cursor: 'pointer',
-                            }}
-                        >
-                            Ver todos los prompts
-                        </button>
+                    <div style={{ padding: '40px 0 8px' }}>
+                        <div className="mx-auto" style={{ maxWidth: 520 }}>
+                            <GeneratorCallout variant="search" query={debouncedSearch || undefined} from="busqueda-vacia" />
+
+                            <div className="text-center" style={{ marginTop: 22 }}>
+                                <button
+                                    onClick={() => { handleCategorySelect('todas'); setSelectedTier('todos'); setSearchQuery(''); }}
+                                    style={{
+                                        background: 'none', border: 'none', cursor: 'pointer',
+                                        fontSize: 13.5, color: TEXT_MED, textDecoration: 'underline',
+                                    }}
+                                >
+                                    o ver todos los prompts
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
