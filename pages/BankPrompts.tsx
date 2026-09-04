@@ -12,7 +12,7 @@ import {
 /* ══════════════════════════════════════════════════════════════
    /bank-prompts — Landing autocontenida (ajena a la app).
    No usa la Navbar/Footer ni la tipografía global: trae su propio
-   header, footer y tipografía (Euclid Circular).
+   header, footer y tipografía (Hanken Grotesk).
    ══════════════════════════════════════════════════════════════ */
 
 /* Checkout de Hotmart (el mismo producto que /ebook) */

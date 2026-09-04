@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Lock, Plus, Shield, Sparkles, Wand2 } from 'lucide-react';
+// `Infinity` se importa con alias: el nombre sin alias taparía el global de JS.
+import { Check, Infinity as InfinityIcon, Lock, Plus, Shield, Sparkles, Wand2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { hasLibraryAccess } from '../lib/access';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
 } from '../components/darkKit';
 
 /* Precios — mismo lenguaje visual oscuro estilo skills.sh que el resto de la app. */
@@ -20,6 +22,7 @@ const FEATURES = [
 
 const FAQ_DATA = [
     { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $7 USD al mes, desbloqueas el acceso total a nuestra librería y el generador de prompts con IA (hasta 10 prompts a medida al día). No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
+    { question: '¿Hay opción de pagar una sola vez?', answer: 'Sí. Por $47.99 USD en un único pago te quedas la biblioteca completa de forma permanente, con todas las actualizaciones futuras incluidas y sin volver a pagar nunca. La única diferencia con la mensual es que el generador de prompts con IA no entra: ese consume recursos cada vez que lo usas, así que se queda en la suscripción.' },
     { question: '¿Realmente funcionan estos prompts?', answer: 'Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento.' },
     { question: '¿Con qué modelos de IA puedo usarlos?', answer: 'Están diseñados para brillar en los modelos más potentes como GPT-5, Claude y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E.' },
     { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado.' },
@@ -63,23 +66,25 @@ const Pricing: React.FC = () => {
                     .select('subscription_status')
                     .eq('customer_id', user.id)
                     .maybeSingle();
-                if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
-                    setIsSubscribed(true);
-                }
+                setIsSubscribed(hasLibraryAccess(sub?.subscription_status));
             }
         };
         checkUser();
     }, []);
 
-    // El pago vive en /checkout (Paddle embebido dentro de la app)
-    const handleJoinClick = () => {
+    // El pago vive en /checkout (Paddle embebido dentro de la app).
+    // `plan=lifetime` abre el pago único; sin parámetro, la mensual.
+    const goToCheckout = (plan?: 'lifetime') => {
         if (isSubscribed) return;
-        if (!user) return navigate('/login?redirect=/checkout');
-        navigate('/checkout');
+        const target = plan ? `/checkout?plan=${plan}` : '/checkout';
+        if (!user) return navigate(`/login?redirect=${encodeURIComponent(target)}`);
+        navigate(target);
     };
 
+    const handleJoinClick = () => goToCheckout();
+
     return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
 
             <main className="mx-auto max-w-3xl px-5 sm:px-8 py-14 md:py-16">
 
@@ -96,7 +101,7 @@ const Pricing: React.FC = () => {
 
                     <h1
                         style={{
-                            fontFamily: MONO,
+                            fontFamily: SANS,
                             fontWeight: 700,
                             fontSize: 'clamp(1.7rem, 3.6vw, 2.5rem)',
                             lineHeight: 1.15,
@@ -107,7 +112,7 @@ const Pricing: React.FC = () => {
                     >
                         Un plan. <span style={{ color: AMBER }}>Acceso total.</span>
                     </h1>
-                    <p style={{ fontFamily: MONO, color: MUTED, fontSize: 14.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
+                    <p style={{ fontFamily: SANS, color: MUTED, fontSize: 14.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
                         Desbloquea todo el directorio de prompts y el generador con IA por lo que cuesta un café al mes.
                     </p>
                 </div>
@@ -187,11 +192,11 @@ const Pricing: React.FC = () => {
                                     </span>
                                     <span className="flex flex-col" style={{ paddingBottom: 5 }}>
                                         <span style={{ fontFamily: MONO, fontSize: 13.5, color: MUTED, lineHeight: 1.3 }}>USD / mes</span>
-                                        <span style={{ fontFamily: MONO, fontSize: 11.5, color: DIM, lineHeight: 1.3 }}>menos de $0,24 al día</span>
+                                        <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, lineHeight: 1.3 }}>menos de $0,24 al día</span>
                                     </span>
                                 </div>
 
-                                <p style={{ fontFamily: MONO, color: DIM, fontSize: 12, lineHeight: 1.6 }}>
+                                <p style={{ fontFamily: SANS, color: DIM, fontSize: 12, lineHeight: 1.6 }}>
                                     Facturación mensual · cancela cuando quieras, sin dramas.
                                 </p>
                             </div>
@@ -219,7 +224,7 @@ const Pricing: React.FC = () => {
                                             >
                                                 <Check size={10} strokeWidth={3.2} style={{ color: GREEN }} />
                                             </span>
-                                            <span style={{ fontFamily: MONO, fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{feature}</span>
+                                            <span style={{ fontFamily: SANS, fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{feature}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -229,7 +234,7 @@ const Pricing: React.FC = () => {
                                     disabled={isSubscribed}
                                     style={{
                                         width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                                        fontFamily: MONO,
+                                        fontFamily: SANS,
                                         background: isSubscribed ? PANEL : 'linear-gradient(180deg, #ffffff, #d8d8d8)',
                                         border: isSubscribed ? `1px solid ${BORDER}` : '1px solid rgba(255,255,255,0.9)',
                                         color: isSubscribed ? MUTED : '#000',
@@ -260,9 +265,58 @@ const Pricing: React.FC = () => {
                                 style={{ backgroundColor: PANEL, borderTop: `1px solid ${BORDER_SOFT}`, padding: '12px 24px' }}
                             >
                                 <Shield size={13} style={{ color: DIM }} />
-                                <span style={{ fontFamily: MONO, fontSize: 11.5, color: MUTED }}>Pago seguro vía Paddle · SSL 256-bit</span>
+                                <span style={{ fontFamily: SANS, fontSize: 11.5, color: MUTED }}>Pago seguro vía Paddle · SSL 256-bit</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* ── Alternativa: pago único vitalicio ────────────────── */}
+                <div className="mx-auto mb-16" style={{ maxWidth: 560, marginTop: -32 }}>
+                    <div
+                        style={{
+                            backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14,
+                            padding: '22px 24px',
+                        }}
+                    >
+                        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                            <div className="flex items-center gap-2.5">
+                                <InfinityIcon size={15} style={{ color: AMBER }} />
+                                <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: AMBER }}>
+                                    Pago único
+                                </span>
+                            </div>
+                            <div className="flex items-baseline gap-1.5">
+                                <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 26, letterSpacing: '-0.03em', color: TEXT }}>
+                                    $47.99
+                                </span>
+                                <span style={{ fontFamily: MONO, fontSize: 11.5, color: DIM }}>USD una vez</span>
+                            </div>
+                        </div>
+
+                        <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14.5, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em' }}>
+                            ¿Prefieres no pagar todos los meses?
+                        </p>
+                        <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.7, marginBottom: 18 }}>
+                            Paga una sola vez y quédate la biblioteca completa para siempre, con todas las
+                            actualizaciones futuras incluidas. No incluye el generador con IA, que sigue siendo
+                            parte de la suscripción mensual.
+                        </p>
+
+                        <button
+                            onClick={() => goToCheckout('lifetime')}
+                            disabled={isSubscribed}
+                            style={{
+                                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                fontFamily: SANS, backgroundColor: 'transparent',
+                                border: `1px solid ${isSubscribed ? BORDER : 'rgba(255,178,36,0.42)'}`,
+                                color: isSubscribed ? MUTED : AMBER,
+                                fontWeight: 700, fontSize: 13.5, padding: '13px 22px', borderRadius: 10,
+                                cursor: isSubscribed ? 'default' : 'pointer',
+                            }}
+                        >
+                            {isSubscribed ? 'Ya tienes acceso' : 'Comprar acceso vitalicio'}
+                        </button>
                     </div>
                 </div>
 
@@ -279,8 +333,8 @@ const Pricing: React.FC = () => {
                             >
                                 {t.icon}
                             </div>
-                            <p style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13.5, color: TEXT, marginBottom: 6, letterSpacing: '-0.01em' }}>{t.title}</p>
-                            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 12, lineHeight: 1.65 }}>{t.desc}</p>
+                            <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 13.5, color: TEXT, marginBottom: 6, letterSpacing: '-0.01em' }}>{t.title}</p>
+                            <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12, lineHeight: 1.65 }}>{t.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -296,7 +350,7 @@ const Pricing: React.FC = () => {
                         >
                             Preguntas frecuentes
                         </p>
-                        <h2 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25, color: TEXT }}>
+                        <h2 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25, color: TEXT }}>
                             Todo lo que necesitas saber.
                         </h2>
                     </div>
@@ -315,7 +369,7 @@ const Pricing: React.FC = () => {
                                             cursor: 'pointer', textAlign: 'left',
                                         }}
                                     >
-                                        <span style={{ fontFamily: MONO, fontSize: 13.5, fontWeight: 600, color: TEXT, lineHeight: 1.5 }}>{item.question}</span>
+                                        <span style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT, lineHeight: 1.5 }}>{item.question}</span>
                                         <Plus
                                             size={16}
                                             style={{
@@ -333,7 +387,7 @@ const Pricing: React.FC = () => {
                                         }}
                                     >
                                         <div style={{ overflow: 'hidden' }}>
-                                            <p style={{ padding: '0 18px 17px', fontFamily: MONO, color: MUTED, fontSize: 13, lineHeight: 1.75 }}>
+                                            <p style={{ padding: '0 18px 17px', fontFamily: SANS, color: MUTED, fontSize: 13, lineHeight: 1.75 }}>
                                                 {item.answer}
                                             </p>
                                         </div>

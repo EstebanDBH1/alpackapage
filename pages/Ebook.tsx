@@ -91,7 +91,7 @@ const AIMarquee: React.FC = () => {
             }}
           >
             <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: tool.dot, flexShrink: 0 }} />
-            <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: 12, color: TEXT_MED, fontWeight: 500 }}>
+            <span style={{ fontFamily: '"Hanken Grotesk", sans-serif', fontSize: 12, color: TEXT_MED, fontWeight: 500 }}>
               {tool.name}
             </span>
           </div>
@@ -211,7 +211,7 @@ const Ebook: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: '"Space Grotesk", sans-serif', color: TEXT }}>
+    <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: '"Hanken Grotesk", sans-serif', color: TEXT }}>
 
       {/* ── Header ── */}
       <header style={{
@@ -282,7 +282,7 @@ const Ebook: React.FC = () => {
 
             {/* Headline */}
             <h1 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
+              fontFamily: '"Hanken Grotesk", sans-serif',
               fontWeight: 500,
               fontSize: 'clamp(2.7rem, 6vw, 4.6rem)',
               lineHeight: 1.06,
@@ -363,7 +363,7 @@ const Ebook: React.FC = () => {
         ══════════════════════════════════════════ */}
         <section style={{ backgroundColor: BG_WARM, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}`, paddingTop: 20, paddingBottom: 20, overflow: 'hidden' }}>
           <p style={{
-            fontFamily: '"Space Grotesk", sans-serif',
+            fontFamily: '"Hanken Grotesk", sans-serif',
             fontSize: 11,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -395,7 +395,7 @@ const Ebook: React.FC = () => {
                 </div>
 
                 <h2 style={{
-                  fontFamily: '"Space Grotesk", sans-serif',
+                  fontFamily: '"Hanken Grotesk", sans-serif',
                   fontWeight: 600,
                   fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
                   color: TEXT,
@@ -469,7 +469,7 @@ const Ebook: React.FC = () => {
               </div>
 
               <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
+                fontFamily: '"Hanken Grotesk", sans-serif',
                 fontWeight: 600,
                 fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
                 color: TEXT,
@@ -523,7 +523,7 @@ const Ebook: React.FC = () => {
                     }}>
                       {step.icon}
                     </div>
-                    <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 40, color: 'rgba(249,115,22,0.25)', lineHeight: 1 }}>{step.n}</span>
+                    <span style={{ fontFamily: '"Hanken Grotesk", sans-serif', fontWeight: 600, fontSize: 40, color: 'rgba(249,115,22,0.25)', lineHeight: 1 }}>{step.n}</span>
                   </div>
                   <p style={{ color: TEXT, fontWeight: 700, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{step.title}</p>
                   <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.7 }}>{step.desc}</p>
@@ -551,7 +551,7 @@ const Ebook: React.FC = () => {
               </div>
 
               <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
+                fontFamily: '"Hanken Grotesk", sans-serif',
                 fontWeight: 600,
                 fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
                 color: TEXT,
@@ -638,7 +638,7 @@ const Ebook: React.FC = () => {
                 </div>
 
                 <h2 style={{
-                  fontFamily: '"Space Grotesk", sans-serif',
+                  fontFamily: '"Hanken Grotesk", sans-serif',
                   fontWeight: 600,
                   fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
                   color: TEXT,
@@ -738,7 +738,7 @@ const Ebook: React.FC = () => {
               </div>
 
               <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
+                fontFamily: '"Hanken Grotesk", sans-serif',
                 fontWeight: 600,
                 fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
                 color: TEXT,
@@ -837,7 +837,7 @@ const Ebook: React.FC = () => {
             </div>
 
             <h2 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
+              fontFamily: '"Hanken Grotesk", sans-serif',
               fontWeight: 600,
               fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
               color: TEXT,
@@ -865,7 +865,7 @@ const Ebook: React.FC = () => {
 
             <div className="text-center mb-9">
               <h2 style={{
-                fontFamily: '"Space Grotesk", sans-serif',
+                fontFamily: '"Hanken Grotesk", sans-serif',
                 fontWeight: 600,
                 fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
                 color: TEXT,
@@ -908,7 +908,7 @@ const Ebook: React.FC = () => {
             </div>
 
             <h2 style={{
-              fontFamily: '"Space Grotesk", sans-serif',
+              fontFamily: '"Hanken Grotesk", sans-serif',
               fontWeight: 600,
               fontSize: 'clamp(2rem, 5vw, 3.6rem)',
               color: 'white',
@@ -946,7 +946,7 @@ const Ebook: React.FC = () => {
               </p>
 
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, fontSize: 62, color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>$14,99</span>
+                <span style={{ fontFamily: '"Hanken Grotesk", sans-serif', fontWeight: 600, fontSize: 62, color: 'white', lineHeight: 1, letterSpacing: '-0.02em' }}>$14,99</span>
                 <div>
                   <p style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>$37</p>
                   <p style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>pago único</p>

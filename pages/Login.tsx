@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
 import { Check, ExternalLink } from 'lucide-react';
 import {
-  BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, MONO,
+  BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
 } from '../components/darkKit';
 
 /* Login — mismo lenguaje visual oscuro estilo skills.sh que el resto de la
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
   const [showIOSInstructions, setShowIOSInstructions] = React.useState(false);
 
   return (
-    <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+    <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
 
       <main className="flex items-start justify-center px-5 py-14 sm:py-20">
         <div className="w-full" style={{ maxWidth: 420 }}>
@@ -104,10 +104,10 @@ const Login: React.FC = () => {
                 </span>
               </div>
 
-              <h1 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10, color: TEXT }}>
+              <h1 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 24, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10, color: TEXT }}>
                 Iniciar sesión
               </h1>
-              <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 26 }}>
+              <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 26 }}>
                 Entra con tu cuenta de Google para acceder al directorio de prompts, al generador y a tus prompts guardados.
               </p>
 
@@ -119,7 +119,7 @@ const Login: React.FC = () => {
                     borderRadius: 12, padding: '15px 15px 13px', marginBottom: 20,
                   }}
                 >
-                  <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.6, color: AMBER, marginBottom: 12 }}>
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.6, color: AMBER, marginBottom: 12 }}>
                     Estás dentro de {browser.appName}. Para iniciar sesión con Google, abre esta página en{' '}
                     {browser.isAndroid ? 'Chrome' : 'Safari'}.
                   </p>
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                     <div
                       style={{
                         backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 9,
-                        padding: '10px 12px', marginBottom: 12, fontFamily: MONO, fontSize: 12, color: MUTED, lineHeight: 1.6,
+                        padding: '10px 12px', marginBottom: 12, fontFamily: SANS, fontSize: 12, color: MUTED, lineHeight: 1.6,
                       }}
                     >
                       Toca <strong style={{ color: TEXT }}>···</strong> o <strong style={{ color: TEXT }}>⋮</strong> y selecciona{' '}
@@ -140,7 +140,7 @@ const Login: React.FC = () => {
                     onClick={handleOpenInBrowser}
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                      fontFamily: MONO, backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
+                      fontFamily: SANS, backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
                       borderRadius: 9, padding: '11px 16px', fontSize: 13, fontWeight: 700,
                     }}
                   >
@@ -155,7 +155,7 @@ const Login: React.FC = () => {
                 <div
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                    fontFamily: MONO, border: `1px solid ${BORDER_SOFT}`, borderRadius: 10, padding: '13px 18px',
+                    fontFamily: SANS, border: `1px solid ${BORDER_SOFT}`, borderRadius: 10, padding: '13px 18px',
                     fontSize: 13.5, fontWeight: 600, color: DIM, cursor: 'not-allowed',
                   }}
                 >
@@ -167,7 +167,7 @@ const Login: React.FC = () => {
                   onClick={handleGoogleLogin}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                    fontFamily: MONO, backgroundColor: '#ffffff', border: '1px solid #ffffff', borderRadius: 10,
+                    fontFamily: SANS, backgroundColor: '#ffffff', border: '1px solid #ffffff', borderRadius: 10,
                     padding: '13px 18px', fontSize: 13.5, fontWeight: 700, color: '#111',
                     cursor: 'pointer', transition: 'opacity .15s',
                   }}
@@ -179,7 +179,7 @@ const Login: React.FC = () => {
                 </button>
               )}
 
-              <p style={{ fontFamily: MONO, fontSize: 11.5, color: DIM, lineHeight: 1.7, marginTop: 18 }}>
+              <p style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, lineHeight: 1.7, marginTop: 18 }}>
                 Al continuar, aceptas nuestros{' '}
                 <Link to="/terms" style={{ color: MUTED, textDecoration: 'underline' }}>Términos</Link> y la{' '}
                 <Link to="/privacy" style={{ color: MUTED, textDecoration: 'underline' }}>Privacidad</Link>.
@@ -195,13 +195,13 @@ const Login: React.FC = () => {
               ].map(t => (
                 <div key={t} className="flex items-start gap-2.5" style={{ padding: '4px 0' }}>
                   <Check size={13} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
-                  <span style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{t}</span>
+                  <span style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{t}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <p style={{ textAlign: 'center', fontFamily: MONO, fontSize: 12.5, color: DIM, marginTop: 20 }}>
+          <p style={{ textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: DIM, marginTop: 20 }}>
             ¿Todavía no tienes cuenta?{' '}
             <Link to="/pricing" style={{ color: TEXT, fontWeight: 600, textDecoration: 'none' }}>
               Ver el plan →

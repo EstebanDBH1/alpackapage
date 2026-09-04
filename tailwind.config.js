@@ -39,12 +39,14 @@ export default {
         ring: 'oklch(0.86 0.09 90 / <alpha-value>)',
       },
       fontFamily: {
-        // Toda la app usa Geist Mono; /ebook define su propia tipografía
-        // inline (Space Grotesk) y no pasa por estos alias.
-        sans: ['"Geist Mono"', 'ui-monospace', 'monospace'],
-        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
-        display: ['"Geist Mono"', 'ui-monospace', 'monospace'],
-        space: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+        // Pareja tipográfica del sitio: Hanken Grotesk para todo lo que se
+        // lee (títulos, copy, UI) y JetBrains Mono para lo técnico
+        // (etiquetas, badges, precios, prompts y código).
+        // `display` y `space` son alias históricos y también son la sans.
+        sans: ['"Hanken Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        display: ['"Hanken Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        space: ['"Hanken Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'Consolas', 'monospace'],
       },
     },
   },

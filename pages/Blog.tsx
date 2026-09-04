@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCachedBlogList, fetchBlogList, type BlogPostPreview } from '../lib/blogList';
 import { Search } from 'lucide-react';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, SANS, MONO,
 } from '../components/darkKit';
 
 /* Blog — mismo lenguaje visual oscuro estilo skills.sh que el resto de la app. */
@@ -51,7 +51,7 @@ const Blog: React.FC = () => {
     const cardsKey = useMemo(() => filteredPosts.map(p => p.id).join(','), [filteredPosts]);
 
     return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
 
             {/* ── Hero ──────────────────────────────────────────────────────── */}
             <div className="px-5 sm:px-8 pt-12 pb-9 text-center">
@@ -68,7 +68,7 @@ const Blog: React.FC = () => {
                     <h1
                         className="animate-fade-up"
                         style={{
-                            fontFamily: MONO,
+                            fontFamily: SANS,
                             fontWeight: 700,
                             fontSize: 'clamp(1.6rem, 3.2vw, 2.3rem)',
                             lineHeight: 1.18,
@@ -82,7 +82,7 @@ const Blog: React.FC = () => {
 
                     <p
                         className="animate-fade-up"
-                        style={{ fontFamily: MONO, color: MUTED, fontSize: 14.5, lineHeight: 1.75, maxWidth: 620, margin: '0 auto', animationDelay: '0.15s' }}
+                        style={{ fontFamily: SANS, color: MUTED, fontSize: 14.5, lineHeight: 1.75, maxWidth: 620, margin: '0 auto', animationDelay: '0.15s' }}
                     >
                         Artículos prácticos sobre prompts, herramientas y flujos de trabajo con
                         ChatGPT, Claude y Gemini. Sin humo: solo lo que funciona.
@@ -115,7 +115,7 @@ const Blog: React.FC = () => {
                             placeholder="Buscar un artículo…"
                             style={{
                                 width: '100%', backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: 10,
-                                padding: '10px 18px 10px 42px', fontFamily: MONO, fontSize: 13.5, color: TEXT, outline: 'none',
+                                padding: '10px 18px 10px 42px', fontFamily: SANS, fontSize: 13.5, color: TEXT, outline: 'none',
                                 transition: 'border-color .15s',
                             }}
                             onFocus={e => { e.currentTarget.style.borderColor = '#3a3a3a'; }}
@@ -133,7 +133,7 @@ const Blog: React.FC = () => {
                                         key={cat}
                                         onClick={() => setSelectedCategory(cat)}
                                         style={{
-                                            fontFamily: MONO,
+                                            fontFamily: SANS,
                                             backgroundColor: active ? TEXT : PANEL,
                                             border: `1px solid ${active ? TEXT : BORDER}`,
                                             color: active ? '#000' : MUTED,
@@ -175,7 +175,7 @@ const Blog: React.FC = () => {
                 {/* Estado vacío */}
                 {!loading && filteredPosts.length === 0 && (
                     <div className="text-center" style={{ padding: '56px 0' }}>
-                        <p style={{ fontFamily: MONO, color: MUTED, fontSize: 14, marginBottom: 20 }}>
+                        <p style={{ fontFamily: SANS, color: MUTED, fontSize: 14, marginBottom: 20 }}>
                             {posts.length === 0
                                 ? 'Todavía no hay artículos publicados. Vuelve pronto.'
                                 : 'Ningún artículo coincide con tu búsqueda.'}
@@ -184,7 +184,7 @@ const Blog: React.FC = () => {
                             <button
                                 onClick={() => { setSelectedCategory('todas'); setSearchQuery(''); }}
                                 style={{
-                                    fontFamily: MONO, backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 8,
+                                    fontFamily: SANS, backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 8,
                                     padding: '9px 18px', fontSize: 13, fontWeight: 600, color: TEXT, cursor: 'pointer',
                                 }}
                             >
@@ -229,7 +229,7 @@ const PostCard: React.FC<{ post: BlogPostPreview }> = ({ post }) => (
                 />
             ) : (
                 <div className="flex h-full w-full items-center justify-center">
-                    <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 700, color: DIM, opacity: 0.5 }}>A</span>
+                    <span style={{ fontFamily: SANS, fontSize: 34, fontWeight: 700, color: DIM, opacity: 0.5 }}>A</span>
                 </div>
             )}
         </div>
@@ -250,16 +250,16 @@ const PostCard: React.FC<{ post: BlogPostPreview }> = ({ post }) => (
                 </time>
             </div>
 
-            <h3 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14.5, lineHeight: 1.4, color: TEXT, marginBottom: 8, letterSpacing: '-0.01em' }}>
+            <h3 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14.5, lineHeight: 1.4, color: TEXT, marginBottom: 8, letterSpacing: '-0.01em' }}>
                 {post.title}
             </h3>
             {post.excerpt && (
-                <p className="line-clamp-3" style={{ fontFamily: MONO, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>
+                <p className="line-clamp-3" style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>
                     {post.excerpt}
                 </p>
             )}
 
-            <span style={{ marginTop: 16, fontFamily: MONO, fontSize: 12.5, fontWeight: 600, color: GREEN }}>
+            <span style={{ marginTop: 16, fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: GREEN }}>
                 Leer artículo →
             </span>
         </div>

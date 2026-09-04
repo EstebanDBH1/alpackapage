@@ -20,7 +20,13 @@ export const DIM = '#707070';
 export const GREEN = '#3fcf8e';
 export const AMBER = '#ffb224';
 
-export const MONO = '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+/* ── Tipografía ──────────────────────────────────────────────────
+   Pareja del sitio: Hanken Grotesk para todo lo que se lee (títulos,
+   copy, botones, navegación) y JetBrains Mono reservado a lo técnico
+   (eyebrows en versalitas, badges, precios, contadores, prompts). Usar
+   la mono solo ahí es lo que hace que la combinación se note. */
+export const SANS = '"Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+export const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace';
 
 export const HEADER_H = 56;
 
@@ -168,7 +174,7 @@ export const DarkHeader: React.FC = () => {
                         <Link
                             key={l.to}
                             to={l.to}
-                            style={{ fontFamily: MONO, fontSize: 13, color: MUTED, textDecoration: 'none', transition: 'color .15s' }}
+                            style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none', transition: 'color .15s' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
                         >
@@ -178,7 +184,7 @@ export const DarkHeader: React.FC = () => {
                     <button
                         onClick={goAuth}
                         style={{
-                            fontFamily: MONO, fontSize: 12.5, fontWeight: 600,
+                            fontFamily: SANS, fontSize: 12.5, fontWeight: 600,
                             backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
                             borderRadius: 8, padding: '7px 14px', marginLeft: 3,
                         }}
@@ -264,7 +270,7 @@ export const DarkHeader: React.FC = () => {
                                 to={l.to}
                                 onClick={() => setMenuOpen(false)}
                                 style={{
-                                    fontFamily: MONO, fontSize: 14.5, fontWeight: 500,
+                                    fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
                                     color: pathname === l.to ? TEXT : MUTED,
                                     textDecoration: 'none', padding: '13px 2px',
                                     borderBottom: `1px solid ${BORDER_SOFT}`,
@@ -277,7 +283,7 @@ export const DarkHeader: React.FC = () => {
                             onClick={goAuth}
                             style={{
                                 marginTop: 16, width: '100%',
-                                fontFamily: MONO, fontSize: 14, fontWeight: 700,
+                                fontFamily: SANS, fontSize: 14, fontWeight: 700,
                                 backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
                                 borderRadius: 10, padding: '13px 18px',
                             }}
@@ -291,7 +297,7 @@ export const DarkHeader: React.FC = () => {
                                 className="inline-flex items-center justify-center gap-2"
                                 style={{
                                     marginTop: 10, width: '100%',
-                                    fontFamily: MONO, fontSize: 13.5, fontWeight: 600,
+                                    fontFamily: SANS, fontSize: 13.5, fontWeight: 600,
                                     backgroundColor: 'transparent', color: MUTED,
                                     border: `1px solid ${BORDER}`, cursor: 'pointer',
                                     borderRadius: 10, padding: '12px 18px',
@@ -318,16 +324,17 @@ export const TEXT_MED = MUTED;
 export const TEXT_DIM = DIM;
 export const ACCENT = AMBER;
 export const YELLOW = TEXT;          // CTA principal: blanco con texto oscuro
-export const FONT = MONO;
+export const FONT = SANS;
 
-/* Euclid Circular era solo del tema claro: en el oscuro todo va en mono. */
-export const useEuclidFont = () => { /* no-op: el tema oscuro usa Geist Mono */ };
+/* Euclid Circular era solo del tema claro; hoy todo el sitio usa Hanken. */
+export const useEuclidFont = () => { /* no-op: la sans se carga en index.html */ };
 
-/* Fuerza la tipografía mono dentro de `.bp-scope` (el preflight de Tailwind
-   aplica su propia familia al body). */
+/* Fija la tipografía dentro de `.bp-scope`: Hanken de base y JetBrains Mono
+   solo en lo que se marque como mono (utilidad `font-mono`, code/pre). */
 export const LandingStyles: React.FC = () => (
     <style>{`
-    .bp-scope, .bp-scope * { font-family: ${MONO}; }
+    .bp-scope, .bp-scope * { font-family: ${SANS}; }
+    .bp-scope .font-mono, .bp-scope code, .bp-scope pre, .bp-scope kbd { font-family: ${MONO}; }
     .bp-scope ::selection { background: ${TEXT}; color: #000; }
   `}</style>
 );
@@ -339,7 +346,7 @@ export const DarkFooter: React.FC = () => (
             className="mx-auto max-w-6xl px-5 sm:px-8 flex flex-wrap items-center justify-between gap-3"
             style={{ paddingTop: 22, paddingBottom: 22 }}
         >
-            <span style={{ fontFamily: MONO, fontSize: 11.5, color: DIM }}>
+            <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
                 © {new Date().getFullYear()} alpacka.ai
             </span>
             <div className="flex items-center gap-5">
@@ -351,7 +358,7 @@ export const DarkFooter: React.FC = () => (
                     <Link
                         key={l.to}
                         to={l.to}
-                        style={{ fontFamily: MONO, fontSize: 11.5, color: DIM, textDecoration: 'none' }}
+                        style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, textDecoration: 'none' }}
                         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DIM; }}
                     >

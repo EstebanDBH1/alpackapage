@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { hasGeneratorAccess } from '../lib/access';
 import { AlertCircle, ArrowRight, Check, ChevronDown, Copy, Lock, Sparkles, Wand2 } from 'lucide-react';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
 } from '../components/darkKit';
 
 /* Generador — mismo lenguaje visual oscuro estilo skills.sh que la home
@@ -156,7 +157,7 @@ const ChipSelect: React.FC<{
                 aria-expanded={open}
                 style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    fontFamily: MONO,
+                    fontFamily: SANS,
                     backgroundColor: active ? 'rgba(255,178,36,0.08)' : PANEL,
                     border: `1px solid ${active ? 'rgba(255,178,36,0.28)' : BORDER}`,
                     color: active ? AMBER : MUTED,
@@ -184,7 +185,7 @@ const ChipSelect: React.FC<{
                                 onClick={() => { onChange(null); setOpen(false); }}
                                 style={{
                                     width: '100%', textAlign: 'left', border: 'none', background: 'none', cursor: 'pointer',
-                                    fontFamily: MONO, borderRadius: 8, padding: '8px 11px', fontSize: 12.5, color: DIM,
+                                    fontFamily: SANS, borderRadius: 8, padding: '8px 11px', fontSize: 12.5, color: DIM,
                                 }}
                             >
                                 Sin especificar
@@ -198,7 +199,7 @@ const ChipSelect: React.FC<{
                                 onClick={() => { onChange(opt); setOpen(false); }}
                                 style={{
                                     width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
-                                    fontFamily: MONO,
+                                    fontFamily: SANS,
                                     backgroundColor: opt === value ? BORDER_SOFT : 'transparent',
                                     color: opt === value ? TEXT : MUTED,
                                     borderRadius: 8, padding: '8px 11px',
@@ -226,10 +227,10 @@ const SectionHead: React.FC<{ kicker: string; title: string; text: string }> = (
         >
             {kicker}
         </p>
-        <h2 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 10, color: TEXT }}>
+        <h2 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 10, color: TEXT }}>
             {title}
         </h2>
-        <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>{text}</p>
+        <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>{text}</p>
     </div>
 );
 
@@ -269,7 +270,7 @@ const Generator: React.FC = () => {
                     .maybeSingle(),
             ]);
 
-            const subscribed = !!(sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing'));
+            const subscribed = hasGeneratorAccess(sub?.subscription_status);
             setRemaining(Math.max(DAILY_LIMIT - (usage?.count ?? 0), 0));
             setAccess(subscribed ? 'subscribed' : 'unsubscribed');
         };
@@ -334,7 +335,7 @@ const Generator: React.FC = () => {
 
     // ── Loading ──────────────────────────────────────────────────────────────
     if (access === 'loading') return (
-        <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: SANS }}>
             <div className="mx-auto max-w-3xl px-5 sm:px-8 py-16 space-y-5">
                 {[44, 20, 280].map((h, i) => (
                     <div
@@ -360,13 +361,13 @@ const Generator: React.FC = () => {
 
     const ctaStyle: React.CSSProperties = {
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-        fontFamily: MONO, backgroundColor: TEXT, color: '#000', border: 'none',
+        fontFamily: SANS, backgroundColor: TEXT, color: '#000', border: 'none',
         fontWeight: 700, fontSize: 14, padding: '14px 26px', borderRadius: 10,
         textDecoration: 'none', cursor: 'pointer',
     };
 
     return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
             <main className="mx-auto max-w-3xl px-5 sm:px-8 py-12 md:py-14">
 
                 {/* ── Hero ────────────────────────────────────────────────── */}
@@ -386,7 +387,7 @@ const Generator: React.FC = () => {
 
                     <h1
                         style={{
-                            fontFamily: MONO,
+                            fontFamily: SANS,
                             fontWeight: 700,
                             fontSize: 'clamp(1.7rem, 3.6vw, 2.5rem)',
                             lineHeight: 1.15,
@@ -398,7 +399,7 @@ const Generator: React.FC = () => {
                         Genera tus prompts de IA
                         <span style={{ display: 'block', color: AMBER }}>en un solo clic</span>
                     </h1>
-                    <p style={{ fontFamily: MONO, color: MUTED, fontSize: 14.5, lineHeight: 1.7, maxWidth: 560, margin: '0 auto' }}>
+                    <p style={{ fontFamily: SANS, color: MUTED, fontSize: 14.5, lineHeight: 1.7, maxWidth: 560, margin: '0 auto' }}>
                         Consigue prompts potentes sin esfuerzo — describe tu objetivo como si hablaras con un amigo
                         y nosotros nos encargamos del resto.
                     </p>
@@ -423,7 +424,7 @@ const Generator: React.FC = () => {
                                     width: 30, height: 30, borderRadius: 8, flexShrink: 0, marginTop: 2,
                                     backgroundColor: PANEL, border: `1px solid ${BORDER}`, color: MUTED,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    fontFamily: MONO, fontSize: 14, fontWeight: 600,
+                                    fontFamily: SANS, fontSize: 14, fontWeight: 600,
                                 }}
                             >
                                 $
@@ -449,7 +450,7 @@ const Generator: React.FC = () => {
                                 style={{
                                     flex: 1, minWidth: 0, resize: 'none', background: 'transparent',
                                     border: 'none', outline: 'none', padding: '5px 0',
-                                    fontFamily: MONO, fontSize: 14.5, lineHeight: 1.6, color: TEXT,
+                                    fontFamily: SANS, fontSize: 14.5, lineHeight: 1.6, color: TEXT,
                                 }}
                             />
                         </div>
@@ -457,7 +458,7 @@ const Generator: React.FC = () => {
                         {/* Fila 2: paso opcional + acción */}
                         <div className="mt-3 flex flex-wrap items-center justify-between gap-3" style={{ paddingLeft: 42 }}>
                             <div className="flex flex-wrap items-center gap-2">
-                                <span style={{ fontFamily: MONO, fontSize: 11, color: DIM, marginRight: 2 }}>Opcional:</span>
+                                <span style={{ fontFamily: SANS, fontSize: 11, color: DIM, marginRight: 2 }}>Opcional:</span>
                                 <ChipSelect label="Tono" options={TONES} value={tone} onChange={setTone} />
                                 <ChipSelect label="Formato" options={FORMATS} value={format} onChange={setFormat} />
                             </div>
@@ -471,7 +472,7 @@ const Generator: React.FC = () => {
                                         disabled={generating || idea.trim().length < 10 || remaining === 0}
                                         style={{
                                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                            fontFamily: MONO, backgroundColor: TEXT, color: '#000', border: 'none',
+                                            fontFamily: SANS, backgroundColor: TEXT, color: '#000', border: 'none',
                                             fontWeight: 700, fontSize: 13.5, padding: '10px 18px', borderRadius: 9,
                                             opacity: (generating || idea.trim().length < 10 || remaining === 0) ? 0.4 : 1,
                                             cursor: (generating || idea.trim().length < 10 || remaining === 0) ? 'not-allowed' : 'pointer',
@@ -501,7 +502,7 @@ const Generator: React.FC = () => {
                                         to="/pricing"
                                         style={{
                                             display: 'inline-flex', alignItems: 'center', gap: 8,
-                                            fontFamily: MONO, backgroundColor: TEXT, color: '#000',
+                                            fontFamily: SANS, backgroundColor: TEXT, color: '#000',
                                             fontWeight: 700, fontSize: 13.5, padding: '10px 18px', borderRadius: 9,
                                             textDecoration: 'none',
                                             whiteSpace: 'nowrap',
@@ -520,12 +521,12 @@ const Generator: React.FC = () => {
                         {access === 'subscribed' ? (
                             <>
                                 {generating && (
-                                    <p style={{ fontFamily: MONO, fontSize: 12, color: DIM }}>
+                                    <p style={{ fontFamily: SANS, fontSize: 12, color: DIM }}>
                                         Construyendo tu mega-prompt… puede tardar unos segundos.
                                     </p>
                                 )}
                                 {remaining !== null && !generating && (
-                                    <p style={{ fontFamily: MONO, fontSize: 12, color: remaining === 0 ? RED : DIM }}>
+                                    <p style={{ fontFamily: SANS, fontSize: 12, color: remaining === 0 ? RED : DIM }}>
                                         {remaining === 0
                                             ? 'Límite diario alcanzado — vuelve mañana'
                                             : `Te quedan ${remaining} de ${DAILY_LIMIT} generaciones hoy`}
@@ -534,12 +535,12 @@ const Generator: React.FC = () => {
                             </>
                         ) : (
                             <>
-                                <p style={{ maxWidth: 460, textAlign: 'center', fontFamily: MONO, fontSize: 12.5, lineHeight: 1.7, color: MUTED }}>
+                                <p style={{ maxWidth: 460, textAlign: 'center', fontFamily: SANS, fontSize: 12.5, lineHeight: 1.7, color: MUTED }}>
                                     El generador está incluido en la suscripción premium: hasta {DAILY_LIMIT} prompts al día,
                                     más acceso total al banco. Son 7 USD/mes y cancelas cuando quieras.
                                 </p>
                                 {access === 'anonymous' && (
-                                    <Link to="/login?redirect=/generador" style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}>
+                                    <Link to="/login?redirect=/generador" style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}>
                                         Ya tengo cuenta
                                     </Link>
                                 )}
@@ -555,7 +556,7 @@ const Generator: React.FC = () => {
                                 }}
                             >
                                 <AlertCircle size={15} style={{ color: RED, flexShrink: 0, marginTop: 2 }} />
-                                <p style={{ fontFamily: MONO, fontSize: 13, lineHeight: 1.6, color: RED }}>{error}</p>
+                                <p style={{ fontFamily: SANS, fontSize: 13, lineHeight: 1.6, color: RED }}>{error}</p>
                             </div>
                         )}
                     </div>
@@ -575,7 +576,7 @@ const Generator: React.FC = () => {
                                 onClick={handleCopy}
                                 style={{
                                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                                    fontFamily: MONO,
+                                    fontFamily: SANS,
                                     backgroundColor: copied ? 'rgba(63,207,142,0.1)' : TEXT,
                                     border: `1px solid ${copied ? 'rgba(63,207,142,0.35)' : TEXT}`,
                                     color: copied ? GREEN : '#000',
@@ -595,7 +596,7 @@ const Generator: React.FC = () => {
                 )}
 
                 {result && (
-                    <p className="mb-8 text-center" style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, lineHeight: 1.7 }}>
+                    <p className="mb-8 text-center" style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, lineHeight: 1.7 }}>
                         Reemplaza los campos{' '}
                         <code style={{ backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 5, padding: '1px 6px', fontSize: 12, color: TEXT }}>
                             [INSERTAR …]
@@ -621,10 +622,10 @@ const Generator: React.FC = () => {
                                     <span style={{ flex: 1, height: 1, backgroundColor: BORDER_SOFT }} />
                                     <span style={{ fontSize: 20 }} aria-hidden="true">{step.emoji}</span>
                                 </div>
-                                <h3 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em' }}>
+                                <h3 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em' }}>
                                     {step.title}
                                 </h3>
-                                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>{step.text}</p>
+                                <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>{step.text}</p>
                             </div>
                         ))}
                     </div>
@@ -659,7 +660,7 @@ const Generator: React.FC = () => {
                                     el.style.backgroundColor = CARD;
                                 }}
                             >
-                                <span style={{ fontFamily: MONO, fontSize: 13, color: MUTED, lineHeight: 1.6 }}>{ex}</span>
+                                <span style={{ fontFamily: SANS, fontSize: 13, color: MUTED, lineHeight: 1.6 }}>{ex}</span>
                                 <ArrowRight size={15} style={{ color: DIM, flexShrink: 0 }} />
                             </button>
                         ))}
@@ -679,7 +680,7 @@ const Generator: React.FC = () => {
                                 <div style={{ padding: '20px 18px' }}>
                                     <div className="mb-4 flex items-center gap-3">
                                         <span style={{ fontSize: 20 }} aria-hidden="true">{preview.emoji}</span>
-                                        <h3 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, color: TEXT, letterSpacing: '-0.01em' }}>
+                                        <h3 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14, color: TEXT, letterSpacing: '-0.01em' }}>
                                             {preview.title}
                                         </h3>
                                     </div>
@@ -687,7 +688,7 @@ const Generator: React.FC = () => {
                                         {preview.features.map((feature) => (
                                             <div key={feature} className="flex items-start gap-2.5">
                                                 <Check size={13} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
-                                                <span style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{feature}</span>
+                                                <span style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{feature}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -722,10 +723,10 @@ const Generator: React.FC = () => {
                                 >
                                     {prop.kicker}
                                 </span>
-                                <h3 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em', lineHeight: 1.35 }}>
+                                <h3 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em', lineHeight: 1.35 }}>
                                     {prop.title}
                                 </h3>
-                                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>{prop.text}</p>
+                                <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.65 }}>{prop.text}</p>
                             </div>
                         ))}
                     </div>
@@ -735,7 +736,7 @@ const Generator: React.FC = () => {
                             <Wand2 size={16} />
                             Generar mi prompt
                         </button>
-                        <p style={{ marginTop: 16, fontFamily: MONO, fontSize: 12.5, color: MUTED }}>
+                        <p style={{ marginTop: 16, fontFamily: SANS, fontSize: 12.5, color: MUTED }}>
                             ¿Prefieres uno ya probado?{' '}
                             <Link to="/" style={{ color: TEXT, fontWeight: 600, textDecoration: 'none' }}>
                                 Explora el directorio →

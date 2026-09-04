@@ -17,10 +17,12 @@ interface SubscriberRow {
 const PRICE_LABELS: Record<string, string> = {
     'pri_01kjneczae0gfxdwde1q1h0app': '$4 (anclado)',
     'pri_01kyrhpzmcm7j0hnvcyvb0q9zy': '$7',
+    'pri_01m1pta9nh5jh843qe9fb8gf4p': '$47.99 (único)',
 };
 
 const STATUS_META: Record<string, { label: string; className: string }> = {
     active: { label: 'Activa', className: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400' },
+    lifetime: { label: 'Vitalicio', className: 'border-violet-500/40 bg-violet-500/10 text-violet-400' },
     trialing: { label: 'En prueba', className: 'border-sky-500/40 bg-sky-500/10 text-sky-400' },
     past_due: { label: 'Pago atrasado', className: 'border-amber-500/40 bg-amber-500/10 text-amber-400' },
     paused: { label: 'Pausada', className: 'border-border bg-secondary text-muted-foreground' },
@@ -62,9 +64,12 @@ const AdminSubscribers: React.FC = () => {
     }, [authState]);
 
     const stats = useMemo(() => {
+        // 'lifetime' no entra en isLive: es un pago único, no una suscripción
+        // viva, y contarlo en «Activas» inflaría la métrica de recurrente.
         const isLive = (r: SubscriberRow) => r.subscription_status === 'active' || r.subscription_status === 'trialing';
         return {
             activas: rows.filter(r => isLive(r) && !r.cancel_at_period_end).length,
+            vitalicios: rows.filter(r => r.subscription_status === 'lifetime').length,
             porCancelar: rows.filter(r => isLive(r) && r.cancel_at_period_end).length,
             atrasadas: rows.filter(r => r.subscription_status === 'past_due').length,
             canceladas: rows.filter(r => r.subscription_status === 'canceled' || r.subscription_status === 'cancelled').length,
@@ -145,9 +150,10 @@ const AdminSubscribers: React.FC = () => {
             </div>
 
             {/* Resumen */}
-            <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
                 {[
                     { label: 'Activas', value: stats.activas, filter: 'active' },
+                    { label: 'Vitalicios', value: stats.vitalicios, filter: 'lifetime' },
                     { label: 'Se cancelarán', value: stats.porCancelar, filter: 'por_cancelar' },
                     { label: 'Pago atrasado', value: stats.atrasadas, filter: 'past_due' },
                     { label: 'Canceladas', value: stats.canceladas, filter: 'canceled' },

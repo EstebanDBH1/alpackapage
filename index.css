@@ -130,8 +130,18 @@ details[open] .faq-chevron {
 /* Variante oscura: páginas del diseño nuevo estilo skills.sh (.dk-scope) */
 .dk-scope .blog-prose {
   color: #a0a0a0;
-  font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 14.5px;
+  font-size: 16px;
+}
+
+/* El cuerpo del artículo va en Hanken; la mono queda para code/pre. */
+.blog-prose code,
+.blog-prose pre,
+.blog-prose kbd {
+  @apply font-mono;
+}
+
+.blog-prose code {
+  font-size: 0.9em;
 }
 
 .dk-scope .blog-prose h2,

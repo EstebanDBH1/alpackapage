@@ -31,7 +31,7 @@ export interface User {
   email: string;
   full_name?: string;
   avatar_url?: string;
-  subscription_status?: 'active' | 'cancelled' | 'past_due' | 'trialing' | 'paused';
+  subscription_status?: 'active' | 'cancelled' | 'past_due' | 'trialing' | 'paused' | 'lifetime';
   stripe_custer_id?: string; // Legacy
   paddle_customer_id?: string;
 }

@@ -6,7 +6,7 @@ import { getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
     CategoryBadge,
 } from '../components/darkKit';
 import { OpenAILogo, ClaudeLogo, GeminiLogo, GrokLogo, DeepSeekLogo } from '../components/AiLogos';
@@ -174,7 +174,7 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
 
             <style>{`
                 /* Marquee de dos grupos idénticos: cada uno se desplaza -100% de su
@@ -219,7 +219,7 @@ const Home: React.FC = () => {
                         </h1>
                     </div>
 
-                    <p style={{ fontFamily: MONO, fontSize: 'clamp(16px, 2vw, 21px)', lineHeight: 1.55, color: MUTED }}>
+                    <p style={{ fontFamily: SANS, fontSize: 'clamp(16px, 2vw, 21px)', lineHeight: 1.55, color: MUTED }}>
                         Los prompts son instrucciones listas para tu IA. Copia el que
                         necesitas, pégalo en ChatGPT, Claude o Gemini y obtén resultados
                         de nivel experto sin escribir nada desde cero.
@@ -270,7 +270,7 @@ const Home: React.FC = () => {
                                                 style={{ gap: 10, flexShrink: 0, color: TEXT, marginRight: 34 }}
                                             >
                                                 {tool.logo}
-                                                <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color: MUTED, whiteSpace: 'nowrap' }}>
+                                                <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: MUTED, whiteSpace: 'nowrap' }}>
                                                     {tool.name}
                                                 </span>
                                             </span>
@@ -313,7 +313,7 @@ const Home: React.FC = () => {
                             placeholder="Buscar prompts…"
                             style={{
                                 width: '100%', backgroundColor: 'transparent', border: 'none', outline: 'none',
-                                padding: '12px 40px 12px 28px', fontSize: 14, color: TEXT, fontFamily: MONO,
+                                padding: '12px 40px 12px 28px', fontSize: 14, color: TEXT, fontFamily: SANS,
                             }}
                         />
                         <kbd
@@ -338,7 +338,7 @@ const Home: React.FC = () => {
                                         onClick={() => setTab(t.key)}
                                         style={{
                                             background: 'none', border: 'none', cursor: 'pointer',
-                                            fontFamily: MONO, fontSize: 13, whiteSpace: 'nowrap',
+                                            fontFamily: SANS, fontSize: 13, whiteSpace: 'nowrap',
                                             color: active ? TEXT : DIM, fontWeight: active ? 600 : 400,
                                             padding: '10px 10px 12px',
                                             borderBottom: `2px solid ${active ? TEXT : 'transparent'}`,
@@ -359,7 +359,7 @@ const Home: React.FC = () => {
                             onChange={e => setCategory(e.target.value)}
                             aria-label="Filtrar por categoría"
                             style={{
-                                fontFamily: MONO, fontSize: 12.5, color: MUTED,
+                                fontFamily: SANS, fontSize: 12.5, color: MUTED,
                                 backgroundColor: BG, border: `1px solid ${BORDER}`, borderRadius: 7,
                                 padding: '5px 9px', outline: 'none', cursor: 'pointer',
                             }}
@@ -393,13 +393,13 @@ const Home: React.FC = () => {
                 {/* Estado vacío */}
                 {!loading && filtered.length === 0 && (
                     <div className="text-center" style={{ padding: '64px 20px' }}>
-                        <p style={{ color: MUTED, fontSize: 14, marginBottom: 20, fontFamily: MONO }}>
+                        <p style={{ color: MUTED, fontSize: 14, marginBottom: 20, fontFamily: SANS }}>
                             Ningún prompt coincide con tu búsqueda.
                         </p>
                         <button
                             onClick={() => { setTab('todos'); setCategory('todas'); setSearchQuery(''); }}
                             style={{
-                                fontFamily: MONO, backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                fontFamily: SANS, backgroundColor: PANEL, border: `1px solid ${BORDER}`,
                                 borderRadius: 8, padding: '9px 18px', fontSize: 13, color: TEXT, cursor: 'pointer',
                             }}
                         >
@@ -411,7 +411,7 @@ const Home: React.FC = () => {
                 {/* Sentinel de scroll + contador */}
                 <div ref={sentinelRef} />
                 {!loading && filtered.length > 0 && (
-                    <p className="text-center" style={{ color: DIM, fontSize: 12, marginTop: 22, fontFamily: MONO }}>
+                    <p className="text-center" style={{ color: DIM, fontSize: 12, marginTop: 22, fontFamily: SANS }}>
                         {visibleCount < filtered.length
                             ? `${Math.min(visibleCount, filtered.length).toLocaleString('es')} de ${filtered.length.toLocaleString('es')} prompts`
                             : `${filtered.length.toLocaleString('es')} prompts`}
@@ -466,13 +466,13 @@ const PromptCard: React.FC<{ prompt: Prompt }> = ({ prompt }) => {
             {/* Título + descripción */}
             <h3
                 className="line-clamp-1"
-                style={{ fontFamily: MONO, fontSize: 14.5, fontWeight: 700, color: TEXT, letterSpacing: '-0.01em', marginBottom: 7 }}
+                style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 700, color: TEXT, letterSpacing: '-0.01em', marginBottom: 7 }}
             >
                 {prompt.title}
             </h3>
             <p
                 className="line-clamp-2 flex-1"
-                style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.6, color: MUTED, marginBottom: 14 }}
+                style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.6, color: MUTED, marginBottom: 14 }}
             >
                 {prompt.description}
             </p>

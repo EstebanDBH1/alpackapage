@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    User, CreditCard, LogOut, AlertTriangle,
+    User, CreditCard, LogOut, AlertTriangle, Check,
     Clock, FileText, Zap, ArrowRight, Bookmark, Wand2,
 } from 'lucide-react';
 import { supabase, isAdminUser } from '../lib/supabase';
+import { hasLibraryAccess, isLifetime } from '../lib/access';
 import { Subscription } from '../types';
 import {
     BG, BG_WARM, BG_INK, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
@@ -46,6 +47,9 @@ const Dashboard: React.FC = () => {
 
     const handleCancelSubscription = async () => {
         if (!subscription) return;
+        // Un vitalicio no tiene suscripción en Paddle: llamar al portal aquí
+        // daría un error confuso a alguien que ya pagó.
+        if (subscription.subscription_status === 'lifetime') return;
         if (!window.confirm('¿Estás seguro de que quieres cancelar?')) return;
         setUpdating(true);
         try {
@@ -70,7 +74,10 @@ const Dashboard: React.FC = () => {
         }
     };
 
-    const isActive = subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing';
+    // Se delega en lib/access para no repetir aquí la lista de statuses
+    const isActive = hasLibraryAccess(subscription?.subscription_status);
+    // El vitalicio es un pago único: no vence, no se renueva, no se cancela.
+    const lifetime = isLifetime(subscription?.subscription_status);
     // Precio lanzamiento ($4) para suscriptores anclados; $7 para el resto
     const GRANDFATHERED_PRICE_ID = 'pri_01kjneczae0gfxdwde1q1h0app';
     const monthlyPrice = subscription?.price_id === GRANDFATHERED_PRICE_ID ? '$4' : '$7';
@@ -151,7 +158,7 @@ const Dashboard: React.FC = () => {
                         }}
                     >
                         <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: isActive ? GREEN : TEXT_DIM }} />
-                        {isActive ? 'Premium activo' : 'Sin suscripción'}
+                        {lifetime ? 'Acceso vitalicio' : isActive ? 'Premium activo' : 'Sin suscripción'}
                     </span>
                 </div>
             </div>
@@ -188,7 +195,7 @@ const Dashboard: React.FC = () => {
                                             color: isActive ? YELLOW : 'rgba(255,255,255,0.45)',
                                         }}
                                     >
-                                        {isActive ? '★ premium' : 'free'}
+                                        {lifetime ? '★ vitalicio' : isActive ? '★ premium' : 'free'}
                                     </span>
                                 </div>
 
@@ -270,10 +277,12 @@ const Dashboard: React.FC = () => {
                             >
                                 <div>
                                     <h2 style={{ fontWeight: 600, fontSize: 17.5, letterSpacing: '-0.02em', marginBottom: 5 }}>
-                                        Tu suscripción
+                                        {lifetime ? 'Tu acceso' : 'Tu suscripción'}
                                     </h2>
                                     <p style={{ color: TEXT_MED, fontSize: 14 }}>
-                                        {isActive ? 'Gestiona tu facturación y estado.' : 'No tienes una suscripción activa.'}
+                                        {lifetime
+                                            ? 'Acceso permanente a la biblioteca. No hay nada que gestionar.'
+                                            : isActive ? 'Gestiona tu facturación y estado.' : 'No tienes una suscripción activa.'}
                                     </p>
                                 </div>
                                 {isActive && (
@@ -282,23 +291,27 @@ const Dashboard: React.FC = () => {
                                         style={{ backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '9px 16px' }}
                                     >
                                         <span style={{ fontSize: 24, fontWeight: 600, lineHeight: 1, letterSpacing: '-0.03em', color: TEXT }}>
-                                            {monthlyPrice}
+                                            {lifetime ? '$47.99' : monthlyPrice}
                                         </span>
-                                        <span style={{ fontSize: 12, color: TEXT_MED }}>/mes</span>
+                                        <span style={{ fontSize: 12, color: TEXT_MED }}>{lifetime ? 'pagado' : '/mes'}</span>
                                     </div>
                                 )}
                             </div>
 
                             <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
                                 <div>
-                                    <p style={label}>Próxima factura</p>
+                                    <p style={label}>{lifetime ? 'Vencimiento' : 'Próxima factura'}</p>
                                     <div className="flex items-center gap-2" style={{ fontSize: 14.5, fontWeight: 600, color: TEXT }}>
                                         <Clock size={14} style={{ color: TEXT_MED }} />
-                                        {isActive && subscription?.current_period_end
-                                            ? new Date(subscription.current_period_end).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-                                            : '—'}
+                                        {lifetime
+                                            ? 'Nunca'
+                                            : isActive && subscription?.current_period_end
+                                                ? new Date(subscription.current_period_end).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+                                                : '—'}
                                     </div>
-                                    {isActive && !subscription?.cancel_at_period_end && (
+                                    {lifetime ? (
+                                        <p style={{ fontSize: 12.5, color: TEXT_DIM, marginTop: 5 }}>Pago único, ya cobrado.</p>
+                                    ) : isActive && !subscription?.cancel_at_period_end && (
                                         <p style={{ fontSize: 12.5, color: TEXT_DIM, marginTop: 5 }}>Renovación automática.</p>
                                     )}
                                 </div>
@@ -313,7 +326,23 @@ const Dashboard: React.FC = () => {
                             </div>
 
                             {/* Acciones */}
-                            {isActive ? (
+                            {lifetime ? (
+                                // Un pago único no se cancela ni se gestiona en el portal de
+                                // Paddle: no hay suscripción detrás que tocar.
+                                <div
+                                    className="flex items-start gap-3"
+                                    style={{ backgroundColor: 'rgba(63,207,142,0.06)', border: '1px solid rgba(63,207,142,0.25)', borderRadius: 13, padding: '14px 16px' }}
+                                >
+                                    <Check size={15} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 2 }} />
+                                    <p style={{ fontSize: 14, lineHeight: 1.6, color: TEXT_MED }}>
+                                        Tienes la biblioteca completa de por vida, con todas las actualizaciones
+                                        futuras incluidas. No hay nada que renovar ni cancelar.{' '}
+                                        <span style={{ color: TEXT_DIM }}>
+                                            El generador con IA no entra en el vitalicio; requiere la suscripción mensual.
+                                        </span>
+                                    </p>
+                                </div>
+                            ) : isActive ? (
                                 <button
                                     onClick={handleCancelSubscription}
                                     disabled={updating}

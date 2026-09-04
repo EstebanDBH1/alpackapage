@@ -5,7 +5,7 @@ import { BlogPost as BlogPostType } from '../types';
 import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import { ArrowLeft, Clock } from 'lucide-react';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, SANS, MONO,
 } from '../components/darkKit';
 
 /* Artículo del blog — mismo lenguaje visual oscuro estilo skills.sh que el
@@ -57,7 +57,7 @@ const BlogPost: React.FC = () => {
 
     if (status === 'loading') {
         return (
-            <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: MONO }}>
+            <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: SANS }}>
                 <div className="mx-auto w-full max-w-3xl px-5 sm:px-8 py-16 space-y-5">
                     <div className="animate-pulse" style={{ height: 14, width: 130, borderRadius: 7, backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}` }} />
                     <div className="animate-pulse" style={{ height: 46, width: '100%', borderRadius: 10, backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}` }} />
@@ -76,17 +76,17 @@ const BlogPost: React.FC = () => {
         return (
             <div
                 className="flex flex-col items-center justify-center gap-5 px-5 py-24 text-center"
-                style={{ backgroundColor: BG, color: TEXT, minHeight: '70vh', fontFamily: MONO }}
+                style={{ backgroundColor: BG, color: TEXT, minHeight: '70vh', fontFamily: SANS }}
             >
-                <h1 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Artículo no encontrado</h1>
-                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, maxWidth: 380, lineHeight: 1.7 }}>
+                <h1 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Artículo no encontrado</h1>
+                <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, maxWidth: 380, lineHeight: 1.7 }}>
                     Este artículo no existe o ya no está disponible.
                 </p>
                 <Link
                     to="/blog"
                     style={{
                         display: 'inline-flex', alignItems: 'center', gap: 8,
-                        fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 13.5,
+                        fontFamily: SANS, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 13.5,
                         padding: '12px 22px', borderRadius: 10, textDecoration: 'none',
                     }}
                 >
@@ -97,7 +97,7 @@ const BlogPost: React.FC = () => {
     }
 
     return (
-        <div className="dk-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div className="dk-scope" style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
 
             <div className="mx-auto w-full max-w-3xl px-5 sm:px-8 pt-10 pb-20">
 
@@ -105,7 +105,7 @@ const BlogPost: React.FC = () => {
                 <Link
                     to="/blog"
                     className="inline-flex items-center gap-2 mb-9"
-                    style={{ fontFamily: MONO, fontSize: 13, color: MUTED, textDecoration: 'none' }}
+                    style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none' }}
                 >
                     <ArrowLeft size={14} /> Volver al blog
                 </Link>
@@ -144,7 +144,7 @@ const BlogPost: React.FC = () => {
 
                     <h1
                         style={{
-                            fontFamily: MONO,
+                            fontFamily: SANS,
                             fontWeight: 700,
                             fontSize: 'clamp(1.7rem, 3.6vw, 2.4rem)',
                             lineHeight: 1.2,
@@ -156,7 +156,7 @@ const BlogPost: React.FC = () => {
                     </h1>
 
                     {post.excerpt && (
-                        <p style={{ marginTop: 18, fontFamily: MONO, color: MUTED, fontSize: 15.5, lineHeight: 1.7 }}>
+                        <p style={{ marginTop: 18, fontFamily: SANS, color: MUTED, fontSize: 15.5, lineHeight: 1.7 }}>
                             {post.excerpt}
                         </p>
                     )}
@@ -185,10 +185,10 @@ const BlogPost: React.FC = () => {
                     className="text-center"
                     style={{ backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14, padding: '32px 26px' }}
                 >
-                    <h2 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.4vw, 1.6rem)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 12, color: TEXT }}>
+                    <h2 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.4vw, 1.6rem)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 12, color: TEXT }}>
                         ¿Quieres resultados así con tu IA?
                     </h2>
-                    <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 460, margin: '0 auto 24px' }}>
+                    <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 460, margin: '0 auto 24px' }}>
                         Explora el directorio con más de 1.000 prompts probados para ChatGPT, Claude y Gemini,
                         organizados por categoría.
                     </p>
@@ -196,7 +196,7 @@ const BlogPost: React.FC = () => {
                         to="/"
                         style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                            fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 14,
+                            fontFamily: SANS, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 14,
                             padding: '14px 26px', borderRadius: 10, textDecoration: 'none',
                         }}
                     >

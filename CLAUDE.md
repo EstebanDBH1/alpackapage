@@ -29,7 +29,8 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 - `/dashboard` — Subscription management
 - `/guardados` — Saved prompts
 - `/generador` — AI prompt generator (subscribers only; calls the `generate-prompt` Edge Function)
-- `/pricing` — Single-plan pricing ($4/month via Paddle)
+- `/pricing` — $7/month subscription via Paddle, plus a one-time $47.99 lifetime library plan
+- `/checkout` — Embedded Paddle checkout; `?plan=lifetime` opens the one-time plan, no param opens the monthly one
 - `/payment-success` — Post-checkout confirmation
 - `/ebook` — Standalone sales page for the Notion prompt library ($10 one-time via Hotmart)
 - `/skills` — Skills page
@@ -45,6 +46,14 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 
 **Subscription gating:** Premium prompt content is gated by subscription status. `subscriptions` table tracks `subscription_id`, `status` (`active`, `trialing`, `cancelled`, `past_due`, `paused`), and `paddle_customer_id`. The Dashboard page reads subscription state from Supabase.
 
+`lib/access.ts` is the single place the frontend decides what a `subscription_status` unlocks (`hasLibraryAccess` / `hasGeneratorAccess`). It is UI only — the real boundary is server-side: `has_library_access()` for the library, `generate-prompt` for the generator. Change a list in one place and you must change it in the other, or the UI will lie.
+
+**Lifetime plan.** `lifetime` is the one-time $47.99 purchase: the full library forever, including future updates. It unlocks the library but **not** the AI generator — the generator costs money per use (Gemini calls) and can't be funded by a single payment — so it's in `LIBRARY_STATUSES` and deliberately absent from `GENERATOR_STATUSES`. Server-side, `has_library_access()` (SECURITY DEFINER, migration `add_lifetime_library_access`) is the one place the library's status list lives; both the `prompts` RLS policy and `get_prompt_detail()` call it, so there is no longer a list to keep in sync between them.
+
+Lifetime rows are written by `paddle-webhook` on `transaction.completed`. Two things make that safe and are easy to break: the handler ignores any transaction carrying a `subscription_id` (every monthly renewal fires `transaction.completed` too, and without that check a $7 subscriber would be upgraded to lifetime for free), and the `subscription.*` branch refuses to overwrite a `lifetime` status (otherwise the `canceled` event from a lifetime buyer's old monthly sub would revoke access they already paid for). A lifetime row has no `current_period_end` and no Paddle subscription behind it, so the Dashboard must not offer it a cancel button or the billing portal — `subscription_id` holds the Paddle **transaction** id.
+
+> **`subscriptions` is read-only from the browser — never add a write path.** `subscription_status` is the column the `prompts` RLS policy and `get_prompt_detail()` trust to decide who sees premium content, so a client-writable `subscriptions` row *is* a free premium account. It used to have INSERT/UPDATE policies checking only `auth.uid()::text = customer_id` (who owns the row, never what it says), which let any signed-in user grant themselves an `active` subscription; those policies were dropped and INSERT/UPDATE/DELETE/TRUNCATE revoked from `anon` and `authenticated` (migration `lock_down_subscriptions_writes`). Only the service role writes there — the Paddle/PayPal webhooks and `create-portal-session`, which bypass RLS. If a feature seems to need a client-side write, it belongs in an Edge Function instead.
+
 **Paddle integration:** Checkout SDK is loaded dynamically. Opens as an overlay with user email pre-filled and Supabase user ID in custom data. Success redirects to `/payment-success`. The `supabase/functions/create-portal-session` Edge Function (Deno) handles sensitive Paddle API calls server-side.
 
 **Prompt generator:** `supabase/functions/generate-prompt` (Deno) powers `/generador`. It verifies the JWT, requires an `active`/`trialing` subscription, enforces a 10-generations-per-day limit per user (UTC day; atomic upsert via the `increment_generator_usage` RPC on the `generator_usage` table, refunded on failure via `decrement_generator_usage`), and calls the Gemini API (`GEMINI_API_KEY` secret; model `gemini-3.6-flash`, override with `GEMINI_MODEL`; limit override with `GENERATOR_DAILY_LIMIT`). Users can SELECT their own `generator_usage` row (RLS) so the UI shows the remaining count; only the service role can write. CORS is restricted to the production domains + `localhost:3000`.
@@ -59,7 +68,13 @@ Tailwind CSS compiled via PostCSS (`tailwind.config.js` + `index.css` with `@tai
 - `brand.*` colors (light/cream palette) used by older components.
 - Semantic tokens (`background`, `foreground`, `card`, `primary`, `accent`, `border`, …) in oklch — the site's dark theme (`oklch(0.15 0.005 60)` background, orange accent `oklch(0.72 0.16 40)`).
 
-**Typography:** The whole app uses **Geist Mono**. All Tailwind font aliases (`font-sans`, `font-mono`, `font-display`, `font-space`) point to Geist Mono in `tailwind.config.js` — Tailwind's preflight applies `sans` to the body, and pages/components use the alias classes. The ONE exception is `/ebook` (`pages/Ebook.tsx`): a light-themed (white, Notion-style) standalone page that sets `"Space Grotesk"` via inline styles on its own root, overriding the global font. Fonts load from Google Fonts in `index.html` (Geist Mono + Space Grotesk only — don't add font families that aren't used).
+**Typography:** The site pairs **Hanken Grotesk** (everything that is read: headings, body copy, buttons, nav) with **JetBrains Mono** (technical accents only: uppercase/tracked eyebrows, badges and chips, dates, prices and counters, prompt/code `<pre>` blocks, the `alpacka.ai` wordmark). Keeping the mono to those roles is what makes the pairing read as intentional — don't set body copy in mono.
+
+Two ways to reach them:
+- **Tailwind aliases** in `tailwind.config.js`: `font-sans` / `font-display` / `font-space` → Hanken Grotesk (`display` and `space` are historical aliases, all three are the same sans); `font-mono` → JetBrains Mono. Tailwind's preflight puts the sans on the body.
+- **Inline styles** in the dark theme: `components/darkKit.tsx` exports `SANS` and `MONO` (and `FONT = SANS` for the pages migrated from the light kit). `components/landingKit.tsx` exports the same names for the light landings — it no longer loads Euclid Circular, so `useEuclidFont()` is a kept-for-compat no-op.
+
+Both kits' `LandingStyles` force `SANS` on everything inside `.bp-scope` and re-exempt `.font-mono`, `code`, `pre` and `kbd`, so the Tailwind utility still wins inside those pages. Fonts load from Google Fonts in `index.html` (Hanken Grotesk + JetBrains Mono only — don't add font families that aren't used). The standalone static landings under `public/` (`gpt-tesis/`, `chatgpt-tesis/`, `new-page-alpacka/`) are independent HTML with their own font links and don't follow this.
 
 ### Path Alias
 

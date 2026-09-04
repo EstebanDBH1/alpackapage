@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowRight, Sparkles, Zap, Wand2, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { hasLibraryAccess, isLifetime } from '../lib/access';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
@@ -14,6 +15,8 @@ const PaymentSuccess: React.FC = () => {
     const [countdown, setCountdown] = useState(REDIRECT_SECONDS);
     const [isVerifying, setIsVerifying] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    // El vitalicio no es una suscripción: los textos de esta pantalla cambian.
+    const [lifetime, setLifetime] = useState(false);
 
     useEuclidFont();
 
@@ -29,7 +32,8 @@ const PaymentSuccess: React.FC = () => {
                 .eq('customer_id', userId)
                 .single();
 
-            if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+            if (hasLibraryAccess(sub?.subscription_status)) {
+                setLifetime(isLifetime(sub?.subscription_status));
                 setIsConfirmed(true);
                 setIsVerifying(false);
             } else {
@@ -108,17 +112,19 @@ const PaymentSuccess: React.FC = () => {
                     </div>
 
                     <h1 style={{ fontWeight: 600, fontSize: 28, letterSpacing: '-0.035em', lineHeight: 1.15, marginBottom: 12 }}>
-                        ¡Ya eres premium!
+                        {lifetime ? '¡La biblioteca es tuya!' : '¡Ya eres premium!'}
                     </h1>
                     <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>
-                        Tu suscripción está activa. Bienvenido al banco de prompts más completo en español.
+                        {lifetime
+                            ? 'Tu acceso vitalicio está activo, con todas las actualizaciones futuras incluidas. No tendrás que pagar de nuevo.'
+                            : 'Tu suscripción está activa. Bienvenido al banco de prompts más completo en español.'}
                     </p>
 
                     {/* Estado de verificación */}
                     {isVerifying && (
                         <div className="mb-6 flex items-center justify-center gap-2" style={{ fontSize: 13, color: TEXT_DIM }}>
                             <Loader2 size={13} className="animate-spin" />
-                            Verificando suscripción…
+                            Verificando tu acceso…
                         </div>
                     )}
                     {!isVerifying && isConfirmed && (
@@ -129,7 +135,7 @@ const PaymentSuccess: React.FC = () => {
                                 padding: '6px 14px', fontSize: 12.5, fontWeight: 600, color: GREEN,
                             }}
                         >
-                            <CheckCircle size={13} /> Suscripción confirmada
+                            <CheckCircle size={13} /> {lifetime ? 'Acceso vitalicio confirmado' : 'Suscripción confirmada'}
                         </div>
                     )}
 

@@ -1,21 +1,63 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, ArrowLeft, ChevronDown } from 'lucide-react';
 import type { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
 import { supabase } from '../lib/supabase';
+import { hasLibraryAccess } from '../lib/access';
 import { loadPaddle, onPaddleEvent, formatMoney } from '../lib/paddle';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, YELLOW, GREEN, FONT,
     useEuclidFont, LandingStyles,
 } from '../components/darkKit';
 
-const FEATURES = [
+/* Dos planes sobre el mismo checkout: la mensual y el pago único vitalicio.
+   Se elige con `?plan=lifetime`; sin parámetro, mensual (el enlace de siempre
+   sigue funcionando igual). */
+
+/* Fallback del precio vitalicio si la env var no está configurada en el build.
+   `.env` está en .gitignore, así que sin esto un despliegue en el que falte la
+   variable rompería la compra sin avisar. Un price id no es secreto: viaja al
+   navegador dentro del bundle de todas formas. La env var, si existe, manda. */
+const LIFETIME_PRICE_ID_FALLBACK = 'pri_01m1pta9nh5jh843qe9fb8gf4p';
+
+const MONTHLY_FEATURES = [
     'Acceso ilimitado a más de 1.000 prompts',
     'Generador de prompts con IA — 10 al día',
     'Actualizaciones semanales',
     'Guarda tus prompts favoritos',
     'Cancela cuando quieras',
 ];
+
+const LIFETIME_FEATURES = [
+    'Acceso ilimitado a más de 1.000 prompts',
+    'Todas las actualizaciones futuras incluidas',
+    'Guarda tus prompts favoritos',
+    'Un solo pago — nunca vuelves a pagar',
+    'Sin renovaciones ni cancelaciones que gestionar',
+];
+
+const PLANS = {
+    monthly: {
+        priceId: () => import.meta.env.VITE_PADDLE_PRICE_ID?.trim(),
+        features: MONTHLY_FEATURES,
+        docTitle: 'Completa tu suscripción | Alpacka',
+        heading: 'Suscríbete a',
+        blurb: 'Banco completo de prompts para ChatGPT, Claude y Gemini.',
+        fallbackName: 'Alpacka Premium',
+        recurring: true,
+    },
+    lifetime: {
+        priceId: () => import.meta.env.VITE_PADDLE_LIFETIME_PRICE_ID?.trim() || LIFETIME_PRICE_ID_FALLBACK,
+        features: LIFETIME_FEATURES,
+        docTitle: 'Acceso vitalicio | Alpacka',
+        heading: 'Compra',
+        blurb: 'Banco completo de prompts para ChatGPT, Claude y Gemini, para siempre.',
+        fallbackName: 'Acceso vitalicio',
+        recurring: false,
+    },
+} as const;
+
+type PlanKey = keyof typeof PLANS;
 
 type Status = 'loading' | 'ready' | 'subscribed' | 'error';
 
@@ -40,16 +82,20 @@ const SummaryRow: React.FC<{ label: string; value?: number; currency?: string; s
 
 const Checkout: React.FC = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [status, setStatus] = useState<Status>('loading');
     const [checkoutData, setCheckoutData] = useState<CheckoutEventsData | null>(null);
     const openedRef = useRef(false);
 
+    const planKey: PlanKey = searchParams.get('plan') === 'lifetime' ? 'lifetime' : 'monthly';
+    const plan = PLANS[planKey];
+
     useEuclidFont();
 
     useEffect(() => {
-        document.title = 'Completa tu suscripción | Alpacka';
+        document.title = plan.docTitle;
         return () => { document.title = 'Banco de Prompts de IA · +1.000 prompts para ChatGPT, Claude y Gemini | Alpacka'; };
-    }, []);
+    }, [plan.docTitle]);
 
     // Eventos del checkout: totales en vivo para el resumen + redirección al pagar
     useEffect(() => {
@@ -69,7 +115,7 @@ const Checkout: React.FC = () => {
             const { data: { session } } = await supabase.auth.getSession();
             const user = session?.user;
             if (!user) {
-                navigate('/login?redirect=/checkout');
+                navigate(`/login?redirect=${encodeURIComponent(`/checkout?plan=${planKey}`)}`);
                 return;
             }
 
@@ -79,8 +125,15 @@ const Checkout: React.FC = () => {
                 .eq('customer_id', user.id)
                 .maybeSingle();
             if (cancelled) return;
-            if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+            if (hasLibraryAccess(sub?.subscription_status)) {
                 setStatus('subscribed');
+                return;
+            }
+
+            const priceId = plan.priceId();
+            if (!priceId) {
+                console.error(`Falta el price id de Paddle para el plan "${planKey}"`);
+                setStatus('error');
                 return;
             }
 
@@ -103,7 +156,7 @@ const Checkout: React.FC = () => {
                         allowLogout: false,
                         successUrl: `${window.location.origin}/payment-success`,
                     },
-                    items: [{ priceId: import.meta.env.VITE_PADDLE_PRICE_ID?.trim(), quantity: 1 }],
+                    items: [{ priceId, quantity: 1 }],
                     customer: { email: user.email! },
                     customData: { supabase_user_id: String(user.id) },
                 });
@@ -115,7 +168,7 @@ const Checkout: React.FC = () => {
 
         start();
         return () => { cancelled = true; };
-    }, [navigate]);
+    }, [navigate, planKey, plan]);
 
     if (status === 'subscribed') {
         return (
@@ -136,7 +189,7 @@ const Checkout: React.FC = () => {
                     </div>
                     <h1 style={{ fontWeight: 600, fontSize: 26, letterSpacing: '-0.03em', marginBottom: 10 }}>Ya eres premium</h1>
                     <p style={{ color: TEXT_MED, fontSize: 15, lineHeight: 1.7, maxWidth: 380, marginBottom: 28 }}>
-                        Tu suscripción está activa: tienes acceso completo al banco de prompts y al generador.
+                        Tu acceso está activo: ya tienes el banco de prompts completo. No hace falta que pagues de nuevo.
                     </p>
                     <Link
                         to="/"
@@ -155,7 +208,7 @@ const Checkout: React.FC = () => {
 
     const totals = checkoutData?.totals;
     const currency = checkoutData?.currency_code;
-    const priceName = checkoutData?.items?.[0]?.price_name ?? 'Alpacka Premium';
+    const priceName = checkoutData?.items?.[0]?.price_name ?? plan.fallbackName;
     const recurringTotal = checkoutData?.recurring_totals?.total;
 
     const lineItems = (
@@ -163,12 +216,12 @@ const Checkout: React.FC = () => {
             <div>
                 <p style={{ fontSize: 14.5, fontWeight: 600, color: TEXT }}>{priceName}</p>
                 <p style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.6, marginTop: 4 }}>
-                    Banco completo de prompts para ChatGPT, Claude y Gemini.
+                    {plan.blurb}
                 </p>
             </div>
 
             <div className="flex flex-col gap-2">
-                {FEATURES.map(f => (
+                {plan.features.map(f => (
                     <div key={f} className="flex items-start gap-2.5">
                         <Check size={12} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 3 }} />
                         <span style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.5 }}>{f}</span>
@@ -215,7 +268,7 @@ const Checkout: React.FC = () => {
 
                     {/* ══ Resumen del pedido (en vivo) ══ */}
                     <div className="bp-up md:sticky" style={{ top: 24 }}>
-                        <p style={{ fontSize: 14, color: TEXT_MED, marginBottom: 8 }}>Suscríbete a {priceName}</p>
+                        <p style={{ fontSize: 14, color: TEXT_MED, marginBottom: 8 }}>{plan.heading} {priceName}</p>
 
                         {/* Total en vivo (con impuestos del país del cliente) */}
                         {totals?.total !== undefined ? (
@@ -223,13 +276,21 @@ const Checkout: React.FC = () => {
                                 <span style={{ fontWeight: 600, fontSize: 46, lineHeight: 1, letterSpacing: '-0.04em', color: TEXT }}>
                                     {formatMoney(totals.total, currency)}
                                 </span>
-                                <span style={{ fontSize: 14, color: TEXT_MED, lineHeight: 1.2 }}>al<br />mes</span>
+                                {plan.recurring
+                                    ? <span style={{ fontSize: 14, color: TEXT_MED, lineHeight: 1.2 }}>al<br />mes</span>
+                                    : <span style={{ fontSize: 14, color: TEXT_MED, lineHeight: 1.2 }}>pago<br />único</span>}
                             </div>
                         ) : (
                             <div className="mb-1.5"><LineSkeleton w={190} h={46} /></div>
                         )}
 
-                        {recurringTotal !== undefined ? (
+                        {/* En el vitalicio no hay `recurring_totals`: el texto es fijo,
+                            si no el skeleton se quedaría girando para siempre. */}
+                        {!plan.recurring ? (
+                            <p style={{ fontSize: 12.5, color: TEXT_DIM, marginBottom: 28 }}>
+                                Un solo pago, impuestos incluidos · Acceso permanente con todas las actualizaciones futuras
+                            </p>
+                        ) : recurringTotal !== undefined ? (
                             <p style={{ fontSize: 12.5, color: TEXT_DIM, marginBottom: 28 }}>
                                 Luego {formatMoney(recurringTotal, currency)} cada mes, impuestos incluidos · Sin permanencia
                             </p>

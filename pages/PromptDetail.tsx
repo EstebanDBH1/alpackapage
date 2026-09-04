@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { hasLibraryAccess } from '../lib/access';
 import { getAiToolMeta } from '../lib/aiTools';
 import { Prompt } from '../types';
 import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download, ArrowLeft } from 'lucide-react';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER,
-    MONO, AI_BADGE_DARK, CategoryBadge,
+    SANS, MONO, AI_BADGE_DARK, CategoryBadge,
 } from '../components/darkKit';
 
 /* Detalle de prompt — mismo lenguaje visual oscuro estilo skills.sh
@@ -41,7 +42,7 @@ const PromptDetail: React.FC = () => {
             ]);
 
             const sub = subRes.data;
-            const subscribed = !!(sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing'));
+            const subscribed = hasLibraryAccess(sub?.subscription_status);
             setIsSaved(!!savedRes.data);
 
             if (!error) setPrompt(promptData as Prompt);
@@ -227,7 +228,7 @@ const PromptDetail: React.FC = () => {
 
     // ── Loading ──────────────────────────────────────────────────────────────
     if (loading) return (
-        <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, minHeight: '100vh', fontFamily: SANS }}>
             <div className="mx-auto max-w-3xl px-5 sm:px-8 py-16 space-y-5">
                 {[16, 44, 20, 280].map((h, i) => (
                     <div
@@ -246,7 +247,7 @@ const PromptDetail: React.FC = () => {
 
     // ── Not found ────────────────────────────────────────────────────────────
     if (!prompt) return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '80vh', fontFamily: MONO, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '80vh', fontFamily: SANS, display: 'flex', flexDirection: 'column' }}>
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-20 text-center">
                 <div
                     style={{
@@ -257,10 +258,10 @@ const PromptDetail: React.FC = () => {
                 >
                     <AlertCircle size={22} style={{ color: DIM }} />
                 </div>
-                <h2 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Prompt no encontrado</h2>
+                <h2 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Prompt no encontrado</h2>
                 <Link
                     to="/"
-                    style={{ fontFamily: MONO, fontSize: 13.5, color: MUTED, textDecoration: 'none', borderBottom: `1px solid ${BORDER}`, paddingBottom: 2 }}
+                    style={{ fontFamily: SANS, fontSize: 13.5, color: MUTED, textDecoration: 'none', borderBottom: `1px solid ${BORDER}`, paddingBottom: 2 }}
                 >
                     Volver al directorio
                 </Link>
@@ -279,13 +280,13 @@ const PromptDetail: React.FC = () => {
 
     const boxBtn: React.CSSProperties = {
         display: 'inline-flex', alignItems: 'center', gap: 6,
-        fontFamily: MONO, backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 8,
+        fontFamily: SANS, backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 8,
         padding: '7px 12px', fontSize: 12, fontWeight: 600, color: TEXT,
         cursor: 'pointer', transition: 'border-color .15s, background .15s',
     };
 
     return (
-        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: MONO }}>
+        <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
             <main className="mx-auto max-w-6xl px-5 sm:px-8 py-10 md:py-12">
 
                 {/* Volver */}
@@ -294,7 +295,7 @@ const PromptDetail: React.FC = () => {
                     style={{
                         display: 'inline-flex', alignItems: 'center', gap: 7, marginBottom: 26,
                         background: 'none', border: 'none', cursor: 'pointer',
-                        fontFamily: MONO, fontSize: 13, color: MUTED,
+                        fontFamily: SANS, fontSize: 13, color: MUTED,
                     }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
@@ -329,7 +330,7 @@ const PromptDetail: React.FC = () => {
                         {/* Título */}
                         <h1
                             style={{
-                                fontFamily: MONO,
+                                fontFamily: SANS,
                                 fontWeight: 700,
                                 fontSize: 'clamp(1.5rem, 3.2vw, 2.2rem)',
                                 lineHeight: 1.2,
@@ -356,7 +357,7 @@ const PromptDetail: React.FC = () => {
                             <p
                                 style={{
                                     borderLeft: `2px solid ${BORDER}`, paddingLeft: 16, marginBottom: 28,
-                                    fontFamily: MONO, color: MUTED, fontSize: 14.5, lineHeight: 1.75,
+                                    fontFamily: SANS, color: MUTED, fontSize: 14.5, lineHeight: 1.75,
                                 }}
                             >
                                 {prompt.description}
@@ -447,10 +448,10 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                                 <Lock size={22} style={{ color: AMBER }} />
                                             </div>
 
-                                            <h4 style={{ fontFamily: MONO, fontWeight: 700, fontSize: 19, letterSpacing: '-0.01em', marginBottom: 10, color: TEXT }}>
+                                            <h4 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 19, letterSpacing: '-0.01em', marginBottom: 10, color: TEXT }}>
                                                 Contenido premium
                                             </h4>
-                                            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 22 }}>
+                                            <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 22 }}>
                                                 Suscríbete para desbloquear este prompt y los más de 1.000 del directorio.
                                             </p>
 
@@ -458,7 +459,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                                 to="/pricing"
                                                 style={{
                                                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                                                    fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 14,
+                                                    fontFamily: SANS, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 14,
                                                     padding: '13px 24px', borderRadius: 10, textDecoration: 'none',
                                                     marginBottom: 12,
                                                 }}
@@ -468,7 +469,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                             </Link>
                                             <Link
                                                 to={`/login?redirect=/prompts/${id}`}
-                                                style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}
+                                                style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}
                                             >
                                                 Ya tengo cuenta
                                             </Link>
@@ -496,7 +497,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                 style={{ backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 12, padding: '16px 18px' }}
                             >
                                 <AlertCircle size={16} style={{ color: AMBER, flexShrink: 0, marginTop: 2 }} />
-                                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 13, lineHeight: 1.7 }}>
+                                <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13, lineHeight: 1.7 }}>
                                     <strong style={{ color: TEXT, fontWeight: 600 }}>Cómo usarlo: </strong>
                                     reemplaza los parámetros entre{' '}
                                     <code
@@ -522,7 +523,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                             disabled={saving}
                             style={{
                                 width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                fontFamily: MONO,
+                                fontFamily: SANS,
                                 backgroundColor: isSaved ? 'rgba(63,207,142,0.08)' : PANEL,
                                 border: `1px solid ${isSaved ? 'rgba(63,207,142,0.3)' : BORDER}`,
                                 color: isSaved ? GREEN : TEXT,
@@ -548,8 +549,8 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                 ].map((row, i, arr) => (
                                     <React.Fragment key={row.k}>
                                         <div className="flex items-center justify-between gap-3" style={{ padding: '9px 0' }}>
-                                            <span style={{ fontFamily: MONO, fontSize: 12, color: DIM }}>{row.k}</span>
-                                            <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 600, color: row.accent ? AMBER : TEXT }}>
+                                            <span style={{ fontFamily: SANS, fontSize: 12, color: DIM }}>{row.k}</span>
+                                            <span style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: row.accent ? AMBER : TEXT }}>
                                                 {row.v}
                                             </span>
                                         </div>
@@ -567,14 +568,14 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                     borderRadius: 12, padding: '16px 18px', textAlign: 'center',
                                 }}
                             >
-                                <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.65, color: MUTED, marginBottom: 13 }}>
+                                <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.65, color: MUTED, marginBottom: 13 }}>
                                     Desbloquea <strong style={{ fontWeight: 700, color: AMBER }}>+1.000 prompts premium</strong> y el generador con IA.
                                 </p>
                                 <Link
                                     to="/pricing"
                                     style={{
                                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                        fontFamily: MONO, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 13,
+                                        fontFamily: SANS, backgroundColor: TEXT, color: '#000', fontWeight: 700, fontSize: 13,
                                         padding: '11px 18px', borderRadius: 9, textDecoration: 'none',
                                     }}
                                 >
@@ -590,7 +591,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
                                 padding: '10px', borderRadius: 10,
                                 border: `1px solid ${BORDER_SOFT}`, backgroundColor: CARD,
-                                fontFamily: MONO, fontSize: 13, color: MUTED, textDecoration: 'none',
+                                fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none',
                             }}
                         >
                             <ArrowLeft size={13} /> Todos los prompts

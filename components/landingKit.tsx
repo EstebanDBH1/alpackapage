@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Check, X, ChevronRight, ArrowRight } from 'lucide-react';
 
 /* ══════════════════════════════════════════════════════════════
    Kit visual de las landings autocontenidas (/ y /bank-prompts).
-   Paleta clara + Euclid Circular, fuera del tema oscuro de la app.
+   Paleta clara + Hanken Grotesk, fuera del tema oscuro de la app.
    ══════════════════════════════════════════════════════════════ */
 
 /* ─── Paleta ─── */
@@ -19,27 +19,23 @@ export const ACCENT   = '#f5324f';   // rojo de los titulares
 export const YELLOW   = '#ffc93e';   // botón principal
 export const GREEN    = '#16a34a';
 
-export const FONT =
-  '"Euclid Circular A", "Euclid Circular B", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+/* Misma pareja que el resto del sitio: Hanken Grotesk para leer,
+   JetBrains Mono solo para lo técnico. */
+export const SANS =
+  '"Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+export const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+export const FONT = SANS;
 
-/* Euclid Circular no está en Google Fonts: se carga solo en estas rutas. */
-export const useEuclidFont = () => {
-  useEffect(() => {
-    const id = 'euclid-circular-font';
-    if (document.getElementById(id)) return;
-    const link = document.createElement('link');
-    link.id = id;
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.cdnfonts.com/css/euclid-circular-a';
-    document.head.appendChild(link);
-  }, []);
-};
+/* Antes cargaba Euclid Circular desde un CDN; ahora la sans es Hanken
+   Grotesk y viene con el resto de fuentes desde index.html. */
+export const useEuclidFont = () => { /* no-op */ };
 
-/* Estilos de la cápsula: fuerza la tipografía dentro de `.bp-scope`
-   (el preflight de Tailwind aplica Geist Mono al body). */
+/* Estilos de la cápsula: fija la tipografía dentro de `.bp-scope`
+   (el preflight de Tailwind aplica su propia familia al body). */
 export const LandingStyles: React.FC = () => (
   <style>{`
-    .bp-scope, .bp-scope * { font-family: ${FONT}; }
+    .bp-scope, .bp-scope * { font-family: ${SANS}; }
+    .bp-scope .font-mono, .bp-scope code, .bp-scope pre, .bp-scope kbd { font-family: ${MONO}; }
     .bp-scope ::selection { background: ${YELLOW}; color: #1a1500; }
     @keyframes bpGlow {
       0%,100% { opacity: .55; transform: scale(1); }
@@ -63,7 +59,7 @@ export const Eyebrow: React.FC<{
     style={{ backgroundColor: bg, border: `1px solid ${border}`, padding: '5px 13px', marginBottom: 18 }}
   >
     <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: color, flexShrink: 0 }} />
-    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color }}>
+    <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color }}>
       {children}
     </span>
   </div>

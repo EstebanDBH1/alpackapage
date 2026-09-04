@@ -8,7 +8,7 @@ import {
 } from './landingKit';
 
 /* Header de la app — mismo lenguaje visual que las landings
-   (/ y /bank-prompts): fondo claro, Euclid Circular y CTA amarillo. */
+   (/ y /bank-prompts): fondo claro, Hanken Grotesk y CTA amarillo. */
 
 const LINKS = [
   { to: '/prompts', label: 'Prompts' },

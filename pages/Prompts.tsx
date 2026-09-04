@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
+import { hasLibraryAccess } from '../lib/access';
 import { getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
@@ -66,7 +67,7 @@ const Prompts: React.FC = () => {
                 const { data: sub } = await supabase
                     .from('subscriptions').select('subscription_status')
                     .eq('customer_id', user.id).maybeSingle();
-                if (sub && (sub.subscription_status === 'active' || sub.subscription_status === 'trialing')) {
+                if (hasLibraryAccess(sub?.subscription_status)) {
                     setIsSubscribed(true);
                 }
             }
