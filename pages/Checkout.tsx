@@ -30,10 +30,10 @@ const MONTHLY_FEATURES = [
 
 const LIFETIME_FEATURES = [
     'Acceso ilimitado a más de 1.000 prompts',
+    'Generador de prompts con IA — 10 al día',
     'Todas las actualizaciones futuras incluidas',
     'Guarda tus prompts favoritos',
     'Un solo pago — nunca vuelves a pagar',
-    'Sin renovaciones ni cancelaciones que gestionar',
 ];
 
 const PLANS = {

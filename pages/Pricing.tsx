@@ -22,7 +22,7 @@ const FEATURES = [
 
 const FAQ_DATA = [
     { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $7 USD al mes, desbloqueas el acceso total a nuestra librería y el generador de prompts con IA (hasta 10 prompts a medida al día). No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
-    { question: '¿Hay opción de pagar una sola vez?', answer: 'Sí. Por $47.99 USD en un único pago te quedas la biblioteca completa de forma permanente, con todas las actualizaciones futuras incluidas y sin volver a pagar nunca. La única diferencia con la mensual es que el generador de prompts con IA no entra: ese consume recursos cada vez que lo usas, así que se queda en la suscripción.' },
+    { question: '¿Hay opción de pagar una sola vez?', answer: 'Sí. Por $47.99 USD en un único pago te quedas todo de forma permanente: la biblioteca completa, el generador de prompts con IA y todas las actualizaciones futuras, sin volver a pagar nunca. Es exactamente lo mismo que incluye la mensual, pero sin renovaciones. El generador mantiene el mismo límite de 10 prompts al día que tienen los suscriptores.' },
     { question: '¿Realmente funcionan estos prompts?', answer: 'Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento.' },
     { question: '¿Con qué modelos de IA puedo usarlos?', answer: 'Están diseñados para brillar en los modelos más potentes como GPT-5, Claude y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E.' },
     { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado.' },
@@ -298,9 +298,8 @@ const Pricing: React.FC = () => {
                             ¿Prefieres no pagar todos los meses?
                         </p>
                         <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.7, marginBottom: 18 }}>
-                            Paga una sola vez y quédate la biblioteca completa para siempre, con todas las
-                            actualizaciones futuras incluidas. No incluye el generador con IA, que sigue siendo
-                            parte de la suscripción mensual.
+                            Paga una sola vez y quédatelo todo para siempre: la biblioteca completa, el generador
+                            con IA y todas las actualizaciones futuras. Sin renovaciones ni cargos posteriores.
                         </p>
 
                         <button

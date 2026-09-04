@@ -105,7 +105,10 @@ Deno.serve(async (req) => {
             .eq('customer_id', user.id)
             .maybeSingle();
 
-        const isSubscribed = !!(sub && ['active', 'trialing'].includes(sub.subscription_status));
+        // 'lifetime' es el pago único de $47.99, que también incluye el generador.
+        // El coste por uso lo acota el límite diario de más abajo, igual que a
+        // los suscriptores. Espejo de GENERATOR_STATUSES en lib/access.ts.
+        const isSubscribed = !!(sub && ['active', 'trialing', 'lifetime'].includes(sub.subscription_status));
         if (!isSubscribed) {
             return json({ error: 'Necesitas una suscripción activa para usar el generador' }, 403);
         }

@@ -335,10 +335,10 @@ const Dashboard: React.FC = () => {
                                 >
                                     <Check size={15} strokeWidth={3} style={{ color: GREEN, flexShrink: 0, marginTop: 2 }} />
                                     <p style={{ fontSize: 14, lineHeight: 1.6, color: TEXT_MED }}>
-                                        Tienes la biblioteca completa de por vida, con todas las actualizaciones
-                                        futuras incluidas. No hay nada que renovar ni cancelar.{' '}
+                                        Tienes la biblioteca completa y el generador con IA de por vida, con todas
+                                        las actualizaciones futuras incluidas. No hay nada que renovar ni cancelar.{' '}
                                         <span style={{ color: TEXT_DIM }}>
-                                            El generador con IA no entra en el vitalicio; requiere la suscripción mensual.
+                                            El generador mantiene el límite de 10 prompts al día.
                                         </span>
                                     </p>
                                 </div>

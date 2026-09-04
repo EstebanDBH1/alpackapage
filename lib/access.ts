@@ -8,10 +8,10 @@
    function `generate-prompt`. Si algún día un plan da uno y no el
    otro, este es el sitio donde se refleja.
 
-   `lifetime` es el pago único de $47.99: biblioteca para siempre,
-   sin generador. Se queda fuera de GENERATOR_STATUSES a propósito —
-   el generador tiene coste marginal por uso (llamadas a Gemini) y no
-   se sostiene contra un pago único.
+   `lifetime` es el pago único de $47.99: biblioteca Y generador,
+   para siempre. El coste por uso del generador lo acota el límite de
+   10 generaciones al día que aplica la edge function, el mismo que a
+   los suscriptores mensuales.
 
    Esto es solo UI: la frontera real está en el servidor. Si cambias
    una lista aquí, cambia también la de allí o la interfaz mentirá.
@@ -21,7 +21,7 @@
    ══════════════════════════════════════════════════════════════ */
 
 export const LIBRARY_STATUSES = ['active', 'trialing', 'lifetime'] as const;
-export const GENERATOR_STATUSES = ['active', 'trialing'] as const;
+export const GENERATOR_STATUSES = ['active', 'trialing', 'lifetime'] as const;
 
 type Status = string | null | undefined;
 
