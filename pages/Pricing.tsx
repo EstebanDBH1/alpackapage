@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// `Infinity` se importa con alias: el nombre sin alias taparía el global de JS.
-import { Check, Infinity as InfinityIcon, Lock, Plus, Shield, Sparkles, Wand2 } from 'lucide-react';
+import { Check, Infinity as InfinityIcon, Lock, Plus, RefreshCw, Shield, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { hasLibraryAccess } from '../lib/access';
@@ -8,41 +7,84 @@ import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
 } from '../components/darkKit';
 
-/* Precios — mismo lenguaje visual oscuro estilo skills.sh que el resto de la app. */
+/* Precios — dos planes con el mismo peso visual. Antes la mensual tenía
+   halo, borde degradado y precio gigante mientras el pago único era una
+   franja gris debajo: parecían de dos categorías distintas cuando en
+   realidad dan exactamente lo mismo y solo cambia la forma de pagar. */
 
-const FEATURES = [
-    'Acceso ilimitado a más de 1.000 prompts',
-    'Generador de prompts con IA — hasta 10 prompts al día',
-    'Actualizaciones constantes con los últimos modelos',
-    'Búsqueda técnica avanzada por categoría',
+/* Los dos planes incluyen el mismo contenido: la diferencia está abajo,
+   en las condiciones. Se describe sin cifras de catálogo para que el
+   texto no caduque cada vez que crece la biblioteca. */
+const INCLUDED = [
+    'Todo el catálogo de prompts premium',
+    'Generador de prompts con IA — 10 al día',
+    'Prompts nuevos cada semana',
+    'Búsqueda y filtros por categoría',
     'Guarda tus prompts favoritos',
-    'Soporte prioritario',
-    'Cancela cuando quieras, sin ataduras',
+];
+
+type Plan = {
+    id: 'monthly' | 'lifetime';
+    tag: string;
+    name: string;
+    price: string;
+    unit: string;
+    note: string;
+    perks: string[];
+    cta: string;
+    featured: boolean;
+    ribbon?: string;
+};
+
+const PLANS: Plan[] = [
+    {
+        id: 'monthly',
+        tag: 'Suscripción',
+        name: 'Mensual',
+        price: '$7',
+        unit: 'USD / mes',
+        note: 'Menos de $0,24 al día. Cancela cuando quieras.',
+        perks: ['Cancela con un clic, sin permanencia', 'Mantienes el acceso hasta fin de mes'],
+        cta: 'Suscribirme',
+        featured: false,
+    },
+    {
+        id: 'lifetime',
+        tag: 'Pago único',
+        name: 'Vitalicio',
+        price: '$47.99',
+        unit: 'USD una sola vez',
+        note: 'Lo que cuestan 7 meses de suscripción, y es para siempre.',
+        perks: ['Un solo pago, nunca vuelves a pagar', 'Todas las actualizaciones futuras incluidas'],
+        cta: 'Comprar acceso vitalicio',
+        featured: true,
+        ribbon: 'Mejor valor',
+    },
 ];
 
 const FAQ_DATA = [
-    { question: '¿Cuál es el costo y qué incluye?', answer: 'Por solo $7 USD al mes, desbloqueas el acceso total a nuestra librería y el generador de prompts con IA (hasta 10 prompts a medida al día). No hay letras chiquitas: tienes todos los prompts premium, las actualizaciones semanales y las nuevas categorías sin pagar un centavo más.' },
-    { question: '¿Hay opción de pagar una sola vez?', answer: 'Sí. Por $47.99 USD en un único pago te quedas todo de forma permanente: la biblioteca completa, el generador de prompts con IA y todas las actualizaciones futuras, sin volver a pagar nunca. Es exactamente lo mismo que incluye la mensual, pero sin renovaciones. El generador mantiene el mismo límite de 10 prompts al día que tienen los suscriptores.' },
+    { question: '¿Cuál es la diferencia entre los dos planes?', answer: 'Ninguna en cuanto a lo que recibes: los dos dan el catálogo completo, el generador con IA y las actualizaciones. La única diferencia es cómo pagas. La mensual son $7 al mes y la cancelas cuando quieras; el vitalicio es un único pago de $47.99 y ya no vuelves a pagar nunca. Si piensas quedarte más de siete meses, sale a cuenta el vitalicio.' },
     { question: '¿Realmente funcionan estos prompts?', answer: 'Totalmente. No son frases al azar; cada uno ha sido testeado con ingeniería de prompts para asegurar que la IA te entregue resultados profesionales, estructurados y útiles desde el primer intento.' },
     { question: '¿Con qué modelos de IA puedo usarlos?', answer: 'Están diseñados para brillar en los modelos más potentes como GPT-5, Claude y Gemini. También tenemos secciones dedicadas para herramientas de imagen como Midjourney y DALL-E.' },
-    { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado.' },
+    { question: '¿Qué es el generador de prompts?', answer: 'Le describes en una frase lo que quieres lograr y te escribe un prompt a medida, con la misma estructura que los del catálogo. Puedes generar hasta 10 al día, y entra en los dos planes.' },
+    { question: '¿Puedo cancelar si ya no los necesito?', answer: 'Claro, aquí mandas tú. Puedes cancelar tu suscripción con un solo clic desde tu perfil en cualquier momento. Seguirás teniendo acceso premium hasta que termine tu mes pagado. El plan vitalicio no hace falta cancelarlo: no se renueva.' },
     { question: '¿Actualizan el banco de prompts?', answer: '¡Cada semana! Nuestro equipo de expertos añade nuevos prompts basados en las tendencias del mercado y las peticiones de nuestra comunidad para que nunca te quedes atrás.' },
     { question: '¿Puedo sugerir un prompt que no esté?', answer: '¡Nos encantaría! Aunque nuestra curaduría es interna para mantener la calidad premium, escuchamos a nuestros suscriptores. Si necesitas un prompt específico, escríbenos y nuestro equipo lo diseñará para la próxima actualización.' },
 ];
 
 const TRUST = [
     {
-        icon: <Sparkles size={17} style={{ color: AMBER }} />,
+        icon: <Sparkles size={16} style={{ color: AMBER }} />,
         chipBg: 'rgba(255,178,36,0.08)', chipBd: 'rgba(255,178,36,0.28)',
         title: 'Sin tasas ocultas', desc: 'El precio es final. Sin créditos, sin recargas, sin sorpresas en tu factura.',
     },
     {
-        icon: <Wand2 size={17} style={{ color: '#b39dff' }} />,
+        icon: <RefreshCw size={16} style={{ color: '#b39dff' }} />,
         chipBg: 'rgba(139,92,246,0.1)', chipBd: 'rgba(139,92,246,0.3)',
         title: 'Flexibilidad total', desc: 'Cancela con un clic. Mantienes el acceso hasta que termine tu periodo.',
     },
     {
-        icon: <Lock size={17} style={{ color: GREEN }} />,
+        icon: <Lock size={16} style={{ color: GREEN }} />,
         chipBg: 'rgba(63,207,142,0.08)', chipBd: 'rgba(63,207,142,0.3)',
         title: 'Pago seguro', desc: 'Checkout encriptado vía Paddle. Tus datos nunca tocan nuestros servidores.',
     },
@@ -74,266 +116,209 @@ const Pricing: React.FC = () => {
 
     // El pago vive en /checkout (Paddle embebido dentro de la app).
     // `plan=lifetime` abre el pago único; sin parámetro, la mensual.
-    const goToCheckout = (plan?: 'lifetime') => {
+    const goToCheckout = (plan: Plan['id']) => {
         if (isSubscribed) return;
-        const target = plan ? `/checkout?plan=${plan}` : '/checkout';
+        const target = plan === 'lifetime' ? '/checkout?plan=lifetime' : '/checkout';
         if (!user) return navigate(`/login?redirect=${encodeURIComponent(target)}`);
         navigate(target);
     };
 
-    const handleJoinClick = () => goToCheckout();
-
     return (
         <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
-
-            <main className="mx-auto max-w-3xl px-5 sm:px-8 py-14 md:py-16">
+            <main className="mx-auto max-w-5xl px-5 sm:px-8 py-14 md:py-16">
 
                 {/* ── Hero ─────────────────────────────────────────────── */}
-                <div className="mb-10 text-center">
-                    <p
-                        style={{
-                            fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
-                            textTransform: 'uppercase', color: DIM, marginBottom: 14,
-                        }}
-                    >
+                <div className="mb-11 text-center">
+                    <p style={{
+                        fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
+                        textTransform: 'uppercase', color: DIM, marginBottom: 14,
+                    }}>
                         Membresía premium
                     </p>
-
-                    <h1
-                        style={{
-                            fontFamily: SANS,
-                            fontWeight: 700,
-                            fontSize: 'clamp(1.7rem, 3.6vw, 2.5rem)',
-                            lineHeight: 1.15,
-                            letterSpacing: '-0.02em',
-                            marginBottom: 14,
-                            color: TEXT,
-                        }}
-                    >
-                        Un plan. <span style={{ color: AMBER }}>Acceso total.</span>
+                    <h1 style={{
+                        fontWeight: 700, fontSize: 'clamp(1.8rem, 3.8vw, 2.6rem)',
+                        lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: 14,
+                        textWrap: 'balance',
+                    }}>
+                        Mismo acceso. <span style={{ color: AMBER }}>Tú eliges cómo pagarlo.</span>
                     </h1>
-                    <p style={{ fontFamily: SANS, color: MUTED, fontSize: 14.5, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
-                        Desbloquea todo el directorio de prompts y el generador con IA por lo que cuesta un café al mes.
+                    <p style={{ color: MUTED, fontSize: 15, lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>
+                        Los dos planes incluyen exactamente lo mismo: el catálogo completo y el generador
+                        con IA. La única diferencia es si prefieres pagar cada mes o una sola vez.
                     </p>
                 </div>
 
-                {/* ── Card de precio ───────────────────────────────────── */}
-                <div className="relative mx-auto mb-16" style={{ maxWidth: 560 }}>
-
-                    {/* Halo ambiental detrás de la card */}
-                    <div
-                        aria-hidden="true"
-                        style={{
-                            position: 'absolute', inset: '-70px -40px', pointerEvents: 'none', zIndex: 0,
-                            background: 'radial-gradient(60% 45% at 50% 0%, rgba(255,178,36,0.13), transparent 72%)',
-                        }}
-                    />
-
-                    {/* Borde degradado: wrapper de 1px que envuelve la card */}
-                    <div
-                        className="relative"
-                        style={{
-                            zIndex: 1, padding: 1, borderRadius: 18,
-                            background: 'linear-gradient(160deg, rgba(255,178,36,0.55), rgba(255,178,36,0.12) 30%, #262626 62%, #1a1a1a)',
-                            boxShadow: '0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.4)',
-                        }}
-                    >
-                        <div style={{ borderRadius: 17, overflow: 'hidden', backgroundColor: CARD }}>
-
-                            {/* Cabecera: rejilla sutil + etiqueta */}
+                {/* ── Los dos planes ───────────────────────────────────── */}
+                <div className="grid gap-4 md:grid-cols-2" style={{ marginBottom: 22 }}>
+                    {PLANS.map(plan => (
+                        <div
+                            key={plan.id}
+                            className="relative flex flex-col"
+                            style={{
+                                borderRadius: 18,
+                                padding: 1,
+                                background: plan.featured
+                                    ? 'linear-gradient(160deg, rgba(255,178,36,0.5), rgba(255,178,36,0.12) 34%, #232323 66%, #1a1a1a)'
+                                    : BORDER_SOFT,
+                                boxShadow: plan.featured ? '0 20px 56px rgba(0,0,0,0.5)' : 'none',
+                            }}
+                        >
                             <div
-                                className="relative"
-                                style={{
-                                    padding: '26px 26px 24px',
-                                    borderBottom: `1px solid ${BORDER_SOFT}`,
-                                    background: `
-                                        linear-gradient(180deg, rgba(255,178,36,0.05), transparent 85%),
-                                        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(255,255,255,0.022) 23px, rgba(255,255,255,0.022) 24px),
-                                        repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(255,255,255,0.022) 23px, rgba(255,255,255,0.022) 24px)
-                                    `,
-                                }}
+                                className="flex flex-1 flex-col"
+                                style={{ borderRadius: 17, backgroundColor: CARD, overflow: 'hidden' }}
                             >
-                                <div className="flex items-start justify-between gap-4">
-                                    <div
-                                        className="inline-flex items-center gap-2 rounded-full"
-                                        style={{
-                                            backgroundColor: 'rgba(255,178,36,0.09)', border: '1px solid rgba(255,178,36,0.32)',
-                                            padding: '5px 13px',
-                                        }}
-                                    >
-                                        <Sparkles size={11} style={{ color: AMBER }} />
-                                        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: AMBER }}>
-                                            Membresía pro
+                                {/* Cabecera */}
+                                <div style={{ padding: '24px 24px 22px', borderBottom: `1px solid ${BORDER_SOFT}` }}>
+                                    <div className="flex items-center justify-between gap-3" style={{ marginBottom: 18 }}>
+                                        <span style={{
+                                            fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
+                                            textTransform: 'uppercase',
+                                            color: plan.featured ? AMBER : DIM,
+                                        }}>
+                                            {plan.tag}
+                                        </span>
+                                        {plan.ribbon && (
+                                            <span
+                                                className="inline-flex items-center gap-1.5"
+                                                style={{
+                                                    backgroundColor: 'rgba(255,178,36,0.1)',
+                                                    border: '1px solid rgba(255,178,36,0.32)',
+                                                    borderRadius: 100, padding: '4px 11px',
+                                                    fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
+                                                    letterSpacing: '0.12em', textTransform: 'uppercase', color: AMBER,
+                                                }}
+                                            >
+                                                <InfinityIcon size={10} /> {plan.ribbon}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <p style={{ fontSize: 15, fontWeight: 700, color: TEXT, marginBottom: 10 }}>
+                                        {plan.name}
+                                    </p>
+
+                                    <div className="flex items-end gap-2.5" style={{ marginBottom: 10 }}>
+                                        <span style={{
+                                            fontFamily: MONO, fontWeight: 700, fontSize: 46, lineHeight: 0.95,
+                                            letterSpacing: '-0.04em', color: TEXT,
+                                        }}>
+                                            {plan.price}
+                                        </span>
+                                        <span style={{ fontFamily: MONO, fontSize: 12.5, color: MUTED, paddingBottom: 4 }}>
+                                            {plan.unit}
                                         </span>
                                     </div>
 
-                                    <span
-                                        style={{
-                                            fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: '0.14em',
-                                            textTransform: 'uppercase', color: DIM, whiteSpace: 'nowrap', paddingTop: 6,
-                                        }}
-                                    >
-                                        Plan único
-                                    </span>
+                                    <p style={{ fontSize: 12.5, color: DIM, lineHeight: 1.6, minHeight: 34 }}>
+                                        {plan.note}
+                                    </p>
                                 </div>
 
-                                {/* Precio */}
-                                <div className="flex items-end gap-3" style={{ marginTop: 22, marginBottom: 8 }}>
-                                    <span
-                                        style={{
-                                            fontFamily: MONO, fontWeight: 700, fontSize: 62, lineHeight: 0.95,
-                                            letterSpacing: '-0.045em',
-                                            background: 'linear-gradient(165deg, #ffffff 25%, #9a9a9a)',
-                                            WebkitBackgroundClip: 'text', backgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
-                                        }}
-                                    >
-                                        $7
-                                    </span>
-                                    <span className="flex flex-col" style={{ paddingBottom: 5 }}>
-                                        <span style={{ fontFamily: MONO, fontSize: 13.5, color: MUTED, lineHeight: 1.3 }}>USD / mes</span>
-                                        <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM, lineHeight: 1.3 }}>menos de $0,24 al día</span>
-                                    </span>
-                                </div>
+                                {/* Incluido */}
+                                <div className="flex flex-1 flex-col" style={{ padding: '22px 24px 24px' }}>
+                                    <p style={{
+                                        fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.18em',
+                                        textTransform: 'uppercase', color: DIM, marginBottom: 15,
+                                    }}>
+                                        Incluido
+                                    </p>
 
-                                <p style={{ fontFamily: SANS, color: DIM, fontSize: 12, lineHeight: 1.6 }}>
-                                    Facturación mensual · cancela cuando quieras, sin dramas.
-                                </p>
-                            </div>
-
-                            {/* Cuerpo: qué incluye */}
-                            <div style={{ padding: '24px 26px 26px' }}>
-                                <p
-                                    style={{
-                                        fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.18em',
-                                        textTransform: 'uppercase', color: DIM, marginBottom: 16,
-                                    }}
-                                >
-                                    Incluido
-                                </p>
-
-                                <div className="flex flex-col gap-3 mb-7">
-                                    {FEATURES.map(feature => (
-                                        <div key={feature} className="flex items-start gap-3">
-                                            <span
-                                                style={{
-                                                    width: 17, height: 17, borderRadius: 5, flexShrink: 0, marginTop: 1,
-                                                    backgroundColor: 'rgba(63,207,142,0.1)', border: '1px solid rgba(63,207,142,0.3)',
+                                    <div className="flex flex-col gap-2.5" style={{ marginBottom: 16 }}>
+                                        {INCLUDED.map(item => (
+                                            <div key={item} className="flex items-start gap-2.5">
+                                                <span style={{
+                                                    width: 16, height: 16, borderRadius: 5, flexShrink: 0, marginTop: 1,
+                                                    backgroundColor: 'rgba(63,207,142,0.1)',
+                                                    border: '1px solid rgba(63,207,142,0.3)',
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                }}
-                                            >
-                                                <Check size={10} strokeWidth={3.2} style={{ color: GREEN }} />
-                                            </span>
-                                            <span style={{ fontFamily: SANS, fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{feature}</span>
-                                        </div>
-                                    ))}
+                                                }}>
+                                                    <Check size={9} strokeWidth={3.2} style={{ color: GREEN }} />
+                                                </span>
+                                                <span style={{ fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Lo propio de cada plan */}
+                                    <div
+                                        className="flex flex-col gap-2.5"
+                                        style={{ borderTop: `1px solid ${BORDER_SOFT}`, paddingTop: 16, marginBottom: 22 }}
+                                    >
+                                        {plan.perks.map(perk => (
+                                            <div key={perk} className="flex items-start gap-2.5">
+                                                <span style={{
+                                                    width: 16, height: 16, borderRadius: 5, flexShrink: 0, marginTop: 1,
+                                                    backgroundColor: 'rgba(255,178,36,0.09)',
+                                                    border: '1px solid rgba(255,178,36,0.28)',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                }}>
+                                                    <Check size={9} strokeWidth={3.2} style={{ color: AMBER }} />
+                                                </span>
+                                                <span style={{ fontSize: 12.5, color: TEXT, lineHeight: 1.5, fontWeight: 500 }}>
+                                                    {perk}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* El botón queda abajo del todo en las dos tarjetas */}
+                                    <button
+                                        onClick={() => goToCheckout(plan.id)}
+                                        disabled={isSubscribed}
+                                        className="mt-auto w-full"
+                                        style={{
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontFamily: SANS, fontWeight: 700, fontSize: 14,
+                                            padding: '14px 22px', borderRadius: 10,
+                                            cursor: isSubscribed ? 'default' : 'pointer',
+                                            transition: 'transform .15s, box-shadow .15s, opacity .15s',
+                                            ...(isSubscribed
+                                                ? { background: PANEL, border: `1px solid ${BORDER}`, color: MUTED }
+                                                : plan.featured
+                                                    ? { background: 'linear-gradient(180deg, #ffffff, #d8d8d8)', border: '1px solid rgba(255,255,255,0.9)', color: '#000', boxShadow: '0 8px 26px rgba(255,255,255,0.1)' }
+                                                    : { background: 'transparent', border: `1px solid ${BORDER}`, color: TEXT }),
+                                        }}
+                                        onMouseEnter={e => {
+                                            if (isSubscribed) return;
+                                            const el = e.currentTarget as HTMLElement;
+                                            el.style.transform = 'translateY(-1px)';
+                                            if (!plan.featured) el.style.borderColor = '#3a3a3a';
+                                        }}
+                                        onMouseLeave={e => {
+                                            const el = e.currentTarget as HTMLElement;
+                                            el.style.transform = 'translateY(0)';
+                                            if (!plan.featured) el.style.borderColor = BORDER;
+                                        }}
+                                    >
+                                        {isSubscribed ? 'Ya tienes acceso' : plan.cta}
+                                    </button>
                                 </div>
-
-                                <button
-                                    onClick={handleJoinClick}
-                                    disabled={isSubscribed}
-                                    style={{
-                                        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                                        fontFamily: SANS,
-                                        background: isSubscribed ? PANEL : 'linear-gradient(180deg, #ffffff, #d8d8d8)',
-                                        border: isSubscribed ? `1px solid ${BORDER}` : '1px solid rgba(255,255,255,0.9)',
-                                        color: isSubscribed ? MUTED : '#000',
-                                        fontWeight: 700, fontSize: 14.5, padding: '15px 24px', borderRadius: 10,
-                                        cursor: isSubscribed ? 'default' : 'pointer',
-                                        boxShadow: isSubscribed ? 'none' : '0 8px 26px rgba(255,255,255,0.12)',
-                                        transition: 'transform .15s, box-shadow .15s',
-                                    }}
-                                    onMouseEnter={e => {
-                                        if (isSubscribed) return;
-                                        const el = e.currentTarget as HTMLElement;
-                                        el.style.transform = 'translateY(-1px)';
-                                        el.style.boxShadow = '0 12px 34px rgba(255,255,255,0.2)';
-                                    }}
-                                    onMouseLeave={e => {
-                                        const el = e.currentTarget as HTMLElement;
-                                        el.style.transform = 'translateY(0)';
-                                        el.style.boxShadow = isSubscribed ? 'none' : '0 8px 26px rgba(255,255,255,0.12)';
-                                    }}
-                                >
-                                    {isSubscribed ? 'Plan actual' : (user ? 'Suscribirme ahora' : 'Unirme al directorio')}
-                                </button>
-                            </div>
-
-                            {/* Pie: pago seguro */}
-                            <div
-                                className="flex items-center justify-center gap-2"
-                                style={{ backgroundColor: PANEL, borderTop: `1px solid ${BORDER_SOFT}`, padding: '12px 24px' }}
-                            >
-                                <Shield size={13} style={{ color: DIM }} />
-                                <span style={{ fontFamily: SANS, fontSize: 11.5, color: MUTED }}>Pago seguro vía Paddle · SSL 256-bit</span>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
 
-                {/* ── Alternativa: pago único vitalicio ────────────────── */}
-                <div className="mx-auto mb-16" style={{ maxWidth: 560, marginTop: -32 }}>
-                    <div
-                        style={{
-                            backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14,
-                            padding: '22px 24px',
-                        }}
-                    >
-                        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                            <div className="flex items-center gap-2.5">
-                                <InfinityIcon size={15} style={{ color: AMBER }} />
-                                <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: AMBER }}>
-                                    Pago único
-                                </span>
-                            </div>
-                            <div className="flex items-baseline gap-1.5">
-                                <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 26, letterSpacing: '-0.03em', color: TEXT }}>
-                                    $47.99
-                                </span>
-                                <span style={{ fontFamily: MONO, fontSize: 11.5, color: DIM }}>USD una vez</span>
-                            </div>
-                        </div>
-
-                        <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14.5, color: TEXT, marginBottom: 7, letterSpacing: '-0.01em' }}>
-                            ¿Prefieres no pagar todos los meses?
-                        </p>
-                        <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12.5, lineHeight: 1.7, marginBottom: 18 }}>
-                            Paga una sola vez y quédatelo todo para siempre: la biblioteca completa, el generador
-                            con IA y todas las actualizaciones futuras. Sin renovaciones ni cargos posteriores.
-                        </p>
-
-                        <button
-                            onClick={() => goToCheckout('lifetime')}
-                            disabled={isSubscribed}
-                            style={{
-                                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                fontFamily: SANS, backgroundColor: 'transparent',
-                                border: `1px solid ${isSubscribed ? BORDER : 'rgba(255,178,36,0.42)'}`,
-                                color: isSubscribed ? MUTED : AMBER,
-                                fontWeight: 700, fontSize: 13.5, padding: '13px 22px', borderRadius: 10,
-                                cursor: isSubscribed ? 'default' : 'pointer',
-                            }}
-                        >
-                            {isSubscribed ? 'Ya tienes acceso' : 'Comprar acceso vitalicio'}
-                        </button>
-                    </div>
+                {/* Pago seguro */}
+                <div className="flex items-center justify-center gap-2" style={{ marginBottom: 56 }}>
+                    <Shield size={13} style={{ color: DIM }} />
+                    <span style={{ fontSize: 11.5, color: MUTED }}>
+                        Pago seguro vía Paddle · SSL 256-bit · Sin renovaciones ocultas
+                    </span>
                 </div>
 
                 {/* ── Garantías ────────────────────────────────────────── */}
                 <div className="mb-16 grid grid-cols-1 gap-3 sm:grid-cols-3">
                     {TRUST.map(t => (
                         <div key={t.title} style={{ backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 12, padding: '20px 18px' }}>
-                            <div
-                                style={{
-                                    width: 38, height: 38, borderRadius: 11, marginBottom: 14,
-                                    backgroundColor: t.chipBg, border: `1px solid ${t.chipBd}`,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                }}
-                            >
+                            <div style={{
+                                width: 36, height: 36, borderRadius: 11, marginBottom: 14,
+                                backgroundColor: t.chipBg, border: `1px solid ${t.chipBd}`,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
                                 {t.icon}
                             </div>
-                            <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 13.5, color: TEXT, marginBottom: 6, letterSpacing: '-0.01em' }}>{t.title}</p>
-                            <p style={{ fontFamily: SANS, color: MUTED, fontSize: 12, lineHeight: 1.65 }}>{t.desc}</p>
+                            <p style={{ fontWeight: 700, fontSize: 13.5, color: TEXT, marginBottom: 6, letterSpacing: '-0.01em' }}>{t.title}</p>
+                            <p style={{ color: MUTED, fontSize: 12, lineHeight: 1.65 }}>{t.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -341,15 +326,13 @@ const Pricing: React.FC = () => {
                 {/* ── FAQ ──────────────────────────────────────────────── */}
                 <div>
                     <div className="mb-8 text-center">
-                        <p
-                            style={{
-                                fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
-                                textTransform: 'uppercase', color: DIM, marginBottom: 12,
-                            }}
-                        >
+                        <p style={{
+                            fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
+                            textTransform: 'uppercase', color: DIM, marginBottom: 12,
+                        }}>
                             Preguntas frecuentes
                         </p>
-                        <h2 style={{ fontFamily: SANS, fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25, color: TEXT }}>
+                        <h2 style={{ fontWeight: 700, fontSize: 'clamp(1.3rem, 2.6vw, 1.7rem)', letterSpacing: '-0.02em', lineHeight: 1.25 }}>
                             Todo lo que necesitas saber.
                         </h2>
                     </div>
@@ -362,31 +345,22 @@ const Pricing: React.FC = () => {
                                 <div key={index} style={{ borderBottom: last ? 'none' : `1px solid ${BORDER_SOFT}` }}>
                                     <button
                                         onClick={() => setOpenIndex(open ? null : index)}
+                                        aria-expanded={open}
                                         style={{
                                             width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                             gap: 16, padding: '16px 18px', background: 'none', border: 'none',
                                             cursor: 'pointer', textAlign: 'left',
                                         }}
                                     >
-                                        <span style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT, lineHeight: 1.5 }}>{item.question}</span>
+                                        <span style={{ fontSize: 13.5, fontWeight: 600, color: TEXT, lineHeight: 1.5 }}>{item.question}</span>
                                         <Plus
                                             size={16}
-                                            style={{
-                                                color: DIM, flexShrink: 0,
-                                                transition: 'transform .25s',
-                                                transform: open ? 'rotate(45deg)' : 'none',
-                                            }}
+                                            style={{ color: DIM, flexShrink: 0, transition: 'transform .25s', transform: open ? 'rotate(45deg)' : 'none' }}
                                         />
                                     </button>
-                                    <div
-                                        style={{
-                                            display: 'grid',
-                                            gridTemplateRows: open ? '1fr' : '0fr',
-                                            transition: 'grid-template-rows .25s ease',
-                                        }}
-                                    >
+                                    <div style={{ display: 'grid', gridTemplateRows: open ? '1fr' : '0fr', transition: 'grid-template-rows .25s ease' }}>
                                         <div style={{ overflow: 'hidden' }}>
-                                            <p style={{ padding: '0 18px 17px', fontFamily: SANS, color: MUTED, fontSize: 13, lineHeight: 1.75 }}>
+                                            <p style={{ padding: '0 18px 17px', color: MUTED, fontSize: 13, lineHeight: 1.75 }}>
                                                 {item.answer}
                                             </p>
                                         </div>

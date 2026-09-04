@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import { DarkHeader, DarkFooter } from './components/darkKit';
-import GeneratorBanner from './components/GeneratorBanner';
+import GeneratorAnnouncement from './components/GeneratorAnnouncement';
 
 // Code-splitting por ruta: cada página se descarga solo cuando se visita.
 const Login = React.lazy(() => import('./pages/Login'));
@@ -91,9 +91,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen antialiased" style={{ backgroundColor: '#000000' }}>
       <DarkHeader />
-      {/* Anuncio propio del generador: sale en todas las rutas del layout
-          compartido y se autolimita (ver GeneratorBanner). */}
-      <GeneratorBanner />
+      {/* Anuncio "what's new" del generador: se muestra una sola vez
+          por navegador y no vuelve (ver GeneratorAnnouncement). */}
+      <GeneratorAnnouncement />
       <main className="flex-grow">
         <PageTransition>{children}</PageTransition>
       </main>
