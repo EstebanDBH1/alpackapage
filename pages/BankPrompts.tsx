@@ -37,7 +37,13 @@ const INK_2 = '#1c1c1a';
 const MUTED = '#6d6b64';
 const FAINT = '#a3a097';
 const LINE = 'rgba(18,18,17,0.12)';
-const ACCENT = '#f2622e';
+/* Amarillo de la marca (el de la página de ventas anterior). Sobre el papel
+   no se lee como color de texto, así que ahí va como subrayado de rotulador
+   detrás de texto oscuro; como relleno (botones, chips) y sobre tinta, tal cual. */
+const ACCENT = '#ffc93e';
+const ON_ACCENT = '#1a1500';
+const ACCENT_DEEP = '#a87600';   // acentos pequeños de texto sobre papel
+const MARKER = `linear-gradient(transparent 56%, ${ACCENT} 56%, ${ACCENT} 92%, transparent 92%)`;
 const ON_INK = '#f3f0e9';
 const ON_INK_MED = 'rgba(243,240,233,0.62)';
 const ON_INK_DIM = 'rgba(243,240,233,0.36)';
@@ -303,7 +309,7 @@ const PromptText: React.FC<{ text: string }> = ({ text }) => (
         <div key={i}>
           {line.split(/(\[[^\]]+\])/).map((part, j) =>
             part.startsWith('[')
-              ? <span key={j} style={{ color: '#ff9b73', backgroundColor: 'rgba(242,98,46,0.14)', borderRadius: 4, padding: '0 3px' }}>{part}</span>
+              ? <span key={j} style={{ color: ACCENT, backgroundColor: 'rgba(255,201,62,0.12)', borderRadius: 4, padding: '0 3px' }}>{part}</span>
               : <React.Fragment key={j}>{part}</React.Fragment>,
           )}
           {line === '' && ' '}
@@ -385,7 +391,7 @@ const PromptDemo: React.FC = () => {
             </>
           ))} />
           <p style={{ marginTop: 'auto', paddingTop: 24, fontSize: 14.5, lineHeight: 1.6, color: INK }}>
-            <span style={{ color: ACCENT, fontWeight: 700 }}>→</span> Una respuesta que vale para cualquiera… y por eso no te sirve a ti.
+            <span style={{ color: ACCENT_DEEP, fontWeight: 700 }}>→</span> Una respuesta que vale para cualquiera… y por eso no te sirve a ti.
           </p>
         </div>
 
@@ -401,7 +407,7 @@ const PromptDemo: React.FC = () => {
               style={{
                 fontSize: 12.5, fontWeight: 600, padding: '7px 12px', borderRadius: 99, cursor: 'pointer',
                 border: `1px solid ${INK_LINE}`, backgroundColor: copied ? ACCENT : 'transparent',
-                color: copied ? '#fff' : ON_INK, transition: 'background-color .2s',
+                color: copied ? ON_ACCENT : ON_INK, transition: 'background-color .2s',
               }}
             >
               {copied ? <Check size={13} /> : <Copy size={13} />}
@@ -415,7 +421,7 @@ const PromptDemo: React.FC = () => {
       </div>
 
       <p style={{ fontSize: 14.5, color: MUTED, marginTop: 18 }}>
-        Lo que está <span style={{ color: ACCENT, fontWeight: 600 }}>[entre corchetes]</span> lo cambias por tus datos. El resto ya está pensado.
+        Lo que está <span style={{ color: INK, fontWeight: 600, backgroundColor: ACCENT, borderRadius: 4, padding: '1px 5px' }}>[entre corchetes]</span> lo cambias por tus datos. El resto ya está pensado.
       </p>
     </div>
   );
@@ -570,17 +576,17 @@ const BankPrompts: React.FC = () => {
         .bp-btn-md { font-size: 15.5px; padding: 8px 8px 8px 24px; }
         .bp-btn-lg { font-size: 17px; padding: 9px 9px 9px 28px; }
         .bp-btn-ink { background: ${INK}; color: ${PAPER}; }
-        .bp-btn-accent { background: ${ACCENT}; color: #fff; }
+        .bp-btn-accent { background: ${ACCENT}; color: ${ON_ACCENT}; }
         .bp-btn-ic { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px;
           transition: transform .35s cubic-bezier(.2,.8,.2,1); }
         .bp-btn-sm .bp-btn-ic { width: 28px; height: 28px; }
         .bp-btn-md .bp-btn-ic { width: 38px; height: 38px; }
         .bp-btn-lg .bp-btn-ic { width: 46px; height: 46px; }
-        .bp-btn-ink .bp-btn-ic { background: ${ACCENT}; color: #fff; }
-        .bp-btn-accent .bp-btn-ic { background: #fff; color: ${ACCENT}; }
+        .bp-btn-ink .bp-btn-ic { background: ${ACCENT}; color: ${ON_ACCENT}; }
+        .bp-btn-accent .bp-btn-ic { background: ${INK}; color: ${ACCENT}; }
         .bp-btn:hover { transform: translateY(-2px); }
         .bp-btn:hover .bp-btn-ic { transform: rotate(-45deg); }
-        .bp-btn:focus-visible, .bp-scope button:focus-visible, .bp-scope a:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 3px; }
+        .bp-btn:focus-visible, .bp-scope button:focus-visible, .bp-scope a:focus-visible { outline: 2px solid ${INK}; outline-offset: 3px; }
 
         .bp-hl { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
         .bp-hl > span { display: block; }
@@ -660,7 +666,7 @@ const BankPrompts: React.FC = () => {
           <h1 style={{ fontWeight: 800, fontSize: 'clamp(3rem, 10.6vw, 11rem)', lineHeight: 0.92, letterSpacing: '-0.06em', color: INK }}>
             <span className="bp-hl"><span>Pídele a la IA</span></span>
             <span className="bp-hl"><span>como lo haría</span></span>
-            <span className="bp-hl"><span>un <span style={{ color: ACCENT }}>experto.</span></span></span>
+            <span className="bp-hl"><span>un <span style={{ backgroundImage: MARKER, padding: '0 .04em' }}>experto.</span></span></span>
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 mt-10 md:mt-14 items-end">
@@ -707,7 +713,7 @@ const BankPrompts: React.FC = () => {
           {[...TASKS, ...TASKS].map((t, i) => (
             <span key={i} className="inline-flex items-center" style={{ fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 600, letterSpacing: '-0.02em', whiteSpace: 'nowrap', color: INK }}>
               {t}
-              <span style={{ color: ACCENT, margin: '0 28px', fontSize: '0.8em' }}>✦</span>
+              <span style={{ color: ACCENT_DEEP, margin: '0 28px', fontSize: '0.8em' }}>✦</span>
             </span>
           ))}
         </div>
@@ -832,7 +838,7 @@ const BankPrompts: React.FC = () => {
               <div style={{ border: `1px solid ${INK_LINE}`, borderRadius: 24, padding: 'clamp(24px, 3vw, 36px)', backgroundColor: INK_2 }}>
                 <div className="flex items-center justify-between mb-6">
                   <span style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: ON_INK_MED }}>Pack completo</span>
-                  <span style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 600, backgroundColor: ACCENT, color: '#fff', borderRadius: 99, padding: '4px 10px' }}>-31% hoy</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 600, backgroundColor: ACCENT, color: ON_ACCENT, borderRadius: 99, padding: '4px 10px' }}>-31% hoy</span>
                 </div>
                 <div className="flex items-end gap-4">
                   <span style={{ display: 'inline-block', overflow: 'hidden', lineHeight: 0.9 }}>
@@ -890,7 +896,7 @@ const BankPrompts: React.FC = () => {
             La próxima vez que abras ChatGPT
           </p>
           <h2 className="bp-rv" style={{ fontWeight: 800, fontSize: 'clamp(2.8rem, 8.4vw, 8.8rem)', lineHeight: 0.92, letterSpacing: '-0.06em' }}>
-            sabrás exactamente<br />qué <span style={{ color: ACCENT }}>pedirle.</span>
+            sabrás exactamente<br />qué <span style={{ backgroundImage: MARKER, padding: '0 .04em' }}>pedirle.</span>
           </h2>
           <div className="bp-rv mt-12 flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
             <BuyButton size="lg" label={`Conseguir el pack · ${PRICE}`} />

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Search, Check, Copy, X, ArrowRight } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
-    useEuclidFont, LandingStyles,
+    useEuclidFont, LandingStyles, HEADER_H,
 } from '../components/darkKit';
 
 // ── Datos de skills (estático, fácil de ampliar) ─────────────────────────────
@@ -584,7 +584,7 @@ const Skills: React.FC = () => {
             {/* ── Barra de filtros (sticky bajo el navbar) ───────────────────── */}
             <div
                 style={{
-                    position: 'sticky', top: 0, zIndex: 40,
+                    position: 'sticky', top: HEADER_H, zIndex: 40,
                     backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                     borderTop: `1px solid ${BORDER}`,

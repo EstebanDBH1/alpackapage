@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, ChevronDown, Search, Bookmark, User as UserIcon, Shield } from 'lucide-react';
+import {
+    Menu, X, LogOut, ChevronDown, Search, Bookmark, User as UserIcon, Shield, ArrowRight,
+    Library, Sparkles, Puzzle, Newspaper, Briefcase, BookOpen, Instagram,
+} from 'lucide-react';
+import AlpacaIcon from './AlpacaIcon';
 import { supabase, isAdminUser } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 
@@ -29,7 +33,7 @@ export const AMBER = '#ffb224';
 export const SANS = '"Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 export const MONO = '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace';
 
-export const HEADER_H = 56;
+export const HEADER_H = 64;
 
 /* ── Badge de categoría ──────────────────────────────────────────
    Cada categoría recibe siempre el mismo color (hash del nombre) para
@@ -91,20 +95,6 @@ export const AI_BADGE_DARK: Record<string, { bg: string; bd: string; fg: string 
     claude: { bg: 'rgba(212,168,83,0.08)', bd: 'rgba(212,168,83,0.3)', fg: '#d4a853' },
     gemini: { bg: 'rgba(66,133,244,0.08)', bd: 'rgba(66,133,244,0.3)', fg: '#6ea8ff' },
 };
-
-/* ── Navegación ──────────────────────────────────────────────────
-   El catálogo tiene 20+ categorías y cientos de prompts, así que
-   "Prompts" es un desplegable con todas ellas en vez de un enlace
-   suelto: sin eso, las rutas /prompts/categoria/* existen pero no
-   las enlaza nadie y el catálogo entero cuelga de una sola puerta. */
-
-const NAV_LINKS: { to: string; label: string; highlight?: boolean }[] = [
-    { to: '/generador', label: 'Generador', highlight: true },
-    { to: '/skills', label: 'Skills' },
-    { to: '/servicios', label: 'Servicios' },
-    { to: '/blog', label: 'Blog' },
-    { to: '/pricing', label: 'Precios' },
-];
 
 /* El generador lleva un distintivo "Nuevo" hasta que la persona entra por
    primera vez. Es descubrimiento sin insistir: se ve, y en cuanto cumple su
@@ -168,17 +158,64 @@ const useCatalogCategories = (shouldLoad: boolean): CategorySummary[] => {
     return cats;
 };
 
+/* ── Header ─────────────────────────────────────────────────────
+   Estructura tipo Supabase: logo, menús con paneles a todo el ancho
+   (Producto, Prompts, Recursos), Precios, y a la derecha búsqueda +
+   "Iniciar sesión" + CTA. Fijo arriba con fondo translúcido: las barras
+   sticky de las páginas (filtros de /prompts, /blog, /skills) se pegan
+   debajo con `top: HEADER_H`. */
+
+type MenuKey = 'producto' | 'prompts' | 'recursos';
+
+type MenuItem = { to: string; icon: React.ReactNode; title: string; desc: string; isNew?: boolean };
+
+const PRODUCT_ITEMS: MenuItem[] = [
+    { to: '/prompts', icon: <Library size={17} />, title: 'Biblioteca de prompts', desc: 'Cientos de prompts listos para copiar y pegar.' },
+    { to: '/generador', icon: <Sparkles size={17} />, title: 'Generador con IA', desc: 'Describe lo que quieres y te escribe el prompt.', isNew: true },
+    { to: '/skills', icon: <Puzzle size={17} />, title: 'Skills para Claude', desc: 'Instrucciones que convierten a Claude en especialista.' },
+    { to: '/guardados', icon: <Bookmark size={17} />, title: 'Guardados', desc: 'Tus prompts favoritos, siempre a un clic.' },
+];
+
+const RESOURCE_ITEMS: MenuItem[] = [
+    { to: '/blog', icon: <Newspaper size={17} />, title: 'Blog', desc: 'Guías y trucos para sacarle más a la IA.' },
+    { to: '/servicios', icon: <Briefcase size={17} />, title: 'Servicios', desc: 'Llevamos la IA a tu negocio, llave en mano.' },
+    { to: '/bank-prompts', icon: <BookOpen size={17} />, title: 'Pack en Notion', desc: '+500 prompts en Notion con un solo pago.' },
+];
+
+const navTextStyle = (active: boolean): React.CSSProperties => ({
+    fontFamily: SANS, fontSize: 14, color: active ? TEXT : MUTED, textDecoration: 'none',
+    background: 'none', border: 'none', cursor: 'pointer', padding: '8px 10px', borderRadius: 8,
+    display: 'inline-flex', alignItems: 'center', gap: 5, transition: 'color .15s, background-color .15s',
+});
+
+const MenuCard: React.FC<{ item: MenuItem; showNew: boolean; onPick: () => void }> = ({ item, showNew, onPick }) => (
+    <Link to={item.to} onClick={onPick} className="alp-menu-card flex items-start gap-3" style={{ textDecoration: 'none', padding: 12, borderRadius: 10 }}>
+        <span className="alp-menu-ic" style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, border: `1px solid ${BORDER}`, backgroundColor: PANEL, color: MUTED, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {item.icon}
+        </span>
+        <span style={{ minWidth: 0 }}>
+            <span className="flex items-center gap-2" style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: TEXT }}>
+                {item.title}
+                {item.isNew && showNew && <NewBadge />}
+            </span>
+            <span className="block" style={{ fontFamily: SANS, fontSize: 13, color: DIM, lineHeight: 1.5, marginTop: 2 }}>{item.desc}</span>
+        </span>
+    </Link>
+);
+
 export const DarkHeader: React.FC = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const [user, setUser] = useState<any>(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [catsOpen, setCatsOpen] = useState(false);
-    const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
+    const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
+    const [mobileSection, setMobileSection] = useState<MenuKey | null>(null);
     const [accountOpen, setAccountOpen] = useState(false);
     const [query, setQuery] = useState('');
+    const [scrolled, setScrolled] = useState(false);
     const [seenGenerator, setSeenGenerator] = useState(readSeenGenerator);
     const accountRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
 
     // Al visitar el generador el distintivo cumple su función y se retira
     useEffect(() => {
@@ -187,37 +224,61 @@ export const DarkHeader: React.FC = () => {
         setSeenGenerator(true);
     }, [pathname, seenGenerator]);
 
-    // Solo se cargan cuando hacen falta: al abrir el desplegable o el menú móvil
-    const categories = useCatalogCategories(catsOpen || menuOpen);
+    // Las categorías solo se cargan cuando hacen falta: al abrir su panel o el menú móvil
+    const categories = useCatalogCategories(openMenu === 'prompts' || menuOpen);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const inPrompts = pathname === '/prompts' || pathname.startsWith('/prompts/');
     const isActive = (to: string) => pathname === to || pathname.startsWith(to + '/');
+    const productActive = PRODUCT_ITEMS.some(i => i.to !== '/prompts' && isActive(i.to));
+    const resourcesActive = RESOURCE_ITEMS.some(i => isActive(i.to));
 
     // Un pequeño retardo al salir evita que el panel se cierre al cruzar el
     // hueco entre el botón y el desplegable.
-    const openCats = () => {
+    const open = (k: MenuKey) => {
         if (closeTimer.current) clearTimeout(closeTimer.current);
-        setCatsOpen(true);
+        setOpenMenu(k);
     };
-    const scheduleCloseCats = () => {
+    const scheduleClose = () => {
         if (closeTimer.current) clearTimeout(closeTimer.current);
-        closeTimer.current = setTimeout(() => setCatsOpen(false), 140);
+        closeTimer.current = setTimeout(() => setOpenMenu(null), 140);
     };
     useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+
+    // El borde inferior aparece al empezar a bajar, como en Supabase
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 4);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    // ⌘K / Ctrl+K enfoca la búsqueda del header
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                if (window.matchMedia('(min-width: 1024px)').matches) searchRef.current?.focus();
+                else setMenuOpen(true);
+            }
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, []);
 
     const submitSearch = (e: React.FormEvent) => {
         e.preventDefault();
         const q = query.trim();
-        setCatsOpen(false);
+        setOpenMenu(null);
         setMenuOpen(false);
+        searchRef.current?.blur();
         navigate(q ? `/prompts?q=${encodeURIComponent(q)}` : '/prompts');
     };
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
-        // Sin esto el header seguiría mostrando "Cuenta" tras cerrar sesión
-        // (o "Acceder" tras entrar) hasta recargar la página.
+        // Sin esto el header seguiría mostrando "Iniciar sesión" tras entrar
+        // (o la cuenta tras salir) hasta recargar la página.
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (_event, session) => setUser(session?.user ?? null),
         );
@@ -227,23 +288,23 @@ export const DarkHeader: React.FC = () => {
     // Al navegar se cierra todo: si no, el panel sigue abierto sobre la página nueva
     useEffect(() => {
         setMenuOpen(false);
-        setCatsOpen(false);
-        setMobileCatsOpen(false);
+        setOpenMenu(null);
+        setMobileSection(null);
         setAccountOpen(false);
     }, [pathname]);
 
     // Escape cierra lo que esté abierto (y evita dejarlo sin salida en teclado)
     useEffect(() => {
-        if (!menuOpen && !catsOpen && !accountOpen) return;
+        if (!menuOpen && !openMenu && !accountOpen) return;
         const onKey = (e: KeyboardEvent) => {
             if (e.key !== 'Escape') return;
             setMenuOpen(false);
-            setCatsOpen(false);
+            setOpenMenu(null);
             setAccountOpen(false);
         };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
-    }, [menuOpen, catsOpen, accountOpen]);
+    }, [menuOpen, openMenu, accountOpen]);
 
     // El menú de cuenta se cierra al pulsar fuera, como en cualquier web
     useEffect(() => {
@@ -276,6 +337,8 @@ export const DarkHeader: React.FC = () => {
 
     // Al entrar se vuelve a donde estabas, no a una página cualquiera
     const loginHref = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`;
+    // "Empieza gratis" lleva al catálogo después de entrar
+    const signupHref = `/login?redirect=${encodeURIComponent('/prompts')}`;
 
     const handleLogout = async () => {
         setMenuOpen(false);
@@ -288,112 +351,115 @@ export const DarkHeader: React.FC = () => {
         navigate('/');
     };
 
+    const avatar = (size: number) => avatarUrl ? (
+        <img src={avatarUrl} alt="" referrerPolicy="no-referrer" style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover' }} />
+    ) : (
+        <span className="inline-flex items-center justify-center" style={{ width: size, height: size, borderRadius: '50%', backgroundColor: PANEL, border: `1px solid ${BORDER}`, fontFamily: SANS, fontSize: size * 0.44, fontWeight: 700, color: TEXT }}>
+            {initial}
+        </span>
+    );
+
+    const menuTrigger = (k: MenuKey, label: string, active: boolean) => (
+        <div key={k} onMouseEnter={() => open(k)} onMouseLeave={scheduleClose}>
+            <button
+                type="button"
+                className="alp-nav-item"
+                onClick={() => (openMenu === k ? setOpenMenu(null) : open(k))}
+                aria-expanded={openMenu === k}
+                aria-haspopup="true"
+                style={navTextStyle(active || openMenu === k)}
+            >
+                {label}
+                <ChevronDown size={13} style={{ transition: 'transform .18s', transform: openMenu === k ? 'rotate(180deg)' : 'none' }} />
+            </button>
+        </div>
+    );
+
+    const closeAll = () => { setOpenMenu(null); setMenuOpen(false); };
+
     return (
         <header
             style={{
-                position: 'relative', zIndex: 60,
-                height: HEADER_H,
-                backgroundColor: BG,
-                borderBottom: `1px solid ${BORDER_SOFT}`,
-                display: 'flex', alignItems: 'center',
+                position: 'sticky', top: 0, zIndex: 60, height: HEADER_H,
+                backgroundColor: scrolled || openMenu || menuOpen ? 'rgba(0,0,0,0.82)' : BG,
+                backdropFilter: 'saturate(180%) blur(14px)', WebkitBackdropFilter: 'saturate(180%) blur(14px)',
+                borderBottom: `1px solid ${scrolled || openMenu || menuOpen ? BORDER_SOFT : 'transparent'}`,
+                display: 'flex', alignItems: 'center', transition: 'background-color .2s, border-color .2s',
             }}
         >
-            <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 flex items-center justify-between">
-                <Link to="/" className="flex items-center" style={{ textDecoration: 'none' }} aria-label="Inicio">
-                    <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>
-                        alpacka.ai
-                    </span>
-                </Link>
+            <style>{`
+                .alp-nav-item:hover { color: ${TEXT} !important; background-color: ${PANEL}; }
+                .alp-menu-card { transition: background-color .15s; }
+                .alp-menu-card:hover { background-color: ${PANEL}; }
+                .alp-menu-card:hover .alp-menu-ic { color: ${AMBER}; border-color: rgba(255,178,36,0.35); }
+                .alp-menu-ic { transition: color .15s, border-color .15s; }
+                .alp-panel { animation: alpPanel .18s cubic-bezier(.2,.8,.2,1) both; }
+                @keyframes alpPanel { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+                .alp-cta { transition: filter .15s, transform .15s; }
+                .alp-cta:hover { filter: brightness(1.08); }
+                .alp-ghost:hover { border-color: #3a3a3a !important; color: ${TEXT} !important; }
+                @media (prefers-reduced-motion: reduce) { .alp-panel { animation: none; } }
+            `}</style>
 
-                {/* Navegación de escritorio — a partir de md: con 5 enlaces más el
-                    botón de cuenta, en tablet no cabe y se usa la hamburguesa. */}
-                <nav className="hidden md:flex items-center gap-4">
-                    {/* Prompts: enlace + desplegable con todas las categorías */}
-                    <div
-                        className="relative flex items-center"
-                        onMouseEnter={openCats}
-                        onMouseLeave={scheduleCloseCats}
-                    >
-                        <Link
-                            to="/prompts"
-                            style={{
-                                fontFamily: SANS, fontSize: 13, textDecoration: 'none',
-                                color: inPrompts ? TEXT : MUTED, transition: 'color .15s',
-                                display: 'inline-flex', alignItems: 'center', gap: 4,
-                            }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
-                            onMouseLeave={e => { if (!inPrompts) (e.currentTarget as HTMLElement).style.color = MUTED; }}
-                        >
-                            Prompts
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => (catsOpen ? setCatsOpen(false) : openCats())}
-                            aria-expanded={catsOpen}
-                            aria-haspopup="true"
-                            aria-label="Ver categorías"
-                            style={{
-                                background: 'none', border: 'none', cursor: 'pointer', padding: '4px 2px',
-                                color: inPrompts ? TEXT : MUTED, display: 'inline-flex', alignItems: 'center',
-                            }}
-                        >
-                            <ChevronDown
-                                size={13}
-                                style={{ transition: 'transform .18s', transform: catsOpen ? 'rotate(180deg)' : 'none' }}
-                            />
-                        </button>
-                    </div>
+            <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6">
+                    <Link to="/" className="flex items-center gap-2" style={{ textDecoration: 'none' }} aria-label="Inicio">
+                        <AlpacaIcon variant="light" className="h-6 w-auto" />
+                        <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>alpacka.ai</span>
+                    </Link>
 
-                    {NAV_LINKS.map(l => (
-                        <Link
-                            key={l.to}
-                            to={l.to}
-                            className="inline-flex items-center gap-1.5"
-                            style={{
-                                fontFamily: SANS, fontSize: 13, textDecoration: 'none',
-                                color: isActive(l.to) ? TEXT : MUTED, transition: 'color .15s',
-                            }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
-                            onMouseLeave={e => { if (!isActive(l.to)) (e.currentTarget as HTMLElement).style.color = MUTED; }}
-                        >
-                            {l.label}
-                            {l.highlight && !seenGenerator && <NewBadge />}
-                        </Link>
-                    ))}
+                    {/* Navegación de escritorio */}
+                    <nav className="hidden lg:flex items-center" aria-label="Principal">
+                        {menuTrigger('producto', 'Producto', productActive)}
+                        {menuTrigger('prompts', 'Prompts', inPrompts)}
+                        {menuTrigger('recursos', 'Recursos', resourcesActive)}
+                        <Link to="/pricing" className="alp-nav-item" style={navTextStyle(isActive('/pricing'))}>Precios</Link>
+                    </nav>
+                </div>
 
-                    {/* Buscador: lleva a /prompts?q= */}
-                    <form onSubmit={submitSearch} className="hidden lg:flex items-center" style={{ marginLeft: 4 }}>
+                <div className="hidden lg:flex items-center gap-2.5">
+                    {/* Búsqueda: lleva a /prompts?q= */}
+                    <form onSubmit={submitSearch} className="flex items-center">
                         <div className="relative flex items-center">
-                            <Search size={13} style={{ position: 'absolute', left: 9, color: DIM, pointerEvents: 'none' }} />
+                            <Search size={14} style={{ position: 'absolute', left: 10, color: DIM, pointerEvents: 'none' }} />
                             <input
+                                ref={searchRef}
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
                                 placeholder="Buscar prompts"
                                 aria-label="Buscar prompts"
                                 style={{
-                                    fontFamily: SANS, fontSize: 12.5, color: TEXT,
+                                    fontFamily: SANS, fontSize: 13, color: TEXT,
                                     backgroundColor: PANEL, border: `1px solid ${BORDER}`,
-                                    borderRadius: 8, padding: '6px 10px 6px 27px', width: 150, outline: 'none',
-                                    transition: 'border-color .15s, width .18s',
+                                    borderRadius: 8, padding: '7px 44px 7px 31px', width: 200, outline: 'none',
+                                    transition: 'border-color .15s',
                                 }}
-                                onFocus={e => { e.currentTarget.style.borderColor = '#3a3a3a'; e.currentTarget.style.width = '190px'; }}
-                                onBlur={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.width = '150px'; }}
+                                onFocus={e => { e.currentTarget.style.borderColor = '#3a3a3a'; }}
+                                onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
                             />
+                            <kbd style={{ position: 'absolute', right: 7, fontFamily: MONO, fontSize: 10.5, color: DIM, border: `1px solid ${BORDER}`, borderRadius: 5, padding: '1px 5px', pointerEvents: 'none' }}>Ctrl K</kbd>
                         </div>
                     </form>
+
                     {!user ? (
-                        <Link
-                            to={loginHref}
-                            style={{
-                                fontFamily: SANS, fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
-                                backgroundColor: TEXT, color: '#000',
-                                borderRadius: 8, padding: '7px 14px', marginLeft: 3,
-                            }}
-                        >
-                            Acceder
-                        </Link>
+                        <>
+                            <Link
+                                to={loginHref}
+                                className="alp-ghost"
+                                style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 500, color: MUTED, textDecoration: 'none', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '6px 12px', transition: 'border-color .15s, color .15s' }}
+                            >
+                                Iniciar sesión
+                            </Link>
+                            <Link
+                                to={signupHref}
+                                className="alp-cta"
+                                style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: '#1a1200', backgroundColor: AMBER, textDecoration: 'none', border: `1px solid ${AMBER}`, borderRadius: 8, padding: '6px 12px' }}
+                            >
+                                Empieza gratis
+                            </Link>
+                        </>
                     ) : (
-                        <div ref={accountRef} className="relative" style={{ marginLeft: 3 }}>
+                        <div ref={accountRef} className="relative">
                             <button
                                 type="button"
                                 onClick={() => setAccountOpen(o => !o)}
@@ -408,58 +474,28 @@ export const DarkHeader: React.FC = () => {
                                     transition: 'background-color .15s, border-color .15s',
                                 }}
                             >
-                                {avatarUrl ? (
-                                    <img
-                                        src={avatarUrl}
-                                        alt=""
-                                        referrerPolicy="no-referrer"
-                                        style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    <span
-                                        className="inline-flex items-center justify-center"
-                                        style={{
-                                            width: 26, height: 26, borderRadius: '50%',
-                                            backgroundColor: PANEL, border: `1px solid ${BORDER}`,
-                                            fontFamily: SANS, fontSize: 11.5, fontWeight: 700, color: TEXT,
-                                        }}
-                                    >
-                                        {initial}
-                                    </span>
-                                )}
-                                <span
-                                    className="max-w-[92px] truncate"
-                                    style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED }}
-                                >
-                                    {firstName}
-                                </span>
-                                <ChevronDown
-                                    size={12}
-                                    style={{ color: DIM, transition: 'transform .18s', transform: accountOpen ? 'rotate(180deg)' : 'none' }}
-                                />
+                                {avatar(26)}
+                                <span className="max-w-[92px] truncate" style={{ fontFamily: SANS, fontSize: 13, color: MUTED }}>{firstName}</span>
+                                <ChevronDown size={12} style={{ color: DIM, transition: 'transform .18s', transform: accountOpen ? 'rotate(180deg)' : 'none' }} />
                             </button>
 
                             {accountOpen && (
                                 <div
                                     role="menu"
+                                    className="alp-panel"
                                     style={{
                                         position: 'absolute', top: 'calc(100% + 9px)', right: 0, zIndex: 70,
-                                        minWidth: 224, backgroundColor: CARD,
+                                        minWidth: 232, backgroundColor: CARD,
                                         border: `1px solid ${BORDER}`, borderRadius: 12,
                                         boxShadow: '0 18px 40px rgba(0,0,0,0.6)', overflow: 'hidden',
                                     }}
                                 >
                                     <div style={{ padding: '12px 14px', borderBottom: `1px solid ${BORDER_SOFT}` }}>
-                                        <p className="truncate" style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: TEXT }}>
-                                            {displayName}
-                                        </p>
+                                        <p className="truncate" style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: TEXT }}>{displayName}</p>
                                         {admin && (
-                                            <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: AMBER, marginTop: 3 }}>
-                                                Administrador
-                                            </p>
+                                            <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: AMBER, marginTop: 3 }}>Administrador</p>
                                         )}
                                     </div>
-
                                     <div style={{ padding: 6 }}>
                                         {[
                                             { to: accountHome, icon: <UserIcon size={14} />, label: admin ? 'Panel de admin' : 'Mi cuenta' },
@@ -471,45 +507,21 @@ export const DarkHeader: React.FC = () => {
                                                 to={item.to}
                                                 role="menuitem"
                                                 onClick={() => setAccountOpen(false)}
-                                                className="flex items-center gap-2.5"
-                                                style={{
-                                                    fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none',
-                                                    padding: '9px 10px', borderRadius: 8, transition: 'background-color .12s, color .12s',
-                                                }}
-                                                onMouseEnter={e => {
-                                                    const el = e.currentTarget as HTMLElement;
-                                                    el.style.backgroundColor = PANEL; el.style.color = TEXT;
-                                                }}
-                                                onMouseLeave={e => {
-                                                    const el = e.currentTarget as HTMLElement;
-                                                    el.style.backgroundColor = 'transparent'; el.style.color = MUTED;
-                                                }}
+                                                className="alp-menu-card flex items-center gap-2.5"
+                                                style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none', padding: '9px 10px', borderRadius: 8 }}
                                             >
                                                 {item.icon}
                                                 {item.label}
                                             </Link>
                                         ))}
                                     </div>
-
                                     <div style={{ padding: 6, borderTop: `1px solid ${BORDER_SOFT}` }}>
                                         <button
                                             type="button"
                                             role="menuitem"
                                             onClick={handleLogout}
-                                            className="flex w-full items-center gap-2.5"
-                                            style={{
-                                                fontFamily: SANS, fontSize: 13, color: MUTED, textAlign: 'left',
-                                                background: 'none', border: 'none', cursor: 'pointer',
-                                                padding: '9px 10px', borderRadius: 8, transition: 'background-color .12s, color .12s',
-                                            }}
-                                            onMouseEnter={e => {
-                                                const el = e.currentTarget as HTMLElement;
-                                                el.style.backgroundColor = PANEL; el.style.color = TEXT;
-                                            }}
-                                            onMouseLeave={e => {
-                                                const el = e.currentTarget as HTMLElement;
-                                                el.style.backgroundColor = 'transparent'; el.style.color = MUTED;
-                                            }}
+                                            className="alp-menu-card flex w-full items-center gap-2.5"
+                                            style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '9px 10px', borderRadius: 8 }}
                                         >
                                             <LogOut size={14} />
                                             Cerrar sesión
@@ -519,12 +531,12 @@ export const DarkHeader: React.FC = () => {
                             )}
                         </div>
                     )}
-                </nav>
+                </div>
 
                 {/* Hamburguesa (móvil y tablet) */}
                 <button
                     type="button"
-                    className="md:hidden inline-flex items-center justify-center"
+                    className="lg:hidden inline-flex items-center justify-center"
                     onClick={() => setMenuOpen(o => !o)}
                     aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                     aria-expanded={menuOpen}
@@ -541,114 +553,102 @@ export const DarkHeader: React.FC = () => {
                 </button>
             </div>
 
-            {/* Desplegable de categorías (escritorio). Ocupa el ancho del header
-                en vez de colgar del botón: con 20+ categorías, un panel anclado
-                se saldría de la pantalla por la derecha. */}
-            {catsOpen && (
+            {/* Paneles de escritorio: ocupan el ancho del header */}
+            {openMenu && (
                 <div
-                    className="hidden md:block"
-                    onMouseEnter={openCats}
-                    onMouseLeave={scheduleCloseCats}
+                    className="alp-panel hidden lg:block"
+                    onMouseEnter={() => open(openMenu)}
+                    onMouseLeave={scheduleClose}
                     style={{
                         position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60,
-                        backgroundColor: CARD,
-                        borderTop: `1px solid ${BORDER_SOFT}`,
-                        borderBottom: `1px solid ${BORDER}`,
-                        boxShadow: '0 20px 44px rgba(0,0,0,0.6)',
+                        backgroundColor: CARD, borderTop: `1px solid ${BORDER_SOFT}`, borderBottom: `1px solid ${BORDER}`,
+                        boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
                     }}
                 >
-                    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8" style={{ paddingTop: 20, paddingBottom: 18 }}>
-                        <div className="flex items-baseline justify-between" style={{ marginBottom: 14 }}>
-                            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: DIM }}>
-                                Categorías
-                            </span>
-                            <Link
-                                to="/prompts"
-                                style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}
-                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
-                                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
-                            >
-                                Ver todo el catálogo →
-                            </Link>
-                        </div>
+                    <div className="mx-auto w-full max-w-7xl px-5 sm:px-8" style={{ paddingTop: 20, paddingBottom: 22 }}>
+                        {openMenu === 'producto' && (
+                            <div className="grid grid-cols-12 gap-8">
+                                <div className="col-span-8 grid grid-cols-2 gap-1">
+                                    {PRODUCT_ITEMS.map(item => <MenuCard key={item.to} item={item} showNew={!seenGenerator} onPick={closeAll} />)}
+                                </div>
+                                <div className="col-span-4" style={{ borderLeft: `1px solid ${BORDER_SOFT}`, paddingLeft: 28 }}>
+                                    <p style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM, margin: '12px 0 12px' }}>Para empezar</p>
+                                    {[
+                                        { to: '/prompts', label: 'Explorar el catálogo' },
+                                        { to: '/pricing', label: 'Ver planes y precios' },
+                                        { to: signupHref, label: 'Crear una cuenta gratis' },
+                                    ].map(l => (
+                                        <Link key={l.label} to={l.to} onClick={closeAll} className="alp-menu-card flex items-center justify-between" style={{ fontFamily: SANS, fontSize: 14, color: MUTED, textDecoration: 'none', padding: '9px 10px', borderRadius: 8, margin: '0 -10px' }}>
+                                            {l.label}
+                                            <ArrowRight size={14} style={{ color: DIM }} />
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-                        {categories.length === 0 ? (
-                            <div className="grid grid-cols-4 gap-x-6 gap-y-1.5">
-                                {Array.from({ length: 12 }).map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className="animate-pulse"
-                                        style={{ height: 15, borderRadius: 5, backgroundColor: PANEL, margin: '7px 0' }}
-                                    />
-                                ))}
+                        {openMenu === 'recursos' && (
+                            <div className="grid grid-cols-3 gap-1">
+                                {RESOURCE_ITEMS.map(item => <MenuCard key={item.to} item={item} showNew={false} onPick={closeAll} />)}
                             </div>
-                        ) : (
-                            <div className="grid grid-cols-4 gap-x-6 gap-y-0.5">
-                                {categories.map(c => (
-                                    <Link
-                                        key={c.name}
-                                        to={categoryHref(c.name)}
-                                        onClick={() => setCatsOpen(false)}
-                                        className="flex items-baseline justify-between gap-3"
-                                        style={{
-                                            fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none',
-                                            padding: '7px 8px', borderRadius: 7, transition: 'background-color .12s, color .12s',
-                                        }}
-                                        onMouseEnter={e => {
-                                            const el = e.currentTarget as HTMLElement;
-                                            el.style.backgroundColor = PANEL;
-                                            el.style.color = TEXT;
-                                        }}
-                                        onMouseLeave={e => {
-                                            const el = e.currentTarget as HTMLElement;
-                                            el.style.backgroundColor = 'transparent';
-                                            el.style.color = MUTED;
-                                        }}
-                                    >
-                                        <span className="truncate">{c.name}</span>
-                                        <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>
-                                            {c.count}
-                                        </span>
+                        )}
+
+                        {openMenu === 'prompts' && (
+                            <>
+                                <div className="flex items-baseline justify-between" style={{ marginBottom: 12 }}>
+                                    <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}>Categorías</span>
+                                    <Link to="/prompts" onClick={closeAll} className="inline-flex items-center gap-1.5" style={{ fontFamily: SANS, fontSize: 13, color: MUTED, textDecoration: 'none' }}>
+                                        Ver todo el catálogo <ArrowRight size={13} />
                                     </Link>
-                                ))}
-                            </div>
+                                </div>
+                                {/* Alto reservado mientras llegan las categorías: el panel no crece de golpe */}
+                                <div className="grid grid-cols-4 gap-x-6 gap-y-0.5" style={{ minHeight: 6 * 34 }}>
+                                    {categories.length === 0
+                                        ? Array.from({ length: 16 }).map((_, i) => (
+                                            <div key={i} className="animate-pulse" style={{ height: 14, borderRadius: 5, backgroundColor: PANEL, margin: '10px 8px' }} />
+                                        ))
+                                        : categories.map(c => (
+                                            <Link
+                                                key={c.name}
+                                                to={categoryHref(c.name)}
+                                                onClick={closeAll}
+                                                className="alp-menu-card flex items-baseline justify-between gap-3"
+                                                style={{ fontFamily: SANS, fontSize: 13.5, color: MUTED, textDecoration: 'none', padding: '7px 8px', borderRadius: 7 }}
+                                            >
+                                                <span className="truncate">{c.name}</span>
+                                                <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>{c.count}</span>
+                                            </Link>
+                                        ))}
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>
             )}
 
-            {/* Panel móvil + capa para cerrar tocando fuera */}
+            {/* Panel móvil + capa para cerrar tocando fuera. La capa es absolute y no
+                fixed: el backdrop-filter del header lo convierte en el bloque
+                contenedor de los fixed y la capa quedaría con alto cero. */}
             {menuOpen && (
                 <>
                     <div
-                        className="md:hidden"
+                        className="lg:hidden"
                         onClick={() => setMenuOpen(false)}
                         aria-hidden="true"
-                        style={{
-                            position: 'fixed', top: HEADER_H, left: 0, right: 0, bottom: 0,
-                            backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 55,
-                        }}
+                        style={{ position: 'absolute', top: '100%', left: 0, right: 0, height: `calc(100dvh - ${HEADER_H}px)`, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 55 }}
                     />
                     <nav
                         id="alp-mobile-nav"
-                        className="md:hidden"
+                        className="lg:hidden"
                         style={{
                             position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 60,
-                            // Un punto más claro que el fondo: sobre negro atenuado, un
-                            // panel negro puro no se distingue de la página de detrás.
-                            backgroundColor: CARD,
-                            borderBottom: `1px solid ${BORDER}`,
-                            padding: '10px 20px 18px',
-                            display: 'flex', flexDirection: 'column',
+                            backgroundColor: CARD, borderBottom: `1px solid ${BORDER}`,
+                            padding: '12px 20px 20px', display: 'flex', flexDirection: 'column',
                             boxShadow: '0 18px 40px rgba(0,0,0,0.6)',
-                            // Con las categorías desplegadas la lista no cabe en pantalla:
-                            // el panel se desplaza por dentro en vez de desbordarse.
-                            maxHeight: `calc(100vh - ${HEADER_H}px)`,
-                            overflowY: 'auto',
-                            overscrollBehavior: 'contain',
+                            maxHeight: `calc(100dvh - ${HEADER_H}px)`, overflowY: 'auto', overscrollBehavior: 'contain',
                         }}
                     >
-                        <form onSubmit={submitSearch} style={{ marginBottom: 6 }}>
+                        <form onSubmit={submitSearch} style={{ marginBottom: 8 }}>
                             <div className="relative flex items-center">
                                 <Search size={14} style={{ position: 'absolute', left: 11, color: DIM, pointerEvents: 'none' }} />
                                 <input
@@ -656,160 +656,83 @@ export const DarkHeader: React.FC = () => {
                                     onChange={e => setQuery(e.target.value)}
                                     placeholder="Buscar prompts"
                                     aria-label="Buscar prompts"
-                                    style={{
-                                        fontFamily: SANS, fontSize: 14, color: TEXT, width: '100%',
-                                        backgroundColor: PANEL, border: `1px solid ${BORDER}`,
-                                        borderRadius: 10, padding: '11px 12px 11px 32px', outline: 'none',
-                                    }}
+                                    style={{ fontFamily: SANS, fontSize: 15, color: TEXT, width: '100%', backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '11px 12px 11px 32px', outline: 'none' }}
                                 />
                             </div>
                         </form>
 
-                        {/* Prompts, con las categorías dentro */}
-                        <div style={{ borderBottom: `1px solid ${BORDER_SOFT}` }}>
-                            <div className="flex items-center justify-between">
-                                <Link
-                                    to="/prompts"
-                                    onClick={() => setMenuOpen(false)}
-                                    style={{
-                                        flex: 1, fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
-                                        color: inPrompts ? TEXT : MUTED, textDecoration: 'none', padding: '13px 2px',
-                                    }}
-                                >
-                                    Prompts
-                                </Link>
+                        {([
+                            { k: 'producto' as MenuKey, label: 'Producto' },
+                            { k: 'prompts' as MenuKey, label: 'Prompts' },
+                            { k: 'recursos' as MenuKey, label: 'Recursos' },
+                        ]).map(sec => (
+                            <div key={sec.k} style={{ borderBottom: `1px solid ${BORDER_SOFT}` }}>
                                 <button
                                     type="button"
-                                    onClick={() => setMobileCatsOpen(o => !o)}
-                                    aria-expanded={mobileCatsOpen}
-                                    aria-label={mobileCatsOpen ? 'Ocultar categorías' : 'Ver categorías'}
-                                    style={{
-                                        background: 'none', border: 'none', cursor: 'pointer',
-                                        color: MUTED, padding: '10px 6px', display: 'inline-flex', alignItems: 'center',
-                                    }}
+                                    onClick={() => setMobileSection(s => (s === sec.k ? null : sec.k))}
+                                    aria-expanded={mobileSection === sec.k}
+                                    className="w-full flex items-center justify-between"
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: SANS, fontSize: 15, fontWeight: 500, color: TEXT, padding: '14px 2px' }}
                                 >
-                                    <ChevronDown
-                                        size={16}
-                                        style={{ transition: 'transform .18s', transform: mobileCatsOpen ? 'rotate(180deg)' : 'none' }}
-                                    />
+                                    {sec.label}
+                                    <ChevronDown size={16} style={{ color: DIM, transition: 'transform .18s', transform: mobileSection === sec.k ? 'rotate(180deg)' : 'none' }} />
                                 </button>
+                                {mobileSection === sec.k && (
+                                    <div className="flex flex-col" style={{ paddingBottom: 10 }}>
+                                        {sec.k === 'prompts' ? (
+                                            <>
+                                                <Link to="/prompts" onClick={closeAll} style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: TEXT, textDecoration: 'none', padding: '10px 12px' }}>Todo el catálogo</Link>
+                                                {categories.length === 0
+                                                    ? <span style={{ fontFamily: SANS, fontSize: 13, color: DIM, padding: '8px 12px' }}>Cargando categorías…</span>
+                                                    : categories.map(c => (
+                                                        <Link key={c.name} to={categoryHref(c.name)} onClick={closeAll} className="flex items-baseline justify-between gap-3" style={{ fontFamily: SANS, fontSize: 14, color: MUTED, textDecoration: 'none', padding: '9px 12px' }}>
+                                                            <span className="truncate">{c.name}</span>
+                                                            <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>{c.count}</span>
+                                                        </Link>
+                                                    ))}
+                                            </>
+                                        ) : (
+                                            (sec.k === 'producto' ? PRODUCT_ITEMS : RESOURCE_ITEMS).map(item => (
+                                                <MenuCard key={item.to} item={item} showNew={!seenGenerator} onPick={closeAll} />
+                                            ))
+                                        )}
+                                    </div>
+                                )}
                             </div>
-
-                            {mobileCatsOpen && (
-                                <div className="flex flex-col" style={{ paddingBottom: 8 }}>
-                                    {categories.length === 0 ? (
-                                        <span style={{ fontFamily: SANS, fontSize: 13, color: DIM, padding: '8px 12px' }}>
-                                            Cargando categorías…
-                                        </span>
-                                    ) : categories.map(c => (
-                                        <Link
-                                            key={c.name}
-                                            to={categoryHref(c.name)}
-                                            onClick={() => setMenuOpen(false)}
-                                            className="flex items-baseline justify-between gap-3"
-                                            style={{
-                                                fontFamily: SANS, fontSize: 13.5, color: MUTED, textDecoration: 'none',
-                                                padding: '10px 12px', borderRadius: 8, backgroundColor: PANEL, marginBottom: 4,
-                                            }}
-                                        >
-                                            <span className="truncate">{c.name}</span>
-                                            <span style={{ fontFamily: MONO, fontSize: 10.5, color: DIM, flexShrink: 0 }}>{c.count}</span>
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        {NAV_LINKS.map(l => (
-                            <Link
-                                key={l.to}
-                                to={l.to}
-                                onClick={() => setMenuOpen(false)}
-                                className="flex items-center gap-2"
-                                style={{
-                                    fontFamily: SANS, fontSize: 14.5, fontWeight: 500,
-                                    color: isActive(l.to) ? TEXT : MUTED,
-                                    textDecoration: 'none', padding: '13px 2px',
-                                    borderBottom: `1px solid ${BORDER_SOFT}`,
-                                }}
-                            >
-                                {l.label}
-                                {l.highlight && !seenGenerator && <NewBadge />}
-                            </Link>
                         ))}
+
+                        <Link to="/pricing" onClick={closeAll} style={{ fontFamily: SANS, fontSize: 15, fontWeight: 500, color: TEXT, textDecoration: 'none', padding: '14px 2px', borderBottom: `1px solid ${BORDER_SOFT}` }}>
+                            Precios
+                        </Link>
+
                         {!user ? (
-                            <Link
-                                to={loginHref}
-                                onClick={() => setMenuOpen(false)}
-                                className="block text-center"
-                                style={{
-                                    marginTop: 16, width: '100%',
-                                    fontFamily: SANS, fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                                    backgroundColor: TEXT, color: '#000',
-                                    borderRadius: 10, padding: '13px 18px',
-                                }}
-                            >
-                                Acceder
-                            </Link>
+                            <div className="grid grid-cols-2 gap-2" style={{ marginTop: 18 }}>
+                                <Link to={loginHref} onClick={closeAll} className="text-center" style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, textDecoration: 'none', color: TEXT, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '12px 14px' }}>
+                                    Iniciar sesión
+                                </Link>
+                                <Link to={signupHref} onClick={closeAll} className="text-center" style={{ fontFamily: SANS, fontSize: 14, fontWeight: 700, textDecoration: 'none', color: '#1a1200', backgroundColor: AMBER, borderRadius: 10, padding: '12px 14px' }}>
+                                    Empieza gratis
+                                </Link>
+                            </div>
                         ) : (
                             <>
-                                <div
-                                    className="flex items-center gap-2.5"
-                                    style={{ marginTop: 14, marginBottom: 4, padding: '4px 2px' }}
-                                >
-                                    {avatarUrl ? (
-                                        <img
-                                            src={avatarUrl}
-                                            alt=""
-                                            referrerPolicy="no-referrer"
-                                            style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }}
-                                        />
-                                    ) : (
-                                        <span
-                                            className="inline-flex items-center justify-center"
-                                            style={{
-                                                width: 28, height: 28, borderRadius: '50%',
-                                                backgroundColor: PANEL, border: `1px solid ${BORDER}`,
-                                                fontFamily: SANS, fontSize: 12, fontWeight: 700, color: TEXT,
-                                            }}
-                                        >
-                                            {initial}
-                                        </span>
-                                    )}
-                                    <span className="truncate" style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT }}>
-                                        {displayName}
-                                    </span>
+                                <div className="flex items-center gap-2.5" style={{ marginTop: 16, marginBottom: 6, padding: '4px 2px' }}>
+                                    {avatar(28)}
+                                    <span className="truncate" style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT }}>{displayName}</span>
                                 </div>
-
                                 {[
                                     { to: accountHome, icon: <UserIcon size={15} />, label: admin ? 'Panel de admin' : 'Mi cuenta' },
                                     { to: '/guardados', icon: <Bookmark size={15} />, label: 'Mis guardados' },
                                 ].map(item => (
-                                    <Link
-                                        key={item.to}
-                                        to={item.to}
-                                        onClick={() => setMenuOpen(false)}
-                                        className="flex items-center gap-2.5"
-                                        style={{
-                                            fontFamily: SANS, fontSize: 14, color: MUTED, textDecoration: 'none',
-                                            padding: '12px 12px', borderRadius: 9, backgroundColor: PANEL, marginBottom: 6,
-                                        }}
-                                    >
+                                    <Link key={item.to} to={item.to} onClick={closeAll} className="flex items-center gap-2.5" style={{ fontFamily: SANS, fontSize: 14, color: MUTED, textDecoration: 'none', padding: '12px 12px', borderRadius: 9, backgroundColor: PANEL, marginBottom: 6 }}>
                                         {item.icon}
                                         {item.label}
                                     </Link>
                                 ))}
-
                                 <button
                                     onClick={handleLogout}
                                     className="inline-flex items-center justify-center gap-2"
-                                    style={{
-                                        marginTop: 4, width: '100%',
-                                        fontFamily: SANS, fontSize: 13.5, fontWeight: 600,
-                                        backgroundColor: 'transparent', color: MUTED,
-                                        border: `1px solid ${BORDER}`, cursor: 'pointer',
-                                        borderRadius: 10, padding: '12px 18px',
-                                    }}
+                                    style={{ marginTop: 4, width: '100%', fontFamily: SANS, fontSize: 13.5, fontWeight: 600, backgroundColor: 'transparent', color: MUTED, border: `1px solid ${BORDER}`, cursor: 'pointer', borderRadius: 10, padding: '12px 18px' }}
                                 >
                                     <LogOut size={14} />
                                     Cerrar sesión
@@ -848,29 +771,25 @@ export const LandingStyles: React.FC = () => (
   `}</style>
 );
 
-/* ── Footer oscuro ───────────────────────────────────────────────
-   Además de lo legal, expone todas las categorías. Es la segunda vía
-   de entrada al catálogo (la primera es el desplegable del header) y
-   la que deja esos enlaces al alcance de un buscador. */
+/* ── Footer ──────────────────────────────────────────────────────
+   Estructura tipo Supabase: marca a la izquierda y columnas de enlaces
+   (Producto, Categorías, Recursos, Legal). Además de navegar, expone las
+   categorías: es la segunda vía de entrada al catálogo (la primera es el
+   header) y la que deja esos enlaces al alcance de un buscador. */
 
-const FooterLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
-    <Link
-        to={to}
-        style={{ fontFamily: SANS, fontSize: 12.5, color: DIM, textDecoration: 'none', transition: 'color .15s' }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = TEXT; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DIM; }}
-    >
-        {children}
-    </Link>
-);
+const FooterLink: React.FC<{ to: string; children: React.ReactNode; external?: boolean }> = ({ to, children, external }) => {
+    const style: React.CSSProperties = { fontFamily: SANS, fontSize: 13.5, color: DIM, textDecoration: 'none', transition: 'color .15s' };
+    const hover = {
+        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.color = TEXT; },
+        onMouseLeave: (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.color = DIM; },
+    };
+    return external
+        ? <a href={to} target="_blank" rel="noopener noreferrer" style={style} {...hover}>{children}</a>
+        : <Link to={to} style={style} {...hover}>{children}</Link>;
+};
 
 const FooterHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <p style={{
-        fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em',
-        textTransform: 'uppercase', color: MUTED, marginBottom: 14,
-    }}>
-        {children}
-    </p>
+    <p style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: TEXT, marginBottom: 16 }}>{children}</p>
 );
 
 export const DarkFooter: React.FC = () => {
@@ -880,87 +799,79 @@ export const DarkFooter: React.FC = () => {
 
     return (
         <footer style={{ borderTop: `1px solid ${BORDER_SOFT}`, backgroundColor: BG }}>
-            <div className="mx-auto max-w-6xl px-5 sm:px-8" style={{ paddingTop: 48, paddingBottom: 32 }}>
-
-                <div className="grid gap-10 md:gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
-
+            <div className="mx-auto max-w-7xl px-5 sm:px-8" style={{ paddingTop: 64, paddingBottom: 32 }}>
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-x-8 gap-y-12">
                     {/* Marca */}
-                    <div style={{ minWidth: 180 }}>
-                        <Link to="/" style={{ textDecoration: 'none' }}>
-                            <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>
-                                alpacka.ai
-                            </span>
+                    <div className="col-span-2 md:col-span-4">
+                        <Link to="/" className="inline-flex items-center gap-2" style={{ textDecoration: 'none' }}>
+                            <AlpacaIcon variant="light" className="h-6 w-auto" />
+                            <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>alpacka.ai</span>
                         </Link>
-                        <p style={{ fontFamily: SANS, fontSize: 12.5, color: DIM, lineHeight: 1.7, marginTop: 12, maxWidth: 240 }}>
+                        <p style={{ fontFamily: SANS, fontSize: 13.5, color: DIM, lineHeight: 1.7, marginTop: 14, maxWidth: 280 }}>
                             Prompts profesionales en español para ChatGPT, Claude y Gemini.
                         </p>
+                        <a
+                            href="https://www.instagram.com/alpacka.ai/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram de Alpacka"
+                            className="inline-flex items-center justify-center"
+                            style={{ marginTop: 20, width: 36, height: 36, borderRadius: 9, border: `1px solid ${BORDER}`, color: MUTED, transition: 'color .15s, border-color .15s' }}
+                            onMouseEnter={e => { e.currentTarget.style.color = TEXT; e.currentTarget.style.borderColor = '#3a3a3a'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = MUTED; e.currentTarget.style.borderColor = BORDER; }}
+                        >
+                            <Instagram size={16} />
+                        </a>
                     </div>
 
-                    {/* Producto */}
-                    <div className="flex flex-col">
+                    <div className="md:col-span-2 flex flex-col">
                         <FooterHeading>Producto</FooterHeading>
-                        <div className="flex flex-col gap-2.5">
-                            <FooterLink to="/prompts">Catálogo de prompts</FooterLink>
+                        <div className="flex flex-col gap-3">
+                            <FooterLink to="/prompts">Biblioteca de prompts</FooterLink>
                             <FooterLink to="/generador">Generador con IA</FooterLink>
-                            <FooterLink to="/skills">Skills</FooterLink>
-                            <FooterLink to="/servicios">Servicios</FooterLink>
+                            <FooterLink to="/skills">Skills para Claude</FooterLink>
+                            <FooterLink to="/guardados">Guardados</FooterLink>
                             <FooterLink to="/pricing">Precios</FooterLink>
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-2 flex flex-col">
+                        <FooterHeading>Recursos</FooterHeading>
+                        <div className="flex flex-col gap-3">
                             <FooterLink to="/blog">Blog</FooterLink>
-                        </div>
-                    </div>
-
-                    {/* Cuenta */}
-                    <div className="flex flex-col">
-                        <FooterHeading>Cuenta</FooterHeading>
-                        <div className="flex flex-col gap-2.5">
-                            <FooterLink to="/login">Iniciar sesión</FooterLink>
+                            <FooterLink to="/servicios">Servicios</FooterLink>
+                            <FooterLink to="/bank-prompts">Pack en Notion</FooterLink>
                             <FooterLink to="/dashboard">Mi cuenta</FooterLink>
-                            <FooterLink to="/guardados">Mis guardados</FooterLink>
-                            <FooterLink to="/terms">Términos</FooterLink>
-                            <FooterLink to="/privacy">Privacidad</FooterLink>
                         </div>
                     </div>
 
-                    {/* Categorías */}
-                    {/* Ocupa dos columnas solo a partir de md: en móvil la rejilla
-                        tiene una sola columna y un span 2 crearía una implícita,
-                        desbordando la página a lo ancho. */}
-                    <div className="flex flex-col md:col-span-2" style={{ minWidth: 240 }}>
+                    {/* Categorías: alto reservado mientras cargan */}
+                    <div className="col-span-2 md:col-span-4 flex flex-col">
                         <FooterHeading>Categorías</FooterHeading>
-                        {categories.length === 0 ? (
-                            <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
-                                {Array.from({ length: 8 }).map((_, i) => (
-                                    <div key={i} className="animate-pulse" style={{ height: 12, borderRadius: 4, backgroundColor: PANEL }} />
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-3" style={{ minHeight: 5 * 32 }}>
+                            {categories.length === 0
+                                ? Array.from({ length: 10 }).map((_, i) => (
+                                    <div key={i} className="animate-pulse" style={{ height: 13, borderRadius: 4, backgroundColor: PANEL, marginTop: 4 }} />
+                                ))
+                                : categories.slice(0, 10).map(c => (
+                                    <FooterLink key={c.name} to={categoryHref(c.name)}>{c.name}</FooterLink>
                                 ))}
+                        </div>
+                        {categories.length > 10 && (
+                            <div style={{ marginTop: 14 }}>
+                                <FooterLink to="/prompts">Ver las {categories.length} categorías →</FooterLink>
                             </div>
-                        ) : (
-                            <>
-                                <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
-                                    {categories.slice(0, 14).map(c => (
-                                        <FooterLink key={c.name} to={categoryHref(c.name)}>{c.name}</FooterLink>
-                                    ))}
-                                </div>
-                                {categories.length > 14 && (
-                                    <div style={{ marginTop: 14 }}>
-                                        <FooterLink to="/prompts">Ver las {categories.length} categorías →</FooterLink>
-                                    </div>
-                                )}
-                            </>
                         )}
                     </div>
                 </div>
 
                 {/* Barra inferior */}
-                <div
-                    className="flex flex-wrap items-center justify-between gap-3"
-                    style={{ borderTop: `1px solid ${BORDER_SOFT}`, marginTop: 40, paddingTop: 22 }}
-                >
-                    <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
-                        © {new Date().getFullYear()} alpacka.ai
-                    </span>
-                    <span style={{ fontFamily: SANS, fontSize: 11.5, color: DIM }}>
-                        Pagos procesados por Paddle
-                    </span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{ borderTop: `1px solid ${BORDER_SOFT}`, marginTop: 56, paddingTop: 24 }}>
+                    <span style={{ fontFamily: SANS, fontSize: 12.5, color: DIM }}>© {new Date().getFullYear()} alpacka.ai · Pagos procesados por Paddle</span>
+                    <div className="flex items-center gap-6">
+                        <FooterLink to="/terms">Términos</FooterLink>
+                        <FooterLink to="/privacy">Privacidad</FooterLink>
+                    </div>
                 </div>
             </div>
         </footer>

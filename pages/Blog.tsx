@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCachedBlogList, fetchBlogList, type BlogPostPreview } from '../lib/blogList';
 import { Search } from 'lucide-react';
 import {
-    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, SANS, MONO,
+    BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, SANS, MONO, HEADER_H,
 } from '../components/darkKit';
 
 /* Blog — mismo lenguaje visual oscuro estilo skills.sh que el resto de la app. */
@@ -93,7 +93,7 @@ const Blog: React.FC = () => {
             {/* ── Barra de filtros (sticky arriba al hacer scroll) ───────────── */}
             <div
                 style={{
-                    position: 'sticky', top: 0, zIndex: 40,
+                    position: 'sticky', top: HEADER_H, zIndex: 40,
                     backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                     borderTop: `1px solid ${BORDER_SOFT}`,

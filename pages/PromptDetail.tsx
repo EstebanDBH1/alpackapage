@@ -8,7 +8,7 @@ import { Prompt } from '../types';
 import { Copy, Check, Lock, AlertCircle, Bookmark, BookmarkCheck, ArrowRight, Download, ArrowLeft } from 'lucide-react';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER,
-    SANS, MONO, AI_BADGE_DARK, CategoryBadge,
+    SANS, MONO, AI_BADGE_DARK, CategoryBadge, HEADER_H,
 } from '../components/darkKit';
 
 /* Detalle de prompt — mismo lenguaje visual oscuro estilo skills.sh
@@ -553,7 +553,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                     </div>
 
                     {/* ── DERECHA: metadatos ────────────────────────────────── */}
-                    <div className="flex flex-col gap-3 lg:sticky" style={{ top: 24 }}>
+                    <div className="flex flex-col gap-3 lg:sticky" style={{ top: HEADER_H + 24 }}>
 
                         {/* Guardar */}
                         <button

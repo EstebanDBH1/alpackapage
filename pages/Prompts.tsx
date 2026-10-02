@@ -10,7 +10,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Shield, Search, ChevronDown, Sparkles, Check } from 'lucide-react';
 import {
     BG, BG_WARM, TEXT, TEXT_MED, TEXT_DIM, BORDER, ACCENT, YELLOW, GREEN, FONT,
-    useEuclidFont, LandingStyles, CategoryBadge,
+    useEuclidFont, LandingStyles, CategoryBadge, HEADER_H,
 } from '../components/darkKit';
 
 const PAGE_SIZE = 12;
@@ -193,7 +193,7 @@ const Prompts: React.FC = () => {
             {/* ── Barra de filtros (sticky bajo el navbar) ───────────────────── */}
             <div
                 style={{
-                    position: 'sticky', top: 0, zIndex: 40,
+                    position: 'sticky', top: HEADER_H, zIndex: 40,
                     backgroundColor: 'rgba(0,0,0,0.85)',
                     backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                     borderTop: `1px solid ${BORDER}`,
