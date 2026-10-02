@@ -136,7 +136,9 @@ const NotionMock: React.FC = () => {
   }, [qi]);
 
   const q = QUERIES[qi];
-  const results = typed.length >= 2 ? ROWS.filter(r => r.kw === q) : ROWS.slice(0, 6);
+  /* Siempre 3 filas (las de la búsqueda en curso): si el número de filas
+     cambiara mientras se escribe/borra, la página entera saltaría. */
+  const results = ROWS.filter(r => r.kw === q);
   const activeArea = typed.length >= 2 ? results[0]?.area : undefined;
 
   return (
@@ -179,7 +181,7 @@ const NotionMock: React.FC = () => {
         <div style={{ padding: '22px 22px 22px' }}>
           <p style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em', color: INK, marginBottom: 16 }}>Banco de prompts</p>
 
-          <div className="flex items-center gap-2.5" style={{ border: `1px solid ${LINE}`, borderRadius: 10, padding: '10px 12px', backgroundColor: '#fff', marginBottom: 14 }}>
+          <div className="flex items-center gap-2.5" style={{ border: `1px solid ${LINE}`, borderRadius: 10, padding: '0 12px', height: 44, backgroundColor: '#fff', marginBottom: 14 }}>
             <Search size={15} style={{ color: FAINT }} />
             <span style={{ fontSize: 14.5, color: INK }}>{typed}</span>
             <span className="bp-caret" />
@@ -311,6 +313,24 @@ const PromptText: React.FC<{ text: string }> = ({ text }) => (
   </pre>
 );
 
+/* Pinta todas las variantes en la misma celda de grid y solo muestra la
+   activa: el bloque mide siempre lo que la más larga, así cambiar de
+   pestaña no mueve el resto de la página. */
+const Stack: React.FC<{ active: number; items: React.ReactNode[] }> = ({ active, items }) => (
+  <div style={{ display: 'grid' }}>
+    {items.map((node, i) => (
+      <div
+        key={i}
+        className={i === active ? 'bp-swap' : undefined}
+        aria-hidden={i !== active}
+        style={{ gridArea: '1 / 1', visibility: i === active ? 'visible' : 'hidden' }}
+      >
+        {node}
+      </div>
+    ))}
+  </div>
+);
+
 const PromptDemo: React.FC = () => {
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -345,28 +365,32 @@ const PromptDemo: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-4" key={active}>
+      <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-4">
         {/* Lo que escribe casi todo el mundo */}
-        <div className="bp-swap flex flex-col" style={{ backgroundColor: CARD, border: `1px solid ${LINE}`, borderRadius: 18, padding: 24 }}>
+        <div className="flex flex-col" style={{ backgroundColor: CARD, border: `1px solid ${LINE}`, borderRadius: 18, padding: 24 }}>
           <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: FAINT, marginBottom: 20 }}>
             Lo que escribe casi todo el mundo
           </p>
-          <div style={{ backgroundColor: PAPER_2, borderRadius: '16px 16px 4px 16px', padding: '12px 15px', marginLeft: 'auto', maxWidth: '92%', marginBottom: 16 }}>
-            <p style={{ fontSize: 15, color: INK }}>{s.vague}</p>
-          </div>
-          <div className="flex gap-2.5">
-            <span style={{ width: 26, height: 26, borderRadius: 99, border: `1px solid ${LINE}`, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: MUTED }}>
-              <OpenAILogo size={13} />
-            </span>
-            <p style={{ fontSize: 14.5, lineHeight: 1.65, color: MUTED }}>{s.vagueResult}</p>
-          </div>
+          <Stack active={active} items={samples.map(x => (
+            <>
+              <div style={{ backgroundColor: PAPER_2, borderRadius: '16px 16px 4px 16px', padding: '12px 15px', marginLeft: 'auto', width: 'fit-content', maxWidth: '92%', marginBottom: 16 }}>
+                <p style={{ fontSize: 15, color: INK }}>{x.vague}</p>
+              </div>
+              <div className="flex gap-2.5">
+                <span style={{ width: 26, height: 26, borderRadius: 99, border: `1px solid ${LINE}`, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: MUTED }}>
+                  <OpenAILogo size={13} />
+                </span>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: MUTED }}>{x.vagueResult}</p>
+              </div>
+            </>
+          ))} />
           <p style={{ marginTop: 'auto', paddingTop: 24, fontSize: 14.5, lineHeight: 1.6, color: INK }}>
             <span style={{ color: ACCENT, fontWeight: 700 }}>→</span> Una respuesta que vale para cualquiera… y por eso no te sirve a ti.
           </p>
         </div>
 
         {/* Un prompt del pack */}
-        <div className="bp-swap" style={{ backgroundColor: INK, borderRadius: 18, overflow: 'hidden', animationDelay: '60ms' }}>
+        <div style={{ backgroundColor: INK, borderRadius: 18, overflow: 'hidden' }}>
           <div className="flex items-center justify-between gap-3" style={{ padding: '14px 18px 14px 22px', borderBottom: `1px solid ${INK_LINE}` }}>
             <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: ON_INK_MED }}>
               Un prompt del pack
@@ -385,7 +409,7 @@ const PromptDemo: React.FC = () => {
             </button>
           </div>
           <div style={{ padding: '20px 22px 24px' }}>
-            <PromptText text={s.prompt} />
+            <Stack active={active} items={samples.map(x => <PromptText text={x.prompt} />)} />
           </div>
         </div>
       </div>
