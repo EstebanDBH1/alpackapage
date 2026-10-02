@@ -1,23 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Wand2, X, ArrowRight } from 'lucide-react';
+import { X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { hasGeneratorAccess } from '../lib/access';
 import { CARD, PANEL, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, SANS, MONO } from './darkKit';
 
 /* ── Anuncio del generador ("what's new") ────────────────────────
-   Tarjeta centrada que se muestra UNA vez y no vuelve. Sustituye al
-   banner permanente: el generador es la función más infrautilizada
-   del producto (de 40 personas que lo tienen pagado, 16 lo han
-   abierto), pero un anuncio que vive para siempre en la cabecera se
-   convierte en ruido a los dos días.
+   Se muestra UNA vez por navegador y no vuelve.
 
-   Reglas: una sola vez por navegador, con retardo para no golpear
-   nada más cargar, y nunca sobre las páginas donde estorbaría. */
+   En vez de describir la función con un icono y un párrafo, la tarjeta
+   la enseña: se ve la frase que escribe el usuario y el prompt saliendo
+   debajo, en la monoespaciada y con el formato de bloques del catálogo.
+   El material del producto es texto, así que el anuncio es texto. */
 
 const SEEN_KEY = 'alp-generator-announced';
 const SEEN_GENERATOR_KEY = 'alp-seen-generator';
 const DELAY_MS = 1400;
+
+/* Modo prueba: la tarjeta reaparece en cada recarga en vez de mostrarse
+   una sola vez. Se activa solo con `npm run dev`, o en producción añadiendo
+   `?announce=1` a la URL. Nunca por defecto: si esto se colara, el anuncio
+   saldría a cada visitante en cada carga y sería exactamente el pop-up
+   pesado que queremos evitar. */
+const isForced = (): boolean => {
+    try {
+        if (import.meta.env.DEV) return true;
+        return new URLSearchParams(window.location.search).has('announce');
+    } catch { return false; }
+};
 
 // Ni en el propio generador ni encima de un pago a medias
 const HIDDEN_ON = ['/generador', '/checkout', '/payment-success', '/login'];
@@ -32,6 +42,9 @@ const alreadyHandled = (): boolean => {
 };
 
 const markHandled = () => {
+    // En modo prueba no se persiste: así el localStorage queda limpio para
+    // comprobar después el comportamiento real de "una sola vez".
+    if (isForced()) return;
     try { localStorage.setItem(SEEN_KEY, '1'); } catch { /* nada que hacer */ }
 };
 
@@ -43,7 +56,8 @@ const GeneratorAnnouncement: React.FC = () => {
     const ctaRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
-        if (alreadyHandled()) return;
+        const forced = isForced();
+        if (!forced && alreadyHandled()) return;
         if (HIDDEN_ON.some(p => pathname === p || pathname.startsWith(p + '/'))) return;
 
         let cancelled = false;
@@ -99,21 +113,21 @@ const GeneratorAnnouncement: React.FC = () => {
     return (
         <>
             <style>{`
-                @keyframes alpFadeIn { from { opacity: 0 } to { opacity: 1 } }
-                @keyframes alpRise { from { opacity: 0; transform: translateY(10px) scale(.985) } to { opacity: 1; transform: none } }
-                .alp-ann-overlay { animation: alpFadeIn .18s ease-out both }
-                .alp-ann-card { animation: alpRise .26s cubic-bezier(.2,.7,.3,1) both }
+                @keyframes alpFade { from { opacity: 0 } to { opacity: 1 } }
+                @keyframes alpRise { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+                .alp-ov { animation: alpFade .18s ease-out both }
+                .alp-card { animation: alpRise .3s cubic-bezier(.2,.7,.3,1) both }
                 @media (prefers-reduced-motion: reduce) {
-                    .alp-ann-overlay, .alp-ann-card { animation: none }
+                    .alp-ov, .alp-card { animation: none !important; opacity: 1 !important; transform: none !important }
                 }
             `}</style>
 
             <div
-                className="alp-ann-overlay fixed inset-0 flex items-center justify-center"
+                className="alp-ov fixed inset-0 flex items-center justify-center"
                 style={{
                     zIndex: 100, padding: 20,
-                    backgroundColor: 'rgba(0,0,0,0.66)',
-                    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)',
+                    backgroundColor: 'rgba(0,0,0,0.72)',
+                    backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
                 }}
                 onClick={close}
             >
@@ -121,111 +135,104 @@ const GeneratorAnnouncement: React.FC = () => {
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="alp-ann-title"
-                    className="alp-ann-card relative w-full"
+                    className="alp-card relative w-full"
                     onClick={e => e.stopPropagation()}
                     style={{
-                        maxWidth: 400,
+                        maxWidth: 440,
                         backgroundColor: CARD,
                         border: `1px solid ${BORDER}`,
-                        borderRadius: 18,
-                        padding: '30px 28px 26px',
+                        borderRadius: 16,
                         fontFamily: SANS,
-                        boxShadow: '0 30px 70px rgba(0,0,0,0.7)',
+                        boxShadow: '0 30px 80px rgba(0,0,0,0.75)',
+                        overflow: 'hidden',
                     }}
                 >
-                    <button
-                        type="button"
-                        onClick={close}
-                        aria-label="Cerrar"
-                        className="absolute inline-flex items-center justify-center"
-                        style={{
-                            top: 12, right: 12, width: 28, height: 28, borderRadius: 8,
-                            background: 'none', border: 'none', color: DIM, cursor: 'pointer',
-                            transition: 'color .15s, background-color .15s',
-                        }}
-                        onMouseEnter={e => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.color = TEXT; el.style.backgroundColor = PANEL;
-                        }}
-                        onMouseLeave={e => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.color = DIM; el.style.backgroundColor = 'transparent';
-                        }}
-                    >
-                        <X size={15} />
-                    </button>
-
+                    {/* Barra superior: etiqueta discreta y cierre */}
                     <div
-                        className="flex items-center justify-center"
-                        style={{
-                            width: 42, height: 42, borderRadius: 13, marginBottom: 20,
-                            backgroundColor: 'rgba(255,178,36,0.09)',
-                            border: '1px solid rgba(255,178,36,0.28)',
-                        }}
+                        className="flex items-center justify-between"
+                        style={{ padding: '13px 14px 13px 18px', borderBottom: `1px solid ${BORDER_SOFT}` }}
                     >
-                        <Wand2 size={19} style={{ color: AMBER }} />
-                    </div>
-
-                    <p style={{
-                        fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.18em',
-                        textTransform: 'uppercase', color: AMBER, marginBottom: 10,
-                    }}>
-                        Nuevo
-                    </p>
-
-                    <h2
-                        id="alp-ann-title"
-                        style={{
-                            fontSize: 20, fontWeight: 700, color: TEXT,
-                            letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10,
-                        }}
-                    >
-                        Ahora puedes crear tus propios prompts
-                    </h2>
-
-                    <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.7, marginBottom: 22 }}>
-                        Describe en una frase lo que quieres lograr y el generador te escribe un
-                        prompt a medida, con la misma estructura que los del catálogo.
-                        {subscribed
-                            ? ' Ya está incluido en tu plan: hasta 10 al día.'
-                            : ' Está incluido en la membresía, con hasta 10 al día.'}
-                    </p>
-
-                    <div className="flex flex-col gap-2">
-                        <button
-                            ref={ctaRef}
-                            type="button"
-                            onClick={accept}
-                            className="inline-flex w-full items-center justify-center gap-2"
-                            style={{
-                                backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
-                                fontFamily: SANS, fontSize: 14, fontWeight: 700,
-                                borderRadius: 10, padding: '13px 20px',
-                            }}
-                        >
-                            Probar el generador <ArrowRight size={14} />
-                        </button>
+                        <div className="flex items-center gap-2.5">
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: AMBER }} />
+                            <span style={{
+                                fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
+                                letterSpacing: '0.18em', textTransform: 'uppercase', color: MUTED,
+                            }}>
+                                Nuevo · Generador
+                            </span>
+                        </div>
                         <button
                             type="button"
                             onClick={close}
-                            className="w-full"
+                            aria-label="Cerrar"
+                            className="inline-flex items-center justify-center"
                             style={{
-                                background: 'none', border: `1px solid ${BORDER_SOFT}`, cursor: 'pointer',
-                                fontFamily: SANS, fontSize: 13, fontWeight: 600, color: MUTED,
-                                borderRadius: 10, padding: '11px 20px',
-                                transition: 'color .15s, border-color .15s',
+                                width: 26, height: 26, borderRadius: 7,
+                                background: 'none', border: 'none', color: DIM, cursor: 'pointer',
+                                transition: 'color .15s, background-color .15s',
                             }}
                             onMouseEnter={e => {
                                 const el = e.currentTarget as HTMLElement;
-                                el.style.color = TEXT; el.style.borderColor = BORDER;
+                                el.style.color = TEXT; el.style.backgroundColor = PANEL;
                             }}
                             onMouseLeave={e => {
                                 const el = e.currentTarget as HTMLElement;
-                                el.style.color = MUTED; el.style.borderColor = BORDER_SOFT;
+                                el.style.color = DIM; el.style.backgroundColor = 'transparent';
                             }}
                         >
-                            Ahora no
+                            <X size={14} />
                         </button>
+                    </div>
+
+                    <div style={{ padding: '22px 18px 20px' }}>
+                        <h2
+                            id="alp-ann-title"
+                            style={{
+                                fontSize: 21, fontWeight: 700, color: TEXT,
+                                letterSpacing: '-0.025em', lineHeight: 1.28, marginBottom: 9,
+                            }}
+                        >
+                            Genera tus prompts de IA
+                            <br />
+                            en un solo clic
+                        </h2>
+                        <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.7, marginBottom: 18 }}>
+                            Consigue prompts potentes sin esfuerzo — describe tu objetivo como si
+                            hablaras con un amigo y nosotros nos encargamos del resto.
+                        </p>
+
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                ref={ctaRef}
+                                type="button"
+                                onClick={accept}
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
+                                    fontFamily: SANS, fontSize: 13.5, fontWeight: 700,
+                                    borderRadius: 9, padding: '12px 18px',
+                                }}
+                            >
+                                Crear
+                            </button>
+                            <button
+                                type="button"
+                                onClick={close}
+                                style={{
+                                    background: 'none', border: 'none', cursor: 'pointer',
+                                    fontFamily: SANS, fontSize: 13, fontWeight: 500, color: DIM,
+                                    padding: '12px 14px', transition: 'color .15s',
+                                }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DIM; }}
+                            >
+                                Ahora no
+                            </button>
+                        </div>
+
+                        <p style={{ fontFamily: MONO, fontSize: 10, color: DIM, marginTop: 13, letterSpacing: '0.04em' }}>
+                            {subscribed ? 'Incluido en tu plan · 10 al día' : 'Incluido en la membresía · 10 al día'}
+                        </p>
                     </div>
                 </div>
             </div>

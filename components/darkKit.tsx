@@ -101,6 +101,7 @@ export const AI_BADGE_DARK: Record<string, { bg: string; bd: string; fg: string 
 const NAV_LINKS: { to: string; label: string; highlight?: boolean }[] = [
     { to: '/generador', label: 'Generador', highlight: true },
     { to: '/skills', label: 'Skills' },
+    { to: '/servicios', label: 'Servicios' },
     { to: '/blog', label: 'Blog' },
     { to: '/pricing', label: 'Precios' },
 ];
@@ -902,6 +903,7 @@ export const DarkFooter: React.FC = () => {
                             <FooterLink to="/prompts">Catálogo de prompts</FooterLink>
                             <FooterLink to="/generador">Generador con IA</FooterLink>
                             <FooterLink to="/skills">Skills</FooterLink>
+                            <FooterLink to="/servicios">Servicios</FooterLink>
                             <FooterLink to="/pricing">Precios</FooterLink>
                             <FooterLink to="/blog">Blog</FooterLink>
                         </div>

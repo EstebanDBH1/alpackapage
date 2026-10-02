@@ -18,6 +18,7 @@ const SavedPromptsPage = React.lazy(() => import('./pages/SavedPromptsPage'));
 const Ebook = React.lazy(() => import('./pages/Ebook'));
 const Admin = React.lazy(() => import('./pages/Admin'));
 const Skills = React.lazy(() => import('./pages/Skills'));
+const Servicios = React.lazy(() => import('./pages/Servicios'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
@@ -127,6 +128,7 @@ const App: React.FC = () => {
           <Route path="/bank-prompts" element={<BankPrompts />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/skills" element={<Skills />} />
+          <Route path="/servicios" element={<Servicios />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
