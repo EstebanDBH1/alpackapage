@@ -24,9 +24,9 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const BUY_URL = 'https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034';
 
 /* Precio en un solo sitio: si cambia en Hotmart, se cambia aquí. */
-const PRICE = '19,99$';
-const PRICE_BEFORE = '29$';
-const PER_PROMPT = '0,04$';
+const PRICE = '14,99$';
+const PRICE_BEFORE = '19,99$';
+const PER_PROMPT = '0,03$';
 
 /* ─── Paleta ─── */
 const PAPER = '#f3f0e9';
@@ -838,7 +838,7 @@ const BankPrompts: React.FC = () => {
               <div style={{ border: `1px solid ${INK_LINE}`, borderRadius: 24, padding: 'clamp(24px, 3vw, 36px)', backgroundColor: INK_2 }}>
                 <div className="flex items-center justify-between mb-6">
                   <span style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: ON_INK_MED }}>Pack completo</span>
-                  <span style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 600, backgroundColor: ACCENT, color: ON_ACCENT, borderRadius: 99, padding: '4px 10px' }}>-31% hoy</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 600, backgroundColor: ACCENT, color: ON_ACCENT, borderRadius: 99, padding: '4px 10px' }}>-25% hoy</span>
                 </div>
                 <div className="flex items-end gap-4">
                   <span style={{ display: 'inline-block', overflow: 'hidden', lineHeight: 0.9 }}>
