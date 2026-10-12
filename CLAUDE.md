@@ -63,7 +63,7 @@ Lifetime rows are written by `paddle-webhook` on `transaction.completed`. Two th
 
 **Data fetching:** Supabase client is initialized in `lib/`. Public reads follow a shared pattern — lightweight payloads + memory/sessionStorage cache with stale-while-revalidate: `lib/promptsList.ts` (prompt catalog via `get_prompts_list()` RPC, no `content` column; shared by `/prompts` and the Home marquee) and `lib/blogList.ts` (blog list without `content` + per-slug post cache). Full prompt content is only fetched per-prompt via `get_prompt_detail()` (subscription-gated). Admin pages intentionally do NOT cache (fresh data while editing). Auth checks use `getSession()` (local read), not `getUser()` (network round-trip). The older `get_public_prompts()` RPC still exists in the DB but the frontend no longer calls it. The `saved_prompts` table joins users to bookmarked prompts.
 
-**Chunk-reload guard:** `index.tsx` listens for Vite's `vite:preloadError` and reloads the page once (sessionStorage flag) when a lazy route chunk fails to load — this recovers visitors whose cached `index.html` references pre-deploy asset hashes.
+**Chunk-reload guard:** `index.tsx` listens for Vite's `vite:preloadError`, re-fetches the failing `/assets/` URLs with `cache: 'reload'` and then reloads the page once (sessionStorage flag, cleared 10 s after a successful `load`). The re-fetch matters: a chunk requested during a deploy window gets Cloudflare's HTML fallback cached as `immutable` under its URL, and a plain reload just reads that bad cache entry again (symptom: "Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of text/html").
 
 ### Styling
 
