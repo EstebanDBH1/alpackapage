@@ -288,7 +288,6 @@ const focusOff = (e: React.FocusEvent<HTMLElement>) => { e.currentTarget.style.b
 const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => void }> = ({ service, onServiceChange }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
     const [message, setMessage] = useState('');
     const [website, setWebsite] = useState('');   // honeypot: invisible para personas
     const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -299,10 +298,6 @@ const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => v
         setErrorMsg('');
         // Un bot que rellena el campo oculto recibe un «enviado» falso.
         if (website) { setState('sent'); return; }
-        if (phone.replace(/\D/g, '').length < 6) {
-            setErrorMsg('Escribe un número de contacto válido, con prefijo de país.');
-            return;
-        }
         if (message.trim().length < 10) {
             setErrorMsg('Cuéntanos un poco más sobre lo que necesitas.');
             return;
@@ -311,7 +306,6 @@ const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => v
         const { error } = await supabase.from('service_requests').insert({
             name: name.trim(),
             email: email.trim(),
-            phone: phone.trim(),
             service: service || null,
             message: message.trim(),
         });
@@ -333,7 +327,7 @@ const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => v
                 <p style={{ fontWeight: 700, fontSize: 17, marginBottom: 8 }}>¡Solicitud enviada!</p>
                 <p style={{ color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 340 }}>
                     Gracias{name ? `, ${name.trim().split(' ')[0]}` : ''}. Hemos recibido tu mensaje y te
-                    contactaremos en menos de 24 horas por correo o por teléfono.
+                    responderemos por correo en menos de 24 horas.
                 </p>
             </div>
         );
@@ -349,18 +343,11 @@ const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => v
                         placeholder="Tu nombre" style={fieldStyle} />
                 </div>
                 <div>
-                    <label htmlFor="sr-phone" style={labelStyle}>Teléfono / WhatsApp *</label>
-                    <input id="sr-phone" required type="tel" maxLength={40} autoComplete="tel" value={phone}
-                        onChange={e => setPhone(e.target.value)} onFocus={focusOn} onBlur={focusOff}
-                        placeholder="+34 600 000 000" style={fieldStyle} />
+                    <label htmlFor="sr-email" style={labelStyle}>Correo electrónico *</label>
+                    <input id="sr-email" required type="email" maxLength={254} autoComplete="email" value={email}
+                        onChange={e => setEmail(e.target.value)} onFocus={focusOn} onBlur={focusOff}
+                        placeholder="tu@correo.com" style={fieldStyle} />
                 </div>
-            </div>
-
-            <div>
-                <label htmlFor="sr-email" style={labelStyle}>Correo electrónico *</label>
-                <input id="sr-email" required type="email" maxLength={254} autoComplete="email" value={email}
-                    onChange={e => setEmail(e.target.value)} onFocus={focusOn} onBlur={focusOff}
-                    placeholder="tu@correo.com" style={fieldStyle} />
             </div>
 
             <div>

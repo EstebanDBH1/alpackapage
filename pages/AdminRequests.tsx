@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
 import AdminTabs, { NEW_REQUESTS_EVENT } from '../components/AdminTabs';
 import {
-    Lock, RefreshCw, AlertCircle, Mail, Phone, MessageCircle, Trash2, Inbox, Search,
+    Lock, RefreshCw, AlertCircle, Mail, Trash2, Inbox, Search,
 } from 'lucide-react';
 
 /* Bandeja de solicitudes de servicio que llegan desde el formulario de
@@ -17,7 +17,6 @@ interface ServiceRequest {
     created_at: string;
     name: string;
     email: string;
-    phone: string;
     service: string | null;
     message: string;
     status: Status;
@@ -32,9 +31,6 @@ const STATUS_META: Record<Status, { label: string; className: string }> = {
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-// wa.me solo acepta dígitos (con prefijo de país, sin «+»).
-const whatsappHref = (phone: string) => `https://wa.me/${phone.replace(/\D/g, '')}`;
 
 const AdminRequests: React.FC = () => {
     const [authState, setAuthState] = useState<'loading' | 'anonymous' | 'forbidden' | 'admin'>('loading');
@@ -106,7 +102,7 @@ const AdminRequests: React.FC = () => {
         const q = search.trim().toLowerCase();
         return rows.filter(r =>
             (statusFilter ? r.status === statusFilter : r.status !== 'archivado') &&
-            (!q || [r.name, r.email, r.phone, r.message, r.service ?? ''].some(v => v.toLowerCase().includes(q)))
+            (!q || [r.name, r.email, r.message, r.service ?? ''].some(v => v.toLowerCase().includes(q)))
         );
     }, [rows, statusFilter, search]);
 
@@ -181,7 +177,7 @@ const AdminRequests: React.FC = () => {
                 <input
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    placeholder="Buscar por nombre, email, teléfono…"
+                    placeholder="Buscar por nombre, email o mensaje…"
                     className="w-full rounded-xl border border-border bg-card py-3 pl-10 pr-4 text-sm text-foreground focus:border-accent focus:outline-none"
                 />
             </div>
@@ -246,20 +242,6 @@ const AdminRequests: React.FC = () => {
                                                 className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90"
                                             >
                                                 <Mail size={13} /> {r.email}
-                                            </a>
-                                            <a
-                                                href={whatsappHref(r.phone)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs text-foreground transition hover:border-accent"
-                                            >
-                                                <MessageCircle size={13} /> WhatsApp
-                                            </a>
-                                            <a
-                                                href={`tel:${r.phone.replace(/[^\d+]/g, '')}`}
-                                                className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs text-foreground transition hover:border-accent"
-                                            >
-                                                <Phone size={13} /> {r.phone}
                                             </a>
                                         </div>
 
