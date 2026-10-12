@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
+import AdminTabs from '../components/AdminTabs';
 import { BlogPost } from '../types';
 import BlogContent, { blogHtmlToText } from '../components/BlogContent';
 import RichTextEditor from '../components/RichTextEditor';
@@ -198,24 +199,7 @@ const AdminBlog: React.FC = () => {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-12">
-            {/* Pestañas del panel */}
-            <div className="mb-10 flex items-center gap-2">
-                <Link
-                    to="/admin"
-                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
-                >
-                    Prompts
-                </Link>
-                <span className="rounded-full border border-accent bg-accent/10 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-accent">
-                    Blog
-                </span>
-                <Link
-                    to="/admin/suscriptores"
-                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
-                >
-                    Suscriptores
-                </Link>
-            </div>
+            <AdminTabs active="/admin/blog" />
 
             {form ? (
                 /* ---------- Editor ---------- */

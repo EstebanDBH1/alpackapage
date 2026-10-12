@@ -35,7 +35,8 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 - `/ebook` — Standalone sales page for the Notion prompt library ($10 one-time via Hotmart)
 - `/skills` — Skills page
 - `/blog` / `/blog/:slug` — Blog (content from Supabase `blog_posts`)
-- `/admin` / `/admin/blog` — Admin panels (protected by `is_admin` RLS in Supabase)
+- `/servicios` — Services page (no public prices); its contact form inserts into `service_requests`
+- `/admin` / `/admin/blog` / `/admin/suscriptores` / `/admin/solicitudes` — Admin panels (protected by `is_admin` RLS in Supabase). Tabs are shared in `components/AdminTabs.tsx`, which shows a badge with the count of `service_requests` in status `nuevo`. `service_requests` lets `anon`/`authenticated` INSERT only the form columns (not `status`); only `is_admin()` can read, update `status` or delete.
 - `/terms` / `/privacy` — Static legal pages
 
 `STANDALONE_ROUTES` (`/ebook`, `/bank-prompts`, `/checkout`) render without the shared layout — they bring their own header/footer. Every other route gets `DarkHeader` / `DarkFooter` from `components/darkKit.tsx`; that is the *only* navigation (the old `components/Navbar.tsx` was dead code and has been deleted).

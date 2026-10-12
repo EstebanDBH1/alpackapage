@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
+import AdminTabs from '../components/AdminTabs';
 import { Search, Lock, RefreshCw, AlertCircle } from 'lucide-react';
 
 interface SubscriberRow {
@@ -118,24 +119,7 @@ const AdminSubscribers: React.FC = () => {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-12">
-            {/* Pestañas del panel */}
-            <div className="mb-10 flex items-center gap-2">
-                <Link
-                    to="/admin"
-                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
-                >
-                    Prompts
-                </Link>
-                <Link
-                    to="/admin/blog"
-                    className="rounded-full border border-border px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition hover:border-accent hover:text-foreground"
-                >
-                    Blog
-                </Link>
-                <span className="rounded-full border border-accent bg-accent/10 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-accent">
-                    Suscriptores
-                </span>
-            </div>
+            <AdminTabs active="/admin/suscriptores" />
 
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <h1 className="text-2xl font-medium tracking-tight text-foreground">Suscriptores</h1>

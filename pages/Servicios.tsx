@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    ArrowRight, Bot, Check, Clock, Code2, GraduationCap, LineChart, Mail,
-    MessageCircle, Plus, Rocket, Sparkles, Workflow, Globe,
+    AlertCircle, ArrowRight, Bot, Check, CheckCircle2, Clock, Code2, GraduationCap,
+    LineChart, Loader2, Mail, Plus, Rocket, Send, Sparkles, Workflow, Globe,
 } from 'lucide-react';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
 } from '../components/darkKit';
+import { supabase } from '../lib/supabase';
 
 /* Página de servicios (Alpacka Studio): el brazo de "hecho para ti" del
-   negocio. La suscripción vende prompts a $7; esto vende implantación a
-   cuatro cifras al mismo público que ya nos lee. Todo el contenido es
-   estático y vive aquí arriba para poder editar precios y textos sin tocar
-   el maquetado. */
+   negocio. Sin precios publicados: cada proyecto se presupuesta tras la
+   primera conversación. El formulario de abajo inserta en la tabla
+   service_requests (el público solo puede insertar; leer es cosa del admin,
+   en /admin/solicitudes). Todo el contenido es estático y vive aquí arriba
+   para poder editar textos sin tocar el maquetado. */
 
-/* ── Contacto — cámbialo por tus canales reales ───────────────────────── */
-const CONTACT_EMAIL = 'hola@alpackaai.xyz';
-const WHATSAPP_URL = 'https://wa.me/000000000000';   // ← tu número con prefijo
-const CALL_URL = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Diagnóstico gratuito — Alpacka Studio')}`;
+/* ── Contacto ─────────────────────────────────────────────────────────── */
+const CONTACT_EMAIL = 'alpackaaiservice@gmail.com';
+const MAILTO_URL = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Consulta de servicio — Alpacka Studio')}`;
 
 type Service = {
     id: string;
@@ -27,7 +28,7 @@ type Service = {
     name: string;
     pitch: string;
     includes: string[];
-    price: string;
+    ideal: string;
     timeline: string;
     featured?: boolean;
 };
@@ -46,7 +47,7 @@ const SERVICES: Service[] = [
             'Informes y alertas automáticas donde ya trabajas',
             'Documentación y traspaso para que no dependas de nadie',
         ],
-        price: 'Desde $490',
+        ideal: 'Equipos que pierden horas en tareas repetitivas',
         timeline: '1–2 semanas',
         featured: true,
     },
@@ -63,7 +64,7 @@ const SERVICES: Service[] = [
             'SEO técnico, velocidad y analítica desde el día uno',
             'Panel para editar contenidos sin tocar código',
         ],
-        price: 'Desde $890',
+        ideal: 'Negocios que quieren una web que venda sola',
         timeline: '2–4 semanas',
     },
     {
@@ -79,7 +80,7 @@ const SERVICES: Service[] = [
             'Agenda citas y registra cada lead en tu CRM o en una hoja',
             'Traspaso a humano cuando la conversación lo pide',
         ],
-        price: 'Desde $690',
+        ideal: 'Marcas que reciben muchos mensajes al día',
         timeline: '1–2 semanas',
     },
     {
@@ -95,7 +96,7 @@ const SERVICES: Service[] = [
             'Cobros con Stripe o Paddle, suscripción o pago único',
             'Dominio, despliegue y 30 días de soporte incluidos',
         ],
-        price: 'Desde $2.400',
+        ideal: 'Emprendedores con una idea de producto digital',
         timeline: '4–8 semanas',
     },
     {
@@ -111,7 +112,7 @@ const SERVICES: Service[] = [
             'Artículos SEO y guiones para reels en lote',
             'Formación al equipo para que lo lleven ellos',
         ],
-        price: 'Desde $390 / mes',
+        ideal: 'Creadores y marcas que publican cada semana',
         timeline: 'Servicio mensual',
     },
     {
@@ -127,7 +128,7 @@ const SERVICES: Service[] = [
             'Diagnóstico y hoja de ruta de IA priorizada por impacto',
             'Sesión de seguimiento a los 30 días',
         ],
-        price: 'Desde $450',
+        ideal: 'Equipos que ya usan IA pero sin método',
         timeline: 'Sesión o mensual',
     },
 ];
@@ -135,13 +136,13 @@ const SERVICES: Service[] = [
 const PROCESS = [
     {
         step: '01',
-        title: 'Diagnóstico gratuito',
-        desc: 'Una llamada de 30 minutos. Te digo qué se puede automatizar, qué no merece la pena y cuánto tiempo o dinero hay en juego. Sin compromiso.',
+        title: 'Nos cuentas qué necesitas',
+        desc: 'Rellenas el formulario o nos escribes. Te contactamos en menos de 24 horas para entender tu negocio y lo que quieres conseguir. Sin compromiso.',
     },
     {
         step: '02',
-        title: 'Propuesta cerrada',
-        desc: 'Alcance, precio fijo y fecha de entrega por escrito en 48 horas. Sin horas sorpresa ni facturas que crecen a mitad del proyecto.',
+        title: 'Propuesta a medida',
+        desc: 'Alcance, presupuesto y fecha de entrega por escrito. Sin horas sorpresa ni facturas que crecen a mitad del proyecto.',
     },
     {
         step: '03',
@@ -187,8 +188,8 @@ const FAQ = [
         answer: 'Sobre todo con negocios pequeños y medianos: tiendas online, agencias, consultorías, infoproductores y equipos de menos de 50 personas. Son los que más ganan automatizando, porque cada hora que se libera se nota al día siguiente.',
     },
     {
-        question: '¿Cuánto cuesta realmente un proyecto?',
-        answer: 'Los precios que ves son el punto de partida de cada servicio. El precio final depende del alcance, y lo sabes cerrado y por escrito antes de empezar: nunca facturamos por horas abiertas. Si tu presupuesto es menor, te digo qué parte del proyecto tiene sentido hacer primero.',
+        question: '¿Cuánto cuesta un proyecto?',
+        answer: 'Depende de lo que necesites, por eso no publicamos tarifas cerradas. Nos cuentas tu caso en el formulario, lo hablamos y te enviamos una propuesta con alcance, precio y fecha por escrito antes de empezar: nunca facturamos por horas abiertas. Si tu presupuesto es ajustado, te decimos qué parte tiene sentido hacer primero.',
     },
     {
         question: 'No tengo ni idea de tecnología. ¿Es un problema?',
@@ -204,7 +205,7 @@ const FAQ = [
     },
     {
         question: '¿En qué se diferencia esto de la suscripción de prompts?',
-        answer: 'La suscripción es "hazlo tú": te damos las herramientas y los prompts por $7 al mes. Los servicios son "lo hacemos por ti": entramos en tu negocio, construimos el sistema y lo dejamos funcionando. Si tienes tiempo pero no presupuesto, empieza por la suscripción.',
+        answer: 'La suscripción es "hazlo tú": te damos las herramientas y los prompts para que los uses por tu cuenta. Los servicios son "lo hacemos por ti": entramos en tu negocio, construimos el sistema y lo dejamos funcionando. Si tienes tiempo pero no presupuesto, empieza por la suscripción.',
     },
 ];
 
@@ -268,10 +269,155 @@ const GhostCta: React.FC<{ href: string; children: React.ReactNode }> = ({ href,
     );
 };
 
+/* ── Formulario de solicitud ──────────────────────────────────────────── */
+
+const fieldStyle: React.CSSProperties = {
+    width: '100%', backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10,
+    padding: '12px 14px', fontFamily: SANS, fontSize: 14, color: TEXT, outline: 'none',
+    transition: 'border-color .15s',
+};
+
+const labelStyle: React.CSSProperties = {
+    display: 'block', fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em',
+    textTransform: 'uppercase', color: DIM, marginBottom: 7,
+};
+
+const focusOn = (e: React.FocusEvent<HTMLElement>) => { e.currentTarget.style.borderColor = AMBER; };
+const focusOff = (e: React.FocusEvent<HTMLElement>) => { e.currentTarget.style.borderColor = BORDER; };
+
+const ContactForm: React.FC<{ service: string; onServiceChange: (s: string) => void }> = ({ service, onServiceChange }) => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [message, setMessage] = useState('');
+    const [website, setWebsite] = useState('');   // honeypot: invisible para personas
+    const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+    const [errorMsg, setErrorMsg] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setErrorMsg('');
+        // Un bot que rellena el campo oculto recibe un «enviado» falso.
+        if (website) { setState('sent'); return; }
+        if (phone.replace(/\D/g, '').length < 6) {
+            setErrorMsg('Escribe un número de contacto válido, con prefijo de país.');
+            return;
+        }
+        if (message.trim().length < 10) {
+            setErrorMsg('Cuéntanos un poco más sobre lo que necesitas.');
+            return;
+        }
+        setState('sending');
+        const { error } = await supabase.from('service_requests').insert({
+            name: name.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            service: service || null,
+            message: message.trim(),
+        });
+        if (error) {
+            setState('error');
+            setErrorMsg(`No se pudo enviar. Inténtalo de nuevo o escríbenos a ${CONTACT_EMAIL}.`);
+            return;
+        }
+        setState('sent');
+    };
+
+    if (state === 'sent') {
+        return (
+            <div
+                className="flex flex-col items-center justify-center text-center"
+                style={{ backgroundColor: PANEL, border: `1px solid ${BORDER_SOFT}`, borderRadius: 14, padding: '40px 24px' }}
+            >
+                <CheckCircle2 size={34} style={{ color: GREEN, marginBottom: 14 }} />
+                <p style={{ fontWeight: 700, fontSize: 17, marginBottom: 8 }}>¡Solicitud enviada!</p>
+                <p style={{ color: MUTED, fontSize: 13.5, lineHeight: 1.7, maxWidth: 340 }}>
+                    Gracias{name ? `, ${name.trim().split(' ')[0]}` : ''}. Hemos recibido tu mensaje y te
+                    contactaremos en menos de 24 horas por correo o por teléfono.
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className="relative flex flex-col gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label htmlFor="sr-name" style={labelStyle}>Nombre *</label>
+                    <input id="sr-name" required maxLength={120} autoComplete="name" value={name}
+                        onChange={e => setName(e.target.value)} onFocus={focusOn} onBlur={focusOff}
+                        placeholder="Tu nombre" style={fieldStyle} />
+                </div>
+                <div>
+                    <label htmlFor="sr-phone" style={labelStyle}>Teléfono / WhatsApp *</label>
+                    <input id="sr-phone" required type="tel" maxLength={40} autoComplete="tel" value={phone}
+                        onChange={e => setPhone(e.target.value)} onFocus={focusOn} onBlur={focusOff}
+                        placeholder="+34 600 000 000" style={fieldStyle} />
+                </div>
+            </div>
+
+            <div>
+                <label htmlFor="sr-email" style={labelStyle}>Correo electrónico *</label>
+                <input id="sr-email" required type="email" maxLength={254} autoComplete="email" value={email}
+                    onChange={e => setEmail(e.target.value)} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="tu@correo.com" style={fieldStyle} />
+            </div>
+
+            <div>
+                <label htmlFor="sr-service" style={labelStyle}>Servicio que te interesa</label>
+                <select id="sr-service" value={service} onChange={e => onServiceChange(e.target.value)}
+                    onFocus={focusOn} onBlur={focusOff} style={{ ...fieldStyle, cursor: 'pointer' }}>
+                    <option value="">No lo sé todavía / otro</option>
+                    {SERVICES.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                </select>
+            </div>
+
+            <div>
+                <label htmlFor="sr-message" style={labelStyle}>¿Qué necesitas? *</label>
+                <textarea id="sr-message" required minLength={10} maxLength={5000} rows={6} value={message}
+                    onChange={e => setMessage(e.target.value)} onFocus={focusOn} onBlur={focusOff}
+                    placeholder="Cuéntanos a qué se dedica tu negocio, qué quieres conseguir y, si lo tienes, un plazo aproximado."
+                    style={{ ...fieldStyle, resize: 'vertical', lineHeight: 1.6 }} />
+            </div>
+
+            {/* Honeypot anti-spam: fuera de pantalla y fuera del orden de tabulación */}
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                value={website} onChange={e => setWebsite(e.target.value)}
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+
+            {errorMsg && (
+                <div className="flex items-start gap-2" style={{
+                    backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.35)',
+                    borderRadius: 10, padding: '10px 12px', fontSize: 13, color: '#fca5a5',
+                }}>
+                    <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 2 }} /> {errorMsg}
+                </div>
+            )}
+
+            <button
+                type="submit"
+                disabled={state === 'sending'}
+                className="inline-flex items-center justify-center gap-2"
+                style={{
+                    fontFamily: SANS, fontWeight: 700, fontSize: 14, padding: '14px 24px', borderRadius: 10,
+                    background: 'linear-gradient(180deg, #ffffff, #d8d8d8)',
+                    border: '1px solid rgba(255,255,255,0.9)', color: '#000',
+                    cursor: state === 'sending' ? 'wait' : 'pointer', opacity: state === 'sending' ? 0.7 : 1,
+                }}
+            >
+                {state === 'sending'
+                    ? <><Loader2 size={15} className="animate-spin" /> Enviando…</>
+                    : <><Send size={15} /> Enviar solicitud</>}
+            </button>
+        </form>
+    );
+};
+
 /* ── Página ───────────────────────────────────────────────────────────── */
 
 const Servicios: React.FC = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [pickedService, setPickedService] = useState('');
 
     return (
         <div style={{ backgroundColor: BG, color: TEXT, minHeight: '100vh', fontFamily: SANS }}>
@@ -289,19 +435,19 @@ const Servicios: React.FC = () => {
                         <span style={{ color: AMBER }}>Y la dejamos funcionando.</span>
                     </h1>
                     <p style={{ color: MUTED, fontSize: 15.5, lineHeight: 1.75, maxWidth: 600, margin: '0 auto 28px' }}>
-                        Automatizaciones, webs con IA integrada y agentes que atienden por ti.
-                        Proyectos cerrados, con precio y fecha por escrito, entregados en semanas.
+                        Automatizaciones, webs con IA integrada, agentes que atienden por ti y
+                        formación para tu equipo. Proyectos a medida de tu negocio, entregados en semanas.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3" style={{ marginBottom: 22 }}>
-                        <PrimaryCta href={CALL_URL}>
-                            Agendar diagnóstico gratuito <ArrowRight size={15} />
+                        <PrimaryCta href="#contacto">
+                            Cuéntanos qué necesitas <ArrowRight size={15} />
                         </PrimaryCta>
                         <GhostCta href="#servicios">Ver los servicios</GhostCta>
                     </div>
 
                     <p style={{ fontFamily: MONO, fontSize: 11, color: DIM, letterSpacing: '0.04em' }}>
-                        Respuesta en menos de 24 h · Primera llamada sin coste
+                        Respuesta en menos de 24 h · Primera consulta sin coste
                     </p>
                 </section>
 
@@ -413,35 +559,45 @@ const Servicios: React.FC = () => {
                                             ))}
                                         </div>
 
-                                        {/* Precio y plazo: abajo del todo, alineados entre tarjetas */}
+                                        {/* Para quién y plazo: abajo del todo, alineados entre tarjetas */}
                                         <div
-                                            className="mt-auto flex items-end justify-between gap-3"
+                                            className="mt-auto flex flex-col gap-4"
                                             style={{ borderTop: `1px solid ${BORDER_SOFT}`, paddingTop: 16 }}
                                         >
-                                            <div>
-                                                <p style={{
-                                                    fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em',
-                                                    textTransform: 'uppercase', color: DIM, marginBottom: 5,
-                                                }}>
-                                                    Inversión
-                                                </p>
-                                                <p style={{
-                                                    fontFamily: MONO, fontWeight: 700, fontSize: 19,
-                                                    letterSpacing: '-0.02em', color: TEXT,
-                                                }}>
-                                                    {s.price}
-                                                </p>
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div>
+                                                    <p style={{
+                                                        fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em',
+                                                        textTransform: 'uppercase', color: DIM, marginBottom: 5,
+                                                    }}>
+                                                        Ideal para
+                                                    </p>
+                                                    <p style={{ fontSize: 13, fontWeight: 600, color: TEXT, lineHeight: 1.45 }}>
+                                                        {s.ideal}
+                                                    </p>
+                                                </div>
+                                                <span
+                                                    className="inline-flex flex-shrink-0 items-center gap-1.5"
+                                                    style={{
+                                                        backgroundColor: PANEL, border: `1px solid ${BORDER}`,
+                                                        borderRadius: 100, padding: '5px 11px',
+                                                        fontFamily: MONO, fontSize: 10, color: MUTED,
+                                                    }}
+                                                >
+                                                    <Clock size={10} /> {s.timeline}
+                                                </span>
                                             </div>
-                                            <span
-                                                className="inline-flex items-center gap-1.5"
+                                            <a
+                                                href="#contacto"
+                                                onClick={() => setPickedService(s.name)}
+                                                className="inline-flex items-center gap-1.5 self-start"
                                                 style={{
-                                                    backgroundColor: PANEL, border: `1px solid ${BORDER}`,
-                                                    borderRadius: 100, padding: '5px 11px',
-                                                    fontFamily: MONO, fontSize: 10, color: MUTED,
+                                                    fontSize: 13, fontWeight: 600, textDecoration: 'none',
+                                                    color: s.featured ? AMBER : TEXT,
                                                 }}
                                             >
-                                                <Clock size={10} /> {s.timeline}
-                                            </span>
+                                                Solicitar este servicio <ArrowRight size={13} />
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -552,46 +708,67 @@ const Servicios: React.FC = () => {
                     </div>
                 </section>
 
-                {/* ── CTA final ────────────────────────────────────────── */}
+                {/* ── Contacto + formulario ────────────────────────────── */}
                 <section
-                    className="text-center"
+                    id="contacto"
                     style={{
-                        borderRadius: 18, padding: 1,
+                        scrollMarginTop: 80, borderRadius: 18, padding: 1,
                         background: 'linear-gradient(160deg, rgba(255,178,36,0.4), rgba(255,178,36,0.08) 36%, #232323 68%, #1a1a1a)',
                     }}
                 >
-                    <div style={{ borderRadius: 17, backgroundColor: CARD, padding: '40px 28px' }}>
-                        <Eyebrow>Siguiente paso</Eyebrow>
-                        <h2 style={{
-                            fontWeight: 700, fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-                            letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 14,
-                            textWrap: 'balance',
-                        }}>
-                            Cuéntame qué te está quitando el tiempo.
-                        </h2>
-                        <p style={{ color: MUTED, fontSize: 14.5, lineHeight: 1.75, maxWidth: 520, margin: '0 auto 26px' }}>
-                            Treinta minutos, sin compromiso y sin discurso de ventas. Sales de la
-                            llamada sabiendo qué automatizar primero, aunque no me contrates.
-                        </p>
+                    <div
+                        className="grid gap-10 md:grid-cols-[1fr_1.25fr]"
+                        style={{ borderRadius: 17, backgroundColor: CARD, padding: 'clamp(24px, 4vw, 40px)' }}
+                    >
+                        <div>
+                            <Eyebrow>Siguiente paso</Eyebrow>
+                            <h2 style={{
+                                fontWeight: 700, fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+                                letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 14,
+                                textWrap: 'balance',
+                            }}>
+                                Cuéntanos qué necesitas.
+                            </h2>
+                            <p style={{ color: MUTED, fontSize: 14.5, lineHeight: 1.75, marginBottom: 24 }}>
+                                Explícanos tu negocio y lo que quieres conseguir. Revisamos cada
+                                solicitud personalmente y te respondemos en menos de 24 horas con
+                                una propuesta o, como mínimo, con un consejo útil.
+                            </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3" style={{ marginBottom: 20 }}>
-                            <PrimaryCta href={CALL_URL}>
-                                <Mail size={15} /> Escribir por email
-                            </PrimaryCta>
-                            <GhostCta href={WHATSAPP_URL}>
-                                <MessageCircle size={15} /> Hablar por WhatsApp
-                            </GhostCta>
+                            <div className="flex flex-col gap-3" style={{ marginBottom: 24 }}>
+                                {['Sin compromiso ni discurso de ventas', 'Propuesta a medida y por escrito', 'Tus datos solo se usan para responderte'].map(t => (
+                                    <div key={t} className="flex items-center gap-2.5">
+                                        <Check size={14} strokeWidth={3} style={{ color: GREEN, flexShrink: 0 }} />
+                                        <span style={{ fontSize: 13, color: MUTED }}>{t}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <p style={{
+                                fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em',
+                                textTransform: 'uppercase', color: DIM, marginBottom: 8,
+                            }}>
+                                ¿Prefieres el correo?
+                            </p>
+                            <a
+                                href={MAILTO_URL}
+                                className="inline-flex items-center gap-2 break-all"
+                                style={{ fontSize: 14, fontWeight: 600, color: TEXT, textDecoration: 'none' }}
+                            >
+                                <Mail size={15} style={{ color: AMBER, flexShrink: 0 }} /> {CONTACT_EMAIL}
+                            </a>
                         </div>
 
-                        <p style={{ fontSize: 12.5, color: DIM, lineHeight: 1.7 }}>
-                            ¿Prefieres hacerlo tú por tu cuenta?{' '}
-                            <Link to="/pricing" style={{ color: TEXT, textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                                Mira la suscripción de prompts
-                            </Link>{' '}
-                            desde $7 al mes.
-                        </p>
+                        <ContactForm service={pickedService} onServiceChange={setPickedService} />
                     </div>
                 </section>
+
+                <p className="text-center" style={{ fontSize: 12.5, color: DIM, lineHeight: 1.7, marginTop: 24 }}>
+                    ¿Prefieres hacerlo tú por tu cuenta?{' '}
+                    <Link to="/prompts" style={{ color: TEXT, textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                        Explora la biblioteca de prompts
+                    </Link>
+                </p>
 
             </main>
         </div>

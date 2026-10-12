@@ -23,6 +23,7 @@ const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
 const AdminSubscribers = React.lazy(() => import('./pages/AdminSubscribers'));
+const AdminRequests = React.lazy(() => import('./pages/AdminRequests'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Checkout = React.lazy(() => import('./pages/Checkout'));
 const Generator = React.lazy(() => import('./pages/Generator'));
@@ -133,6 +134,7 @@ const App: React.FC = () => {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
           <Route path="/admin/suscriptores" element={<AdminSubscribers />} />
+          <Route path="/admin/solicitudes" element={<AdminRequests />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </React.Suspense>
