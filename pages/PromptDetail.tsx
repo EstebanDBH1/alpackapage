@@ -482,7 +482,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                                 Contenido premium
                                             </h4>
                                             <p style={{ fontFamily: SANS, color: MUTED, fontSize: 13.5, lineHeight: 1.7, marginBottom: 22 }}>
-                                                Suscríbete para desbloquear este prompt y los más de 1.000 del directorio.
+                                                Desbloquéalo junto con los más de 1.000 prompts del directorio.
                                             </p>
 
                                             <Link
@@ -494,7 +494,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                                     marginBottom: 12,
                                                 }}
                                             >
-                                                Desbloquear por 7 USD/mes
+                                                Desbloquear
                                                 <ArrowRight size={15} />
                                             </Link>
                                             <Link
@@ -617,7 +617,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                                         padding: '11px 18px', borderRadius: 9, textDecoration: 'none',
                                     }}
                                 >
-                                    Ver el plan — 7 USD/mes
+                                    Desbloquear <ArrowRight size={14} />
                                 </Link>
                             </div>
                         )}

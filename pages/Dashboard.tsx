@@ -415,7 +415,7 @@ const Dashboard: React.FC = () => {
                                     }}
                                 >
                                     <Zap size={15} fill="currentColor" />
-                                    Suscribirme ahora
+                                    Desbloquear
                                     <ArrowRight size={15} />
                                 </button>
                             )}

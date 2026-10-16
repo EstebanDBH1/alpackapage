@@ -36,7 +36,7 @@ const STEPS = [
     {
         emoji: '💎',
         title: 'Hazte premium',
-        text: 'Por 7 USD/mes desbloqueas el generador — hasta 10 prompts al día — y los +1.000 prompts del banco.',
+        text: 'Desbloquea el generador — hasta 10 prompts al día — y los +1.000 prompts del banco.',
     },
     {
         emoji: '⚡',
@@ -536,8 +536,8 @@ const Generator: React.FC = () => {
                         ) : (
                             <>
                                 <p style={{ maxWidth: 460, textAlign: 'center', fontFamily: SANS, fontSize: 12.5, lineHeight: 1.7, color: MUTED }}>
-                                    El generador está incluido en la suscripción premium: hasta {DAILY_LIMIT} prompts al día,
-                                    más acceso total al banco. Son 7 USD/mes y cancelas cuando quieras.
+                                    El generador está incluido en el acceso premium: hasta {DAILY_LIMIT} prompts al día,
+                                    más acceso total al banco.
                                 </p>
                                 {access === 'anonymous' && (
                                     <Link to="/login?redirect=/generador" style={{ fontFamily: SANS, fontSize: 12.5, color: MUTED, textDecoration: 'none' }}>
