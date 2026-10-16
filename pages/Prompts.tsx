@@ -8,7 +8,7 @@ import GeneratorCallout from '../components/GeneratorCallout';
 import { Prompt } from '../types';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
-    Shield, Search, ChevronDown, Sparkles, Check, X, Lock, ArrowRight, SlidersHorizontal, ChevronRight,
+    Search, ChevronDown, Sparkles, Check, X, Lock, ArrowRight, SlidersHorizontal, ChevronRight,
 } from 'lucide-react';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, GREEN, SANS, MONO,
@@ -271,12 +271,6 @@ const Prompts: React.FC = () => {
 
     const shownPrompts = filteredPrompts.slice(0, visible);
     const remaining = filteredPrompts.length - shownPrompts.length;
-
-    // El pago vive en /checkout (Paddle embebido dentro de la app)
-    const handleSubscribe = () => {
-        if (!user) return navigate('/login?redirect=/checkout');
-        navigate('/checkout');
-    };
 
     // ── Filtros activos (chips) ─────────────────────────────────────────────────
     const activeChips: { key: string; label: string; onRemove: () => void }[] = [];
@@ -581,7 +575,7 @@ const Prompts: React.FC = () => {
                     )}
 
                     {/* ── CTA Premium ──────────────────────────────────────── */}
-                    {!isSubscribed && !loading && <PremiumCta onSubscribe={handleSubscribe} />}
+                    {!isSubscribed && !loading && <PremiumCta />}
                 </main>
             </div>
 
@@ -951,7 +945,7 @@ const CardSkeleton: React.FC = () => (
 );
 
 // ── CTA Premium ─────────────────────────────────────────────────────────────
-const PremiumCta: React.FC<{ onSubscribe: () => void }> = ({ onSubscribe }) => (
+const PremiumCta: React.FC = () => (
     <section
         className="relative overflow-hidden mt-16"
         style={{ border: `1px solid ${BORDER}`, borderRadius: 18, backgroundColor: CARD }}
@@ -995,27 +989,20 @@ const PremiumCta: React.FC<{ onSubscribe: () => void }> = ({ onSubscribe }) => (
                 </div>
             </div>
 
-            <div style={{ border: `1px solid ${BORDER}`, borderRadius: 14, backgroundColor: BG, padding: 22 }}>
-                <div className="flex items-end gap-2 mb-5">
-                    <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 40, lineHeight: 1, letterSpacing: '-0.04em', color: TEXT }}>7 USD</span>
-                    <span style={{ fontSize: 14, color: MUTED, paddingBottom: 4 }}>/ mes</span>
-                </div>
-                <button
-                    type="button"
-                    onClick={onSubscribe}
+            {/* Sin precio aquí: el botón lleva a /pricing, donde se elige entre
+                la mensual y el pago único con toda la información delante. */}
+            <div className="flex md:justify-end">
+                <Link
+                    to="/pricing"
                     className="pp-btn"
                     style={{
-                        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                        backgroundColor: TEXT, color: '#000', border: 'none', cursor: 'pointer',
-                        fontWeight: 600, fontSize: 15, height: 48, borderRadius: 11,
+                        width: '100%', maxWidth: 320, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                        backgroundColor: TEXT, color: '#000', textDecoration: 'none',
+                        fontWeight: 600, fontSize: 15, height: 50, borderRadius: 11,
                     }}
                 >
-                    Suscribirme ahora <ArrowRight size={15} />
-                </button>
-                <div className="flex items-center justify-center gap-2 mt-3.5">
-                    <Shield size={12} style={{ color: DIM }} />
-                    <span style={{ fontSize: 12.5, color: DIM }}>Pago seguro · Cancela cuando quieras</span>
-                </div>
+                    Desbloquear <ArrowRight size={15} />
+                </Link>
             </div>
         </div>
     </section>

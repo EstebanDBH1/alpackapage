@@ -9,6 +9,7 @@ import {
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
 import { isNewPrompt } from '../lib/utils';
 import { Prompt } from '../types';
+import { SIGNUP_HREF } from '../lib/authFlow';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, GREEN, AMBER, SANS, MONO,
     CategoryBadge, categoryHref,
@@ -455,7 +456,7 @@ const Home: React.FC = () => {
         });
     }, { scope: root });
 
-    const signupHref = `/login?redirect=${encodeURIComponent('/prompts')}`;
+    const signupHref = SIGNUP_HREF;
 
     return (
         <div ref={root} style={{ backgroundColor: BG, color: TEXT, fontFamily: SANS, overflowX: 'clip' }}>

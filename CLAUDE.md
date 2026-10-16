@@ -45,7 +45,7 @@ All routes are defined in `App.tsx`, lazy-loaded per route (code-splitting):
 
 ### Key Patterns
 
-**Authentication:** Google OAuth via Supabase Auth. Login page reads `?redirect=` param to return users to their intended destination after sign-in.
+**Authentication:** Google OAuth via Supabase Auth. Login page reads `?redirect=` param to return users to their intended destination after sign-in; with no param it goes to `/dashboard` (admins to `/admin`). `lib/authFlow.ts` owns the rule for the header/home links: from a page where the user was doing something concrete (`/prompts…`, `/generador`, `/guardados`, `/blog/:slug`, `/skills`) they come back to it, from anywhere else (home, pricing, …) they go to `/dashboard`. Before leaving for Google, `Login` sets a sessionStorage flag (not for `/checkout`, which has no header); `DarkHeader` consumes it on return and shows a one-off "Sesión iniciada" toast. Every `redirectTo` must be in Supabase Auth → URL Configuration → Redirect URLs, or Supabase silently falls back to the Site URL (the home).
 
 **Subscription gating:** Premium prompt content is gated by subscription status. `subscriptions` table tracks `subscription_id`, `status` (`active`, `trialing`, `cancelled`, `past_due`, `paused`), and `paddle_customer_id`. The Dashboard page reads subscription state from Supabase.
 

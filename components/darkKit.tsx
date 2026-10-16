@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
-    Menu, X, LogOut, ChevronDown, Search, Bookmark, User as UserIcon, Shield, ArrowRight,
+    Menu, X, LogOut, ChevronDown, Search, Bookmark, User as UserIcon, Shield, ArrowRight, Check,
     Library, Sparkles, Puzzle, Newspaper, Briefcase, BookOpen, Instagram,
 } from 'lucide-react';
 import AlpacaIcon from './AlpacaIcon';
 import { supabase, isAdminUser } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
+import { loginHrefFrom, SIGNUP_HREF, consumeSignInFlag } from '../lib/authFlow';
 
 /* ══════════════════════════════════════════════════════════════
    Kit visual del nuevo diseño oscuro estilo skills.sh
@@ -214,6 +215,7 @@ export const DarkHeader: React.FC = () => {
     const [query, setQuery] = useState('');
     const [scrolled, setScrolled] = useState(false);
     const [seenGenerator, setSeenGenerator] = useState(readSeenGenerator);
+    const [signedInToast, setSignedInToast] = useState<any>(null);
     const accountRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
 
@@ -276,14 +278,27 @@ export const DarkHeader: React.FC = () => {
     };
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+        // Al volver de Google se avisa una sola vez de que la sesión está
+        // iniciada: sin esto, quien vuelve a la página donde estaba no tiene
+        // ninguna señal de que ha entrado.
+        const receive = (u: any) => {
+            setUser(u);
+            if (u && consumeSignInFlag()) setSignedInToast(u);
+        };
+        supabase.auth.getSession().then(({ data: { session } }) => receive(session?.user ?? null));
         // Sin esto el header seguiría mostrando "Iniciar sesión" tras entrar
         // (o la cuenta tras salir) hasta recargar la página.
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            (_event, session) => setUser(session?.user ?? null),
+            (_event, session) => receive(session?.user ?? null),
         );
         return () => subscription.unsubscribe();
     }, []);
+
+    useEffect(() => {
+        if (!signedInToast) return;
+        const t = setTimeout(() => setSignedInToast(null), 6000);
+        return () => clearTimeout(t);
+    }, [signedInToast]);
 
     // Al navegar se cierra todo: si no, el panel sigue abierto sobre la página nueva
     useEffect(() => {
@@ -335,10 +350,9 @@ export const DarkHeader: React.FC = () => {
     // El admin gestiona su cuenta en /admin; el resto en /dashboard
     const accountHome = admin ? '/admin' : '/dashboard';
 
-    // Al entrar se vuelve a donde estabas, no a una página cualquiera
-    const loginHref = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`;
-    // "Empieza gratis" lleva al catálogo después de entrar
-    const signupHref = `/login?redirect=${encodeURIComponent('/prompts')}`;
+    // Si estabas en algo concreto vuelves ahí; si no, a tu panel (lib/authFlow)
+    const loginHref = loginHrefFrom(pathname, window.location.search);
+    const signupHref = SIGNUP_HREF;
 
     const handleLogout = async () => {
         setMenuOpen(false);
@@ -398,13 +412,14 @@ export const DarkHeader: React.FC = () => {
                 .alp-cta { transition: filter .15s, transform .15s; }
                 .alp-cta:hover { filter: brightness(1.08); }
                 .alp-ghost:hover { border-color: #3a3a3a !important; color: ${TEXT} !important; }
-                @media (prefers-reduced-motion: reduce) { .alp-panel { animation: none; } }
+                .alp-toast { animation: alpPanel .22s cubic-bezier(.2,.8,.2,1) both; }
+                @media (prefers-reduced-motion: reduce) { .alp-panel, .alp-toast { animation: none; } }
             `}</style>
 
             <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-6">
                     <Link to="/" className="flex items-center gap-2" style={{ textDecoration: 'none' }} aria-label="Inicio">
-                        <AlpacaIcon variant="light" className="h-6 w-auto" />
+                        <AlpacaIcon variant="light" className="h-8 w-auto" />
                         <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>alpacka.ai</span>
                     </Link>
 
@@ -742,6 +757,48 @@ export const DarkHeader: React.FC = () => {
                     </nav>
                 </>
             )}
+
+            {signedInToast && (
+                <div
+                    role="status"
+                    className="alp-toast fixed right-4 left-4 sm:left-auto"
+                    style={{
+                        top: HEADER_H + 12, zIndex: 60, maxWidth: 380, marginLeft: 'auto',
+                        display: 'flex', alignItems: 'flex-start', gap: 12,
+                        backgroundColor: PANEL, border: `1px solid ${BORDER}`, borderRadius: 12,
+                        padding: '14px 14px 14px 16px', boxShadow: '0 18px 50px rgba(0,0,0,0.6)',
+                    }}
+                >
+                    <span style={{
+                        width: 22, height: 22, borderRadius: '50%', flexShrink: 0, marginTop: 1,
+                        backgroundColor: 'rgba(63,207,142,0.12)', border: '1px solid rgba(63,207,142,0.35)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                        <Check size={12} strokeWidth={3} style={{ color: GREEN }} />
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: TEXT }}>Sesión iniciada</p>
+                        <p style={{ fontFamily: SANS, fontSize: 13.5, color: MUTED, lineHeight: 1.5, marginTop: 2 }}>
+                            Hola, {(signedInToast.user_metadata?.full_name || signedInToast.email || '').split(' ')[0]}.
+                            {pathname !== accountHome && (
+                                <>
+                                    {' '}
+                                    <Link to={accountHome} onClick={() => setSignedInToast(null)} style={{ color: TEXT, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                                        Ir a mi panel
+                                    </Link>
+                                </>
+                            )}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setSignedInToast(null)}
+                        aria-label="Cerrar aviso"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: DIM, padding: 2, flexShrink: 0 }}
+                    >
+                        <X size={15} />
+                    </button>
+                </div>
+            )}
         </header>
     );
 };
@@ -804,7 +861,7 @@ export const DarkFooter: React.FC = () => {
                     {/* Marca */}
                     <div className="col-span-2 md:col-span-4">
                         <Link to="/" className="inline-flex items-center gap-2" style={{ textDecoration: 'none' }}>
-                            <AlpacaIcon variant="light" className="h-6 w-auto" />
+                            <AlpacaIcon variant="light" className="h-8 w-auto" />
                             <span style={{ fontFamily: MONO, fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>alpacka.ai</span>
                         </Link>
                         <p style={{ fontFamily: SANS, fontSize: 13.5, color: DIM, lineHeight: 1.7, marginTop: 14, maxWidth: 280 }}>

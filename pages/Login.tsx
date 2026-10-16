@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase, isAdminUser } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
+import { markSignInStarted } from '../lib/authFlow';
 import { Check, ExternalLink, Lock, Bookmark, Wand2, Library, Loader2 } from 'lucide-react';
 import AlpacaIcon from '../components/AlpacaIcon';
 import {
@@ -99,6 +100,9 @@ const Login: React.FC = () => {
   const handleGoogleLogin = async () => {
     setError(false);
     setPending(true);
+    // El checkout no lleva header (y por tanto no hay aviso): ahí no se marca,
+    // o el aviso saldría más tarde, fuera de contexto, tras pagar.
+    if (!redirect.startsWith('/checkout')) markSignInStarted();
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -160,7 +164,7 @@ const Login: React.FC = () => {
               boxShadow: '0 0 0 6px rgba(255,255,255,0.02)',
             }}
           >
-            <AlpacaIcon variant="light" className="w-6 h-auto" />
+            <AlpacaIcon variant="light" className="h-8 w-auto" />
           </div>
 
           <h1 style={{ fontWeight: 600, fontSize: 'clamp(1.7rem, 3vw, 2.05rem)', letterSpacing: '-0.035em', lineHeight: 1.1, marginBottom: 12, color: TEXT }}>

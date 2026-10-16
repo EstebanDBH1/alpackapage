@@ -82,6 +82,8 @@ const Dashboard: React.FC = () => {
     const GRANDFATHERED_PRICE_ID = 'pri_01kjneczae0gfxdwde1q1h0app';
     const monthlyPrice = subscription?.price_id === GRANDFATHERED_PRICE_ID ? '$4' : '$7';
     const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario';
+    // Cuenta recién creada (primer login): se le da la bienvenida en vez del "Hola" de siempre
+    const isNewAccount = !!user?.created_at && Date.now() - new Date(user.created_at).getTime() < 30 * 60 * 1000;
     const initials = (user?.user_metadata?.full_name || user?.email || 'U')
         .split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase();
 
@@ -139,10 +141,12 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div>
                             <h1 style={{ fontWeight: 600, fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
-                                Hola, {firstName}
+                                {isNewAccount ? `Bienvenido, ${firstName}` : `Hola de nuevo, ${firstName}`}
                             </h1>
                             <p style={{ color: TEXT_MED, fontSize: 14, marginTop: 3 }}>
-                                Gestiona tu acceso y suscripción
+                                {isNewAccount
+                                    ? 'Tu cuenta está lista. Este es tu panel: vuelve aquí desde "Mi cuenta" cuando quieras.'
+                                    : 'Tu panel de alpacka.ai: acceso, suscripción y atajos.'}
                             </p>
                         </div>
                     </div>
@@ -268,6 +272,51 @@ const Dashboard: React.FC = () => {
 
                     {/* ── Columna principal ─────────────────────────────── */}
                     <div className="lg:col-span-2 space-y-4">
+
+                        {/* Empieza aquí — para cuentas sin plan: que el primer
+                            login no termine en un "no tienes suscripción" */}
+                        {!isActive && (
+                            <div style={{ ...card, padding: '26px 24px' }}>
+                                <h2 style={{ fontWeight: 600, fontSize: 17.5, letterSpacing: '-0.02em', marginBottom: 5 }}>
+                                    Empieza aquí
+                                </h2>
+                                <p style={{ color: TEXT_MED, fontSize: 14, lineHeight: 1.6, marginBottom: 18 }}>
+                                    Tu cuenta gratuita ya funciona. Tres cosas que puedes hacer ahora mismo:
+                                </p>
+                                <ol className="flex flex-col gap-2.5">
+                                    {[
+                                        { n: 1, to: '/prompts?acceso=gratis', title: 'Prueba los prompts gratis', desc: 'Cópialos y pégalos en ChatGPT, Claude o Gemini.' },
+                                        { n: 2, to: '/prompts', title: 'Guarda tus favoritos', desc: 'Toca el marcador de cualquier prompt y lo tendrás en "Mis guardados".' },
+                                        { n: 3, to: '/pricing', title: 'Desbloquea la biblioteca completa', desc: 'Todos los prompts premium y el generador con IA.' },
+                                    ].map(step => (
+                                        <li key={step.n}>
+                                            <Link
+                                                to={step.to}
+                                                className="flex items-center gap-3.5"
+                                                style={{
+                                                    backgroundColor: BG_WARM, border: `1px solid ${BORDER}`, borderRadius: 12,
+                                                    padding: '13px 15px', textDecoration: 'none', color: TEXT,
+                                                }}
+                                            >
+                                                <span style={{
+                                                    width: 26, height: 26, borderRadius: 8, flexShrink: 0,
+                                                    border: `1px solid ${BORDER}`, backgroundColor: BG, color: TEXT_MED,
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    fontSize: 12.5, fontWeight: 700,
+                                                }}>
+                                                    {step.n}
+                                                </span>
+                                                <span style={{ flex: 1, minWidth: 0 }}>
+                                                    <span className="block" style={{ fontSize: 14.5, fontWeight: 600 }}>{step.title}</span>
+                                                    <span className="block" style={{ fontSize: 13, color: TEXT_MED, lineHeight: 1.5, marginTop: 2 }}>{step.desc}</span>
+                                                </span>
+                                                <ArrowRight size={14} style={{ color: TEXT_DIM, flexShrink: 0 }} />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div>
+                        )}
 
                         {/* Suscripción */}
                         <div style={{ ...card, padding: '26px 24px' }}>
