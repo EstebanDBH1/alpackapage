@@ -15,8 +15,8 @@ import {
    header, footer y tipografía (Hanken Grotesk).
    ══════════════════════════════════════════════════════════════ */
 
-/* Checkout de Hotmart */
-const BUY_URL = 'https://pay.hotmart.com/H108622791V?checkoutMode=10&bid=1795437610766';
+/* Checkout de Hotmart (el mismo producto que /ebook) */
+const BUY_URL = 'https://pay.hotmart.com/K99381988U?checkoutMode=10&bid=1778363157034';
 
 /* ─── Botón de compra (usa el CTA del kit con la URL de pago) ─── */
 const BuyButton: React.FC<{ full?: boolean; label?: string; size?: 'sm' | 'md' | 'lg' }> = ({
