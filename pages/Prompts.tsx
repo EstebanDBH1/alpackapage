@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
 import { getCachedPromptsList, fetchPromptsList } from '../lib/promptsList';
-import { hasLibraryAccess } from '../lib/access';
+import { useAccess } from '../lib/useAccess';
 import { AI_TOOLS, getAiToolMeta } from '../lib/aiTools';
 import { isNewPrompt } from '../lib/utils';
 import GeneratorCallout from '../components/GeneratorCallout';
@@ -126,31 +125,12 @@ const Prompts: React.FC = () => {
     // Arranca con la caché si existe: el grid se pinta en el primer render
     const [prompts, setPrompts] = useState<Prompt[]>(() => getCachedPromptsList() ?? []);
     const [loading, setLoading] = useState(() => !getCachedPromptsList());
-    const [user, setUser] = useState<any>(null);
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    // Plan del visitante: quien ya pagó no ve candados ni el CTA de compra
+    const { subscribed: isSubscribed, resolved: accessResolved } = useAccess();
     const [visible, setVisible] = useState(PAGE_SIZE);
     const [sheetOpen, setSheetOpen] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
     const resultsRef = useRef<HTMLDivElement>(null);
-
-    // ── Sesión + suscripción ───────────────────────────────────────────────────
-    useEffect(() => {
-        const checkUser = async () => {
-            // getSession lee del almacenamiento local (sin round-trip al servidor de auth)
-            const { data: { session } } = await supabase.auth.getSession();
-            const user = session?.user ?? null;
-            setUser(user);
-            if (user) {
-                const { data: sub } = await supabase
-                    .from('subscriptions').select('subscription_status')
-                    .eq('customer_id', user.id).maybeSingle();
-                if (hasLibraryAccess(sub?.subscription_status)) {
-                    setIsSubscribed(true);
-                }
-            }
-        };
-        checkUser();
-    }, []);
 
     // ── Prompts ────────────────────────────────────────────────────────────────
     // Stale-while-revalidate: si hubo caché ya se pintó; aquí refrescamos en
@@ -303,7 +283,7 @@ const Prompts: React.FC = () => {
         selectedCategory, onCategory: handleCategorySelect,
         selectedTier, tierCounts, onTier: t => setParam('acceso', t === 'todos' ? null : t),
         selectedTool, onTool: t => setParam('ia', t === 'todas' ? null : t),
-        loading,
+        loading, unlocked: isSubscribed,
     };
 
     return (
@@ -428,6 +408,7 @@ const Prompts: React.FC = () => {
                             options={TIERS.map(t => ({ ...t, count: loading ? undefined : tierCounts[t.value] }))}
                             value={selectedTier}
                             onChange={t => setParam('acceso', t === 'todos' ? null : t)}
+                            unlocked={isSubscribed}
                         />
                         <SortSelect value={selectedSort} onChange={s => setParam('orden', s === 'destacados' ? null : s)} />
                     </div>
@@ -522,6 +503,7 @@ const Prompts: React.FC = () => {
                                 key={prompt.id}
                                 prompt={prompt}
                                 tokens={searchTokens}
+                                unlocked={isSubscribed}
                                 // Solo la tanda nueva entra animada (y con un retardo corto)
                                 delay={i >= visible - PAGE_SIZE ? Math.min(i % PAGE_SIZE, 8) * 0.03 : 0}
                             />
@@ -575,7 +557,9 @@ const Prompts: React.FC = () => {
                     )}
 
                     {/* ── CTA Premium ──────────────────────────────────────── */}
-                    {!isSubscribed && !loading && <PremiumCta />}
+                    {/* Solo cuando ya se sabe que NO tiene plan: a quien pagó no se le
+                        enseña ni un instante mientras se resuelve su acceso. */}
+                    {accessResolved && !isSubscribed && !loading && <PremiumCta />}
                 </main>
             </div>
 
@@ -607,11 +591,13 @@ const Count: React.FC<{ n?: number; active?: boolean }> = ({ n, active }) =>
         <span style={{ fontFamily: MONO, fontSize: 10.5, color: active ? MUTED : DIM, fontWeight: 500 }}>{n}</span>
     );
 
-const Segmented = <T extends string>({ options, value, onChange, full }: {
+const Segmented = <T extends string>({ options, value, onChange, full, unlocked }: {
     options: { value: T; label: string; count?: number }[];
     value: T;
     onChange: (v: T) => void;
     full?: boolean;
+    /** Con plan activo "Premium" es una etiqueta, no algo bloqueado: sin candado. */
+    unlocked?: boolean;
 }) => (
     <div
         role="radiogroup"
@@ -637,7 +623,7 @@ const Segmented = <T extends string>({ options, value, onChange, full }: {
                         fontSize: 13, fontWeight: 600, transition: 'background .15s, color .15s',
                     }}
                 >
-                    {opt.value === 'premium' && <Lock size={11} style={{ color: active ? AMBER : DIM }} />}
+                    {opt.value === 'premium' && !unlocked && <Lock size={11} style={{ color: active ? AMBER : DIM }} />}
                     {opt.label}
                     <Count n={opt.count} active={active} />
                 </button>
@@ -678,6 +664,7 @@ type FiltersPanelProps = {
     selectedTool: string;
     onTool: (t: string) => void;
     loading: boolean;
+    unlocked: boolean;
 };
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -688,7 +675,7 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 const FiltersPanel: React.FC<FiltersPanelProps & { showTier: boolean }> = ({
     categories, total, selectedCategory, onCategory, selectedTier, tierCounts, onTier,
-    selectedTool, onTool, loading, showTier,
+    selectedTool, onTool, loading, showTier, unlocked,
 }) => {
     const rows = [{ value: 'todas', label: 'Todas', count: total }, ...categories];
     return (
@@ -701,6 +688,7 @@ const FiltersPanel: React.FC<FiltersPanelProps & { showTier: boolean }> = ({
                         options={TIERS.map(t => ({ ...t, count: loading ? undefined : tierCounts[t.value] }))}
                         value={selectedTier}
                         onChange={onTier}
+                        unlocked={unlocked}
                     />
                 </div>
             )}
@@ -876,7 +864,7 @@ const Highlight: React.FC<{ text: string; tokens: string[] }> = ({ text, tokens 
 };
 
 // ── Card de prompt ──────────────────────────────────────────────────────────
-const PromptCard: React.FC<{ prompt: Prompt; tokens: string[]; delay: number }> = ({ prompt, tokens, delay }) => {
+const PromptCard: React.FC<{ prompt: Prompt; tokens: string[]; delay: number; unlocked: boolean }> = ({ prompt, tokens, delay, unlocked }) => {
     const tool = getAiToolMeta(prompt.ai_tool);
     const badge = AI_BADGE_DARK[tool.value] ?? AI_BADGE_DARK['cualquier-modelo'];
     const isNew = isNewPrompt(prompt.created_at);
@@ -906,7 +894,8 @@ const PromptCard: React.FC<{ prompt: Prompt; tokens: string[]; delay: number }> 
                 </div>
                 {prompt.is_premium ? (
                     <span className="inline-flex items-center gap-1 flex-shrink-0" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: AMBER }}>
-                        <Lock size={10} /> Premium
+                        {/* Quien ya pagó lo tiene desbloqueado: marca de incluido, no candado */}
+                        {unlocked ? <Check size={11} strokeWidth={3} /> : <Lock size={10} />} Premium
                     </span>
                 ) : (
                     <span className="inline-flex items-center gap-1 flex-shrink-0" style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: GREEN }}>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Bookmark, ArrowRight, Lock, Trash2 } from 'lucide-react';
+import { Bookmark, ArrowRight, Check, Lock, Trash2 } from 'lucide-react';
+import { useAccess } from '../lib/useAccess';
 import {
     BG, PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER,
     SANS, MONO, CategoryBadge,
@@ -41,6 +42,8 @@ const SavedPromptsPage: React.FC = () => {
     const [rows, setRows] = useState<SavedRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [removing, setRemoving] = useState<string | null>(null);
+    // Con plan activo los premium están desbloqueados: no se pintan con candado
+    const { subscribed } = useAccess();
 
     useEffect(() => {
         let cancelled = false;
@@ -161,7 +164,7 @@ const SavedPromptsPage: React.FC = () => {
                                                     letterSpacing: '0.12em', textTransform: 'uppercase', color: AMBER,
                                                 }}
                                             >
-                                                <Lock size={9} /> premium
+                                                {subscribed ? <Check size={10} strokeWidth={3} /> : <Lock size={9} />} premium
                                             </span>
                                         )}
                                     </div>

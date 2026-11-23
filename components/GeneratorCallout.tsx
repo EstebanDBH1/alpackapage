@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Wand2, ArrowRight } from 'lucide-react';
 import { PANEL, CARD, BORDER, BORDER_SOFT, TEXT, MUTED, DIM, AMBER, SANS, MONO } from './darkKit';
+import { useAccess } from '../lib/useAccess';
 
 /* ── Punto de entrada al generador ───────────────────────────────
    El generador lleva desde siempre en el menú y casi nadie lo usa:
@@ -24,6 +25,7 @@ type Props = {
 
 const GeneratorCallout: React.FC<Props> = ({ variant = 'inline', query, from }) => {
     const isSearch = variant === 'search';
+    const { generator: hasGenerator } = useAccess();
     const to = `/generador${from ? `?from=${encodeURIComponent(from)}` : ''}`;
 
     const title = isSearch && query
@@ -95,7 +97,7 @@ const GeneratorCallout: React.FC<Props> = ({ variant = 'inline', query, from }) 
             </Link>
 
             <p style={{ fontSize: 11.5, color: DIM, marginTop: 12 }}>
-                Incluido en tu plan · hasta 10 al día
+                {hasGenerator ? 'Incluido en tu plan' : 'Incluido en el acceso premium'} · hasta 10 al día
             </p>
         </div>
     );

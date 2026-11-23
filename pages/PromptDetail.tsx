@@ -352,7 +352,7 @@ const PromptDetail: React.FC = () => {
                                         border: '1px solid rgba(255,178,36,0.28)',
                                     }}
                                 >
-                                    <Lock size={9} /> Premium
+                                    {isSubscribed ? <Check size={10} strokeWidth={3} /> : <Lock size={9} />} Premium
                                 </span>
                             )}
                         </div>
@@ -582,7 +582,7 @@ ejemplos concretos y un tono [tono]. Evita [errores comunes]...`}
                             <div className="flex flex-col">
                                 {[
                                     { k: 'Categoría', v: prompt.category || 'General', accent: false },
-                                    { k: 'Acceso', v: prompt.is_premium ? 'Premium' : 'Gratuito', accent: !!prompt.is_premium },
+                                    { k: 'Acceso', v: prompt.is_premium ? (isSubscribed ? 'Premium · incluido' : 'Premium') : 'Gratuito', accent: !!prompt.is_premium },
                                     { k: 'Modelo', v: tool.label, accent: false },
                                 ].map((row, i, arr) => (
                                     <React.Fragment key={row.k}>

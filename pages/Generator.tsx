@@ -36,6 +36,7 @@ const STEPS = [
     {
         emoji: '💎',
         title: 'Hazte premium',
+        paywall: true,
         text: 'Desbloquea el generador — hasta 10 prompts al día — y los +1.000 prompts del banco.',
     },
     {
@@ -381,7 +382,7 @@ const Generator: React.FC = () => {
                     >
                         <Sparkles size={11} style={{ color: AMBER }} />
                         <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: AMBER }}>
-                            Exclusivo suscriptores
+                            {access === 'subscribed' ? 'Incluido en tu plan' : 'Exclusivo suscriptores'}
                         </span>
                     </div>
 
@@ -610,10 +611,11 @@ const Generator: React.FC = () => {
                     <SectionHead
                         kicker="Cómo funciona"
                         title="Cómo usar el generador de prompts"
-                        text="Cuatro pasos. Sin tecnicismos ni configuración."
+                        text={access === 'subscribed' ? 'Tres pasos. Sin tecnicismos ni configuración.' : 'Cuatro pasos. Sin tecnicismos ni configuración.'}
                     />
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {STEPS.map((step, i) => (
+                    <div className={access === 'subscribed' ? 'grid grid-cols-1 gap-3 sm:grid-cols-3' : 'grid grid-cols-1 gap-3 sm:grid-cols-2'}>
+                        {/* A quien ya tiene el generador no se le pide "hacerse premium" */}
+                        {STEPS.filter(step => access !== 'subscribed' || !step.paywall).map((step, i) => (
                             <div key={step.title} style={{ backgroundColor: CARD, border: `1px solid ${BORDER_SOFT}`, borderRadius: 12, padding: '20px 18px' }}>
                                 <div className="mb-4 flex items-center gap-3">
                                     <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', color: DIM }}>
