@@ -26,7 +26,8 @@ const BuyButton: React.FC<{ full?: boolean; label?: string; size?: 'sm' | 'md' |
 /* ─── Categorías del pack ─── */
 const categorias = [
   { emoji: '✍️', title: 'Copywriting & Contenido',        desc: 'Copy, emails, guiones, storytelling, plan multicanal.' },
-  { emoji: '📈', title: 'Marketing & Ventas',             desc: 'Embudos, leads, scripts de cierre, estrategia social.' },
+  { emoji: '🤑', title: 'Ganar Dinero',                   desc: 'Ingresos extra, side hustles con IA, freelancing y monetizar tus habilidades.' },
+  { emoji: '📈', title: 'Marketing & Ventas',            desc: 'Embudos, leads, scripts de cierre, estrategia social.' },
   { emoji: '📱', title: 'Marketing para Redes Sociales',  desc: 'Ideas virales, calendarios, engagement, branding.' },
   { emoji: '🌎', title: 'Aprender Inglés',                desc: 'Vocabulario, conversación, phrasal verbs, negocios.' },
   { emoji: '🎬', title: 'Creación de Contenido',          desc: 'YouTube, guiones, títulos, monetización.' },
@@ -227,7 +228,7 @@ const BankPrompts: React.FC = () => {
             {/* LO QUE OBTIENES — cards a todo el ancho de la columna */}
             <section className="mt-14">
               <Eyebrow>Lo que obtienes</Eyebrow>
-              <H2>📁 +500 prompts organizados en 16 áreas</H2>
+              <H2>📁 +500 prompts organizados en 17 áreas</H2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
                 {categorias.map(c => (
@@ -311,12 +312,12 @@ const BankPrompts: React.FC = () => {
                   <Row kind="point">Creas contenido o vendes online y quieres producir 10x más rápido.</Row>
                   <Row kind="point">Tienes un negocio y quieres usar la IA como un experto: copy, embudos, SEO, redes.</Row>
                   <Row kind="point">Estás aprendiendo algo —inglés, francés, código— y quieres un tutor disponible 24/7.</Row>
-                  <Row kind="point">Quieres ordenar tu vida: dinero, peso, hábitos, productividad, cabeza.</Row>
+                  <Row kind="point">Quieres ganar dinero extra u ordenar tu vida: finanzas, peso, hábitos, productividad, cabeza.</Row>
                   <Row kind="point">Estás buscando trabajo y necesitas CV, LinkedIn y entrevistas que sí funcionen.</Row>
                   <Row kind="point">Estás harto de las respuestas mediocres de ChatGPT o cualquier otra IA generativa.</Row>
                 </div>
                 <p style={{ color: TEXT_DIM, fontSize: 14.5, lineHeight: 1.7, marginTop: 14 }}>
-                  No hace falta que te encaje todo: con que uses dos o tres de las 16 áreas, el pack ya se paga solo.
+                  No hace falta que te encaje todo: con que uses dos o tres de las 17 áreas, el pack ya se paga solo.
                 </p>
               </section>
 
@@ -449,7 +450,7 @@ const BankPrompts: React.FC = () => {
                   {[
                     '+500 prompts listos para usar',
                     'Organizados en Notion, duplicable en tu cuenta',
-                    '16 áreas: marketing, finanzas, empleo…',
+                    '17 áreas: ganar dinero, marketing, finanzas…',
                     'Compatible con ChatGPT, Gemini, Claude y cualquier LLM',
                     'Actualizaciones de por vida incluidas',
                   ].map(t => (
