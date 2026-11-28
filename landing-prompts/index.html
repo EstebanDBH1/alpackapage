@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alpacka Prompts — Banco de +500 prompts actualizable</title>
+<meta name="description" content="+500 prompts profesionales en 20 categorías, listos para copiar y pegar en ChatGPT, Claude o Gemini. Un solo pago de $14.99 y actualizaciones incluidas para siempre.">
+<meta property="og:title" content="Alpacka Prompts — Banco de +500 prompts actualizable">
+<meta property="og:description" content="+500 prompts en 20 categorías. Copia, pega, resultado. Un pago de $14.99, actualizaciones para siempre.">
+<meta property="og:type" content="product">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0908;--bg2:#100E0C;--card:#141210;--text:#F4EDE0;--muted:#B9B1A4;--dim:#8A8276;
+  --line:rgba(244,237,224,.09);--line2:rgba(244,237,224,.18);
+  --gold:#E9C46A;--gold-hi:#F8E4AC;--gold-lo:#B8892E;--gold-ink:#1E1503;
+  --gold-soft:rgba(233,196,106,.12);--gold-line:rgba(233,196,106,.34);
+  --paper:#F7F2E3;--ink:#17130D;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--display);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* Top bar + nav */
+.bar{background:var(--gold);color:var(--gold-ink)}
+.bar .wrap{display:flex;justify-content:center;align-items:center;gap:10px;min-height:34px;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;white-space:nowrap}
+.bar i{width:4px;height:4px;border-radius:50%;background:var(--gold-ink);opacity:.5;flex:none}
+.nav{position:sticky;top:0;z-index:25;border-bottom:1px solid var(--line);background:rgba(11,9,8,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px}
+.brand{white-space:nowrap;display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;text-decoration:none}
+.logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(160deg,var(--gold-hi),var(--gold-lo));color:var(--gold-ink);display:grid;place-items:center;font-weight:800;font-size:.95rem}
+.nav-links{display:none;gap:22px;font-size:.88rem;color:var(--muted)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav .cta-s{color:var(--gold-ink);background:var(--gold);text-decoration:none;font-weight:700;font-size:.84rem;padding:9px 14px;border-radius:999px;white-space:nowrap}
+
+/* Hero */
+.hero{position:relative;padding:34px 0 30px;overflow:hidden}
+.hero::before{content:"";position:absolute;left:50%;top:-40px;width:680px;height:460px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(233,196,106,.14),transparent 70%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;gap:26px}
+.eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold-line)}
+h1{font-size:clamp(1.9rem,6.4vw + .5rem,3.4rem);line-height:1.04;letter-spacing:-.04em;text-wrap:balance;font-weight:700;margin-top:14px}
+h1 em{font-style:normal;color:var(--gold);display:block}
+.sub{color:var(--muted);font-size:clamp(.98rem,.9rem + .4vw,1.08rem);line-height:1.5;margin-top:16px;max-width:34em}
+.sub strong{color:var(--gold-hi);font-weight:700}
+.nos{display:grid;gap:9px;font-size:1rem;font-weight:600;letter-spacing:-.005em}
+.nos span{display:flex;align-items:center;gap:10px}
+.works{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.works .lab{margin-right:4px}
+.pill{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:6px 10px;white-space:nowrap}
+
+.buybox{background:var(--card);border:1px solid var(--gold-line);border-radius:18px;padding:20px;box-shadow:0 40px 120px -70px rgba(233,196,106,.55)}
+.bb-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.bb-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2.6s ease-in-out infinite}
+.bb-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:12px 0 16px}
+.bb-price{display:flex;align-items:baseline;gap:6px}
+.bb-price small{font-size:1.1rem;color:var(--muted);font-weight:600}
+.bb-price b{font-size:clamp(2.4rem,8vw,2.9rem);line-height:.9;letter-spacing:-.04em;font-weight:700}
+.bb-save{text-align:right;font-size:.8rem;color:var(--muted);line-height:1.3}
+.bb-save b{display:block;color:var(--gold);font-size:.98rem;font-weight:650}
+.bb-list{list-style:none;display:grid;gap:8px;margin:0 0 16px;padding-top:14px;border-top:1px solid var(--line)}
+.bb-list li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;color:var(--text)}
+.bb-list .tick{margin-top:3px}
+.btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(180deg,var(--gold-hi),var(--gold));color:var(--gold-ink);text-decoration:none;font-family:inherit;font-weight:700;font-size:1.04rem;padding:16px 18px;border-radius:14px;border:0;cursor:pointer;transition:transform .15s,filter .2s}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:scale(.985)}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.6) 50%,transparent 64%);transform:translateX(-130%);animation:sheen 5.5s ease-in-out 2s infinite}
+.btn .arr{width:8px;height:8px;border:solid currentColor;border-width:2px 2px 0 0;transform:rotate(45deg)}
+.btn.ghost{background:transparent;border:1.5px solid var(--gold);color:var(--gold-hi)}
+.btn.ghost::after{display:none}
+.bb-note{margin-top:10px;font-size:.84rem;color:var(--muted);text-align:center}
+.tick{width:16px;height:16px;border-radius:50%;background:var(--gold);flex:none;position:relative;display:inline-block}
+.tick::after{content:"";position:absolute;left:5px;top:3px;width:4px;height:7px;border:solid var(--gold-ink);border-width:0 2px 2px 0;transform:rotate(42deg)}
+
+/* Ajustes móvil */
+.cta-s .cta-p{display:none}
+@media(min-width:400px){.cta-s .cta-p{display:inline}}
+@media(max-width:600px){.bar .b3,.bar .i2{display:none}}
+@media(max-width:359px){.btn{font-size:.92rem}.nav .cta-s{padding:8px 10px}.logo{width:24px;height:24px}}
+@media(max-width:479px){
+  .bar .wrap{font-size:.56rem;letter-spacing:.08em;gap:7px}
+  .bar .b3,.bar .i2{display:none}
+  .brand{font-size:.95rem}
+  .nav .cta-s{font-size:.8rem;padding:8px 12px}
+  .wrap{padding:0 16px}
+  .buybox{padding:16px}
+  .btn{font-size:.98rem;padding:15px 16px}
+  .pb-h{font-size:.84rem;padding-left:12px}
+  .pb-b{padding:16px 14px 8px;font-size:.88rem}
+  .of-list li{grid-template-columns:auto minmax(0,1fr)}
+  .of-list em{display:none}
+  .who span{font-size:.8rem}
+  .cats li{grid-template-columns:40px minmax(0,1fr);gap:12px;padding:12px}
+  .cats i{width:40px;height:40px;font-size:1.15rem}
+  .chips-all a{font-size:.8rem;padding:7px 11px}
+  .faq summary{font-size:.96rem}
+}
+
+/* Stats */
+.stats{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 0 40px}
+.stats li{border:1px solid var(--line);border-radius:14px;padding:16px 8px;background:var(--bg2);text-align:center}
+.stats b{display:block;font-size:clamp(1.5rem,5.5vw,1.9rem);line-height:1;font-weight:700;letter-spacing:-.04em;color:var(--gold)}
+.stats span{display:block;margin-top:6px;font-size:.76rem;line-height:1.25;color:var(--muted)}
+
+.chips-all{padding:0 0 44px;display:grid;gap:12px;justify-items:center;text-align:center}
+.chips-all>div{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:56rem}
+.chips-all a{text-decoration:none;font-size:.88rem;font-weight:600;color:var(--text);border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:8px 13px;white-space:nowrap;transition:border-color .2s,color .2s}
+.chips-all a:hover{border-color:var(--gold);color:var(--gold-hi)}
+.stats{padding-bottom:22px!important}
+
+/* Sections */
+.sec{position:relative;padding:clamp(40px,7vw,64px) 0 clamp(44px,8vw,72px);border-top:1px solid var(--line)}
+.aura::before{content:"";position:absolute;inset:0 0 auto;height:420px;background:radial-gradient(44% 62% at 50% 0%,rgba(233,196,106,.09),transparent 72%);pointer-events:none}
+.sec-h{max-width:44rem;margin:0 auto 28px;display:grid;gap:10px;text-align:left;position:relative}
+.kick{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+h2{font-size:clamp(1.45rem,4.4vw + .55rem,2.25rem);line-height:1.12;letter-spacing:-.03em;text-wrap:balance;font-weight:700}
+h2 em{font-style:normal;color:var(--gold)}
+.sec-h p:not(.kick){color:var(--muted);max-width:36rem;font-size:1.02rem}
+.sec-h p strong{color:var(--text);font-weight:650}
+.lab{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.narrow{max-width:44rem;margin:0 auto;position:relative}
+
+/* Problem */
+.pain{display:grid;gap:10px}
+.pain li{list-style:none;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.pain i{font-style:normal;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;color:var(--dim);font-size:.9rem;font-weight:700}
+.pain b{display:block;font-weight:650;letter-spacing:-.01em}
+.pain span{display:block;color:var(--muted);font-size:.92rem;margin-top:2px}
+
+/* Steps */
+.steps{display:grid;gap:10px;counter-reset:s}
+.step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.step .n{width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--gold-ink);font-weight:800;font-size:1.2rem;display:grid;place-items:center}
+.step b{display:block;font-size:1.12rem;letter-spacing:-.02em;line-height:1.2}
+.step span{display:block;color:var(--muted);font-size:.94rem;margin-top:4px}
+.step span.br{display:inline;margin:0;font-size:.75rem}
+.step small{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+/* Prompt sample */
+.pbox{background:var(--paper);color:var(--ink);border-radius:16px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.8)}
+.pb-h{background:#000;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 10px 10px 16px;font-weight:650;font-size:.9rem}
+.pb-h .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy{font:inherit;cursor:pointer;border:0;background:var(--gold);color:var(--gold-ink);border-radius:999px;padding:8px 16px;font-size:.8rem;font-weight:700;white-space:nowrap;transition:background .2s}
+.copy.ok{background:#CFE8C0}
+.pb-b{padding:18px 18px 8px;font-size:.92rem;line-height:1.55;max-height:340px;overflow:hidden;position:relative}
+.pb-b.open{max-height:none}
+.pb-b:not(.open)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,var(--paper))}
+.pb-b p{margin-bottom:10px}
+.pb-b h4{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:#8A6A1E;margin:14px 0 6px}
+.pb-b ol,.pb-b ul{padding-left:20px;margin-bottom:10px}
+.pb-b li{margin-bottom:4px}
+.br{display:inline-block;background:#F3DC9A;color:var(--ink);font-weight:650;font-size:.82rem;line-height:1.2;padding:2px 6px;border-radius:5px}
+.pb-f{display:flex;justify-content:center;padding:6px 16px 16px}
+.more{font:inherit;cursor:pointer;background:transparent;border:1px solid rgba(23,19,13,.25);color:var(--ink);border-radius:999px;padding:8px 16px;font-size:.84rem;font-weight:650}
+.stabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.stabs button{font:inherit;cursor:pointer;padding:11px 8px;border-radius:14px;border:1px solid var(--line2);background:var(--card);color:var(--muted);font-weight:700;font-size:.92rem;letter-spacing:-.01em;transition:background .2s,color .2s,border-color .2s}
+.stabs button.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.spanel{display:none}
+.spanel.on{display:block;animation:fadeup .45s ease both}
+.sample-note{margin-top:14px;color:var(--muted);font-size:.9rem;text-align:center}
+
+/* Anatomy */
+.anat{display:grid;gap:10px}
+.anat li{list-style:none;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--card);display:grid;gap:4px}
+.anat code{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--gold)}
+.anat b{font-weight:650;letter-spacing:-.01em}
+.anat span{color:var(--muted);font-size:.92rem}
+
+/* Catalog */
+.tabs3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:44rem;margin:0 auto 18px}
+.tabs3 button{font:inherit;cursor:pointer;display:grid;gap:2px;justify-items:center;padding:10px 6px;border-radius:14px;border:1px solid var(--line2);background:var(--card);color:var(--muted);transition:background .2s,color .2s,border-color .2s}
+.tabs3 button b{font-size:.92rem;font-weight:700;letter-spacing:-.01em;text-align:center;line-height:1.15}
+.tabs3 button span{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--dim)}
+.tabs3 button.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.tabs3 button.on span{color:var(--gold-ink);opacity:.7}
+.shelf{display:none;max-width:44rem;margin:0 auto}
+.shelf.on{display:block;animation:fadeup .45s ease both}
+.shelf-l{color:var(--muted);font-size:.95rem;margin-bottom:6px}
+.shelf-l b{color:var(--text)}
+.cat{list-style:none;border-top:1px solid var(--line)}
+.cat li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cat i{font-style:normal;font-weight:700;color:var(--gold);font-size:1.3rem;line-height:1.1;letter-spacing:-.03em}
+.cat i small{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;color:var(--dim);font-weight:500;margin-top:3px}
+.cat b{display:block;font-weight:650;font-size:1.02rem;line-height:1.3;letter-spacing:-.01em}
+.cat span{display:block;margin-top:3px;font-size:.88rem;line-height:1.45;color:var(--muted)}
+
+.grp{max-width:56rem;margin:0 auto 26px}
+.grp-h{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.grp-h .lab{color:var(--gold);white-space:nowrap}
+.grp-h h3{font-size:1.25rem;letter-spacing:-.025em;line-height:1.2}
+.cats{list-style:none;display:grid;gap:8px}
+.cats li{display:grid;grid-template-columns:46px minmax(0,1fr);gap:14px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);transition:border-color .2s,background .2s}
+.cats li:hover{border-color:var(--gold-line);background:linear-gradient(180deg,rgba(233,196,106,.07),rgba(233,196,106,.01))}
+.cats i{font-style:normal;width:46px;height:46px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--gold-line);display:grid;place-items:center;font-size:1.35rem}
+.cats b{display:block;font-weight:700;font-size:1.04rem;line-height:1.25;letter-spacing:-.015em}
+.cats span{display:block;margin-top:4px;font-size:.86rem;line-height:1.45;color:var(--muted)}
+.cat-cta{max-width:28rem;margin:30px auto 0;text-align:center;display:grid;gap:14px}
+.cat-cta p{color:var(--muted)}
+.cat-cta b{color:var(--gold-hi)}
+@media(min-width:720px){.cats{grid-template-columns:1fr 1fr}}
+
+/* Updates */
+.upd{display:grid;gap:12px}
+.upd>div{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:20px;display:grid;gap:8px;align-content:start}
+.upd b{font-weight:700;font-size:1.2rem;line-height:1.15;letter-spacing:-.025em}
+.upd span:not(.lab){font-size:.95rem;color:var(--muted);line-height:1.5}
+.upd .lab{color:var(--gold)}
+.timeline{margin-top:12px;border:1px solid var(--gold-line);border-radius:18px;padding:18px 20px;background:linear-gradient(180deg,rgba(233,196,106,.08),rgba(233,196,106,.02));display:grid;gap:12px}
+.tl{display:grid;grid-template-columns:14px minmax(0,1fr);gap:12px;align-items:start;font-size:.94rem}
+.tl::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold);margin-top:.45em;box-shadow:0 0 0 4px var(--gold-soft)}
+.tl.next::before{background:transparent;border:1.5px dashed var(--gold)}
+.tl b{color:var(--text);font-weight:650}
+.tl span{color:var(--muted)}
+
+/* VS */
+.vs2{display:grid;gap:12px;max-width:44rem;margin:0 auto}
+.vs2>div{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:20px}
+.vs2 h3{font-size:1.2rem;letter-spacing:-.02em;margin:6px 0 12px}
+.vs2 ul{list-style:none;display:grid;gap:9px;color:var(--muted);font-size:.96rem}
+.vs2 li{display:flex;gap:10px;align-items:flex-start}
+.vs2 li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--dim);margin-top:.55em}
+.vs2 .gold{border-color:var(--gold-line);background:linear-gradient(180deg,rgba(233,196,106,.1),rgba(233,196,106,.02))}
+.vs2 .gold .lab{color:var(--gold)}
+.vs2 .gold ul{color:var(--text)}
+.vs2 .gold li::before{background:var(--gold)}
+
+/* For who */
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.who li{list-style:none;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:14px;display:grid;gap:4px}
+.who em{font-style:normal;font-size:1.3rem}
+.who b{font-weight:650;font-size:.98rem;letter-spacing:-.01em;line-height:1.2}
+.who span{color:var(--muted);font-size:.84rem;line-height:1.35}
+
+/* Offer */
+.offer{max-width:44rem;margin:0 auto;border:1px solid var(--gold-line);border-radius:24px;overflow:hidden;background:var(--card);box-shadow:0 50px 140px -70px rgba(233,196,106,.5);position:relative}
+.of-list{padding:24px 20px 10px}
+.of-list h3{font-size:1.4rem;letter-spacing:-.025em;margin-top:6px}
+.of-list ul{list-style:none;margin-top:10px}
+.of-list li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:13px 0;border-top:1px solid var(--line)}
+.of-list li:first-child{border-top:0}
+.of-list .tick{margin-top:3px}
+.of-list b{display:block;font-weight:650;line-height:1.3}
+.of-list span:not(.tick){display:block;margin-top:2px;font-size:.88rem;color:var(--muted);line-height:1.4}
+.of-list em{font-style:normal;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;color:var(--gold);white-space:nowrap;margin-top:4px}
+.of-pay{padding:26px 20px;background:linear-gradient(180deg,rgba(233,196,106,.13),rgba(233,196,106,.03));border-top:1px solid var(--gold-line);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.of-big{display:flex;align-items:baseline;justify-content:center;gap:6px}
+.of-big small{font-size:1.3rem;color:var(--muted);font-weight:600}
+.of-big b{font-size:clamp(2.8rem,10vw,3.4rem);line-height:1;font-weight:700;letter-spacing:-.05em}
+.of-pay p{color:var(--muted);font-size:.92rem;max-width:26rem}
+.of-pay .btn{max-width:420px}
+.trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;font-size:.82rem;color:var(--muted)}
+.trust span{display:flex;align-items:center;gap:7px}
+
+/* FAQ */
+.faq{max-width:44rem;margin:0 auto;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;font-weight:650;font-size:1.02rem;letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:none;width:9px;height:9px;border:solid var(--gold);border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .25s;margin-top:-4px}
+.faq details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.faq details p{color:var(--muted);padding:0 0 18px;font-size:.96rem;max-width:40rem}
+
+/* Final */
+.final{text-align:center;padding:64px 0 72px}
+.final h2{max-width:20ch;margin:10px auto 14px}
+.final p{color:var(--muted);max-width:32rem;margin:0 auto 22px}
+.final .btn{max-width:420px;margin:0 auto}
+footer{border-top:1px solid var(--line);padding:26px 0 100px;color:var(--dim);font-size:.82rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;align-items:center}
+footer a{text-decoration:none;color:var(--muted)}
+
+/* Sticky mobile CTA */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(11,9,8,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--gold-line);display:flex;align-items:center;gap:12px;transform:translateY(110%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.sticky.show{transform:none}
+.sticky .p{display:grid;line-height:1.1;flex:none}
+.sticky .p b{font-size:1.35rem;letter-spacing:-.03em}
+.sticky .p span{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.sticky .btn{padding:13px 14px;font-size:.96rem}
+
+[data-rv]{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+[data-rv].in{opacity:1;transform:none}
+.no-js [data-rv]{opacity:1;transform:none}
+
+@keyframes pulse{50%{opacity:.35}}
+@keyframes sheen{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(min-width:560px){
+  .nos{display:flex;flex-wrap:wrap;gap:8px 22px}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .who{grid-template-columns:repeat(3,1fr)}
+  .upd{grid-template-columns:1fr 1fr}
+}
+@media(min-width:900px){
+  .nav-links{display:flex}
+  .hero{padding:68px 0 56px}
+  .hero .wrap{grid-template-columns:1.15fr .85fr;grid-template-areas:'t o' 'n o';align-items:center;gap:22px 56px}
+  .hero .wrap>div:first-child{grid-area:t;align-self:end}
+  #offer-top{grid-area:o}
+  .hero .nos{grid-area:n;align-self:start}
+  .split{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+  .split .sec-h{margin:0;position:sticky;top:100px}
+  .vs2{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .step{grid-template-columns:1fr;gap:16px}
+  .sticky{display:none}
+  footer{padding-bottom:26px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}[data-rv]{opacity:1;transform:none}}
+</style>
+</head>
+<body class="no-js">
+
+<div class="bar"><div class="wrap"><span>Acceso de por vida</span><i></i><span>Actualizaciones incluidas</span><i class="i2"></i><span class="b3">Un solo pago</span></div></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo">A</span>Alpacka Prompts</a>
+    <nav class="nav-links">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#muestra">Prueba gratis</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <a class="cta-s" href="#comprar" data-buy>Obtener acceso<span class="cta-p"> · $14.99</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Banco de prompts · Actualizable</p>
+      <h1>Deja de improvisar con la IA. <em>Copia, pega, resultado.</em></h1>
+      <p class="sub"><strong>+500 prompts profesionales</strong> en 20 categorías, ya escritos y probados. Rellenas tus datos entre corchetes y la IA te devuelve un plan, un texto o una estrategia lista para usar. Sin aprender "prompt engineering".</p>
+      <div class="works"><span class="lab">Funciona con</span><span class="pill">ChatGPT</span><span class="pill">Claude</span><span class="pill">Gemini</span><span class="pill">Cualquier IA</span></div>
+    </div>
+
+    <aside class="buybox" id="offer-top">
+      <span class="bb-tag">Acceso inmediato</span>
+      <div class="bb-top">
+        <div class="bb-price"><small>$</small><b>14.99</b><small>USD</small></div>
+        <div class="bb-save"><b>Pago único</b>Sin suscripción</div>
+      </div>
+      <ul class="bb-list">
+        <li><span class="tick"></span>+500 prompts en 20 categorías</li>
+        <li><span class="tick"></span>Banco en Notion, copia en un clic</li>
+        <li><span class="tick"></span>Nuevos prompts y categorías gratis, para siempre</li>
+      </ul>
+      <a class="btn" href="#comprar" data-buy>Quiero el banco de prompts <span class="arr"></span></a>
+      <p class="bb-note">Lo recibes en tu email al momento.</p>
+    </aside>
+
+    <div class="nos">
+      <span><span class="tick"></span>Sin experiencia previa</span>
+      <span><span class="tick"></span>En español</span>
+      <span><span class="tick"></span>Listo para copiar</span>
+      <span><span class="tick"></span>Se actualiza solo</span>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <ul class="stats" data-rv>
+    <li><b>+500</b><span>prompts listos para usar</span></li>
+    <li><b>20</b><span>categorías de trabajo, negocio y vida</span></li>
+    <li><b>1</b><span>pago único de $14.99</span></li>
+    <li><b>∞</b><span>actualizaciones sin coste extra</span></li>
+  </ul>
+<div class="chips-all" data-rv>    <span class="lab">Las 20 categorías incluidas</span>    <div>      <a href="#catalogo">📈 Marketing &amp; Ventas</a><a href="#catalogo">📱 Redes sociales</a><a href="#catalogo">💸 Ganar dinero</a><a href="#catalogo">✍️ Copywriting</a><a href="#catalogo">🎥 Creación de contenido</a><a href="#catalogo">🎬 YouTube sin rostro</a><a href="#catalogo">🖼️ Creación de imágenes</a><a href="#catalogo">🔍 SEO</a><a href="#catalogo">🎯 Conseguir empleo</a><a href="#catalogo">⚡ Productividad</a><a href="#catalogo">💻 Vibe Coding</a><a href="#catalogo">🍎 Docentes</a><a href="#catalogo">🎨 Creatividad</a><a href="#catalogo">💰 Finanzas personales</a><a href="#catalogo">🥗 Bajar de peso</a><a href="#catalogo">💪 Fitness</a><a href="#catalogo">🧠 Crecimiento personal</a><a href="#catalogo">📚 Inglés</a><a href="#catalogo">🇫🇷 Francés</a><a href="#catalogo">✨ Astrología</a>    </div>  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="sec aura">
+  <div class="wrap split">
+    <div class="sec-h" data-rv>
+      <p class="kick">El problema</p>
+      <h2>La IA no es el problema. <em>Lo que le pides, sí.</em></h2>
+      <p>Si le escribes una frase suelta, te responde algo genérico. La diferencia entre una respuesta mediocre y una útil está en <strong>cómo está escrito el prompt</strong>.</p>
+    </div>
+    <ul class="pain narrow" data-rv>
+      <li><i>×</i><div><b>Respuestas genéricas que no sirven</b><span>Te da una lista de consejos obvios que ya conocías.</span></div></li>
+      <li><i>×</i><div><b>Pierdes tiempo reescribiendo</b><span>Diez intentos para conseguir algo que se acerque a lo que querías.</span></div></li>
+      <li><i>×</i><div><b>Prompts sueltos de internet</b><span>Copiados de hilos, desordenados, en inglés y sin estructura.</span></div></li>
+      <li><i>×</i><div><b>No sabes qué pedir</b><span>Sabes que la IA puede ayudarte, pero no por dónde empezar.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="sec" id="como-funciona">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Cómo funciona</p>
+      <h2>Tres pasos. <em>Siempre los mismos.</em></h2>
+      <p>No tienes que aprender a escribir prompts. Solo eliges, rellenas y pegas.</p>
+    </div>
+    <div class="steps" data-rv>
+      <div class="step"><span class="n">1</span><div><b>Elige lo que quieres conseguir</b><span>Busca en 20 categorías: vender, conseguir empleo, ahorrar, aprender inglés, crear contenido…</span><small>~10 segundos</small></div></div>
+      <div class="step"><span class="n">2</span><div><b>Copia y rellena los corchetes</b><span>Cada prompt tiene un bloque "Información sobre mí". Cambias solo lo que va entre <span class="br">[INSERTAR]</span>.</span><small>~1 minuto</small></div></div>
+      <div class="step"><span class="n">3</span><div><b>Pega y recibe el resultado</b><span>La IA te devuelve un plan, guion o documento estructurado, listo para usar ese mismo día.</span><small>Al instante</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MUESTRA -->
+<section class="sec aura" id="muestra">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Pruébalo gratis</p>
+      <h2>Dos de los +500. <em>Úsalos ahora.</em></h2>
+      <p>Cópialos, pégalos en ChatGPT o Claude y rellena tus datos. Si te sirven estos, imagina todo lo demás.</p>
+    </div>
+    <div class="narrow" data-rv>
+      <div class="stabs" role="tablist">
+        <button class="on" type="button" role="tab" aria-selected="true" data-sample="sm1">💸 Ganar dinero</button>
+        <button type="button" role="tab" aria-selected="false" data-sample="sm2">🎬 YouTube sin rostro</button>
+      </div>
+      <div class="pbox spanel on" id="sm1" role="tabpanel">
+        <div class="pb-h"><span class="t">💸 Consigue tus primeros 5 clientes sin audiencia ni publicidad</span><button class="copy" type="button">Copiar prompt</button></div>
+        <div class="pb-b">
+          <p>Adopta el rol de un consultor de captación para negocios que empiezan de cero, formado en prospección directa, activación de red de contactos y ofertas de entrada, que ha llevado a decenas de freelancers de cero a cartera llena sin gastar en anuncios. Tu misión es conseguirme mis primeros clientes. El problema es grave: casi todo el mundo empieza montando una web, un logo y un perfil impecable, se pasa dos meses en eso y no habla con una sola persona que pudiera pagarle. Los primeros clientes no llegan por difusión, llegan por conversaciones concretas con gente concreta. Respira hondo y trabaja en este problema paso a paso.</p>
+          <p>Ejecuta estas 5 acciones: 1) Ayúdame a hacer una lista de 30 contactos posibles a partir de mi entorno real: antiguos compañeros, clientes de mi empleo, negocios de mi zona, grupos donde participo y personas que ya me conocen. 2) Clasifícalos por cercanía y probabilidad, y dime a quién escribir primero. 3) Escribe el mensaje de contacto para cada tipo de persona, breve y sin sonar a plantilla, centrado en lo que puedo resolverles y no en que acabo de empezar. 4) Diséñame una oferta de entrada con alcance pequeño y precio accesible que facilite el primer sí, sin regalar el trabajo. 5) Dame el guion de la conversación cuando alguien muestre interés: qué preguntar, cómo presentar el precio y cómo cerrar el acuerdo, más un sistema simple para no perder el seguimiento.</p>
+          <h4>#Información sobre mí</h4>
+          <ul>
+            <li>Qué servicio ofrezco: <span class="br">[INSERTAR]</span></li>
+            <li>A quién le sirve: <span class="br">[INSERTAR]</span></li>
+            <li>Mi red de contactos y sector de origen: <span class="br">[INSERTAR]</span></li>
+            <li>Trabajos previos que puedo mostrar: <span class="br">[INSERTAR]</span></li>
+            <li>Tiempo semanal para buscar clientes: <span class="br">[INSERTAR]</span></li>
+          </ul>
+          <p>¡LO MÁS IMPORTANTE!: Estructura tu respuesta con las secciones A, B, C, D y E. Al final, dame el "reto de las 48 horas": la primera acción concreta que debo completar en los próximos dos días para validar que el plan funciona.</p>
+        </div>
+        <div class="pb-f"><button class="more" type="button">Ver prompt completo</button></div>
+      </div>
+      <div class="pbox spanel" id="sm2" role="tabpanel">
+        <div class="pb-h"><span class="t">🎬 Mapa completo para lanzar un canal sin rostro, de cero a monetizar</span><button class="copy" type="button">Copiar prompt</button></div>
+        <div class="pb-b">
+          <h4>CONTEXT:</h4>
+          <p>Adopta el rol de un consultor de YouTube con experiencia lanzando y escalando canales sin mostrar el rostro, desde cero hasta superar las 4.000 horas y 1.000 suscriptores para monetizar.</p>
+          <h4>INSTRUCCIONES:</h4>
+          <p>Desarrolla un roadmap detallado dividido en 4 fases:</p>
+          <ol>
+            <li><b>Preparación del canal:</b> nicho con datos (CPM, búsquedas, competencia), propuesta de valor única, nombre e identidad visual.</li>
+            <li><b>Primeros 30 videos:</b> estrategia de temas, títulos, hooks, duración ideal, y cómo enseñar al algoritmo tu público objetivo.</li>
+            <li><b>Aceleración de visualizaciones:</b> estrategias para retención alta (cliffhangers, loops narrativos), optimización de CTR, y fomento de comentarios y shares.</li>
+            <li><b>Monetización y escalado:</b> playlists, contenido evergreen, productos digitales o patrocinios, y cuándo reinvertir en outsourcing.</li>
+          </ol>
+          <h4>OUTPUT FORMAT:</h4>
+          <p>Documento profesional con secciones numeradas, bullets y tablas. Termina con checklist ejecutiva para aplicar todo paso a paso.</p>
+        </div>
+        <div class="pb-f"><button class="more" type="button">Ver prompt completo</button></div>
+      </div>
+      <p class="sample-note">Solo cambias lo que está entre <span class="br" style="font-size:.75rem">[corchetes]</span>. Todo lo demás ya está pensado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMÍA -->
+<section class="sec">
+  <div class="wrap split">
+    <div class="sec-h" data-rv>
+      <p class="kick">Por qué funcionan</p>
+      <h2>No son frases. <em>Son instrucciones completas.</em></h2>
+      <p>Cada prompt sigue una estructura profesional que obliga a la IA a pensar como un experto y responder con un formato útil.</p>
+    </div>
+    <ul class="anat narrow" data-rv>
+      <li><code>01 · CONTEXT</code><b>Qué necesitas y por qué</b><span>La IA entiende tu situación antes de responder.</span></li>
+      <li><code>02 · ROLE</code><b>Un experto asignado</b><span>Copywriter senior, coach, nutricionista, reclutador… según la tarea.</span></li>
+      <li><code>03 · RESPONSE GUIDELINES</code><b>Los pasos exactos a seguir</b><span>Nada de respuestas vagas: le dices qué analizar y en qué orden.</span></li>
+      <li><code>04 · CRITERIA</code><b>Estándares de calidad</b><span>Reglas para que el resultado sea claro, accionable y sin relleno.</span></li>
+      <li><code>05 · INFORMACIÓN SOBRE MÍ</code><b>Tu caso, en corchetes</b><span>El único lugar donde escribes. Personaliza todo el resultado.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section class="sec aura" id="catalogo">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Qué hay dentro</p>
+      <h2>+500 prompts en <em>20 categorías.</em></h2>
+      <p>Esto es todo lo que vas a encontrar. Cada categoría trae prompts para conseguir algo concreto que puedes usar el mismo día.</p>
+    </div>
+
+    <div class="grp" data-rv>
+      <div class="grp-h"><span class="lab">Bloque 1</span><h3>Negocio, ventas y contenido</h3></div>
+      <ul class="cats">
+        <li><i>📈</i><div><b>Marketing & Ventas</b><span>Embudos · Generador de leads · Script de cierre · Propuesta de valor</span></div></li>
+        <li><i>📱</i><div><b>Marketing para redes sociales</b><span>Ideas de contenido · Estrategia integral · Textos atrapantes · Respuesta a comentarios</span></div></li>
+        <li><i>💸</i><div><b>Ganar dinero</b><span>Qué vender con lo que ya sabes · Primeros 5 clientes · Ingresos extra · Tu primer producto digital</span></div></li>
+        <li><i>✍️</i><div><b>Copywriting & Contenido</b><span>Hooks que venden · Historias que venden · Emails que convierten · Guiones para reels</span></div></li>
+        <li><i>🎥</i><div><b>Creación de contenido</b><span>Ideas virales · Banco de contenido perpetuo · Sistema para YouTube · Shorts de alto impacto</span></div></li>
+        <li><i>🎬</i><div><b>Canal de YouTube sin rostro</b><span>De cero a monetizar · Nicho perfecto · Vídeos con IA y voz sintética · Guiones virales</span></div></li>
+        <li><i>🖼️</i><div><b>Creación de imágenes</b><span>Prompts para Midjourney, ChatGPT y Gemini · Fotos de producto · Logos · Miniaturas · Imágenes para redes</span></div></li>
+        <li><i>🔍</i><div><b>SEO y contenido</b><span>Palabras clave · Auditoría on-page · Artículo SEO desde cero · Link building realista</span></div></li>
+      </ul>
+    </div>
+
+    <div class="grp" data-rv>
+      <div class="grp-h"><span class="lab">Bloque 2</span><h3>Trabajo, carrera y productividad</h3></div>
+      <ul class="cats">
+        <li><i>🎯</i><div><b>Conseguir empleo</b><span>CV de alto impacto · CV para ATS · LinkedIn imán · Entrevista STAR · Negociar salario</span></div></li>
+        <li><i>⚡</i><div><b>Productividad</b><span>Planificación semanal · Vencer la procrastinación · Auditoría de reuniones · Metas trimestrales</span></div></li>
+        <li><i>💻</i><div><b>Vibe Coding</b><span>De idea a brief · Debuggear sin saber código · Landing de SaaS · Deploy sin meter la pata</span></div></li>
+        <li><i>🍎</i><div><b>Docentes</b><span>Unidad didáctica · Exámenes y rúbricas · Explicar temas difíciles · Reuniones con familias</span></div></li>
+        <li><i>🎨</i><div><b>Creatividad</b><span>30 ángulos sobre cualquier tema · Rompe tu bloqueo · Método SCAMPER · Naming</span></div></li>
+      </ul>
+    </div>
+
+    <div class="grp" data-rv>
+      <div class="grp-h"><span class="lab">Bloque 3</span><h3>Dinero, salud, idiomas y vida</h3></div>
+      <ul class="cats">
+        <li><i>💰</i><div><b>Finanzas personales</b><span>Auditoría financiera · Salir de deudas · Ahorro automático · Inversión para principiantes</span></div></li>
+        <li><i>🥗</i><div><b>Bajar de peso de forma saludable</b><span>Plan nutricional personalizado · Hábitos sin dietas extremas · Transformación holística</span></div></li>
+        <li><i>💪</i><div><b>Fitness</b><span>Hipertrofia · Del sofá a 5K · Entrena en casa · Rutinas de 20 minutos</span></div></li>
+        <li><i>🧠</i><div><b>Prompts honestos (crecimiento personal)</b><span>Destruye mis excusas · Diagnóstico sin anestesia · Dime la verdad que todos suavizan</span></div></li>
+        <li><i>📚</i><div><b>Aprender inglés</b><span>Plan de 4 semanas · Vocabulario en contexto · Conversación con feedback · Phrasal verbs</span></div></li>
+        <li><i>🇫🇷</i><div><b>Aprender francés</b><span>Programa intensivo · Conversación y fluidez · Pronunciación · Preparación DELF/DALF</span></div></li>
+        <li><i>✨</i><div><b>Astrología</b><span>Carta natal · Planifica tu mes · Mapa del amor · Compatibilidad de pareja</span></div></li>
+      </ul>
+    </div>
+
+    <div class="cat-cta" data-rv>
+      <p>Y se siguen añadiendo categorías nuevas, <b>gratis</b> para quien ya compró.</p>
+      <a class="btn" href="#comprar" data-buy>Quiero las 20 categorías · $14.99 <span class="arr"></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ACTUALIZABLE -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Actualizable</p>
+      <h2>Lo compras una vez. <em>Sigue creciendo.</em></h2>
+      <p>No es un PDF que se queda viejo. Es un banco vivo en Notion: cuando se añaden prompts o categorías nuevas, <strong>aparecen en tu mismo enlace</strong> sin pagar nada más.</p>
+    </div>
+    <div class="narrow" data-rv>
+      <div class="upd">
+        <div><span class="lab">Formato</span><b>Banco en Notion</b><span>Ábrelo desde el ordenador o el móvil. Busca, copia y pega. También puedes duplicarlo a tu propio Notion.</span></div>
+        <div><span class="lab">Actualizaciones</span><b>Nuevos prompts, gratis</b><span>Nuevas categorías, mejoras y prompts adaptados a las nuevas herramientas de IA. Todo incluido en tu pago.</span></div>
+      </div>
+      <div class="timeline">
+        <div class="tl"><div><b>Hoy:</b> <span>+500 prompts en 20 categorías.</span></div></div>
+        <div class="tl"><div><b>Últimas incorporaciones:</b> <span>Vibe Coding, Docentes, SEO, Productividad, Francés, Creatividad.</span></div></div>
+        <div class="tl next"><div><b>Próximamente:</b> <span>más categorías y prompts nuevos. Te llegan sin hacer nada.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VS -->
+<section class="sec aura">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">La diferencia</p>
+      <h2>Prompts sueltos vs. <em>un banco de verdad.</em></h2>
+    </div>
+    <div class="vs2" data-rv>
+      <div>
+        <span class="lab">Prompts gratis de internet</span>
+        <h3>Una frase y suerte</h3>
+        <ul>
+          <li>Una línea sin contexto ni estructura</li>
+          <li>Respuestas genéricas que hay que rehacer</li>
+          <li>Dispersos en hilos, capturas y notas</li>
+          <li>Casi siempre en inglés</li>
+          <li>Nadie los mejora ni los actualiza</li>
+        </ul>
+      </div>
+      <div class="gold">
+        <span class="lab">Alpacka Prompts</span>
+        <h3>Instrucciones completas</h3>
+        <ul>
+          <li>Rol, contexto, pasos y criterios de calidad</li>
+          <li>Resultados estructurados y accionables</li>
+          <li>Todo en un solo sitio, por categorías</li>
+          <li>Escritos en español, para tu caso</li>
+          <li>Se actualizan para siempre</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUIÉN -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Para quién es</p>
+      <h2>Si usas IA, <em>hay un bloque para ti.</em></h2>
+    </div>
+    <ul class="who narrow" data-rv>
+      <li><em>🚀</em><b>Emprendedores</b><span>Embudos, ofertas, primeros clientes y ventas.</span></li>
+      <li><em>📱</em><b>Creadores de contenido</b><span>Ideas, guiones, hooks y estrategia de redes.</span></li>
+      <li><em>💼</em><b>Quien busca empleo</b><span>CV, LinkedIn, entrevistas y negociación.</span></li>
+      <li><em>🍎</em><b>Docentes</b><span>Clases, exámenes, rúbricas y gestión del aula.</span></li>
+      <li><em>💻</em><b>Builders con IA</b><span>Vibe coding, SEO y productividad.</span></li>
+      <li><em>🌱</em><b>Tu vida personal</b><span>Finanzas, salud, idiomas y hábitos.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- OFERTA -->
+<section class="sec aura" id="comprar">
+  <div class="wrap">
+    <div class="sec-h" data-rv style="text-align:center;justify-items:center">
+      <p class="kick">Tu acceso</p>
+      <h2>Todo esto por <em>menos de lo que cuesta un almuerzo.</em></h2>
+    </div>
+    <div class="offer" data-rv>
+      <div class="of-list">
+        <span class="lab">Incluye</span>
+        <h3>Alpacka Prompts · Banco completo</h3>
+        <ul>
+          <li><span class="tick"></span><div><b>+500 prompts profesionales</b><span>Con rol, contexto, pasos y criterios. Listos para copiar.</span></div><em>20 CAT.</em></li>
+          <li><span class="tick"></span><div><b>Banco en Notion</b><span>Ordenado por categorías, con índice y búsqueda.</span></div><em>WEB + MÓVIL</em></li>
+          <li><span class="tick"></span><div><b>Guía de uso y tips</b><span>Cómo sacar más de cada prompt y combinarlos entre sí.</span></div><em>INCLUIDO</em></li>
+          <li><span class="tick"></span><div><b>Actualizaciones de por vida</b><span>Prompts y categorías nuevas en tu mismo enlace.</span></div><em>GRATIS</em></li>
+          <li><span class="tick"></span><div><b>Funciona con cualquier IA</b><span>ChatGPT, Claude, Gemini y otras.</span></div><em>TODAS</em></li>
+        </ul>
+      </div>
+      <div class="of-pay">
+        <span class="bb-tag">Pago único · Acceso inmediato</span>
+        <div class="of-big"><small>$</small><b>14.99</b><small>USD</small></div>
+        <p>Sin suscripción ni pagos mensuales. Pagas una vez y es tuyo, con todas las actualizaciones futuras.</p>
+        <a class="btn" href="#comprar" data-buy>Obtener acceso ahora <span class="arr"></span></a>
+        <div class="trust">
+          <span><span class="tick"></span>Pago seguro</span>
+          <span><span class="tick"></span>Entrega al instante por email</span>
+          <span><span class="tick"></span>Actualizaciones incluidas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-h" data-rv>
+      <p class="kick">Preguntas frecuentes</p>
+      <h2>Antes de comprar.</h2>
+    </div>
+    <div class="faq" data-rv>
+      <details><summary>¿Qué recibo exactamente?</summary><p>Un enlace a un banco de prompts en Notion con más de 500 prompts organizados en 20 categorías, una guía de uso y tips. Lo abres desde el navegador o la app de Notion, y puedes duplicarlo a tu propia cuenta.</p></details>
+      <details><summary>¿Qué significa que es "actualizable"?</summary><p>Que el banco sigue creciendo. Cuando se añaden prompts o categorías nuevas, aparecen en el mismo enlace que ya tienes. No pagas nada más.</p></details>
+      <details><summary>¿Necesito saber de IA o de prompts?</summary><p>No. Copias el prompt, rellenas lo que está entre corchetes con tu información y lo pegas en la IA. Eso es todo.</p></details>
+      <details><summary>¿Con qué IA funciona?</summary><p>Con ChatGPT, Claude, Gemini y cualquier otro modelo de chat. Funcionan en las versiones gratuitas, aunque los modelos de pago suelen dar respuestas más completas.</p></details>
+      <details><summary>¿Necesito pagar Notion?</summary><p>No. Puedes ver y copiar los prompts sin cuenta, o con una cuenta gratuita de Notion si quieres duplicarlo.</p></details>
+      <details><summary>¿Es un pago único o una suscripción?</summary><p>Pago único de $14.99 USD. Sin cuotas mensuales y con actualizaciones incluidas.</p></details>
+      <details><summary>¿Cómo y cuándo lo recibo?</summary><p>Al instante. Después del pago recibes el enlace de acceso en tu email.</p></details>
+      <details><summary>¿Los prompts están en español?</summary><p>Sí, todos están escritos en español. Los de idiomas (inglés y francés) están pensados para hispanohablantes que quieren aprender.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="sec aura final">
+  <div class="wrap" data-rv>
+    <p class="kick">Empieza hoy</p>
+    <h2>La próxima vez que abras la IA, <em>sabrás exactamente qué pedirle.</em></h2>
+    <p>+500 prompts, 20 categorías y actualizaciones para siempre. Un solo pago de $14.99.</p>
+    <a class="btn" href="#comprar" data-buy>Quiero mi acceso · $14.99 <span class="arr"></span></a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Alpacka · <a href="https://alpackaai.xyz">alpackaai.xyz</a></span>
+    <span>Los resultados dependen de la información que aportes y del modelo de IA que uses.</span>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky">
+  <div class="p"><b>$14.99</b><span>Pago único</span></div>
+  <a class="btn" href="#comprar" data-buy>Obtener acceso <span class="arr"></span></a>
+</div>
+
+<script>
+/* ====== CONFIG: pega aquí tu enlace de pago (Gumroad, Hotmart, Stripe, Lemon Squeezy…) ====== */
+const CHECKOUT_URL = ""; // ej: "https://tuusuario.gumroad.com/l/alpacka-prompts"
+
+document.body.classList.remove('no-js');
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// Botones de compra
+if (CHECKOUT_URL) {
+  document.querySelectorAll('[data-buy]').forEach(a => { a.href = CHECKOUT_URL; });
+}
+
+// Prompts de muestra: copiar, expandir y pestañas
+document.querySelectorAll('.spanel').forEach(panel => {
+  const body = panel.querySelector('.pb-b');
+  const copyBtn = panel.querySelector('.copy');
+  const moreBtn = panel.querySelector('.more');
+  copyBtn.addEventListener('click', async () => {
+    const text = body.innerText.replace(/\n{3,}/g, '\n\n').trim();
+    try { await navigator.clipboard.writeText(text); }
+    catch (e) {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove();
+    }
+    copyBtn.textContent = '✓ Copiado'; copyBtn.classList.add('ok');
+    setTimeout(() => { copyBtn.textContent = 'Copiar prompt'; copyBtn.classList.remove('ok'); }, 2200);
+  });
+  moreBtn.addEventListener('click', () => {
+    const open = body.classList.toggle('open');
+    moreBtn.textContent = open ? 'Ver menos' : 'Ver prompt completo';
+  });
+});
+document.querySelectorAll('.stabs button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.stabs button').forEach(x => { x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('.spanel').forEach(p => p.classList.remove('on'));
+    b.classList.add('on'); b.setAttribute('aria-selected','true');
+    document.getElementById(b.dataset.sample).classList.add('on');
+  });
+});
+
+// Tabs del catálogo
+document.querySelectorAll('.tabs3 button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs3 button').forEach(x => { x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('.shelf').forEach(s => s.classList.remove('on'));
+    b.classList.add('on'); b.setAttribute('aria-selected','true');
+    document.getElementById(b.dataset.shelf).classList.add('on');
+  });
+});
+
+// Animación de entrada
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12 }) : null;
+document.querySelectorAll('[data-rv]').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+// CTA fijo en móvil: aparece tras el hero, se oculta en la sección de compra
+const sticky = document.getElementById('sticky');
+const heroBox = document.getElementById('offer-top');
+const buySec = document.getElementById('comprar');
+let heroOut = false, buyIn = false;
+const upd = () => sticky.classList.toggle('show', heroOut && !buyIn);
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(([e]) => { heroOut = !e.isIntersecting && e.boundingClientRect.top < 0; upd(); }).observe(heroBox);
+  new IntersectionObserver(([e]) => { buyIn = e.isIntersecting; upd(); }, { threshold: .2 }).observe(buySec);
+}
+</script>
+</body>
+</html>
